@@ -1,0 +1,88 @@
+
+
+.sidebar-menu {
+  height: 100vh;
+  background-color: #1E1450;
+
+  .sidebar-menu-logo-wrap {
+    .sidebar-menu-logo {
+      margin: 24px 0 32px;
+    }
+
+    .sidebar-menu-logo-small {
+      margin: 24px 0 32px;
+    }
+  }
+}
+
+.custom-application-review-item,
+.custom-application-navigator-item,
+.custom-notification-item,
+.custom-profile-item {
+  &,
+  &:hover {
+    background-color: transparent !important;
+  }
+
+  & svg {
+    color: rgb(255 255 255 / 65%);
+  }
+
+  .ant-avatar {
+    color: gray;
+  }
+
+  .ant-menu-title-content {
+    color: rgb(255 255 255 / 65%);
+    font-weight: 400;
+    font-size: 16px;
+    font-family: Metropolis, sans-serif;
+    font-style: normal;
+    line-height: 1.5;
+  }
+
+  &:hover {
+    & svg,
+    .ant-menu-title-content {
+      color: rgb(255 255 255 / 100%);
+    }
+  }
+}
+
+.ant-menu-item-selected {
+  color: white;
+  font-weight: 600;
+  background: transparent;
+  background: linear-gradient(34deg, #2816EE 0%, #281DEE 2.00%, #2546ED 12.00%, #226AEB 24.00%, #2087EB 36.00%, #1F9DEA 49.00%, #1EADE9 62.00%, #1DB6E9 78.00%, #1DB9E9 100%), #2816EE;
+  border-radius: 8px;
+
+  .ant-menu-item-selected svg {
+    fill: white;
+  }
+
+  .ant-menu-item-selected::after {
+    border-right: none;
+    content: "";
+  }
+
+  .ant-menu-item-selected::before {
+    border-right: none;
+    content: "";
+  }
+
+  .ant-menu-title-content{
+    color: #FFF;
+    font-weight: 600;
+
+  }
+
+  & svg{
+    color: #FFF;
+  }
+}
+
+
+.ant-menu-inline{
+  position: relative;
+  height: 90%;
+}

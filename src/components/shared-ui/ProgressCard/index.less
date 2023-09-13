@@ -1,0 +1,99 @@
+@import url("src/components/app/index");
+
+.med-progress-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+
+  @media screen and(max-width: @screen-md-max) {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ant-progress-steps {
+    gap: 6px;
+  }
+
+  .ant-progress-steps-outer {
+    gap: 6px;
+  }
+
+  .ant-progress-steps-item {
+    width: 48px !important;
+    height: 12px !important;
+    border-radius: 200px;
+  }
+
+  .med-progress-card-stage {
+    color: @med-gray-light;
+  }
+
+  .med-progress-card-content-wrap {
+    display: flex;
+    gap: 35px;
+    align-items: center;
+
+    @media screen and(max-width: @screen-md-max) {
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    svg {
+      width: 42px;
+      height: 56px;
+
+      path {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &.med-progress-card-content-wrap-disabled {
+      opacity: 0.4;
+    }
+  }
+
+  .med-progress-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+
+.med-progress-card-wrap{
+  width: 328px;
+  height: 306px;
+  padding: 32px 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover{
+    box-shadow: 0 1px 2px -2px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 12%), 0 5px 12px 4px rgb(0 0 0 / 9%);
+  }
+
+  .ant-progress-steps-item {
+    width: 41px !important;
+    height: 8px !important;
+    border-radius: 200px;
+  }
+
+  .med-progress-card-title{
+    margin: 0;
+    padding-top: 20px;
+    color: #312D42;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.4;
+  }
+
+  .med-button-lock{
+    margin-top: 102px;
+    color: #2816EE;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}

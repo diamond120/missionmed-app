@@ -1,0 +1,39 @@
+@import url("src/components/app/index");
+
+.med-custom-button-primary {
+  height: unset;
+  padding: 8px 30px;
+  color: #fff;
+  font-weight: 400;
+  background-color: @med-main-btn;
+  border: none;
+  border-radius: 8px;
+
+  &:hover,
+  &:focus {
+    background-color: @med-primary-color;
+  }
+}
+
+.med-custom-button-link {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 32px;
+  color: @med-accent-color;
+  font-weight: 600;
+
+  &:hover,
+  &:focus {
+    color: @med-accent-color;
+    background-color: @med-gray-lighten;
+  }
+
+}
+
+a.ant-btn{
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 2;
+
+}
