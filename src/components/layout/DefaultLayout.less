@@ -1,0 +1,82 @@
+@import url("../../components/app/index");
+
+#root {
+  .ant-layout {
+    height: 100%;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .ant-layout-footer {
+    height: @layout-footer-height;
+    line-height: @layout-footer-height;
+  }
+
+  .ant-layout-content {
+    height: 100vh;
+    overflow-y: scroll;
+    background: #F5F5F5;
+  }
+
+  .default {
+    > .ant-layout-content,
+    > .ant-layout-header,
+    > .ant-layout-footer {
+      padding: 24px 64px;
+
+      @media screen and (max-width: @screen-xs-max) {
+        padding: 48px 16px;
+      }
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    &.ant-typography {
+      font-weight: 400;
+      font-family: @headings-font-family;
+    }
+  }
+
+  .ant-typography {
+    margin-bottom: 0;
+    color: @med-text-color;
+    font-size: 16px;
+    line-height: 125%;
+  }
+
+  h1 {
+    &.ant-typography {
+      margin-bottom: 48px;
+      color: @med-title-color;
+      font-size: 40px;
+      line-height: 140%;
+    }
+  }
+
+  h2 {
+    &.ant-typography {
+      margin-bottom: 42px;
+      color: @med-gray-light;
+      font-size: 24px;
+      line-height: 133%;
+    }
+  }
+
+  h3 {
+    &.ant-typography {
+      color: @med-title-color;
+      font-size: 20px;
+      line-height: 120%;
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
