@@ -30,38 +30,36 @@ export function useStudentDispatch() {
 }
 
 function StudentReducer(student, action) {
-  console.log(student, action);
     switch (action.type) {
         case 'add': {
-          console.log("action", action);
           return {
               id:action.id,
-              userId:action.user_id,
-              fullName:action.full_name,
+              userId:action.userId,
+              fullName:action.fullName,
               gender:action.gender,
               pronouns:action.pronouns,
               birthday:action.birthday,
               email:action.email,
-              phoneNumber:action.phone_number,
-              stateId:action.state_id,
-              locationId:action.location_id,
-              timezoneId:action.timezone_id,
+              phoneNumber:action.phoneNumber,
+              state:action.state,
+              location:action.location,
+              timezone:action.timezone,
               biography:action.biography,
-              profilePicture:action.profile_picture,
-              applicantCycle:action.applicant_cycle,
-              applicantTypeId:action.applicant_type_id,
+              profilePicture:action.profilePicture,
+              applicantCycle:action.applicantCycle,
+              applicantTypeId:action.applicantTypeId,
               atar:action.atar,
               gpa:action.gpa,
-              statusOfResidence:action.status_of_residence,
+              statusOfResidence:action.statusOfResidence,
               specification:action.specification,
               atsi:action.atsi,
               rural:action.rural,
-              financialHardship:action.financial_hardship,
+              financialHardship:action.financialHardship,
               gws:action.gws,
           };
         }
         case 'update': {
-          return action.student;
+          return {...student, ...action.student}
         }
         default: {
             throw Error('Unknown action: ' + action.type);

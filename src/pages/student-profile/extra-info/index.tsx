@@ -3,17 +3,20 @@ import "./index.less";
 import { Form, Input, Select, Radio, Button, AutoComplete } from "antd"
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { FC, useState } from "react";
-import { useUpdateStudentMutation } from "../../../graphql"
+import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
+import StudentService from "../../../api/services/Student";
 
-const ExtraInfo: FC<{ student: Student; id: string }> = ({ student, id }) => {
+const ExtraInfo: FC<any> = ({props}) => {
+  const student = useStudent();
+  const dispatch = useStudentDispatch();
+  const [form] = Form.useForm();
   const { Option } = Select;
-  const [ updateStudent ] = useUpdateStudentMutation()
   const [editing, setEditing] = useState(false);
-  const [residenceStatus, setResidenceStatus] = useState<string | null | undefined>(student.status_of_residence);
+  const [residenceStatus, setResidenceStatus] = useState<string | null | undefined>(student.statusOfResidence);
   const [specification, setSpecification] = useState<string | null | undefined>(student.specification);
   const [atsi, setAtsi] = useState<any>(student.atsi);
   const [rural, setRural] = useState<any>(student.rural);
-  const [financialHardship, setFinancialHardship] = useState<any>(student.financial_hardship);
+  const [financialHardship, setFinancialHardship] = useState<any>(student.financialHardship);
   const [gws, setGws] = useState<any>(student.gws);
   const handleEditClick = () => {
     setEditing(true);
@@ -24,18 +27,23 @@ const ExtraInfo: FC<{ student: Student; id: string }> = ({ student, id }) => {
     setEditing(false);
   };
   const updatedStudent = async () => {
-    await updateStudent({
-      variables: {
-        id: id!,
-        input: {
-          status_of_residence: residenceStatus !== '' ? residenceStatus: student?.status_of_residence,
-          specification: specification !== '' ? specification: student?.specification,
-          atsi: atsi !== '' ? atsi : student?.atsi,
-          rural: rural!== '' ? rural : student?.rural,
-          financial_hardship: financialHardship !== '' ? financialHardship : student?.financial_hardship,
-          gws: gws !== '' ? gws : student?.gws,
-
-        }
+    await StudentService.updateAppInfo({
+      statusOfResidence: residenceStatus !== '' ? residenceStatus: student?.statusOfResidence,
+      specification: specification !== '' ? specification: student?.specification,
+      atsi: atsi !== '' ? atsi : student?.atsi,
+      rural: rural!== '' ? rural : student?.rural,
+      financialHardship: financialHardship !== '' ? financialHardship : student?.financialHardship,
+      gws: gws !== '' ? gws : student?.gws,
+    })
+    dispatch({
+      type:"update",
+      student:{
+        statusOfResidence: residenceStatus !== '' ? residenceStatus: student?.statusOfResidence,
+        specification: specification !== '' ? specification: student?.specification,
+        atsi: atsi !== '' ? atsi : student?.atsi,
+        rural: rural!== '' ? rural : student?.rural,
+        financialHardship: financialHardship !== '' ? financialHardship : student?.financialHardship,
+        gws: gws !== '' ? gws : student?.gws,
       }
     })
   }
@@ -53,7 +61,7 @@ const ExtraInfo: FC<{ student: Student; id: string }> = ({ student, id }) => {
       <h2 className={"extra-info-section-title"}>
         Extra Information <QuestionCircleFilled style={{ color: "#6B7393" }} />
       </h2>
-      <Form className={"extra-info-form"}>
+      <Form className={"extra-info-form"} form={form}>
         <Form.Item name={"status"} rules={[{ required: false }]}>
           <div className={"extra-info-form-item"}>
             <p className={"label"}>Status of Residence</p>

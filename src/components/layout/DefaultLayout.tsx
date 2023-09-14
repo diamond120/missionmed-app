@@ -52,7 +52,6 @@ export const DefaultLayout: FC = () => {
       if(user.role == "Student"){
         const getStudentProfile = async() => {
           const result = await Student.getProfile();
-          console.log("getStudentProfile");
           studentDispatch({
             type:"add",
             id:result.data.data.id,
@@ -63,9 +62,9 @@ export const DefaultLayout: FC = () => {
             birthday:result.data.data.birthday ?? null,
             email:result.data.data.email ?? null,
             phoneNumber:result.data.data.phone_number ?? null,
-            stateId:result.data.data.state_id ?? null,
-            locationId:result.data.data.location_id ?? null,
-            timezoneId:result.data.data.timezone_id ?? null,
+            state:result.data.data.state ?? null,
+            location:result.data.data.location ?? null,
+            timezone:result.data.data.timezone ?? null,
             biography:result.data.data.biography ?? null,
             profilePicture:result.data.data.profile_picture ?? null,
             applicantCycle:result.data.data.applicant_cycle ?? null,

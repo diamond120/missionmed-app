@@ -9,42 +9,23 @@ const config = {
     'Authorization': token
   }
 }
-const getAll = () => {
-  return http.get("/tutorials");
-};
 
 const getProfile = () => {
   return http.get(`/student/profile`, config);
 };
 
-// const create = (data: ITutorialData) => {
-//   return httpAuth.post<ITutorialData>("/tutorials", data);
-// };
+const updateProfile = (data) => {
+  return http.post(`/student/update`, data, config);
+};
 
-// const update = (id: any, data: ITutorialData) => {
-//   return httpAuth.put<any>(`/tutorials/${id}`, data);
-// };
-
-// const remove = (id: any) => {
-//   return httpAuth.delete<any>(`/tutorials/${id}`);
-// };
-
-// const removeAll = () => {
-//   return httpAuth.delete<any>(`/tutorials`);
-// };
-
-// const findByTitle = (title: string) => {
-//   return httpAuth.get<Array<ITutorialData>>(`/tutorials?title=${title}`);
-// };
+const updateAppInfo = (data) => {
+  return http.post(`/student/update/application_info`, data, config);
+};
 
 const Service = {
-  getAll,
   getProfile,
-  // create,
-  // update,
-  // remove,
-  // removeAll,
-  // findByTitle,
+  updateProfile,
+  updateAppInfo
 };
 
 export default Service;

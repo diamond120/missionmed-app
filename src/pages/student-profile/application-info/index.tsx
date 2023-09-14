@@ -1,89 +1,103 @@
 import "./index.less"
 import { AutoComplete, Button, Form, InputNumber, Select } from "antd"
 import { FC, useState } from "react"
-import { useUpdateStudentMutation } from "../../../graphql"
+import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
+import {useStudentProfileStaticDataContext} from "../../../api/context/StudentProfileStaticDataContext";
+import StudentService from "../../../api/services/Student";
 
+const ApplicationInfo: FC<any> = ({props}) => {
+  const student = useStudent();
+  const dispatch = useStudentDispatch();
+  const studentProfileStaticData = useStudentProfileStaticDataContext();
 
-const ApplicationInfo: FC<{student: Student, id: string}> = ({student,id}) => {
-  const { Option } = Select;
-  const [ updateStudent ] = useUpdateStudentMutation()
+  const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
-  const [applCycle, setApplCycle] = useState<string | undefined | null>(student.applicant_cycle)
-  const [applType, setApplType] = useState<string | undefined | null>(student.applicant_type)
+  const [applCycle, setApplCycle] = useState<string | undefined | null>(student.applicantCycle)
+  const [applType, setApplType] = useState<string | undefined | null>(student.applicantTypeId)
   const [atar, setAtar] = useState<string | undefined | null>("")
   const [gpa, setGpa] = useState<string | undefined | null>("")
-  const handleEditClick = () => {
-    setEditing(true);
-  };
-
-  const handleSaveClick =() => {
-    updatedStudent()
-    setEditing(false);
-
-  };
-
-  const updatedStudent = async () => {
-    await updateStudent({
-      variables: {
-        id: id!,
-        input: {
-          applicant_cycle: applCycle !== '' ? applCycle : student?.applicant_cycle,
-          applicant_type: applType !== '' ? applType : student?.applicant_type,
-          predicted_atar: atar !== '' ? atar: student?.predicted_atar,
-          gpa: gpa !== '' ? gpa : student?.gpa,
-        }
-      }
-    })
-  }
 
   const optionsApplicantCycle: string[]= [
     "2022 / 2023",
     "2021 / 2022",
     "2020 / 2021",
   ]
-  const optionsApplicantType: string[]= [
-    "High School Leaver",
-    "High School Leaver",
-  ]
+  const optionsApplicantType: string[]= studentProfileStaticData.applicantType;
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const updatedStudent = async () => {
+    await StudentService.updateAppInfo({
+      applicantCycle: applCycle !== '' ? applCycle : student?.applicantCycle,
+      applicantTypeId: applType !== '' ? applType : student?.applicantTypeId,
+      atar: atar !== '' ? atar: student?.atar,
+      gpa: gpa !== '' ? gpa : student?.gpa,
+    })
+
+    dispatch({
+      type:"update",
+      student:{
+        applicantCycle: applCycle !== '' ? applCycle : student?.applicantCycle,
+        applicantTypeId: applType !== '' ? applType : student?.applicantTypeId,
+        atar: atar !== '' ? atar: student?.atar,
+        gpa: gpa !== '' ? gpa : student?.gpa,
+      }
+    })
+  }
+
+  const handleSaveClick = async () => {
+    try{
+      await form.validateFields();
+      updatedStudent()
+      setEditing(false);
+    }catch(e){
+      console.log(e);
+      return false;
+    }
+  };
+
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
   return(
     <div className={"application-info-section"}>
       <h2 className={"application-info-section-title"}>Application Information</h2>
-        <Form className={"application-info-form"}>
+        <Form className={"application-info-form"} form={form}>
 
           <Form.Item
             name={"Applicant Cycle"}
-            rules={[{ required: false, }]}
+            rules={[{ required: true, }]}
+            initialValue={student.applicantCycle}
           >
             <div className={"application-info-form-item"}>
               <p className={"label"}>Applicant Cycle*</p>
               <AutoComplete
-                options={optionsApplicantCycle.map((option) => ({ value: option }))}
+                options={optionsApplicantCycle.map((option) => ({ value: option}))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
                 filterOption={handleFilter}
                 value={applCycle}
                 disabled={!editing}
-                onChange={(value) => setApplCycle(value)}
+                onChange={(value) => {setApplCycle(value); form.setFieldValue('Applicant Cycle',value )}}
 
               />
             </div>
           </Form.Item>
           <Form.Item
             name={"Applicant type"}
-            rules={[{ required: false, }]}
+            rules={[{ required: true, }]}
+            initialValue={student.applicantTypeId}
           >
             <div className={"application-info-form-item"}>
               <p className={"label"}>Applicant Type*</p>
-              <AutoComplete
-                options={optionsApplicantType.map((option) => ({ value: option }))}
+              <Select
+                options={optionsApplicantType.map((option) => ({ value: option.id , label:option.title}))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
-                filterOption={handleFilter}
                 value={applType}
                 disabled={!editing}
-                onChange={(value) => setApplType(value)}
+                onChange={(value) => {setApplType(value);  form.setFieldValue('Applicant type',value ) } }
 
               />
             </div>
@@ -94,7 +108,7 @@ const ApplicationInfo: FC<{student: Student, id: string}> = ({student,id}) => {
           >
             <div className={"application-info-form-item"}>
               <p className={"label"}>Predicted ATAR / ATAR</p>
-              <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.predicted_atar ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={(value) => setAtar(value) } />
+              <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.atar ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={(value) => setAtar(value) } />
             </div>
           </Form.Item>
           <Form.Item
