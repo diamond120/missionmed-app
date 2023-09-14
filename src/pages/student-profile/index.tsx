@@ -26,7 +26,6 @@ const StudentProfile = () => {
       useEffect(() => {
        (async () => {
           const res = await CommonService.getProfileStaticData();
-          console.log(res);
           setStudentProfileStaticData({
           location : res.data.data.location,
           state:res.data.data.state,
