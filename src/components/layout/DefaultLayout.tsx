@@ -52,7 +52,33 @@ export const DefaultLayout: FC = () => {
       if(user.role == "Student"){
         const getStudentProfile = async() => {
           const result = await Student.getProfile();
-          console.log("getStudentProfile");
+          //console.log(result);
+          console.log({
+            type:"add",
+            id:result.data.data.id,
+            userId:result.data.data.user_id,
+            fullName:result.data.data.full_name ?? null,
+            gender:result.data.data.gender ?? null,
+            pronouns:result.data.data.pronouns ?? null,
+            birthday:result.data.data.birthday ?? null,
+            email:result.data.data.email ?? null,
+            phoneNumber:result.data.data.phone_number ?? null,
+            state:result.data.data.state ?? null,
+            location:result.data.data.location ?? null,
+            timezone:result.data.data.timezone ?? null,
+            biography:result.data.data.biography ?? null,
+            profilePicture:result.data.data.profile_picture ?? null,
+            applicantCycle:result.data.data.applicant_cycle ?? null,
+            applicantTypeId:result.data.data.applicant_type_id ?? null,
+            atar:result.data.data.atar ?? null,
+            gpa:result.data.data.gpa ?? null,
+            statusOfResidence:result.data.data.status_of_residence ?? null,
+            specification:result.data.data.specification ?? null,
+            atsi:result.data.data.atsi ?? null,
+            rural:result.data.data.rural ?? null,
+            financialHardship:result.data.data.financial_hardship ?? null,
+            gws:result.data.data.gws ?? null,
+          });
           studentDispatch({
             type:"add",
             id:result.data.data.id,
@@ -63,9 +89,9 @@ export const DefaultLayout: FC = () => {
             birthday:result.data.data.birthday ?? null,
             email:result.data.data.email ?? null,
             phoneNumber:result.data.data.phone_number ?? null,
-            stateId:result.data.data.state_id ?? null,
-            locationId:result.data.data.location_id ?? null,
-            timezoneId:result.data.data.timezone_id ?? null,
+            state:result.data.data.state ?? null,
+            location:result.data.data.location ?? null,
+            timezone:result.data.data.timezone ?? null,
             biography:result.data.data.biography ?? null,
             profilePicture:result.data.data.profile_picture ?? null,
             applicantCycle:result.data.data.applicant_cycle ?? null,

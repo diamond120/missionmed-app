@@ -2,9 +2,12 @@ import "./index.less"
 import { Button, Form, Input } from "antd"
 import { FC, useState } from "react"
 //import { useUpdateStudentMutation } from "../../../graphql"
+import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
+import {default as StudentService} from "../../../api/services/Student";
 
-
-const Biography: FC<{student: Student, id: string}> = ({student, id}) => {
+const Biography: FC<any> = ({props}) => {
+  const student = useStudent();
+  const dispatch = useStudentDispatch();
   const [editing, setEditing] = useState(false);
   const [biography,setBiography] = useState<string | undefined | null>("")
   //const [ updateStudent ] = useUpdateStudentMutation()
@@ -13,20 +16,22 @@ const Biography: FC<{student: Student, id: string}> = ({student, id}) => {
   };
 
   const handleSaveClick =() => {
-   // updatedStudent()
+    updatedStudent()
     setEditing(false);
   };
-  // const updatedStudent = async () => {
-  //   await updateStudent({
-  //     variables: {
-  //       id: id!,
-  //       input: {
-  //         biography: biography !== '' ? biography : student?.full_name,
+  const updatedStudent = async () => {
+    await StudentService.updateProfile({
+      biography: biography !== '' ? biography : student?.biography,
+    })
+    dispatch({
+      type:"update",
+      student:{
+        biography: biography !== '' ? biography : student?.biography,
+      }
+    })
+  }
 
-  //       }
-  //     }
-  //   })
-  // }
+ 
   return(
     <div className={"biography-section"}>
       <h2 className={"biography-section-title"}>Biography</h2>

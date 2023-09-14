@@ -6,14 +6,14 @@ import { Avatar, Button, message, Upload } from "antd"
 import { UserOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { UploadProps } from "antd/lib/upload/interface"
-import { useUpdateStudentMutation, } from "../../../graphql"
-const ProfilePicture: FC<{ student: Student, id: string }> = ({student, id }) => {
-  const [ updateStudent ] = useUpdateStudentMutation()
+import {useStudent} from "../../../api/providers/StudentProvider";
 
-  const [fileUrl, setFileUrl] = useState<string>(student?.profile_picture?.data?.attributes?.url ?? '');
+const ProfilePicture: FC<any> = ({props}) => {
+  const student = useStudent();
+  const [fileUrl, setFileUrl] = useState<string>(student?.profile_picture ?? '');
   const [idFile, setIdFile] = useState('')
   const [isChanged, setIsChanged] = useState(false);
-  const props: UploadProps = {
+  const fileProps: UploadProps = {
     name: 'files',
     multiple: false,
     maxCount: 1,
@@ -44,20 +44,20 @@ const ProfilePicture: FC<{ student: Student, id: string }> = ({student, id }) =>
 
   }
   const handleSave = ()=>{
-    updatedStudent()
+  //  updatedStudent()
     handleOnChange()
   }
-  const updatedStudent =  () => {
-    updateStudent({
-      variables: {
-        id: id!,
-        input: {
-          profile_picture: idFile
+  // const updatedStudent =  () => {
+  //   updateStudent({
+  //     variables: {
+  //       id: id!,
+  //       input: {
+  //         profile_picture: idFile
 
-        }
-      }
-    })
-  }
+  //       }
+  //     }
+  //   })
+  // }
 
   return (
     <div className={"tutor-profile-picture-section"}>
@@ -77,7 +77,7 @@ const ProfilePicture: FC<{ student: Student, id: string }> = ({student, id }) =>
             <Upload
               showUploadList={false}
 
-              {...props}
+              {...fileProps}
             >
               { !isChanged && <Button onClick={handleOnChange} className={"profile-picture-block-btn-change"}>Change</Button>}
 

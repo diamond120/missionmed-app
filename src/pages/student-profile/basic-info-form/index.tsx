@@ -5,12 +5,16 @@ import { FC, useState } from "react"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 // import { useUpdateStudentMutation } from "../../../graphql"
 import { AddressDetails } from "../../../types/AddressDetails"
-import {useStudent} from "../../../api/providers/StudentProvider";
+import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
+import {default as StudentService} from "../../../api/services/Student";
+import {GOOGLE_MAP_API_KEY} from "../../../config/app-config";
 
 const { Option } = Select;
 
 const BasicInfoForm: FC<any> = ({props}) => {
+  const [form] = Form.useForm();
   const student = useStudent();
+  const dispatch = useStudentDispatch();
   //const [ updateStudent ] = useUpdateStudentMutation()
   const [editing, setEditing] = useState(false);
   const [fullName, setFullName] = useState<string | undefined | null>('')
@@ -18,7 +22,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const [pronouns, setPronouns] = useState<string | undefined | null>('')
   const [email, setEmail] = useState<string | undefined | null>('')
   const [birthday, setBirthday] = useState(student.birthday)
-  const [phone, setPhone] = useState<string | undefined | null>(student?.phone_number)
+  const [phone, setPhone] = useState<string | undefined | null>(student?.phoneNumber)
   const [location, setLocation] = useState<string | undefined | null>(student?.location)
   const [state, setState] = useState<string | undefined | null>(student?.state)
   const [selectedTimezone, setSelectedTimezone] = useState<string | undefined | null>('')
@@ -34,39 +38,56 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
-  // const updatedStudent = async () => {
-  //   await updateStudent({
-  //     variables: {
-  //       id: id!,
-  //       input: {
-  //         full_name: fullName !== '' ? fullName : student?.full_name,
-  //         gender: gender !== '' ? gender : student?.gender,
-  //         email_address: email !== '' ? email : student?.email_address,
-  //         pronouns: pronouns !== '' ? pronouns : student?.pronouns,
-  //         location: autoSelected ? autoSelectedLocation : location !== '' ? location : student?.location,
-  //         phone_number: phone !== '' ? phone : student?.phone_number,
-  //         state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
-  //         birthday: birthday !== '' ? birthday : student?.birthday,
-  //         timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : student?.timezone
-  //       }
-  //     }
-  //   })
-  // }
+  const updatedStudent = async () => {
+    await StudentService.updateProfile({
+      fullName: fullName !== '' ? fullName : student?.fullName,
+      gender: gender !== '' ? gender : student?.gender,
+      email: email !== '' ? email : student?.email,
+      pronouns: pronouns !== '' ? pronouns : student?.pronouns,
+      location: autoSelected ? autoSelectedLocation : location !== '' ? location : student?.location,
+      phoneNumber: phone !== '' ? phone : student?.phoneNumber,
+      state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
+      birthday: birthday !== '' ? birthday : student?.birthday,
+      timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : student?.timezone
+    })
+    dispatch({
+      type:"update",
+      student:{
+        fullName: fullName !== '' ? fullName : student?.fullName,
+        gender: gender !== '' ? gender : student?.gender,
+        email: email !== '' ? email : student?.email,
+        pronouns: pronouns !== '' ? pronouns : student?.pronouns,
+        location: autoSelected ? autoSelectedLocation : location !== '' ? location : student?.location,
+        phoneNumber: phone !== '' ? phone : student?.phoneNumber,
+        state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
+        birthday: birthday !== '' ? birthday : student?.birthday,
+        timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : student?.timezone
+      }
+    })
+  }
 
   const handleEditClick = () => {
     setEditing(true);
   };
 
-  const handleSaveClick =() => {
-   // updatedStudent()
-    setEditing(false);
+  const handleSaveClick = async () => {
+    try{
+      await form.validateFields();
+      updatedStudent()
+      setEditing(false);
+    }catch(e){
+      return false;
+    }
+    return false;
   };
 
   const success = (pos:{ coords: { latitude: number; longitude: number }}) => {
     const myLat = pos.coords.latitude
     const myLng = pos.coords.longitude
 
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${myLat},${myLng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&language=en`)
+    console.log(myLat, myLng);
+
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${myLat},${myLng}&key=${GOOGLE_MAP_API_KEY}&language=en`)
       .then(response => response.json())
       .then(address => {
         setAutoSelectedLocation(`${address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'locality'))[0].long_name}, ${address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'country'))[0].long_name}`)
@@ -80,9 +101,12 @@ const BasicInfoForm: FC<any> = ({props}) => {
     console.warn(`ERROR(${err.code}): ${err.message}`)
   }
 
-  const handleSwitchCase = (e: boolean) => {
-    setAutoSelected(e)
-    navigator.geolocation.getCurrentPosition(success, error)
+  const handleSwitchCase = (val: boolean) => {
+ 
+    setAutoSelected(val)
+    if(val == true){
+      navigator.geolocation.getCurrentPosition(success, error)
+    }
   }
 
   const customSelect = () => {
@@ -121,15 +145,16 @@ const BasicInfoForm: FC<any> = ({props}) => {
         <Form
           className={"basic-information-form"}
           initialValues={{ timezone: 'auto' }}
+          form={form}
         >
           <Form.Item
             name={"fullName"}
-            initialValue={student?.full_name}
-            rules={[{ required: false,  }]}
+            initialValue={student?.fullName}
+            rules={[{ required: true,  }]}
           >
             <div className={"basic-information-form-item"}>
               <p className={"label"}>Full Name*</p>
-              <Input className={"input"} disabled={ !editing } defaultValue={student?.full_name ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={e => setFullName(e.target.value)} />
+              <Input className={"input"} disabled={ !editing } defaultValue={student?.fullName ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={e => setFullName(e.target.value)} />
             </div>
           </Form.Item>
           <Form.Item
@@ -154,7 +179,8 @@ const BasicInfoForm: FC<any> = ({props}) => {
           </Form.Item>
           <Form.Item
             name={"birthday"}
-            rules={[{ required: false,}]}
+            rules={[{ required: true,}]}
+            initialValue={birthday}
           >
             <div className={"basic-information-form-item"}>
               <p className={"label"}>Birthday*</p>
@@ -163,15 +189,15 @@ const BasicInfoForm: FC<any> = ({props}) => {
           </Form.Item>
           <Form.Item
             name={"email"}
-            initialValue={student?.email_address}
+            initialValue={student?.email}
             rules={[
-              { required: false,  },
+              { required: true,  },
               { type: 'email', message: 'Please enter a valid email address' },
             ]}
           >
             <div className={"basic-information-form-item"}>
               <p className={"label"}>Email Address*</p>
-              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} type={"email"} defaultValue={student?.email_address ?? ''} onChange={e => setEmail(e.target.value)} />
+              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} type={"email"} defaultValue={student?.email ?? ''} onChange={e => setEmail(e.target.value)} />
             </div>
           </Form.Item>
           <Form.Item
@@ -181,7 +207,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
           >
             <div className={"basic-information-form-item"}>
               <p className={"label"}>Phone Number*</p>
-              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={phone ?? ""} onChange={e => setPhone(e.target.value !== '' ? e.target.value : student?.phone_number)}/>
+              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={phone ?? ""} onChange={e => setPhone(e.target.value !== '' ? e.target.value : student?.phoneNumber)}/>
             </div>
           </Form.Item>
 
@@ -200,7 +226,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
                 value={autoSelected ? autoSelectedLocation : location }
                 disabled={!editing}
                 onChange={(value) => setLocation(value)}
-
               />
             </div>
           </Form.Item>
