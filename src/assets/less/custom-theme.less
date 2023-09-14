@@ -30,3 +30,52 @@
   @med-main-btn: #2816EE;
   @med-main-background: #1E1450;
   @card-shadow: 0px 10px 24px rgba(0, 0, 0, 0.12);
+
+
+.ant-form-item-required{
+    &:after{
+      display: inline-block;
+      margin-right: 4px;
+      color: #ff4d4f;
+      font-size: 14px;
+      font-family: SimSun, sans-serif;
+      line-height: 1;
+      content: '*' !important;
+    }
+    &:before{
+      display: none !important;
+    }
+}
+.education-form-item.add-item-btn{
+  width: 352px;
+  margin-left: auto;
+}
+
+.add-item-btn{
+  width: 352px;
+  margin-left: auto;
+  button.ant-btn{
+    color: #312D42;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+  }
+}
+
+
+@media (max-width:767px){
+  .ant-form{
+    .ant-form-item{
+      .input{
+        width: 100% !important;
+      }
+      .ant-select.ant-select-in-form-item{
+        max-width: 320px;
+        width: 100% !important;
+      }
+
+    } 
+
+  } 
+
+}

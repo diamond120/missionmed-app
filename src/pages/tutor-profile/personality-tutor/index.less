@@ -1,0 +1,116 @@
+.personality-tutor-section{
+  .personality-section-title{
+    color: #6B7393;
+    font-weight: 600;
+    font-size: 24px;
+    font-style: normal;
+    margin-bottom: 21px;
+    line-height: 133%;
+    .anticon-question-circle{
+      width: 20px;
+      height: 20px;
+      position: relative;
+      bottom: -3px;
+      svg{
+        color: rgba(0,0,0,0.45);
+      }
+    }
+  }
+}
+
+.personality-tutor-wrap{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 592px;
+  padding: 32px;
+  background-color: #FFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
+
+  .personality-info{
+    display: flex;
+    align-items: center;
+    .ant-avatar-icon{
+      border: 1px solid #000;
+    }
+    .personality-info-text-block{
+      margin-left: 32px;
+
+      .personality-info-title{
+        margin: 0;
+        color: #2816EE;
+        font-weight: 600;
+        font-size: 24px;
+        font-style: normal;
+        line-height: 133%;
+      }
+
+      .personality-info-subtitle{
+        margin: 0;
+        color: #312D42;
+        font-weight: 400;
+        font-size: 14px;
+        font-style: normal;
+        line-height: 157% ;
+      }
+
+      .personality-info-text{
+        margin: 4px 0 0 ;
+        color: #465078;
+        font-weight: 600;
+        font-size: 16px;
+        font-style: normal;
+        line-height: 150%;
+      }
+    }
+  }
+
+  .personality-actions{
+    display: flex;
+    flex-direction: column;
+
+    .personality-actions-btn-retake{
+      font-weight: 400;
+      font-size: 14px;
+      font-style: normal;
+      background: #FFF;
+      border: 1px solid rgb(0 0 0 / 15%);
+      border-radius: 6px;
+      box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
+      &:hover{
+        color: #FFF;
+        background: #2816EE;
+        border: 1px solid  #2816EE;
+      }
+    }
+
+    .personality-actions-btn-learn{
+      margin-top: 16px;
+      color: #FFF;
+      font-weight: 400;
+      font-size: 14px;
+      font-style: normal;
+      background: #2816EE;
+      border: 1px solid  #2816EE;
+      border-radius: 6px;
+      box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
+    }
+  }
+}
+
+@media (max-width:767px){
+  .personality-tutor-wrap{
+    width: 100%;
+    padding: 20px !important;
+    .personality-info{
+      .ant-avatar{
+          width: 85px !important;
+          height: 85px !important;
+          line-height: 85px !important;
+          font-size: 32px !important;
+      }
+
+    }
+  }
+}
