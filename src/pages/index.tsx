@@ -14,7 +14,7 @@ const Home = lazy<FC>(/*home-page-bundle*/ () => import("./home"));
 // const ApplicationReviewProcess= lazy(/*application-page-bundle*/ () => import("./application-reviewing-process"))
  const SignIn= lazy(/*application-page-bundle*/ () => import("./sign-in"))
  const StudentProfile= lazy(/*application-page-bundle*/ () => import("./student-profile"))
-// const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profile"))
+ const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profile"))
 // const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notifications-tutor"))
 // const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./notifications-student"))
 const routes: RouteObject[] = [
@@ -58,11 +58,11 @@ const routes: RouteObject[] = [
         path: "/student_profile",
         index: true,
       },
-    //   {
-    //     Component: TutorProfile,
-    //     path: "/tutor_profile",
-    //     index: true,
-    //   },
+      {
+        Component: TutorProfile,
+        path: "/tutor_profile",
+        index: true,
+      },
     //   {
     //     Component: NotificationsTutor,
     //     path: "/tutor_notifications",
