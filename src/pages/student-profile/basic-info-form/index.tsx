@@ -84,9 +84,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const success = (pos:{ coords: { latitude: number; longitude: number }}) => {
     const myLat = pos.coords.latitude
     const myLng = pos.coords.longitude
-
-    console.log(myLat, myLng);
-
+    
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${myLat},${myLng}&key=${GOOGLE_MAP_API_KEY}&language=en`)
       .then(response => response.json())
       .then(address => {
