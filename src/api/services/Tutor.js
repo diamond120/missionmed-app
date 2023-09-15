@@ -1,42 +1,58 @@
 import http from "../http-common";
+import {getToken} from "../../common/common.js";
 //import ITutorialData from "../types/Tutorial";
 
-const getAll = () => {
-  return http.get("/tutorials");
+const getProfile = () => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.get(`/tutor/profile`, config);
 };
 
-const get = (id: any) => {
-  return http.get<ITutorialData>(`/tutorials/${id}`);
+const updateProfile = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(`/tutor/update`, data, config);
 };
 
-const create = (data: ITutorialData) => {
-  return http.post<ITutorialData>("/tutorials", data);
-};
+// const getAll = () => {
+//   return http.get("/tutorials");
+// };
 
-const update = (id: any, data: ITutorialData) => {
-  return http.put<any>(`/tutorials/${id}`, data);
-};
+// const get = (id: any) => {
+//   return http.get<ITutorialData>(`/tutorials/${id}`);
+// };
 
-const remove = (id: any) => {
-  return http.delete<any>(`/tutorials/${id}`);
-};
+// const create = (data: ITutorialData) => {
+//   return http.post<ITutorialData>("/tutorials", data);
+// };
 
-const removeAll = () => {
-  return http.delete<any>(`/tutorials`);
-};
+// const update = (id: any, data: ITutorialData) => {
+//   return http.put<any>(`/tutorials/${id}`, data);
+// };
 
-const findByTitle = (title: string) => {
-  return http.get<Array<ITutorialData>>(`/tutorials?title=${title}`);
-};
+// const remove = (id: any) => {
+//   return http.delete<any>(`/tutorials/${id}`);
+// };
+
+// const removeAll = () => {
+//   return http.delete<any>(`/tutorials`);
+// };
+
+// const findByTitle = (title: string) => {
+//   return http.get<Array<ITutorialData>>(`/tutorials?title=${title}`);
+// };
 
 const Service = {
-  getAll,
-  get,
-  create,
-  update,
-  remove,
-  removeAll,
-  findByTitle,
+  getProfile,
+  updateProfile,
 };
 
 export default Service;

@@ -1,25 +1,25 @@
 import "./index.less"
 import { Button, Form, Input } from "antd"
 import { FC, useState } from "react"
-// import { useUpdateTutorMutation } from "../../../graphql"
+import TutorService from "../../../api/services/Tutor";
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 
-
-const BiographyTutor: FC<{ tutor: Tutor, id:string }> = ({tutor,id}) => {
-  // const [updateTutor]= useUpdateTutorMutation()
+const BiographyTutor: FC<ANY> = ({props}) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false);
   const [biography,setBiography] = useState<string | undefined | null>("")
 
-  const updatedTutor =  () => {
-    // updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: {
-    //       biography: biography !== '' ? biography: tutor?.biography,
-
-
-    //     }
-    //   }
-    // })
+  const updatedTutor = async() => {
+    await TutorService.updateProfile({
+      biography: biography !== '' ? biography: tutor?.biography,
+    })
+    dispatch({
+      type:'update',
+      tutor:{
+        biography: biography !== '' ? biography: tutor?.biography
+      }
+    })
   }
 
   const handleEditClick = () => {
@@ -27,7 +27,7 @@ const BiographyTutor: FC<{ tutor: Tutor, id:string }> = ({tutor,id}) => {
   };
 
   const handleSaveClick =() => {
-    updatedTutor()
+    updatedTutor();
     setEditing(false);
   };
 

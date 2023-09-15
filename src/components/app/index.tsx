@@ -2,6 +2,7 @@ import { createContext, memo,useContext, type FC, type PropsWithChildren, useSta
 import PageProvider from "../../pages"
 import { UserProvider } from "../../api/providers/UserProvider.jsx";
 import { StudentProvider } from "../../api/providers/StudentProvider.jsx";
+import { TutorProvider } from "../../api/providers/TutorProvider.jsx";
 import AuthContext from "../../api/context/AuthContext.js";
 
 // type AppProps = {
@@ -30,7 +31,9 @@ const App: FC = memo(() => {
    <AuthContext.Provider value={{authenticated, setAuthenticated}}>
     <UserProvider>
     <StudentProvider>
-      <PageProvider />
+      <TutorProvider>
+        <PageProvider />
+      </TutorProvider>
      </StudentProvider>
     </UserProvider>
   </AuthContext.Provider>

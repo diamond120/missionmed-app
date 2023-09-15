@@ -13,29 +13,12 @@ import Applications from "./applications"
 import ApplicationInfo from "./application-info"
 import ExtraInfo from "./extra-info"
 import {useStudent} from "../../api/providers/StudentProvider";
-import {useEffect, useState } from "react";
-import CommonService from "../../api/services/Common";
-import StudentProfileStaticDataContext from "../../api/context/StudentProfileStaticDataContext";
 
 const StudentProfile = () => {
-  // const studentId = useMeQuery()?.data?.me?.student?.data?.id
   const student = useStudent();
   const { TabPane } = Tabs;
  
-  const [studentProfileStaticData, setStudentProfileStaticData] =useState({});
-      useEffect(() => {
-       (async () => {
-          const res = await CommonService.getProfileStaticData();
-          setStudentProfileStaticData({
-          location : res.data.data.location,
-          state:res.data.data.state,
-          timezone:res.data.data.timezone,
-          applicantType:res.data.data.applicantType
-          })
-        })(); 
-      },[])
     return(
-    <StudentProfileStaticDataContext.Provider value={studentProfileStaticData}>
     <Section >
       <Breadcrumb>
         <Breadcrumb.Item href={"/"}>
@@ -67,7 +50,6 @@ const StudentProfile = () => {
         </Tabs>
       </div>
     </Section>
-    </StudentProfileStaticDataContext.Provider>
   )
 }
 

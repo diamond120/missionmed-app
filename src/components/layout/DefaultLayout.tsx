@@ -1,14 +1,17 @@
 import "./DefaultLayout.less"
 import { Layout } from "antd"
-import { CSSProperties, FC, Suspense, useEffect } from "react"
+import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import SidebarMenu from "../sidebar-menu"
 import User from "../../api/services/User";
 import {useUserDispatch, useUser } from "../../api/providers/UserProvider.jsx";
-import {useStudentDispatch} from "../../api/providers/StudentProvider.jsx";
-//import Tutor from  "../../api/services/Tutor.js";
 import Student from  "../../api/services/Student.js";
+import {useStudentDispatch} from "../../api/providers/StudentProvider.jsx";
+import {useTutorDispatch} from "../../api/providers/TutorProvider.jsx";
+import Tutor from  "../../api/services/Tutor.js";
+import ProfileStaticDataContext from "../../api/context/ProfileStaticDataContext";
+import CommonService from "../../api/services/Common";
 
 const { Sider, Content } = Layout
 
@@ -24,6 +27,20 @@ export const DefaultLayout: FC = () => {
   const dispatch = useUserDispatch();
   const user = useUser();
   const studentDispatch = useStudentDispatch();
+  const tutorDispatch = useTutorDispatch();
+  const [profileStaticData, setProfileStaticData] =useState({});
+
+  const resetTutorContext = () => {
+    tutorDispatch({
+      type:"reset"
+    })
+  }
+
+  const resetStudentContext = () => {
+    studentDispatch({
+      type:"reset"
+    });
+  }
 
   const getUserDetails = async(token) => {
     const result = await User.getUserDetails(token);
@@ -35,7 +52,7 @@ export const DefaultLayout: FC = () => {
       role:result.data.data.role
     })
   }
-  
+
   useEffect(() => {
     if (!localStorage.getItem("jwt")) {
       navigate("/sign_in")
@@ -43,6 +60,15 @@ export const DefaultLayout: FC = () => {
       if(Object.keys(user).length === 0){
         getUserDetails(localStorage.getItem("jwt"));
       }
+      (async () => {
+        const res = await CommonService.getProfileStaticData();
+        setProfileStaticData({
+        location : res.data.data.location,
+        state:res.data.data.state,
+        timezone:res.data.data.timezone,
+        applicantType:res.data.data.applicantType
+        })
+      })();
       navigate("/")
     }
   }, []);
@@ -50,6 +76,7 @@ export const DefaultLayout: FC = () => {
   useEffect(() => {
     if(Object.keys(user).length > 0){
       if(user.role == "Student"){
+        resetTutorContext();
         const getStudentProfile = async() => {
           const result = await Student.getProfile();
           studentDispatch({
@@ -80,20 +107,59 @@ export const DefaultLayout: FC = () => {
           })
         }
         getStudentProfile();
+      }else{
+        resetStudentContext();
+        const getTutorProfile = async() => {
+          const result = await Tutor.getProfile();
+          tutorDispatch({
+            type:"add",
+            id:result.data.data.id,
+            userId:result.data.data.user_id,
+            fullName:result.data.data.full_name ?? null,
+            preferredName:result.data.data.preferred_name ?? null,
+            gender:result.data.data.gender ?? null,
+            pronouns:result.data.data.pronouns ?? null,
+            email:result.data.data.email ?? null,
+            location:result.data.data.location ?? null,
+            timezone:result.data.data.timezone ?? null,
+            biography:result.data.data.biography ?? null,
+            lessionType:result.data.data.lession_type ?? null,
+            bufferTime:result.data.data.buffer_time ?? null,
+            workingHours:result.data.data.working_hours ?? null,
+            ucatTutoring:result.data.data.ucat_tutoring ?? null,
+            ucatTutoringPrice:result.data.data.ucat_tutoring_price ?? null,
+            interviewTutoring:result.data.data.interview_tutoring ?? null,
+            interviewTutoringPrice:result.data.data.interview_tutoring_price ?? null,
+            mockInterview:result.data.data.mock_interview ?? null,
+            mockInterviewPrice:result.data.data.mock_interview_price ?? null,
+            applicationReview:result.data.data.application_review ?? null,
+            applicationReviewPrice:result.data.data.application_review_price ?? null,
+            // profilePicture:result.data.data.profile_picture ?? null,
+            tutorEducations:result.data.data.tutor_educations ? result.data.data.tutor_educations.map((edu) => [edu.school, edu.degree]) : []
+          })
+        }
+        getTutorProfile();
       }
     }
+
+    return () => {
+      resetTutorContext();
+      resetStudentContext();
+    };
   }, [user]);
 
   const { isTablet } = useBreakpoints()
   return (
-    <Layout className={"default"} hasSider>
-      {!isTablet && <SidebarMenu/>}
-      <Content>
-        <Suspense>
-          <Outlet />
-        </Suspense>
-      </Content>
-    </Layout>
+    <ProfileStaticDataContext.Provider value={profileStaticData}>
+      <Layout className={"default"} hasSider>
+        {!isTablet && <SidebarMenu/>}
+        <Content>
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </Content>
+      </Layout>
+    </ProfileStaticDataContext.Provider>
   )
 }
 export default DefaultLayout

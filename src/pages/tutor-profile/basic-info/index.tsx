@@ -4,11 +4,17 @@ import { FC, useState } from "react"
 // import { useUpdateTutorMutation } from "../../../graphql"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 import { AddressDetails } from "../../../types/AddressDetails"
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import TutorService from "../../../api/services/Tutor";
+import {GOOGLE_MAP_API_KEY} from "../../../config/app-config";
+import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
 
-
-const BasicInfoForm: FC<{tutor: Tutor, id:string}> = ({tutor, id}) => {
+const BasicInfoForm: FC<Any> = ({props}) => {
+  const [form] = Form.useForm();
   const { Option } = Select;
-  // const [updateTutor]= useUpdateTutorMutation()
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
+  const profileStaticData = useProfileStaticDataContext();
   const [editing, setEditing] = useState(false);
   const [fullName, setFullName] = useState<string | undefined | null>('')
   const [gender, setGender] = useState<string | undefined | null>('')
@@ -28,48 +34,49 @@ const BasicInfoForm: FC<{tutor: Tutor, id:string}> = ({tutor, id}) => {
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
   const updatedTutor =  async () => {
-    // await updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: {
-    //       full_name: fullName !== '' ? fullName : tutor?.full_name,
-    //       gender: gender !== '' ? gender : tutor?.gender,
-    //       email_address: email !== '' ? email : tutor?.email_address,
-    //       pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
-    //       location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-    //       timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
-
-    //     }
-    //   }
-    // })
+    await TutorService.updateProfile({
+      fullName: fullName !== '' ? fullName : tutor?.fullName,
+      gender: gender !== '' ? gender : tutor?.gender,
+      email: email !== '' ? email : tutor?.email,
+      pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
+      location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
+      timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
+    });
+    dispatch({
+      type:'update',
+      tutor:{
+        fullName: fullName !== '' ? fullName : tutor?.fullName,
+        gender: gender !== '' ? gender : tutor?.gender,
+        email: email !== '' ? email : tutor?.email,
+        pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
+        location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
+        timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
+      }
+    })
   }
-  const optionsLocation: string[]= [
-    "Sydney, Australia",
-    "Melbourne, Australia",
-    "Brisbane, Australia",
-    "Perth, Australia",
-    "Adelaide, Australia",
-    "Canberra, Australia",
-    "Gold Coast, Australia",
-    "Newcastle, Australia",
-    "Greensborough, Australia",
-    "Wollongong Australia",
-  ]
 
+  const optionsLocation: string[]= profileStaticData.location.map(l => l.title)
+  
   const handleEditClick = () => {
     setEditing(true);
   };
 
-  const handleSaveClick =() => {
-    updatedTutor()
-    setEditing(false);
+  const handleSaveClick = async() => {
+    try{
+      await form.validateFields();
+      updatedTutor()
+      setEditing(false);
+    }catch(e){
+      return false;
+    }
+    return false;
   };
 
   const success = (pos:{ coords: { latitude: number; longitude: number }}) => {
     const myLat = pos.coords.latitude
     const myLng = pos.coords.longitude
 
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${myLat},${myLng}&key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&language=en`)
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${myLat},${myLng}&key=${GOOGLE_MAP_API_KEY}&language=en`)
       .then(response => response.json())
       .then(address => {
         setAutoSelectedLocation(`${address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'locality'))[0].long_name}, ${address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'country'))[0].long_name}`)
@@ -82,9 +89,11 @@ const BasicInfoForm: FC<{tutor: Tutor, id:string}> = ({tutor, id}) => {
     console.warn(`ERROR(${err.code}): ${err.message}`)
   }
 
-  const handleSwitchCase = (e: boolean) => {
-    setAutoSelectedTimezone(e)
-    navigator.geolocation.getCurrentPosition(success, error)
+  const handleSwitchCase = (val: boolean) => {
+    setAutoSelectedTimezone(val);
+    if(val == true){
+      navigator.geolocation.getCurrentPosition(success, error)
+    }
   }
 
   const customSelect = () => {
@@ -106,28 +115,32 @@ const BasicInfoForm: FC<{tutor: Tutor, id:string}> = ({tutor, id}) => {
       <Form
         className={"basic-information-form"}
         initialValues={{ timezone: 'auto' }}
+        form={form}
       >
         <Form.Item
           name={"fullName"}
           label={"Full Name"}
           rules={[{ required: true, }]}
+          initialValue={tutor?.fullName ?? ''}
         >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.full_name ?? ''}  onChange={e => setFullName(e.target.value)}  />
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }}   onChange={e => setFullName(e.target.value)}  />
         </Form.Item>
         <Form.Item
           name={"gender"}
           label={"Gender"}
           rules={[{ required: true, }]}
+          initialValue={tutor?.gender ?? ''}
         >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={tutor?.gender ?? ''}  onChange={e => setGender(e.target.value)} />
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}   onChange={e => setGender(e.target.value)} />
         </Form.Item>
         <Form.Item
           name={"pronouns"}
           label={"Pronouns"}
           rules={[{ required: true,}]}
+          initialValue={tutor?.pronouns ?? ''}
         >
           
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={tutor?.pronouns ?? ''}  onChange={e => setPronouns(e.target.value)} />
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}   onChange={e => setPronouns(e.target.value)} />
           
         </Form.Item>
         <Form.Item
@@ -137,15 +150,15 @@ const BasicInfoForm: FC<{tutor: Tutor, id:string}> = ({tutor, id}) => {
             { required: true, message: 'Please enter your email address' },
             { type: 'email', message: 'Please enter a valid email address' },
           ]}
+          initialValue={tutor?.email ?? ''} 
         >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={tutor?.email_address?? ''}  onChange={e => setEmail(e.target.value)} />
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}  onChange={e => setEmail(e.target.value)} />
         </Form.Item>
         <Form.Item
           name={"location"}
           label={"Location"}
           rules={[{ required: true, message: 'Please enter your location' }]}
         >
-          
         <AutoComplete
           options={optionsLocation.map((option) => ({ value: option }))}
           style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -154,7 +167,6 @@ const BasicInfoForm: FC<{tutor: Tutor, id:string}> = ({tutor, id}) => {
           value={autoSelected ? autoSelectedLocation : location }
           disabled={!editing}
           onChange={(value) => setLocation(value)}
-
         />
         </Form.Item>
         <Form.Item

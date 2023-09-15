@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer } from 'react';
+import { stringToBoolean } from '../../common/common';
 
 const StudentContext = createContext(null);
 
@@ -52,14 +53,17 @@ function StudentReducer(student, action) {
               gpa:action.gpa,
               statusOfResidence:action.statusOfResidence,
               specification:action.specification,
-              atsi:action.atsi,
-              rural:action.rural,
-              financialHardship:action.financialHardship,
-              gws:action.gws,
+              atsi:stringToBoolean(action.atsi),
+              rural:stringToBoolean(action.rural),
+              financialHardship:stringToBoolean(action.financialHardship),
+              gws:stringToBoolean(action.gws),
           };
         }
         case 'update': {
           return {...student, ...action.student}
+        }
+        case 'reset': {
+          return {}
         }
         default: {
             throw Error('Unknown action: ' + action.type);

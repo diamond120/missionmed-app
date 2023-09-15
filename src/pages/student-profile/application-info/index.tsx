@@ -2,13 +2,13 @@ import "./index.less"
 import { AutoComplete, Button, Form, InputNumber, Select } from "antd"
 import { FC, useState } from "react"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
-import {useStudentProfileStaticDataContext} from "../../../api/context/StudentProfileStaticDataContext";
+import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
 import StudentService from "../../../api/services/Student";
 
 const ApplicationInfo: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
-  const studentProfileStaticData = useStudentProfileStaticDataContext();
+  const profileStaticData = useProfileStaticDataContext();
 
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
@@ -22,7 +22,7 @@ const ApplicationInfo: FC<any> = ({props}) => {
     "2021 / 2022",
     "2020 / 2021",
   ]
-  const optionsApplicantType: string[]= studentProfileStaticData.applicantType;
+  const optionsApplicantType: string[]= profileStaticData.applicantType;
 
   const handleEditClick = () => {
     setEditing(true);
@@ -104,7 +104,13 @@ const ApplicationInfo: FC<any> = ({props}) => {
           </Form.Item>
           <Form.Item
             name={"predicted"}
-            rules={[{ required: false, }]}
+            rules={[
+              { required: false, },
+              {
+                pattern: /^[\d]{0,8}$/,
+                message: "Value should be less than 8 character"
+              }
+            ]}
           >
             <div className={"application-info-form-item"}>
               <p className={"label"}>Predicted ATAR / ATAR</p>

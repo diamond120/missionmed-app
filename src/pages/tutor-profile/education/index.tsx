@@ -2,12 +2,14 @@ import { MinusCircleOutlined,PlusOutlined } from "@ant-design/icons";
 import { AutoComplete,Button,Form,Input,Select,Space } from "antd";
 import React,{ FC,useRef,useState } from "react";
 import * as Utility from "../../../common/utility";
-// import { useUpdateTutorMutation } from "../../../graphql";
+import TutorService from "../../../api/services/Tutor";
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 import "./index.less";
 
-const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
+const Education: FC<Any> = ({ props }) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false)
-  // const [updateTutor] = useUpdateTutorMutation()
   const { Option } = Select
   const optionsSchools: string[] = [
     "James Cook University",
@@ -41,6 +43,8 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
     // })
   }
   const onFinish = (values: any) => {
+    console.log(values);
+    return false;
     updatedTutor(values);
     setEditing(false);
   };
@@ -48,8 +52,8 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
   return (
     <div className={"education-section"}>
       <h2 className={"education-section-title"}>Education</h2>
-      <Form className={"education-form"} onFinish={onFinish}  initialValues={{ education: tutor?.education.length > 0 ? Utility.recursiveToCamel(tutor.education) : [{schoolName:"" , degreeTitle:""}] }}>
-        <Form.List name={"education"}>
+      <Form className={"education-form"} onFinish={onFinish}  initialValues={{ educations: tutor?.tutorEducations.length > 0 ? tutor.tutorEducations : [{school:"" , degree:""}] }}>
+        <Form.List name={"educations"}>
           {(fields, { add, remove }) => (
             <React.Fragment>
               {fields.map(({ key, name, ...restField }) => (
@@ -59,7 +63,7 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
                   </Form.Item>
                   <Form.Item
                     {...restField}
-                    name={[name, "schoolName"]}
+                    name={[name, "school"]}
                     rules={[{ required: true, message: "Please enter your school" }]}
                     label={"School"}
                   >
@@ -73,7 +77,7 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
 
                   <Form.Item
                     {...restField}
-                    name={[name, "degreeTitle"]}
+                    name={[name, "degree"]}
                     rules={[{ required: true, message: "Please enter your degree" }]}
                     label={"Degree"}
                   
