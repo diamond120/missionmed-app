@@ -25,6 +25,7 @@
           font-size: 38px;
           font-style: normal;
           line-height: 121%;
+          margin-top: 30px;
         }
 
         .sign-in-left-subtitle {
@@ -79,5 +80,27 @@
   .sign-in-right{
     display: none;
 
+  }
+}
+.sign-in-form{
+  width: 100%;
+  .ant-form-item {
+    .ant-form-item-control{
+      max-width: 100%;
+    }
+  }
+  .ant-btn{
+    height: auto;
+    line-height: 30px;
+    border: 1px solid #D6D7E0;
+    background-color: rgba(0, 0,0, 0.04);
+  }
+}
+@media (max-width:767px){
+  .sign-in{
+    flex-wrap: wrap;
+    .sign-in-left {
+      width: 100%;
+    }
   }
 }

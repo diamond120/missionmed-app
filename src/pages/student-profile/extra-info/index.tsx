@@ -62,14 +62,11 @@ const ExtraInfo: FC<any> = ({props}) => {
         Extra Information <QuestionCircleFilled style={{ color: "#6B7393" }} />
       </h2>
       <Form className={"extra-info-form"} form={form}>
-        <Form.Item name={"status"} rules={[{ required: false }]}>
-          <div className={"extra-info-form-item"}>
-            <p className={"label"}>Status of Residence</p>
+        <Form.Item label={"Status of Residence"} name={"status"} rules={[{ required: false }]}>
             <Radio.Group disabled={!editing} defaultValue={residenceStatus} onChange={(e) => setResidenceStatus(e.target.value)}>
               <Radio value={"I’m Domestic"}>I’m Domestic</Radio>
               <Radio value={"I’m International"}>I’m International</Radio>
             </Radio.Group>
-          </div>
         </Form.Item>
 
         {residenceStatus === "I’m Domestic" && (
@@ -77,57 +74,53 @@ const ExtraInfo: FC<any> = ({props}) => {
 
             <Form.Item
               name={"specification"}
+              label={"Specification"}
               rules={[{ required: true, }]}
             >
-              <div className={"extra-info-form-item"}>
-                <p className={"label"}>Specification</p>
-                <Select
-                  options={optionsSpecification.map((option) => ({ value: option }))}
-                  style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
-                  placeholder={"Enter a value"}
-                  filterOption={handleFilter}
-                  value={specification}
-                  disabled={!editing}
-                  onChange={(value) => setSpecification(value)}
+              <Select
+                options={optionsSpecification.map((option) => ({ value: option }))}
+                style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
+                placeholder={"Enter a value"}
+                filterOption={handleFilter}
+                value={specification}
+                disabled={!editing}
+                onChange={(value) => setSpecification(value)}
 
-                />
-              </div>
+              />
             </Form.Item>
-            <Form.Item name={"aboriginal"} rules={[{ required: false }]}>
+            <Form.Item 
+              name={"aboriginal"} 
+              rules={[{ required: false }]}
+              className="aboriginal-torres"
+              >
               <div className={"extra-info-form-item"}>
                 <p className={"label"}>Aboriginal and <br/> Torres Strait <br/> Islander <br/> Applicant (ATSI)<br/> i.e. Indigenous</p>
                 <Radio.Group disabled={!editing} defaultValue={atsi} onChange={(e) => setAtsi(e.target.value)}>
                   <Radio value={true}>Yes</Radio>
                   <Radio value={false}>No</Radio>
                 </Radio.Group>
-              </div>
+              </div> 
             </Form.Item>
-            <Form.Item name={"rural"} rules={[{ required: false }]}>
-              <div className={"extra-info-form-item"}>
-                <p className={"label"}>Rural</p>
-                <Radio.Group disabled={!editing} defaultValue={rural} onChange={(e) => setRural(e.target.value)}>
-                  <Radio value={true}>Yes</Radio>
-                  <Radio value={false}>No</Radio>
-                </Radio.Group>
-              </div>
+            
+            <Form.Item label={"Rural"} name={"rural"} rules={[{ required: false }]}>
+              <Radio.Group disabled={!editing} defaultValue={rural} onChange={(e) => setRural(e.target.value)}>
+                <Radio value={true}>Yes</Radio>
+                <Radio value={false}>No</Radio>
+              </Radio.Group>
             </Form.Item>
-            <Form.Item  name={"financial"} rules={[{ required: false }]}>
-              <div className={"extra-info-form-item"}>
-                <p className={"label"}>Financial Hardship</p>
-                <Radio.Group disabled={!editing} defaultValue={financialHardship} onChange={(e) => setFinancialHardship(e.target.value)}>
-                  <Radio value={true}>Yes</Radio>
-                  <Radio value={false}>No</Radio>
-                </Radio.Group>
-              </div>
+            
+            <Form.Item label={"Financial Hardship"} name={"financial"} rules={[{ required: false }]}>
+              <Radio.Group disabled={!editing} defaultValue={financialHardship} onChange={(e) => setFinancialHardship(e.target.value)}>
+                <Radio value={true}>Yes</Radio>
+                <Radio value={false}>No</Radio>
+              </Radio.Group>
             </Form.Item>
-            <Form.Item name={"gws"} rules={[{ required: false }]}>
-              <div className={"extra-info-form-item"}>
-                <p className={"label"}>GWS (Greater Western Sydney)</p>
-                <Radio.Group disabled={!editing} defaultValue={gws} onChange={(e) => setGws(e.target.value)}>
-                  <Radio value={true}>Yes</Radio>
-                  <Radio value={false}>No</Radio>
-                </Radio.Group>
-              </div>
+
+            <Form.Item label={"GWS (Greater Western Sydney)"} name={"gws"} rules={[{ required: false }]}>
+              <Radio.Group disabled={!editing} defaultValue={gws} onChange={(e) => setGws(e.target.value)}>
+                <Radio value={true}>Yes</Radio>
+                <Radio value={false}>No</Radio>
+              </Radio.Group>
             </Form.Item>
           </div>
         )}

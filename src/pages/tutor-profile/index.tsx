@@ -63,7 +63,7 @@ const TutorProfile = () => {
             <div className={"ratings-wrap"}>
               <Rating rating={4.5} one={0} two={0} three={10} four={75} five={90} title={"Knowledge & Expertise"}/>
               <Rating rating={5} one={0} two={0} three={0} four={0} five={100} title={"Engagement & Enthusiasm"}/>
-              <Rating rating={4.5} one={0} two={0} three={0} four={75} five={90} title={"Clarity & Understandability"}/>
+              <Rating rating={4.5} one={0} two={0} three={5} four={75} five={90} title={"Clarity & Understandability"}/>
               <Rating rating={4.5} one={0} two={0} three={10} four={80} five={75} title={"Punctuality & Preparedness"}/>
             </div>
             <StudentsReview />

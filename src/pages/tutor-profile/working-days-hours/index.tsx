@@ -229,7 +229,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
     <div className={"working-section"}>
       <h2 className={"working-section-title"}>Working Days & Hours</h2>
       <Form className={"working-form"} onFinish={onFinish}>
-      {/* <Form.Item>
+      <Form.Item>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <p className={"label"}>Monday</p>
             <div>
@@ -281,10 +281,10 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
               </div>
             </div>
           </div>
-        </Form.Item> */}
+        </Form.Item>
              
         
-        <Form.Item>
+        {/* <Form.Item>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <p className={"label"}>Monday</p>
             <div>
@@ -336,7 +336,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
               </div>
             </div>
           </div>
-        </Form.Item>
+        </Form.Item> */}
           
 
         <Form.Item>

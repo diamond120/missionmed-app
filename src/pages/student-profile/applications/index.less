@@ -5,6 +5,7 @@
     font-size: 24px;
     font-style: normal;
     line-height: 133%;
+    margin-bottom: 21px;
   }
 }
 
@@ -72,4 +73,20 @@
     }
   }
 
+}
+
+@media (max-width:767px){
+  .applications-section{
+    .applications-wrap{
+      width: 100%;
+      padding: 20px;
+      .applications-item {
+          flex-wrap: wrap;
+        .applications-text-block {
+          min-width: 100%;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
 }
