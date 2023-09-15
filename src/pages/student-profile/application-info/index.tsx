@@ -68,29 +68,26 @@ const ApplicationInfo: FC<any> = ({props}) => {
           <Form.Item
             name={"Applicant Cycle"}
             rules={[{ required: true, }]}
+            label={"Applicant Cycle"}
             initialValue={student.applicantCycle}
-          >
-            <div className={"application-info-form-item"}>
-              <p className={"label"}>Applicant Cycle*</p>
-              <AutoComplete
-                options={optionsApplicantCycle.map((option) => ({ value: option}))}
-                style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
-                placeholder={"Enter a value"}
-                filterOption={handleFilter}
-                value={applCycle}
-                disabled={!editing}
-                onChange={(value) => {setApplCycle(value); form.setFieldValue('Applicant Cycle',value )}}
+          > 
+            <AutoComplete
+              options={optionsApplicantCycle.map((option) => ({ value: option}))}
+              style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
+              placeholder={"Enter a value"}
+              filterOption={handleFilter}
+              value={applCycle}
+              disabled={!editing}
+              onChange={(value) => {setApplCycle(value); form.setFieldValue('Applicant Cycle',value )}}
 
-              />
-            </div>
+            />
           </Form.Item>
           <Form.Item
             name={"Applicant type"}
+            label={"Applicant Type"}
             rules={[{ required: true, }]}
             initialValue={student.applicantTypeId}
           >
-            <div className={"application-info-form-item"}>
-              <p className={"label"}>Applicant Type*</p>
               <Select
                 options={optionsApplicantType.map((option) => ({ value: option.id , label:option.title}))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -100,7 +97,6 @@ const ApplicationInfo: FC<any> = ({props}) => {
                 onChange={(value) => {setApplType(value);  form.setFieldValue('Applicant type',value ) } }
 
               />
-            </div>
           </Form.Item>
           <Form.Item
             name={"predicted"}
@@ -111,20 +107,16 @@ const ApplicationInfo: FC<any> = ({props}) => {
                 message: "Value should be less than 8 character"
               }
             ]}
+            label={"Predicted ATAR / ATAR"}
           >
-            <div className={"application-info-form-item"}>
-              <p className={"label"}>Predicted ATAR / ATAR</p>
-              <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.atar ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={(value) => setAtar(value) } />
-            </div>
+            <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.atar ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={(value) => setAtar(value) } />
           </Form.Item>
           <Form.Item
             name={"gpa"}
             rules={[{ required: false, }]}
+            label={"GPA"}
           >
-            <div className={"application-info-form-item"}>
-              <p className={"label"}>GPA</p>
-              <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.gpa ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={value => setGpa(value)} />
-            </div>
+            <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.gpa ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={value => setGpa(value)} />
           </Form.Item>
           {editing ? (
 

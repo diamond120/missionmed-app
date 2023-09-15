@@ -5,6 +5,16 @@
     font-size: 24px;
     font-style: normal;
     line-height: 133%;
+    margin-bottom: 21px;
+    .anticon-question-circle{
+      width: 20px;
+      height: 20px;
+      position: relative;
+      bottom: -3px;
+      svg{
+        color: rgba(0,0,0,0.45);
+      }
+    }
   }
 }
 
@@ -21,7 +31,9 @@
   .personality-info{
     display: flex;
     align-items: center;
-
+      .ant-avatar-icon{
+        border: 1px solid #000;
+      }
     .personality-info-text-block{
       margin-left: 32px;
 
@@ -66,6 +78,11 @@
       border: 1px solid rgb(0 0 0 / 15%);
       border-radius: 6px;
       box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
+      &:hover{
+        color: #FFF;
+        background: #2816EE;
+        border: 1px solid  #2816EE;
+      }
     }
 
     .personality-actions-btn-learn{
@@ -78,6 +95,27 @@
       border: 1px solid  #2816EE;
       border-radius: 6px;
       box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
+    }
+  }
+}
+
+@media (max-width:767px){
+  .personality-section {
+    .personality-wrap{
+      width: 100%;
+      padding: 20px !important;
+      .personality-info-text-block{
+        margin-left: 15px;
+      }
+      .personality-info{
+        .ant-avatar{
+            width: 85px !important;
+            height: 85px !important;
+            line-height: 85px !important;
+            font-size: 32px !important;
+        }
+  
+      }
     }
   }
 }

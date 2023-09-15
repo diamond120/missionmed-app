@@ -5,22 +5,29 @@ import { Avatar, Button, message, Upload } from "antd"
 import { UserOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { UploadProps } from "antd/lib/upload/interface"
-// import { useUpdateTutorMutation } from "../../../graphql"
-const ProfilePicture: FC<{ tutor: Tutor, id: string }> = ({ tutor, id }) => {
+import { getToken } from "../../../common/common";
+import { BASE_URL } from "../../../config/app-config";
+import TutorService from "../../../api/services/Tutor";
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 
-
-  const [fileUrl, setFileUrl] = useState<string>(tutor?.profile_picture?.data?.attributes?.url ?? '');
-  const [idFile, setIdFile] = useState('')
+const ProfilePicture: FC<Any> = ({ props }) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
+  const [fileUrl, setFileUrl] = useState<string>(tutor?.profilePicture ?? '');
+  //const [idFile, setIdFile] = useState('')
   const [isChanged, setIsChanged] = useState(false);
-  const props: UploadProps = {
-    name: 'files',
+  const uploadProps: UploadProps = {
+    name: 'file',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
     multiple: false,
     maxCount: 1,
     accept: 'image/jpeg, image/png, image/svg+xml',
-    action: `/api/upload`,
+    action: `${BASE_URL}/upload`,
     onChange: (info) => {
-      !!info.file.response && !!info.fileList.length ? setFileUrl(info.file.response[0].url) : setFileUrl('')
-      !!info.file.response && setIdFile(info.file.response[0].id)
+      !!info.file.response && !!info.fileList.length ? setFileUrl(info.file.response.data) : setFileUrl('')
+      // !!info.file.response && setIdFile(info.file.response[0].id)
       const { status, percent } = info.file;
       if (status === 'uploading' && percent === 100) {
         message.success(`${info.file.name} file upload success.`)
@@ -30,31 +37,39 @@ const ProfilePicture: FC<{ tutor: Tutor, id: string }> = ({ tutor, id }) => {
       }
     },
     onRemove() {
-
+  
     }
   }
 
   const handleOnChange = () => {
     setIsChanged(!isChanged);
   };
-  const handleRemove = ()=>{
+  const handleRemove = async()=>{
     setFileUrl("")
+    await TutorService.updateProfile({
+      profilePicture: ""
+    })
+    dispatch({
+      type:"update",
+      tutor:{
+        profilePicture:""
+      }
+    })
   }
 const handleSave = ()=>{
-  // updatedTutor()
+  updatedTutor()
   handleOnChange()
 }
-  // const [updateTutor]= useUpdateTutorMutation()
-  const updatedTutor =  () => {
-    // updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: {
-    //       profile_picture: idFile
-
-    //     }
-    //   }
-    // })
+  const updatedTutor =  async () => {
+   await TutorService.updateProfile({
+      profilePicture: fileUrl
+    })
+    dispatch({
+      type:"update",
+      tutor:{
+        profilePicture:fileUrl
+      }
+    })
   }
 
   return (
@@ -74,8 +89,7 @@ const handleSave = ()=>{
           <div style={{ marginBottom: "16px", display: "flex", justifyContent: "center" }}>
             <Upload
               showUploadList={false}
-
-              {...props}
+              {...uploadProps}
             >
               { !isChanged && <Button onClick={handleOnChange} className={"profile-picture-block-btn-change"}>Change</Button>}
 

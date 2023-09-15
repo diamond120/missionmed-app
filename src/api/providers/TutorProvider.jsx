@@ -55,12 +55,15 @@ function TutorReducer(tutor, action) {
             mockInterviewPrice:action.mockInterviewPrice,
             applicationReview:stringToBoolean(action.applicationReview),
             applicationReviewPrice:action.applicationReviewPrice,
-            // profilePicture:action.profilePicture,
+            profilePicture:action.profilePicture,
             tutorEducations:action.tutorEducations,
           };
         }
         case 'update': {
           return {...tutor, ...action.tutor}
+        }
+        case 'updateEducations': {
+          return {...tutor, educations:action.education}
         }
         case 'reset': {
           return {}

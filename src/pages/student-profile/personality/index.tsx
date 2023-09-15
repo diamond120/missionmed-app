@@ -9,7 +9,7 @@ const Personality = () => {
       <div className={"personality-wrap"}>
         <div className={"personality-info"}>
           <Avatar
-            size={140}
+            size={104}
             icon={<UserOutlined />}
           />
           <div className={"personality-info-text-block"}>

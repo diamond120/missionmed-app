@@ -2,10 +2,12 @@ import "./index.less"
 import { Button, Form, Input } from "antd"
 import { valueType } from "antd/lib/statistic/utils";
 import { FC, useState } from "react"
-// import { useUpdateTutorMutation } from "src/graphql";
+import TutorService from "../../../api/services/Tutor";
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 
-const Billing: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
-  // const [updateTutor]= useUpdateTutorMutation();
+const Billing: FC<Any> = ({props}) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false);
   const [ucatTutoringPrice, setUcatTutoringPrice] = useState<valueType | undefined | null>();
   const [interviewTutoringPrice, setInterviewTutoringPrice] = useState<valueType | undefined | null>();
@@ -13,17 +15,21 @@ const Billing: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
   const [applicationReviewPrice, setApplicationReviewPrice] = useState<valueType | undefined | null>();
 
   const updatedTutor =  async () => {
-    // await updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: {
-    //       ucat_tutoring_price: ucatTutoringPrice ? ucatTutoringPrice.toString() : tutor?.ucat_tutoring_price,
-    //       interview_tutoring_price: interviewTutoringPrice ? interviewTutoringPrice.toString() : tutor?.interview_tutoring_price,
-    //       mock_interview_price: mockInterviewPrice ? mockInterviewPrice.toString() : tutor?.mock_interview_price,
-    //       application_review_price: applicationReviewPrice ? applicationReviewPrice.toString() : tutor?.application_review_price,
-    //     }
-    //   }
-    // })
+    await TutorService.updateProfile({
+      ucatTutoringPrice: ucatTutoringPrice ? ucatTutoringPrice.toString() : tutor?.ucatTutoringPrice,
+      interviewTutoringPrice: interviewTutoringPrice ? interviewTutoringPrice.toString() : tutor?.interviewTutoringPrice,
+      mockInterviewPrice: mockInterviewPrice ? mockInterviewPrice.toString() : tutor?.mockInterviewPrice,
+      applicationReviewPrice: applicationReviewPrice ? applicationReviewPrice.toString() : tutor?.applicationReviewPrice,
+    });
+    dispatch(({
+      type:"update",
+      tutor:{
+        ucatTutoringPrice: ucatTutoringPrice ? ucatTutoringPrice.toString() : tutor?.ucatTutoringPrice,
+        interviewTutoringPrice: interviewTutoringPrice ? interviewTutoringPrice.toString() : tutor?.interviewTutoringPrice,
+        mockInterviewPrice: mockInterviewPrice ? mockInterviewPrice.toString() : tutor?.mockInterviewPrice,
+        applicationReviewPrice: applicationReviewPrice ? applicationReviewPrice.toString() : tutor?.applicationReviewPrice,
+      }
+    }))
   }
 
   const handleEditClick = () => {
@@ -47,7 +53,7 @@ const Billing: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
               <p className={"label"}>UCAT 1-to-1 Tutoring</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.ucat_tutoring_price ?? ""} onChange={e => setUcatTutoringPrice(e.target.value) }/>
+                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.ucatTutoringPrice ?? ""} onChange={e => setUcatTutoringPrice(e.target.value) }/>
                 </p>
                 <p className={"rate"}>Rate per Hour</p>
               </div>
@@ -61,7 +67,7 @@ const Billing: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
               <p className={"label"}>Interview 1-to-1 Tutoring</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.interview_tutoring_price ?? ""} onChange={e => setInterviewTutoringPrice(e.target.value)}/>
+                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.interviewTutoringPrice ?? ""} onChange={e => setInterviewTutoringPrice(e.target.value)}/>
                 </p>
                   <p className={"rate"}>Rate per Hour</p>
               </div>
@@ -75,7 +81,7 @@ const Billing: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
               <p className={"label"}>Mock Interview</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"}  disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.mock_interview_price ?? ""} onChange={e => setMockInterviewPrice(e.target.value)}/>
+                  <Input className={"input"}  disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.mockInterviewPrice ?? ""} onChange={e => setMockInterviewPrice(e.target.value)}/>
                 </p>
                 <p className={"rate"}>Rate per Hour</p>
               </div>
@@ -90,7 +96,7 @@ const Billing: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
               <div className={"price-wrap"}>
                 <p className={"price"}>
                   <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }}  
-                  defaultValue={tutor?.application_review_price ?? ""} onChange={(e) => setApplicationReviewPrice(e.target.value)}/>
+                  defaultValue={tutor?.applicationReviewPrice ?? ""} onChange={(e) => setApplicationReviewPrice(e.target.value)}/>
                 </p>
                 <p className={"rate"}>Rate per Hour</p>
               </div>

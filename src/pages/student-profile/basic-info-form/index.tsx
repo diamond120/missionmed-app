@@ -135,73 +135,61 @@ const BasicInfoForm: FC<any> = ({props}) => {
             name={"fullName"}
             initialValue={student?.fullName}
             rules={[{ required: true,  }]}
+            label={"Full Name"}
           >
-            <div className={"basic-information-form-item"}>
-              <p className={"label"}>Full Name*</p>
               <Input className={"input"} disabled={ !editing } defaultValue={student?.fullName ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={e => setFullName(e.target.value)} />
-            </div>
           </Form.Item>
           <Form.Item
             name={"gender"}
+            label={"Gender"}
             initialValue={student?.gender}
             rules={[{ required: false, }]}
           >
-            <div className={"basic-information-form-item"}>
-              <p className={"label"}>Gender</p>
-              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.gender ?? ''} onChange={e => setGender(e.target.value)} />
-            </div>
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.gender ?? ''} onChange={e => setGender(e.target.value)} />
           </Form.Item>
           <Form.Item
             name={"pronouns"}
+            label={"Pronouns"}
             initialValue={student?.pronouns}
             rules={[{ required: false,}]}
           >
-            <div className={"basic-information-form-item"}>
-              <p className={"label"}>Pronouns</p>
-              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.pronouns ?? ''} onChange={e => setPronouns(e.target.value)}/>
-            </div>
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.pronouns ?? ''} onChange={e => setPronouns(e.target.value)}/>
           </Form.Item>
           <Form.Item
             name={"birthday"}
+            label={"Birthday"}
             rules={[{ required: true,}]}
             initialValue={birthday}
           >
-            <div className={"basic-information-form-item"}>
-              <p className={"label"}>Birthday*</p>
-              <Input className={"input"} disabled={ !editing } type={"date"} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={birthday ?? ''} onChange={e => setBirthday(e.target.value)}/>
-            </div>
+            <Input className={"input"} disabled={ !editing } type={"date"} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={birthday ?? ''} onChange={e => setBirthday(e.target.value)}/>
           </Form.Item>
           <Form.Item
             name={"email"}
             initialValue={student?.email}
+            label={"Email Address"}
             rules={[
               { required: true,  },
               { type: 'email', message: 'Please enter a valid email address' },
             ]}
           >
-            <div className={"basic-information-form-item"}>
-              <p className={"label"}>Email Address*</p>
               <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} type={"email"} defaultValue={student?.email ?? ''} onChange={e => setEmail(e.target.value)} />
-            </div>
           </Form.Item>
           <Form.Item
             name={"phone"}
             initialValue={phone}
+            label={"Phone Number"}
             rules={[{ required: false,  }]}
           >
-            <div className={"basic-information-form-item"}>
-              <p className={"label"}>Phone Number*</p>
-              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={phone ?? ""} onChange={e => setPhone(e.target.value !== '' ? e.target.value : student?.phoneNumber)}/>
-            </div>
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={phone ?? ""} onChange={e => setPhone(e.target.value !== '' ? e.target.value : student?.phoneNumber)}/>
           </Form.Item>
 
 
           <Form.Item
             name={"location"}
-            rules={[{ required: false, }]}
+            label={"Location"}
+            rules={[{ required: true, }]}
           >
             <div className={"basic-information-form-item"}>
-              <p className={"label"}>Location*</p>
               <AutoComplete
                 options={optionsLocation.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -215,10 +203,10 @@ const BasicInfoForm: FC<any> = ({props}) => {
           </Form.Item>
           <Form.Item
             name={"state"}
-            rules={[{ required: false,  }]}
+            label={"State"}
+            rules={[{ required: true,  }]}
           >
             <div className={"basic-information-form-item"}>
-              <p className={"label"}>State*</p>
               <AutoComplete
                 options={optionsState.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -232,11 +220,11 @@ const BasicInfoForm: FC<any> = ({props}) => {
             </div>
           </Form.Item>
           <Form.Item
-            name={"timezone"}
-            rules={[{ required: false, }]}
+            name={"Timezone"}
+            label={"State"}
+            rules={[{ required: true, }]}
           >
             <div className={"timezone-wrap"}>
-              <p className={"timezone-label"}>Timezone*</p>
               <div>
                 {customSelect()}
                   <div className={"switch-wrap"}>

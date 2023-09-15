@@ -76,7 +76,7 @@ export const DefaultLayout: FC = () => {
   useEffect(() => {
     if(Object.keys(user).length > 0){
       if(user.role == "Student"){
-        resetTutorContext();
+       // resetTutorContext();
         const getStudentProfile = async() => {
           const result = await Student.getProfile();
           studentDispatch({
@@ -108,7 +108,7 @@ export const DefaultLayout: FC = () => {
         }
         getStudentProfile();
       }else{
-        resetStudentContext();
+        //resetStudentContext();
         const getTutorProfile = async() => {
           const result = await Tutor.getProfile();
           tutorDispatch({
@@ -135,7 +135,7 @@ export const DefaultLayout: FC = () => {
             applicationReview:result.data.data.application_review ?? null,
             applicationReviewPrice:result.data.data.application_review_price ?? null,
             // profilePicture:result.data.data.profile_picture ?? null,
-            tutorEducations:result.data.data.tutor_educations ? result.data.data.tutor_educations.map((edu) => [edu.school, edu.degree]) : []
+            tutorEducations:result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""})) : []
           })
         }
         getTutorProfile();
@@ -143,8 +143,8 @@ export const DefaultLayout: FC = () => {
     }
 
     return () => {
-      resetTutorContext();
-      resetStudentContext();
+      // resetTutorContext();
+      // resetStudentContext();
     };
   }, [user]);
 

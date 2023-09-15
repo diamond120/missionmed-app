@@ -23,7 +23,7 @@
 .top-form-group{
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
+  margin-top: 13px;
   @media screen and(max-width:1420px){
     display: block;
   }
@@ -48,9 +48,33 @@
 }
 
 .application-info-section{
-  margin-top: 32px;
+  margin-top: 13px;
 }
 
 .extra-info-section{
   margin-top: 40px;
+}
+.ant-tabs{
+  .ant-tabs-nav{
+    &:before{
+      border-color: #D6D7E0;
+    }
+    .ant-tabs-tab{
+      .ant-tabs-tab-btn{
+        font-size: 16px;
+        color: #312D42;
+      }
+      &.ant-tabs-tab-active {
+        .ant-tabs-tab-btn{
+          color: #2816EE;
+          font-weight: 600;
+        }
+      }
+    }
+    .ant-tabs-nav-list{
+      .ant-tabs-ink-bar{
+        background: #2816EE;
+      }
+    }
+  }
 }

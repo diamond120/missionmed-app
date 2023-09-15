@@ -5,6 +5,16 @@
     font-size: 24px;
     font-style: normal;
     line-height: 133%;
+    margin-bottom: 21px;
+    .anticon-question-circle{
+      width: 20px;
+      height: 20px;
+      position: relative;
+      bottom: -3px;
+      svg{
+        color: rgba(0,0,0,0.45);
+      }
+    }
   }
 }
 
@@ -14,7 +24,15 @@
   background-color: #FFF;
   border-radius: 8px;
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
-
+  .aboriginal-torres{
+      .ant-form-item-control{
+        max-width: 100%;
+        .ant-radio-group{
+          max-width: 352px;
+          width: 100%;
+        }
+      }
+  }
   .extra-info-form-item{
     display: flex;
     align-items: center;
@@ -29,9 +47,27 @@
       line-height: 150%;
 
     }
-
-
-
   }
 
+}
+
+@media (max-width:767px){
+  .extra-info-section {
+    .extra-info-form{
+      width: 100%;
+    } 
+    .aboriginal-torres{
+      .extra-info-form-item {
+        flex-wrap: wrap;
+        .label{
+          min-width: 100%;
+          margin-bottom: 10px;
+          br{
+            display: none;
+          }
+        }
+      }
+    }
+
+  }
 }

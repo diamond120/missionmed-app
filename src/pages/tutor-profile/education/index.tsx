@@ -34,17 +34,20 @@ const Education: FC<Any> = ({ props }) => {
   }
 
   const updatedTutor =  async (formData) => {
-   const data = Utility.recursiveToSnake(formData);
-    // await updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: data
-    //   }
-    // })
+    const res = await TutorService.updateProfile({
+     educations:formData.educations
+    });
+    if(res.success){
+      dispatch({
+        type:"updateEducations",
+        educations:res.data.data.educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""}))
+      })
+    }else{
+      console.log(res.message);
+    }
+    
   }
   const onFinish = (values: any) => {
-    console.log(values);
-    return false;
     updatedTutor(values);
     setEditing(false);
   };
@@ -58,9 +61,9 @@ const Education: FC<Any> = ({ props }) => {
             <React.Fragment>
               {fields.map(({ key, name, ...restField }) => (
                 <React.Fragment key={key}>
-                  <Form.Item hidden name={[name, "id"]} {...restField}>
+                  {/* <Form.Item hidden name={[name, "id"]} {...restField}>
                     <Input type={"hidden"} />
-                  </Form.Item>
+                  </Form.Item> */}
                   <Form.Item
                     {...restField}
                     name={[name, "school"]}
@@ -89,9 +92,11 @@ const Education: FC<Any> = ({ props }) => {
                       disabled={!editing}
                     />
                   </Form.Item>
-                  <div style={{ justifyContent: "right", display: "flex", marginBottom: "10px" }}>
+                  {fields.length > 1 ? (
+                    <div style={{ justifyContent: "right", display: "flex", marginBottom: "10px" }}>
                     {editing && <MinusCircleOutlined  style={{ fontSize: "24px" }} onClick={() => remove(name)} />}
                   </div>
+                  ): null}
                 </React.Fragment>
               ))}
               <div className={"education-form-item add-item-btn"} style={{marginBottom: "20px" }}>

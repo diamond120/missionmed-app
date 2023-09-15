@@ -1,7 +1,10 @@
-@font-face {
+
+
+  @font-face {
     font-family: Metropolis;
     src: url('../../fonts/Metropolis.woff2') format('woff2');
   }
+
   @drawer-header-padding: 24px;
   @layout-body-background: #fafbfb;
   @layout-footer-height: @layout-header-height;
@@ -30,6 +33,15 @@
   @med-main-btn: #2816EE;
   @med-main-background: #1E1450;
   @card-shadow: 0px 10px 24px rgba(0, 0, 0, 0.12);
+
+
+
+body{
+  font-family: Metropolis, sans-serif;
+}
+h1,h2,h3,h4,h5,h6, ul, li, ol{
+  font-family: Metropolis, sans-serif;
+}
 
 
 .ant-form-item-required{
@@ -61,8 +73,87 @@
     padding: 0;
   }
 }
+.time-actions-group-switch-wrap{
+  .ant-switch-checked {
+    background-color:   @med-main-btn;
+  }
+}
+.switch-wrap{
+  .ant-switch-checked{
+    background-color: @med-main-btn;
+  }
+}
+.ant-radio-wrapper {
+  .ant-radio.ant-radio-checked {
+    .ant-radio-inner{
+      border-color: @med-main-btn;
+      &:after{
+       background-color:  @med-main-btn;
+      }
+    }
+  }
+}
+.ant-checkbox-wrapper{
+  .ant-checkbox-checked{
+    .ant-checkbox-inner{
+      background-color: @med-main-btn;
+      border-color: @med-main-btn;
+    }
+  }
+}
+.ant-form{
+  .ant-form-item{
+    .input{
+      width: 352px;
+      color: rgb(0 0 0 / 88%);
+      font-weight: 400;
+      font-size: 16px;
+      font-style: normal;
+      line-height: 30px;
+      background-color: #FFF;
+      border: 1px solid  rgb(0 0 0 / 15%);
+      border-radius: 8px;
+    }
+    .ant-form-item-label{
+      label{
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+    .ant-row{
+        justify-content: space-between;
+        align-items: center;
+    }
+     .ant-select.ant-select-in-form-item {
+      width: 352px !important;
+      height: 40px;
+    }
+    .ant-select-selector {
+      height: 40px;
+      align-items: center;
+    }
+    .ant-form-item-control{
+      max-width: 352px; 
+    }
+  }
+}
 
 
+.anticon-minus-circle{
+  svg {
+    path{
+      fill: #C92A2A;
+      &+path{ 
+        fill:#D6D7E0;
+      }
+    }
+  }
+}
+.ant-checkbox-wrapper{
+  .ant-checkbox-inner{
+    border-radius: 4px;
+  }
+}
 @media (max-width:767px){
   .ant-form{
     .ant-form-item{
