@@ -2,12 +2,14 @@ import { MinusCircleOutlined,PlusOutlined } from "@ant-design/icons";
 import { AutoComplete,Button,Form,Input,Select,Space } from "antd";
 import React,{ FC,useRef,useState } from "react";
 import * as Utility from "../../../common/utility";
-// import { useUpdateTutorMutation } from "../../../graphql";
+import TutorService from "../../../api/services/Tutor";
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 import "./index.less";
 
-const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
+const Education: FC<Any> = ({ props }) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false)
-  // const [updateTutor] = useUpdateTutorMutation()
   const { Option } = Select
   const optionsSchools: string[] = [
     "James Cook University",
@@ -32,13 +34,18 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
   }
 
   const updatedTutor =  async (formData) => {
-   const data = Utility.recursiveToSnake(formData);
-    // await updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: data
-    //   }
-    // })
+    const res = await TutorService.updateProfile({
+     educations:formData.educations
+    });
+    if(res.success){
+      dispatch({
+        type:"updateEducations",
+        educations:res.data.data.educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""}))
+      })
+    }else{
+      console.log(res.message);
+    }
+    
   }
   const onFinish = (values: any) => {
     updatedTutor(values);
@@ -48,18 +55,18 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
   return (
     <div className={"education-section"}>
       <h2 className={"education-section-title"}>Education</h2>
-      <Form className={"education-form"} onFinish={onFinish}  initialValues={{ education: tutor?.education.length > 0 ? Utility.recursiveToCamel(tutor.education) : [{schoolName:"" , degreeTitle:""}] }}>
-        <Form.List name={"education"}>
+      <Form className={"education-form"} onFinish={onFinish}  initialValues={{ educations: tutor?.tutorEducations.length > 0 ? tutor.tutorEducations : [{school:"" , degree:""}] }}>
+        <Form.List name={"educations"}>
           {(fields, { add, remove }) => (
             <React.Fragment>
               {fields.map(({ key, name, ...restField }) => (
                 <React.Fragment key={key}>
-                  <Form.Item hidden name={[name, "id"]} {...restField}>
+                  {/* <Form.Item hidden name={[name, "id"]} {...restField}>
                     <Input type={"hidden"} />
-                  </Form.Item>
+                  </Form.Item> */}
                   <Form.Item
                     {...restField}
-                    name={[name, "schoolName"]}
+                    name={[name, "school"]}
                     rules={[{ required: true, message: "Please enter your school" }]}
                     label={"School"}
                   >
@@ -73,7 +80,7 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
 
                   <Form.Item
                     {...restField}
-                    name={[name, "degreeTitle"]}
+                    name={[name, "degree"]}
                     rules={[{ required: true, message: "Please enter your degree" }]}
                     label={"Degree"}
                   
@@ -85,9 +92,11 @@ const Education: FC<{ tutor: Tutor; id: string }> = ({ tutor, id }) => {
                       disabled={!editing}
                     />
                   </Form.Item>
-                  <div style={{ justifyContent: "right", display: "flex", marginBottom: "10px" }}>
+                  {fields.length > 1 ? (
+                    <div style={{ justifyContent: "right", display: "flex", marginBottom: "10px" }}>
                     {editing && <MinusCircleOutlined  style={{ fontSize: "24px" }} onClick={() => remove(name)} />}
                   </div>
+                  ): null}
                 </React.Fragment>
               ))}
               <div className={"education-form-item add-item-btn"} style={{marginBottom: "20px" }}>

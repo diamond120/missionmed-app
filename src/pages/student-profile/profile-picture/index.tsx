@@ -6,22 +6,29 @@ import { Avatar, Button, message, Upload } from "antd"
 import { UserOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { UploadProps } from "antd/lib/upload/interface"
-import {useStudent} from "../../../api/providers/StudentProvider";
+import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
+import StudentService from "../../../api/services/Student";
+import { getToken } from "../../../common/common";
+import { BASE_URL } from "../../../config/app-config";
 
 const ProfilePicture: FC<any> = ({props}) => {
   const student = useStudent();
-  const [fileUrl, setFileUrl] = useState<string>(student?.profile_picture ?? '');
-  const [idFile, setIdFile] = useState('')
+  const dispatch = useStudentDispatch();
+  const [fileUrl, setFileUrl] = useState<string>(student?.profilePicture ?? '');
+ // const [idFile, setIdFile] = useState('')
   const [isChanged, setIsChanged] = useState(false);
   const fileProps: UploadProps = {
-    name: 'files',
+    name: 'file',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
     multiple: false,
     maxCount: 1,
     accept: 'image/jpeg, image/png, image/svg+xml',
-    action: `/api/upload`,
+    action: `${BASE_URL}/upload`,
     onChange: (info) => {
-      !!info.file.response && !!info.fileList.length ? setFileUrl(info.file.response[0].url) : setFileUrl('')
-      !!info.file.response && setIdFile(info.file.response[0].id)
+      !!info.file.response && !!info.fileList.length ? setFileUrl(info.file.response.data) : setFileUrl('')
+      //!!info.file.response && setIdFile(info.file.response[0].id)
       const { status, percent } = info.file;
       if (status === 'uploading' && percent === 100) {
         message.success(`${info.file.name} file upload success.`)
@@ -38,26 +45,35 @@ const ProfilePicture: FC<any> = ({props}) => {
   const handleOnChange = () => {
     setIsChanged(!isChanged);
   };
-  const handleRemove = ()=>{
+  const handleRemove = async()=>{
     handleOnChange()
     setFileUrl("")
+    await StudentService.updateProfile({
+      profilePicture: ""
+    })
+    dispatch({
+      type:"update",
+      student:{
+        profilePicture:""
+      }
+    })
 
   }
   const handleSave = ()=>{
-  //  updatedStudent()
+    updatedStudent()
     handleOnChange()
   }
-  // const updatedStudent =  () => {
-  //   updateStudent({
-  //     variables: {
-  //       id: id!,
-  //       input: {
-  //         profile_picture: idFile
-
-  //       }
-  //     }
-  //   })
-  // }
+  const updatedStudent =  async() => {
+    await StudentService.updateProfile({
+      profilePicture: fileUrl
+    })
+    dispatch({
+      type:"update",
+      tutor:{
+        profilePicture:fileUrl
+      }
+    })
+  }
 
   return (
     <div className={"tutor-profile-picture-section"}>

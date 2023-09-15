@@ -8,6 +8,7 @@ import { AddressDetails } from "../../../types/AddressDetails"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import {default as StudentService} from "../../../api/services/Student";
 import {GOOGLE_MAP_API_KEY} from "../../../config/app-config";
+import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
 
 const { Option } = Select;
 
@@ -15,7 +16,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const [form] = Form.useForm();
   const student = useStudent();
   const dispatch = useStudentDispatch();
-  //const [ updateStudent ] = useUpdateStudentMutation()
+  const profileStaticData = useProfileStaticDataContext();
   const [editing, setEditing] = useState(false);
   const [fullName, setFullName] = useState<string | undefined | null>('')
   const [gender, setGender] = useState<string | undefined | null>('')
@@ -100,7 +101,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
   }
 
   const handleSwitchCase = (val: boolean) => {
- 
     setAutoSelected(val)
     if(val == true){
       navigator.geolocation.getCurrentPosition(success, error)
@@ -117,22 +117,8 @@ const BasicInfoForm: FC<any> = ({props}) => {
     )
   }
 
-  const optionsLocation: string[]= [
-    "Sydney, Australia",
-    "Melbourne, Australia",
-    "Brisbane, Australia",
-    "Perth, Australia",
-    "Adelaide, Australia",
-    "Canberra, Australia",
-    "Gold Coast, Australia",
-    "Newcastle, Australia",
-    "Greensborough, Australia",
-    "Wollongong Australia",
-  ]
-  const optionsState: string[]= [
-    "UNSW",
-    "JCU",
-  ]
+  const optionsLocation: string[]= profileStaticData.location.map(l => l.title)
+  const optionsState: string[]= profileStaticData.state.map(s => s.title)
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
