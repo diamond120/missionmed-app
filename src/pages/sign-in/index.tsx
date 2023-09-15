@@ -65,14 +65,15 @@ const SignIn = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete={"off"}
+            className="sign-in-form"
           >
             <Form.Item
               label={""}
               name={"email"}
               rules={[{ required: true, message: 'Please input your username!' }]}
-              style={{ marginTop: 64 }}
+              style={{ marginTop: 55 }}
             >
-              <Input style={{ borderRadius: 8, width: 392, fontSize: 16, lineHeight: 1.5, padding: " 8px 12px 8px 12px", }} placeholder={"Email"} />
+              <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Email"} />
             </Form.Item>
 
             <Form.Item
@@ -80,7 +81,7 @@ const SignIn = () => {
               name={"password"}
               rules={[{ required: true, message: 'Please input your password!' }]}
             >
-              <Input.Password style={{ borderRadius: 8, width: 392, fontSize: 16, lineHeight: 1.5, padding: " 8px 12px 8px 12px", }} placeholder={"Password"} />
+              <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Password"} />
             </Form.Item>
 
             <div className={"sign-in-left-remember"}>

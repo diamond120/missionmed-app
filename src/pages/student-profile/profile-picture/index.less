@@ -1,10 +1,25 @@
-.profile-picture-section{
+.tutor-profile-picture-section{
   .profile-picture-title{
     color: #6B7393;
     font-weight: 600;
     font-size: 24px;
     font-style: normal;
     line-height: 133%;
+    margin-bottom: 21px;
+  }
+  .profile-picture-block-btn-remove{
+    &:hover{
+      background:  #2816EE;
+      border: 1px solid  #2816EE;
+      color: #fff;
+    }
+  }
+  .profile-picture-block-btn-change{
+    &:hover{
+      
+      border: 1px solid  #2816EE;
+      color: #2816EE;
+    }
   }
 }
 
@@ -56,4 +71,24 @@
   border: 1px solid  rgb(0 0 0 / 15%);
   border-radius: 6px;
   box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
+}
+
+@media (max-width:992px){
+  .tutor-profile-picture-section{
+    margin-top: 40px;
+    .profile-picture-wrap{
+      width: 592px;
+    }
+  }
+}
+@media (max-width:767px){
+  .tutor-profile-picture-section{
+    .profile-picture-wrap{
+      width: 100%;
+      padding: 20px;
+      .profile-picture-block {
+        margin: 0 auto;
+      }
+    }
+  }
 }

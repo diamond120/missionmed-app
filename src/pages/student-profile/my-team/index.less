@@ -5,7 +5,7 @@
     font-size: 24px;
     font-style: normal;
     line-height: 133%;
-
+    margin-bottom: 21px;
   }
 }
 
@@ -18,7 +18,14 @@
 
   .my-team-item{
     display: flex;
-
+    margin-bottom: 23px;
+    align-items: center;
+    &:last-child{
+      margin-bottom: 0;
+    }
+    .ant-avatar-icon{
+      margin-bottom: 0 !important;
+    }
     .my-team-item-text-wrap{
       margin-left: 16px;
 
@@ -39,6 +46,17 @@
         font-style: normal;
         line-height: 157%;
       }
+    }
+  }
+}
+
+
+
+@media (max-width:767px){
+  .my-team-section{
+    .my-team-wrap{
+      width: 100%;
+      padding: 20px;
     }
   }
 }

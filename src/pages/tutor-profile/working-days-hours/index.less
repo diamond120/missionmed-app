@@ -5,6 +5,7 @@
     font-size: 24px;
     font-style: normal;
     line-height: 133%;
+    margin-bottom: 21px;
   }
 }
 
@@ -14,7 +15,24 @@
   background-color: #FFF;
   border-radius: 8px;
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
+  .ant-form-item{
+    margin-bottom: 32px;
+    .ant-row {
+      .ant-form-item-control{
+        max-width:inherit;
+      }
+      .time-actions-group{
+        margin-top: 7px;
+      }
+      .time-input-group{
+        .input{
+          min-height: 40px;
+        }
+      }
+      
 
+    }
+  }
   .label{
     margin: 0;
     color: #312D42;
@@ -84,4 +102,23 @@
 
 .m0{
   margin: 0 !important;
+}
+@media (max-width: 767px){
+  .working-form{
+    width: 100%;
+    .ant-form-item{
+      .ant-form-item-control-input-content{
+        &>div{
+          flex-wrap: wrap;
+        }
+        .label{
+          min-width: 100%;margin-bottom: 10px;
+        }
+        .time-input-group{
+          width: 100%;
+          gap:10px;
+        }
+      }
+    }
+  }
 }
