@@ -97,63 +97,73 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
        
       }}
       >
-      <p className={"label"}>Monday</p>
-      <Form.List name="Monday" >
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: (form.getFieldValue('isMondayOff') == false), message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(form.getFieldValue('isMondayOff') == true || !editing)}
+      <div className='working_days_item'>
+        <div className={"label"}>Monday</div>
+        <Form.List name="Monday" >
+          {(fields, { add, remove }) => (
+            <>
+            <div className='time-input-group'>
+              {fields.map(({ key, name, ...restField }) => (
+                <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'start']}
+                    rules={[{ required: (form.getFieldValue('isMondayOff') == false), message: 'start time required' }]}
+                    initialValue={moment("9:00", format)}
+                  >
+                    <TimePicker
+                          minuteStep={15}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={(form.getFieldValue('isMondayOff') == true || !editing)}
+                          
+                        />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'end']}
+                    rules={[{ required: (form.getFieldValue('isMondayOff') == false ), message: 'end time required' }]}
+                    initialValue={moment("9:00", format)}
+                  >
+                    <TimePicker
+                          minuteStep={15}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={form.getFieldValue('isMondayOff') == true || !editing}
                         
-                      />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: (form.getFieldValue('isMondayOff') == false ), message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={form.getFieldValue('isMondayOff') == true || !editing}
-                       
-                      />
-                </Form.Item>
-                <Button type="text" disabled={(form.getFieldValue('isMondayOff') == true || !editing)}  onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" disabled={(form.getFieldValue('isMondayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
+                        />
+                  </Form.Item>
+                  <Button type="text" disabled={(form.getFieldValue('isMondayOff') == true || !editing)}  onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
+                </Space>
+              ))}
+              </div>
+              <Form.Item className='add-period'>
+                <Button type="dashed" disabled={(form.getFieldValue('isMondayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
+                  Add Period
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+
+        <Form.Item 
+          className='switch-btn'
           name={"isMondayOff"}
           label="Day off"
           initialValue={formattedWorkingHours.isMondayOff}
         >
-        <Switch defaultChecked={formattedWorkingHours.isMondayOff} onChange={(value) => handleSwitchChange(value, 'Monday')}  disabled={!editing}/>
+          <Switch defaultChecked={formattedWorkingHours.isMondayOff} onChange={(value) => handleSwitchChange(value, 'Monday')}  disabled={!editing}/>
         </Form.Item>
+      </div>
+          
+      <div className='working_days_item'>
+        <div className={"label"}>Tuesday</div>    
         <Form.List name="Tuesday">
         {(fields, { add, remove }) => (
           <>
+          <div className='time-input-group'>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
@@ -189,23 +199,31 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                 <Button type="text" disabled={(form.getFieldValue('isTuesdayOff') == true || !editing)}  onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
-            <Form.Item>
+            </div>
+            <Form.Item className='add-period'>
               <Button type="dashed" disabled={(form.getFieldValue('isTuesdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
           </>
         )}
-      </Form.List>
+        </Form.List>
+
         <Form.Item
+          className='switch-btn'
           name={"isTuesdayOff"}
           label="Day off"
         >
-        <Switch defaultChecked={formattedWorkingHours.isTuesdayOff} onChange={(value) => handleSwitchChange(value, 'Tuesday')}  disabled={!editing}/>
+          <Switch defaultChecked={formattedWorkingHours.isTuesdayOff} onChange={(value) => handleSwitchChange(value, 'Tuesday')}  disabled={!editing}/>
         </Form.Item>
+      </div>
+      
+      <div className='working_days_item'>
+        <div className={"label"}>Wednesday</div>
         <Form.List name="Wednesday">
         {(fields, { add, remove }) => (
           <>
+          <div className='time-input-group'>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
@@ -241,24 +259,31 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                 <Button type="text" disabled={(form.getFieldValue('isWednesdayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
-            <Form.Item>
+            </div>
+            
+            <Form.Item className='add-period'>
               <Button type="dashed" disabled={(form.getFieldValue('isWednesdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
           </>
         )}
-      </Form.List>
+        </Form.List>
         <Form.Item
+        className='switch-btn'
           name={"isWednesdayOff"}
           label="Day off"
         >
-        <Switch checked={formattedWorkingHours.isWednesdayOff} onChange={(value) => handleSwitchChange(value, 'Wednesday')}  disabled={!editing}/>
+          <Switch checked={formattedWorkingHours.isWednesdayOff} onChange={(value) => handleSwitchChange(value, 'Wednesday')}  disabled={!editing}/>
         </Form.Item>
+      </div>
 
+      <div className='working_days_item'>
+        <div className={"label"}>Thursday</div>
         <Form.List name="Thursday">
         {(fields, { add, remove }) => (
           <>
+          <div className='time-input-group'>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
@@ -294,7 +319,8 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                 <Button type="text" disabled={(form.getFieldValue('isThursdayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
-            <Form.Item>
+            </div>
+            <Form.Item className='add-period'>
               <Button type="dashed" disabled={(form.getFieldValue('isThursdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
@@ -302,17 +328,22 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
           </>
         )}
       </Form.List>
+      
         <Form.Item
+          className='switch-btn'
           name={"isThursdayOff"}
           label="Day off"
         >
-        <Switch defaultChecked={formattedWorkingHours.isThursdayOff} onChange={(value) => handleSwitchChange(value, 'Thursday')}  disabled={!editing}/>
+          <Switch defaultChecked={formattedWorkingHours.isThursdayOff} onChange={(value) => handleSwitchChange(value, 'Thursday')}  disabled={!editing}/>
         </Form.Item>
+      </div>
 
-
+      <div className='working_days_item'>
+        <div className={"label"}>Friday</div>
         <Form.List name="Friday">
         {(fields, { add, remove }) => (
           <>
+          <div className='time-input-group'>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
@@ -348,24 +379,31 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                 <Button type="text" disabled={(form.getFieldValue('isFridayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
-            <Form.Item>
+            </div>
+            <Form.Item className='add-period'>
               <Button type="dashed" disabled={(form.getFieldValue('isFridayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
           </>
         )}
-      </Form.List>
+        </Form.List>
+
         <Form.Item
+        className='switch-btn'
           name={"isFridayOff"}
           label="Day off"
         >
-        <Switch defaultChecked={formattedWorkingHours.isFridayOff} onChange={(value) => handleSwitchChange(value, 'Friday')}  disabled={!editing}/>
+          <Switch defaultChecked={formattedWorkingHours.isFridayOff} onChange={(value) => handleSwitchChange(value, 'Friday')}  disabled={!editing}/>
         </Form.Item>
+      </div>
 
+      <div className='working_days_item'>
+        <div className={"label"}>Saturday</div>        
         <Form.List name="Saturday">
         {(fields, { add, remove }) => (
           <>
+          <div className='time-input-group'>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
@@ -401,25 +439,30 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                 <Button type="text" disabled={(form.getFieldValue('isSaturdayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
-            <Form.Item>
+            </div>
+            <Form.Item className='add-period'>
               <Button type="dashed" disabled={(form.getFieldValue('isSaturdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
           </>
         )}
-      </Form.List>
+        </Form.List>
         <Form.Item
-          name={"isSaturdayOff"}
-          label="Day off"
-         
-        >
-        <Switch defaultChecked={formattedWorkingHours.isSaturdayOff} onChange={(value) => handleSwitchChange(value, 'Saturday')} disabled={!editing} />
+            className='switch-btn'
+            name={"isSaturdayOff"}
+            label="Day off"
+          >
+          <Switch defaultChecked={formattedWorkingHours.isSaturdayOff} onChange={(value) => handleSwitchChange(value, 'Saturday')} disabled={!editing} />
         </Form.Item>
+      </div>
 
+      <div className='working_days_item'>
+        <div className={"label"}>Sunday</div>     
         <Form.List name="Sunday">
         {(fields, { add, remove }) => (
           <>
+          <div className='time-input-group'>
             {fields.map(({ key, name, ...restField }) => (
               <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
@@ -455,20 +498,23 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                 <Button type="text" disabled={(form.getFieldValue('isSundayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
-            <Form.Item>
+            </div>
+            <Form.Item className='add-period'>
               <Button type="dashed" disabled={(form.getFieldValue('isSundayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
           </>
         )}
-      </Form.List>
+        </Form.List>
         <Form.Item
+          className='switch-btn'
           name={"isSundayOff"}
           label="Day off"
         >
-        <Switch defaultChecked={formattedWorkingHours.isSundayOff} onChange={(value) => handleSwitchChange(value, 'Sunday')} disabled={!editing}/>
+          <Switch defaultChecked={formattedWorkingHours.isSundayOff} onChange={(value) => handleSwitchChange(value, 'Sunday')} disabled={!editing}/>
         </Form.Item>
+      </div>
         
       {/* <Form.Item>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
