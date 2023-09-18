@@ -55,3 +55,6 @@ export const tutorWorkingHours = (workingHours) => {
     return formattedWorkingHours;
 } 
 
+export const formatDate = (dateTime) => {
+    return moment(dateTime).format("MM/DD/YYYY");
+}
