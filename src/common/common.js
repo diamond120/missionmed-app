@@ -33,19 +33,19 @@ const formatHours= (hours) => {
 export const tutorWorkingHours = (workingHours) => {
     const formattedWorkingHours = workingHours.reduce((obj, workingHour) => {
         if(workingHour.day == "Monday"){
-            return {...obj , isMondayOff: workingHour.dayOff, Monday:formatHours(workingHour.hours)}
+            return {...obj , isMondayOff: workingHour.dayOff, Monday:workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours)}
         }else if(workingHour.day == "Tuesday"){
-            return {...obj , isTuesdayOff: workingHour.dayOff, Tuesday:formatHours(workingHour.hours) }
+            return {...obj , isTuesdayOff: workingHour.dayOff, Tuesday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
         }else if(workingHour.day == "Wednesday"){
-            return {...obj , isWednesdayOff: workingHour.dayOff, Wednesday:formatHours(workingHour.hours) }
+            return {...obj , isWednesdayOff: workingHour.dayOff, Wednesday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
         }else if(workingHour.day == "Thursday"){
-            return {...obj , isThursdayOff: workingHour.dayOff, Thursday:formatHours(workingHour.hours) }
+            return {...obj , isThursdayOff: workingHour.dayOff, Thursday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
         }else if(workingHour.day == "Friday"){
-            return {...obj , isFridayOff: workingHour.dayOff, Friday:formatHours(workingHour.hours) }
+            return {...obj , isFridayOff: workingHour.dayOff, Friday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
         }else if(workingHour.day == "Saturday"){
-            return {...obj , isSaturdayOff: workingHour.dayOff, Saturday:formatHours(workingHour.hours) }
+            return {...obj , isSaturdayOff: workingHour.dayOff, Saturday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
         }else if(workingHour.day == "Sunday"){
-            return {...obj , isSundayOff: workingHour.dayOff, Sunday:formatHours(workingHour.hours) }
+            return {...obj , isSundayOff: workingHour.dayOff, Sunday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
         }else{
             return obj
         }
