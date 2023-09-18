@@ -12,11 +12,11 @@ const Home = lazy<FC>(/*home-page-bundle*/ () => import("./home"));
 // const Application = lazy(/*application-page-bundle*/ () => import("./application"));
 // const ApplicationReviewTutor= lazy(/*application-page-bundle*/ () => import("./application-review-tutor"))
 // const ApplicationReviewProcess= lazy(/*application-page-bundle*/ () => import("./application-reviewing-process"))
- const SignIn= lazy(/*application-page-bundle*/ () => import("./sign-in"))
- const StudentProfile= lazy(/*application-page-bundle*/ () => import("./student-profile"))
- const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profile"))
-// const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notifications-tutor"))
-// const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./notifications-student"))
+const SignIn= lazy(/*application-page-bundle*/ () => import("./sign-in"))
+const StudentProfile= lazy(/*application-page-bundle*/ () => import("./student-profile"))
+const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profile"))
+const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notifications-tutor"))
+const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./notifications-student"))
 const routes: RouteObject[] = [
   {
     Component: DefaultLayout,
@@ -63,17 +63,16 @@ const routes: RouteObject[] = [
         path: "/tutor_profile",
         index: true,
       },
-    //   {
-    //     Component: NotificationsTutor,
-    //     path: "/tutor_notifications",
-    //     index: true,
-    //   },
-    //   {
-    //     Component: NotificationsStudent,
-    //     path: "/student_notifications",
-    //     index: true,
-    //   },
-
+      {
+        Component: NotificationsTutor,
+        path: "/tutor_notifications",
+        index: true,
+      },
+      {
+        Component: NotificationsStudent,
+        path: "/student_notifications",
+        index: true,
+      },
       {
         Component: Outlet,
         path: "*",

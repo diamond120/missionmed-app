@@ -100,7 +100,7 @@ const SidebarMenu: React.FC = () => {
         <Menu.Item onClick={applicationReviewNavigate}  key={"1"} icon={<FileDoneOutlined  style={{fontSize: "24px", }} />} className={"custom-application-review-item"}>
           Application Review
         </Menu.Item>
-        <Menu.Item onClick={() =>{navigate(notificationsPage)}} style={{position:"fixed", bottom:"128px",width: "280px"}} key={"12"} icon={<Badge dot={dot}> <BellOutlined style={{fontSize: "24px"}} /> </Badge>}  className={"notification-item custom-notification-item"}>
+        <Menu.Item onClick={() =>{navigate(isStudent ? 'student_notifications' : 'tutor_notifications')}} style={{position:"fixed", bottom:"128px",width: "280px"}} key={"12"} icon={<Badge dot={dot}> <BellOutlined style={{fontSize: "24px"}} /> </Badge>}  className={"notification-item custom-notification-item"}>
           Notifications
         </Menu.Item>
        
