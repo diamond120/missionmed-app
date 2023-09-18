@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export const getToken = () => {
     const token = localStorage.getItem('jwt');
     return token;
@@ -18,3 +20,38 @@ export const stringToBoolean = (value) => {
             return true;
     }
 }
+
+const formatHours= (hours) => {
+    const format = 'HH:mm';
+    if(hours && hours.length > 0){
+        return hours.map(hours => ({start: moment(hours.start, format), end: moment(hours.end, format)}))
+    }else{
+        return hours;
+    }
+}
+
+export const tutorWorkingHours = (workingHours) => {
+    const formattedWorkingHours = workingHours.reduce((obj, workingHour) => {
+        if(workingHour.day == "Monday"){
+            return {...obj , isMondayOff: workingHour.dayOff, Monday:formatHours(workingHour.hours)}
+        }else if(workingHour.day == "Tuesday"){
+            return {...obj , isTuesdayOff: workingHour.dayOff, Tuesday:formatHours(workingHour.hours) }
+        }else if(workingHour.day == "Wednesday"){
+            return {...obj , isWednesdayOff: workingHour.dayOff, Wednesday:formatHours(workingHour.hours) }
+        }else if(workingHour.day == "Thursday"){
+            return {...obj , isThursdayOff: workingHour.dayOff, Thursday:formatHours(workingHour.hours) }
+        }else if(workingHour.day == "Friday"){
+            return {...obj , isFridayOff: workingHour.dayOff, Friday:formatHours(workingHour.hours) }
+        }else if(workingHour.day == "Saturday"){
+            return {...obj , isSaturdayOff: workingHour.dayOff, Saturday:formatHours(workingHour.hours) }
+        }else if(workingHour.day == "Sunday"){
+            return {...obj , isSundayOff: workingHour.dayOff, Sunday:formatHours(workingHour.hours) }
+        }else{
+            return obj
+        }
+
+    }, {})
+    
+    return formattedWorkingHours;
+} 
+
