@@ -2,71 +2,34 @@
 
 import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
 import { Button,Form,Space,Switch,TimePicker } from 'antd';
-import React,{ FC,useState } from "react";
+import React,{ FC,useMemo,useState } from "react";
 import "./index.less";
-import * as Utility from "../../../common/utility";
 import moment from 'moment';
-// import { useUpdateTutorMutation } from "../../../graphql";
+import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import TutorService from "../../../api/services/Tutor";
+import { tutorWorkingHours } from '../../../common/common';
 
-
-const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
+const WorkingDaysHours: FC<Any> = ({props}) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
-  const isMondayOff = Form.useWatch('isMondayOff', form);
-  const isTuesdayOff = Form.useWatch('isTuesdayOff', form);
-  const isWednesdayOff = Form.useWatch('isWednesdayOff', form);
-  const isThursdayOff = Form.useWatch('isThursdayOff', form);
-  const isFridayOff = Form.useWatch('isFridayOff', form);
-  const isSaturdayOff = Form.useWatch('isSaturdayOff', form);
-  const isSundayOff = Form.useWatch('isSundayOff', form);
-  console.log("isMondayOff", isMondayOff)
-  console.log("editing", editing)
+  const isMondayOff = Form.useWatch('isMondayOff', form); 
+  const isTuesdayOff = Form.useWatch('isTuesdayOff', form); 
+  const isWednesdayOff = Form.useWatch('isWednesdayOff', form); 
+  const isThursdayOff = Form.useWatch('isThursdayOff', form); 
+  const isSaturdayOff = Form.useWatch('isSaturdayOff', form); 
+  const isSundayOff = Form.useWatch('isSundayOff', form); 
+  
+  const formattedWorkingHours = useMemo(() => tutorWorkingHours(tutor.workingHours), [tutor.workingHours]);
+ 
   const handleEditClick = (e) => {
     setEditing(true);
     e.preventDefault();
   };
 
-  const handleSaveClick =() => {
-    updatedTutor()
-    setEditing(false);
-  };
-
-  // tp Strapi
   const format = 'HH:mm';
-  const [mondayFromTime, setMondayFromTime] = useState<moment.Moment | null>(moment(new Date(), format));
   
-  const updatedTutor =  () => {
-    // updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: {
-    //       monday_is_day_off: isMondayDayOff,
-    //       monday_working_from: mondayFromTime?.format('HH:mm') || null,
-    //       monday_working_to: mondayToTime?.format('HH:mm') || null,
-    //       tuesday_is_day_off: isTuesdayDayOff,
-    //       tuesday_working_from: tuesdayToTime?.format('HH:mm') || null,
-    //       tuesday_working_to: tuesdayFromTime?.format('HH:mm') || null,
-    //       wednesday_is_day_off: isWednesdayDayOff,
-    //       wednesday_working_from: wednesdayFromTime?.format('HH:mm') || null,
-    //       wednesday_working_to: wednesdayToTime?.format('HH:mm') || null,
-    //       thursday_is_day_off: isThursdayDayOff,
-    //       thursday_working_from: thursdayFromTime?.format('HH:mm') || null,
-    //       thursday_working_to: thursdayToTime?.format('HH:mm') || null,
-    //       friday_is_day_off: isFridayDayOff,
-    //       friday_working_from: fridayFromTime?.format('HH:mm') || null,
-    //       friday_working_to: fridayToTime?.format('HH:mm') || null,
-    //       saturday_is_day_off: isSaturdayDayOff,
-    //       saturday_working_from: saturdayFromTime?.format('HH:mm') || null,
-    //       saturday_working_to: saturdayToTime?.format('HH:mm') || null,
-    //       sunday_is_day_off: isSundayDayOff,
-    //       sunday_working_from: sundayFromTime?.format('HH:mm') || null,
-    //       sunday_working_to: sundayToTime?.format('HH:mm') || null,
-
-    //     }
-    //   }
-    // })
-  }
-
   const formatTimeArr = (timeArr) => {
     if( timeArr.length > 0 ){
       return timeArr.map(time => ({start: time.start.format(format), end:time.end.format(format)}));
@@ -75,55 +38,67 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
     
   }
   const onFinish = async (values: any) => {
-    console.log(values);
-    const Monday = formatTimeArr(values.Monday ?? []);
-    const Tuesday = formatTimeArr(values.Tuesday ?? []);
-    const Wednesday = formatTimeArr(values.Wednesday ?? []);
-    const Thursday = formatTimeArr(values.Thursday ?? []);
-    const Friday = formatTimeArr(values.Friday ?? []);
-    const Saturday = formatTimeArr(values.Saturday ?? []);
-    const Sunday = formatTimeArr(values.Sunday ?? []);
-    let WorkingDaysHours:[
+    const Monday = values.isMondayOff ? [] :formatTimeArr(values.Monday ?? []);
+    const Tuesday =  values.isTuesdayOff ? [] : formatTimeArr(values.Tuesday ?? []);
+    const Wednesday = values.isWednesdayOff ? [] : formatTimeArr(values.Wednesday ?? []);
+    const Thursday = values.isThursdayOff ? [] : formatTimeArr(values.Thursday ?? []);
+    const Friday = values.isFridayOff ? [] : formatTimeArr(values.Friday) ?? [];
+    const Saturday = values.isSaturdayOff ? [] : formatTimeArr(values.Saturday ?? []);
+    const Sunday = values.isSundayOff ? [] : formatTimeArr(values.Sunday ?? []);
+    const workingHours = [
       {day:"Monday", "hours": Monday,"dayOff": values.isMondayOff},
-      {day:"Tuesday", "hours": Tuesday,"dayOff": values.isTuesDayOff},
+      {day:"Tuesday", "hours": Tuesday,"dayOff": values.isTuesdayOff},
       {day:"Wednesday", "hours": Wednesday,"dayOff": values.isWednesdayOff},
       {day:"Thursday", "hours": Thursday,"dayOff": values.isThursdayOff},
       {day:"Friday", "hours": Friday,"dayOff": values.isFridayOff},
       {day:"Saturday", "hours":Saturday,"dayOff": values.isSaturdayOff},
       {day:"Sunday", "hours": Sunday,"dayOff": values.isSundayOff}
     ]
-    console.log(WorkingDaysHours);
-    await TutorService.updateProfile(WorkingDaysHours);
-    // dispatch({
-    //   type:'update',
-    //   tutor:{
-    //     fullName: fullName !== '' ? fullName : tutor?.fullName,
-    //     gender: gender !== '' ? gender : tutor?.gender,
-    //     email: email !== '' ? email : tutor?.email,
-    //     pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
-    //     location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-    //     timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
-    //   }
-    // })
 
+    await TutorService.updateProfile({
+      workingHours:workingHours
+    });
+
+    dispatch({
+      type:'updateWorkingHours',
+      workingHours: workingHours
+    })
     setEditing(false);
     return false;
-    //Utility.formatTime(values, format);
-    console.log(values.mondayWorkingHours[0].from.format(format));
-    // console.log(values.mondayWorkingHours[1].from.format(format));
-    
-    return false;
-   // updatedTutor(values);
-    
   };
-  console.log(isMondayOff || !editing);
+
+  const handleSwitchChange = (value, day) => {
+    if(value == true){
+      return form.setFieldsValue({[day]:[{'start':'', 'end' : ''}]})
+    }
+  }
+  
+ console.log(form.getFieldsValue());
 
   return (
     <div className={"working-section"}>
       <h2 className={"working-section-title"}>Working Days & Hours</h2>
-      <Form className={"working-form"} form={form} onFinish={onFinish}>
+      <Form className={"working-form"} form={form} onFinish={onFinish}
+      initialValues={{
+        "isMondayOff" : formattedWorkingHours.isMondayOff ?? false,
+        "Monday" :  formattedWorkingHours.Monday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+        "isTuesdayOff" : formattedWorkingHours.isTuesdayOff ?? false,
+        "Tuesday" :  formattedWorkingHours.Tuesday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+        "isWednesdayOff" : formattedWorkingHours.isWednesdayOff ?? false,
+        "Wednesday" :  formattedWorkingHours.Wednesday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+        "isThursdayOff" : formattedWorkingHours.isThursdayOff ?? false,
+        "Thursday" :  formattedWorkingHours.Thursday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+        "isFridayOff":formattedWorkingHours.isFridayOff ?? false,
+        "Friday" :  formattedWorkingHours.Friday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+        "isSaturdayOff" : formattedWorkingHours.isSaturdayOff ?? false,
+        "Saturday" :  formattedWorkingHours.Saturday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+        "isSundayOff" : formattedWorkingHours.isSundayOff ?? false,
+        "Sunday" :  formattedWorkingHours.Sunday ?? [{start:moment("9:00", format), end:moment("9:00", format)}],
+       
+      }}
+      >
       <p className={"label"}>Monday</p>
-      <Form.List name="Monday">
+      <Form.List name="Monday" >
         {(fields, { add, remove }) => (
           <>
             {fields.map(({ key, name, ...restField }) => (
@@ -131,7 +106,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required: (form.getFieldValue('isMondayOff') == false), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -139,13 +114,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isMondayOff || !editing)}
+                        disabled={(form.getFieldValue('isMondayOff') == true || !editing)}
+                        
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isMondayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -153,14 +129,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isMondayOff || !editing}
+                        disabled={form.getFieldValue('isMondayOff') == true || !editing}
+                       
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isMondayOff') == true || !editing)}  onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isMondayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -170,9 +147,9 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isMondayOff"}
           label="Day off"
-          initialValue={"false"}
+          initialValue={formattedWorkingHours.isMondayOff}
         >
-        <Switch />
+        <Switch defaultChecked={formattedWorkingHours.isMondayOff} onChange={(value) => handleSwitchChange(value, 'Monday')}  disabled={!editing}/>
         </Form.Item>
         <Form.List name="Tuesday">
         {(fields, { add, remove }) => (
@@ -182,7 +159,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required:  (form.getFieldValue('isTuesdayOff') == false ), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -190,13 +167,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isTuesdayOff || !editing)}
+                        disabled={( form.getFieldValue('isTuesdayOff') == true || !editing)}
+                       
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isTuesdayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -204,14 +182,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isTuesdayOff || !editing}
+                        disabled={form.getFieldValue('isTuesdayOff') == true || !editing}
+                        
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isTuesdayOff') == true || !editing)}  onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isTuesdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -221,9 +200,8 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isTuesdayOff"}
           label="Day off"
-          initialValue={"false"}
         >
-        <Switch />
+        <Switch defaultChecked={formattedWorkingHours.isTuesdayOff} onChange={(value) => handleSwitchChange(value, 'Tuesday')}  disabled={!editing}/>
         </Form.Item>
         <Form.List name="Wednesday">
         {(fields, { add, remove }) => (
@@ -233,7 +211,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required: (form.getFieldValue('isWednesdayOff') == false ), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -241,13 +219,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isWednesdayOff || !editing)}
+                        disabled={( form.getFieldValue('isWednesdayOff') == true  || !editing)}
+                        
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isWednesdayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -255,14 +234,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isWednesdayOff || !editing}
+                        disabled={form.getFieldValue('isWednesdayOff') == true || !editing}
+                        
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isWednesdayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isWednesdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -272,9 +252,8 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isWednesdayOff"}
           label="Day off"
-          initialValue={"false"}
         >
-        <Switch />
+        <Switch checked={formattedWorkingHours.isWednesdayOff} onChange={(value) => handleSwitchChange(value, 'Wednesday')}  disabled={!editing}/>
         </Form.Item>
 
         <Form.List name="Thursday">
@@ -285,7 +264,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required: (form.getFieldValue('isThursdayOff') == false ), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -293,13 +272,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isThursdayOff || !editing)}
+                        disabled={( form.getFieldValue('isThursdayOff') == true || !editing)}
+                      
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isThursdayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -307,14 +287,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isThursdayOff || !editing}
+                        disabled={form.getFieldValue('isThursdayOff') == true || !editing}
+                        
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isThursdayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isThursdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -324,9 +305,8 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isThursdayOff"}
           label="Day off"
-          initialValue={"false"}
         >
-        <Switch />
+        <Switch defaultChecked={formattedWorkingHours.isThursdayOff} onChange={(value) => handleSwitchChange(value, 'Thursday')}  disabled={!editing}/>
         </Form.Item>
 
 
@@ -338,7 +318,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required: (form.getFieldValue('isFridayOff') == false ), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -346,13 +326,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isFridayOff || !editing)}
+                        disabled={( form.getFieldValue('isFridayOff') == true || !editing)}
+                      
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isFridayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -360,14 +341,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isFridayOff || !editing}
+                        disabled={ form.getFieldValue('isFridayOff') == true || !editing}
+                        
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isFridayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isFridayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -377,9 +359,8 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isFridayOff"}
           label="Day off"
-          initialValue={"false"}
         >
-        <Switch />
+        <Switch defaultChecked={formattedWorkingHours.isFridayOff} onChange={(value) => handleSwitchChange(value, 'Friday')}  disabled={!editing}/>
         </Form.Item>
 
         <Form.List name="Saturday">
@@ -390,7 +371,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required: (form.getFieldValue('isSaturdayOff') == false ), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -398,13 +379,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isSaturdayOff || !editing)}
+                        disabled={( form.getFieldValue('isSaturdayOff') == true || !editing)}
+                       
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isSaturdayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -412,14 +394,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isSaturdayOff || !editing}
+                        disabled={form.getFieldValue('isSaturdayOff') == true || !editing}
+                        
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isSaturdayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isSaturdayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -429,9 +412,9 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isSaturdayOff"}
           label="Day off"
-          initialValue={"false"}
+         
         >
-        <Switch />
+        <Switch defaultChecked={formattedWorkingHours.isSaturdayOff} onChange={(value) => handleSwitchChange(value, 'Saturday')} disabled={!editing} />
         </Form.Item>
 
         <Form.List name="Sunday">
@@ -442,7 +425,7 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                 <Form.Item
                   {...restField}
                   name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
+                  rules={[{ required: (form.getFieldValue('isSundayOff') == false ), message: 'start time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -450,13 +433,14 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={(isSundayOff || !editing)}
+                        disabled={( form.getFieldValue('isSundayOff') == true || !editing)}
+                       
                       />
                 </Form.Item>
                 <Form.Item
                   {...restField}
                   name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
+                  rules={[{ required: (form.getFieldValue('isSundayOff') == false ), message: 'end time required' }]}
                   initialValue={moment("9:00", format)}
                 >
                    <TimePicker
@@ -464,14 +448,15 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
                         format={format}
                         style={{ width: "140px" }}
                         className={"input"}
-                        disabled={isSundayOff || !editing}
+                        disabled={form.getFieldValue('isSundayOff') == true || !editing}
+                       
                       />
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
+                <Button type="text" disabled={(form.getFieldValue('isSundayOff') == true || !editing)} onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
               </Space>
             ))}
             <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+              <Button type="dashed" disabled={(form.getFieldValue('isSundayOff') == true || !editing)} onClick={() => add()} block icon={<PlusOutlined />}>
                 Add Period
               </Button>
             </Form.Item>
@@ -481,9 +466,8 @@ const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
         <Form.Item
           name={"isSundayOff"}
           label="Day off"
-          initialValue={"false"}
         >
-        <Switch />
+        <Switch defaultChecked={formattedWorkingHours.isSundayOff} onChange={(value) => handleSwitchChange(value, 'Sunday')} disabled={!editing}/>
         </Form.Item>
         
       {/* <Form.Item>

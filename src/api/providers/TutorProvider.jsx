@@ -56,7 +56,7 @@ function TutorReducer(tutor, action) {
             applicationReview:stringToBoolean(action.applicationReview),
             applicationReviewPrice:action.applicationReviewPrice,
             profilePicture:action.profilePicture,
-            tutorEducations:action.tutorEducations,
+            educations:action.educations,
           };
         }
         case 'update': {
@@ -64,6 +64,9 @@ function TutorReducer(tutor, action) {
         }
         case 'updateEducations': {
           return {...tutor, educations:action.education}
+        }
+        case 'updateWorkingHours': {
+          return {...tutor, workingHours:action.workingHours}
         }
         case 'reset': {
           return {}
