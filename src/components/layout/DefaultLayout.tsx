@@ -134,7 +134,7 @@ export const DefaultLayout: FC = () => {
             mockInterviewPrice:result.data.data.mock_interview_price ?? null,
             applicationReview:result.data.data.application_review ?? null,
             applicationReviewPrice:result.data.data.application_review_price ?? null,
-            // profilePicture:result.data.data.profile_picture ?? null,
+            profilePicture:result.data.data.profile_picture ?? null,
             educations:result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""})) : []
           })
         }
