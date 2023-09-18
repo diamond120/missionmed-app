@@ -31,15 +31,8 @@ const NotificationsTutor: FC = () => {
     pageSize: 10
   })
 
-  const getRandomuserParams = (params: TableParams) => ({
-    results: params.pagination?.pageSize,
-    page: params.pagination?.current,
-    ...params,
-  });
-
   const [notification, setNotification] = useState<any[]>([]);
   const [searchText, setSearchText] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
   const [selectedRows, setSelectedRows] = useState<Key[]>([]);
