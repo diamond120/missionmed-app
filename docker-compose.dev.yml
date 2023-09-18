@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+    react:
+      container_name: react
+      build: ./
+      restart: unless-stopped
+      ports:
+        - "9119:3000"
+      volumes:
+        - ./:/app
+
+networks:
+    default:
+        driver: bridge
