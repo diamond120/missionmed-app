@@ -174,17 +174,17 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           label={"Timezone"}
           rules={[{ required: true, message: 'Please enter your time zone' }]}
         >
-          <div className={"timezone-wrap"}>
+          {customSelect()}
+
+        </Form.Item>
+        <div className={"timezone-wrap"}>
             <div >
-              {customSelect()}
               <div className={"switch-wrap"}>
                 <Switch disabled={!editing} onChange={(e) => handleSwitchCase(e)} />
                 <p className={"switch-text"}>Set automatically</p>
               </div>
             </div>
           </div>
-
-        </Form.Item>
         {editing ? (
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
