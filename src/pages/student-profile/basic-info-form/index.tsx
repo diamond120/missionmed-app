@@ -188,6 +188,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             name={"location"}
             label={"Location"}
             rules={[{ required: true, }]}
+            initialValue={student?.location}
           >
             <div className={"basic-information-form-item"}>
               <AutoComplete
@@ -205,6 +206,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             name={"state"}
             label={"State"}
             rules={[{ required: true,  }]}
+            initialValue={student?.state}
           >
             <div className={"basic-information-form-item"}>
               <AutoComplete
@@ -223,6 +225,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             name={"Timezone"}
             label={"State"}
             rules={[{ required: true, }]}
+            initialValue={student?.timezone}
           >
             <div className={"timezone-wrap"}>
               <div>

@@ -36,7 +36,7 @@ function UserReducer(user, action) {
               id:action.id,
               name:action.name,
               email:action.email,
-              role:action.role
+              role:(action.role).toString().toLowerCase()
           }
         }
         default: {

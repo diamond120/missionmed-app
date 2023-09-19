@@ -75,7 +75,7 @@ export const DefaultLayout: FC = () => {
 
   useEffect(() => {
     if(Object.keys(user).length > 0){
-      if(user.role == "Student"){
+      if(user.role == "student"){
        // resetTutorContext();
         const getStudentProfile = async() => {
           const result = await Student.getProfile();

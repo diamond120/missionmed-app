@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { SvgIcon } from "../icon";
 import {useUser} from "../../api/providers/UserProvider";
 import {useStudent} from "../../api/providers/StudentProvider";
+import {useTutor} from "../../api/providers/TutorProvider";
 import {useAuthContext} from "../../api/context/AuthContext.js";
 import "./index.less"
 
@@ -26,11 +27,11 @@ const SidebarMenu: React.FC = () => {
 
   const user = useUser();
   const student = useStudent();
-  const tutor = {};
+  const tutor = useTutor();
 
   const {setAuthenticated} = useAuthContext();
   let isStudent = false;
-  if(user.role == "Student"){
+  if(user.role == "student"){
     isStudent = true;
   }else{
     isStudent = false;
@@ -111,7 +112,7 @@ const SidebarMenu: React.FC = () => {
           onClick={navigateProfilePage}
           icon={
             <Avatar
-              src={isStudent ? student.ProfilePicture : tutor ? tutor.ProfilePicture: ""}
+              src={isStudent ? student.profilePicture : tutor ? tutor.profilePicture: ""}
               size={32}
               icon={<UserOutlined />}
             />

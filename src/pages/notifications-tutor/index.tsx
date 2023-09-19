@@ -54,7 +54,7 @@ const NotificationsTutor: FC = () => {
   };
 
   const handleViewMore = (id: string, idNotification: string) => {
-    //navigate(`/tutor/reviewing_process/${id}`);
+    navigate(`/tutor/reviewing_process/${id}`);
     // updateNotification({
     //   variables: {
     //     id: idNotification,
