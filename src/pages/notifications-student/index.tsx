@@ -55,7 +55,7 @@ const NotificationsStudent: FC = () => {
 
 
   const handleViewMore = (id: string, idNotification: string) => {
-    // navigate(`/application_review/application/${id}`);
+    navigate(`/application_review/application/${id}`);
     // updateNotification({
     //   variables: {
     //     id: idNotification,
