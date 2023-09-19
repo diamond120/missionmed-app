@@ -8,11 +8,13 @@ const Home: FC = () => {
   const navigate = useNavigate()
   const user = useUser();
 
-  if(user.role == "student"){
-    navigate("/application_review")
-  }else{
-    navigate("/tutor/application_review")
-  }
+  useEffect(() => {
+    if(user.role == "student"){
+      navigate("/application_review")
+    }else{
+      navigate("/tutor/application_review")
+    }
+  },[user.role])
 
   return (
     <React.Fragment>

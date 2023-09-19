@@ -183,14 +183,12 @@ const BasicInfoForm: FC<any> = ({props}) => {
             <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={phone ?? ""} onChange={e => setPhone(e.target.value !== '' ? e.target.value : student?.phoneNumber)}/>
           </Form.Item>
 
-
           <Form.Item
             name={"location"}
             label={"Location"}
             rules={[{ required: true, }]}
             initialValue={student?.location}
           >
-            <div className={"basic-information-form-item"}>
               <AutoComplete
                 options={optionsLocation.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -200,7 +198,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
                 disabled={!editing}
                 onChange={(value) => setLocation(value)}
               />
-            </div>
           </Form.Item>
           <Form.Item
             name={"state"}
@@ -208,7 +205,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
             rules={[{ required: true,  }]}
             initialValue={student?.state}
           >
-            <div className={"basic-information-form-item"}>
               <AutoComplete
                 options={optionsState.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -217,26 +213,24 @@ const BasicInfoForm: FC<any> = ({props}) => {
                 value={autoSelected ? autoSelectedState : state}
                 disabled={!editing}
                 onChange={(value) => setState(value)}
-
               />
-            </div>
           </Form.Item>
           <Form.Item
-            name={"Timezone"}
-            label={"State"}
+            name={"timezone"}
+            label={"TimeZone"}
             rules={[{ required: true, }]}
             initialValue={student?.timezone}
           >
+            {customSelect()}
+          </Form.Item>
             <div className={"timezone-wrap"}>
               <div>
-                {customSelect()}
                   <div className={"switch-wrap"}>
                     <Switch disabled={!editing} onChange={(e) => handleSwitchCase(e)}/>
                     <p className={"switch-text"}>Set automatically</p>
                   </div>
               </div>
             </div>
-          </Form.Item>
             {editing ? (
               <div className={"form-basic-button-wrap"}>
                 <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>

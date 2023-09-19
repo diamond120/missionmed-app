@@ -42,7 +42,7 @@ const SidebarMenu: React.FC = () => {
   }
 
   const applicationReviewNavigate = ()=>{
-    navigate(appReviewPage)
+    isStudent ?  navigate('application_review') : navigate('/tutor/application_review');
   }
   const removeTokenFromLocalStorage = () => {
     localStorage.removeItem("jwt");
