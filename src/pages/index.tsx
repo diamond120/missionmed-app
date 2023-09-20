@@ -18,7 +18,9 @@ const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profi
 const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notifications-tutor"))
 const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./notifications-student"))
 const TutorMockInterview = lazy(() => import("./tutor-mock-interview"))
+const StudentMockInterview = lazy(() => import("./student-mock-interview"))
 const TutorSessionSummary = lazy(() => import("./tutor-session-summary"))
+
 const routes: RouteObject[] = [
   {
     Component: DefaultLayout,
@@ -77,6 +79,11 @@ const routes: RouteObject[] = [
       {
         Component: TutorMockInterview,
         path: "/tutor/mock-interview",
+        index: true,
+      },
+      {
+        Component: StudentMockInterview,
+        path: "/student/mock-interview",
         index: true,
       },
       {

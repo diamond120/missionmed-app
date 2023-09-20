@@ -72,8 +72,6 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
       return form.setFieldsValue({[day]:[{'start':'', 'end' : ''}]})
     }
   }
-  
- console.log(form.getFieldsValue());
 
   return (
     <div className={"working-section"}>

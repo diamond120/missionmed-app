@@ -86,7 +86,7 @@ const Mysessions = () => {
                                                   <div className={"mock_interview"}>Cameron Williamson</div>
                                              </div>
                                         </div>
-                                        <Button className={"secondary-button"} onClick={navigation('/tutor/session-summary')}>Session Summary</Button>
+                                        <Button className={"secondary-button"} onClick={() => navigation('/tutor/session-summary')}>Session Summary</Button>
                                    </li>
                               </ul>
                          </div>
