@@ -4,8 +4,14 @@ const getProfileStaticData = (data) => {
   return http.get("/lists", data);
 };
 
+
+const getUniversityList = (data) => {
+  return http.get("/university-list", data);
+};
+
 const Service = {
-    getProfileStaticData
+    getProfileStaticData,
+    getUniversityList
 };
 
 export default Service;
