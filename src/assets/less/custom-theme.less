@@ -33,6 +33,9 @@
   @med-main-btn: #2816EE;
   @med-main-background: #1E1450;
   @card-shadow: 0px 10px 24px rgba(0, 0, 0, 0.12);
+  @text-white: #ffffff;
+  @text-color:#312D42
+
 
 
 
@@ -158,6 +161,92 @@ h1,h2,h3,h4,h5,h6, ul, li, ol{
     border-radius: 4px;
   }
 }
+
+.tab-title{
+  margin: 24px 0 20px 0;
+  color: #312D42;
+  font-weight: 600;
+  font-size: 38px;
+  font-family: @headings-font-family;
+  font-style: normal;
+  line-height: 1.21;
+}
+.secondary-title{ 
+  color: #6B7393;
+  font-weight: 600;
+  font-size: 24px;
+  margin-top: 5px;
+  margin-bottom: 21px;
+  svg{
+    width: 20px;
+    height: 20px;
+    fill: rgba(0, 0, 0, 0.45);
+  }
+}
+.con-section-wrap{
+  max-width: 1032px;
+}
+.con-box{
+  .con-box-wrap {
+    padding: 32px;;
+    background-color: #FFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    .con-box-title{
+      color: #312D42;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+  }
+}
+.btn-group{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.primary-button{
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: @med-main-btn;
+  height: auto;
+  color: @text-white;
+  border: 0 !important;
+  &:hover, &:active, &:focus{
+    background-color: @med-main-btn;
+    color: @text-white;
+    opacity: 0.85;
+  }
+}
+.secondary-button{
+  padding: 8px 16px;
+  border-radius: 8px;
+  background-color: @text-white;
+  height: auto;
+  color: @text-color;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  &:hover{
+    background-color: @med-main-btn;
+    border-color:  @med-main-btn !important;
+    color: @text-white;
+  }
+}
+.ant-tabs {
+  .ant-tabs-nav{
+    &:before{
+      border-color: #D6D7E0;
+    }
+  }
+  .ant-tabs-nav-list{
+    .ant-tabs-ink-bar{
+      background: @med-main-btn;
+    }
+
+  }
+}
+
+
+// Responsive
 @media (max-width:767px){
   .ant-form{
     .ant-form-item{
@@ -174,3 +263,4 @@ h1,h2,h3,h4,h5,h6, ul, li, ol{
   } 
 
 }
+
