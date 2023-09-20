@@ -21,10 +21,8 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const [pronouns, setPronouns] = useState<string | undefined | null>('')
   const [email, setEmail] = useState<string | undefined | null>('')
   const [location, setLocation] = useState<string | undefined | null>('')
-  const [selectedTimezone, setSelectedTimezone] = useState<string | undefined | null>('')
   const [autoSelected, setAutoSelectedTimezone] = useState<boolean>(false)
   const [autoSelectedLocation, setAutoSelectedLocation] = useState<string>('')
-
   const labelStyle = 'original'
   const timezones = {
     ...allTimezones,
@@ -40,7 +38,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       email: email !== '' ? email : tutor?.email,
       pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
       location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-      timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
+      timezone: form.getFieldValue('timezone')
     });
     dispatch({
       type:'update',
@@ -50,13 +48,13 @@ const BasicInfoForm: FC<Any> = ({props}) => {
         email: email !== '' ? email : tutor?.email,
         pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
         location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-        timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
+        timezone: form.getFieldValue('timezone')
       }
     })
   }
 
-  const optionsLocation: string[]= profileStaticData.location.map(l => l.title)
-  
+  const optionsLocation: string[]= profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title }))
+
   const handleEditClick = () => {
     setEditing(true);
   };
@@ -92,29 +90,28 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const handleSwitchCase = (val: boolean) => {
     setAutoSelectedTimezone(val);
     if(val == true){
+      form.setFieldValue('timezone', localTimezone.label);
       navigator.geolocation.getCurrentPosition(success, error)
     }
   }
 
   const customSelect = () => {
     return (
-      <Select value={autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone} style={{width: 328}} onChange={e => setSelectedTimezone(e)} disabled={ !editing }>
+      <Select style={{width: 328}} disabled={ !editing }>
         {options.map(option => (
           <Option key={option.label} value={option.label}>{option.label}</Option>
         ))}
       </Select>
     )
   }
+  const handleFilter = (inputValue: string, option: any) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
 
-  const handleFilter = (inputValue: string, option: any) =>
-    option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
   return(
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
 
       <Form
         className={"basic-information-form"}
-        initialValues={{ timezone: 'auto' }}
         form={form}
       >
         <Form.Item
@@ -157,10 +154,11 @@ const BasicInfoForm: FC<Any> = ({props}) => {
         <Form.Item
           name={"location"}
           label={"Location"}
+          initialValue={tutor?.location}
           rules={[{ required: true, message: 'Please enter your location' }]}
         >
         <AutoComplete
-          options={optionsLocation.map((option) => ({ value: option }))}
+          options={optionsLocation}
           style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
           placeholder={"Enter a value"}
           filterOption={handleFilter}
@@ -170,13 +168,13 @@ const BasicInfoForm: FC<Any> = ({props}) => {
         />
         </Form.Item>
         <Form.Item
-          name={"timezone"}
-          label={"Timezone"}
-          rules={[{ required: true, message: 'Please enter your time zone' }]}
-        >
-          {customSelect()}
-
-        </Form.Item>
+            name={"timezone"}
+            label={"Timezone"}
+            rules={[{ required: true, }]}
+            initialValue={tutor?.timezone}
+          >
+            {customSelect()}
+          </Form.Item>
         <div className={"timezone-wrap"}>
             <div >
               <div className={"switch-wrap"}>

@@ -26,7 +26,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const [phone, setPhone] = useState<string | undefined | null>(student?.phoneNumber)
   const [location, setLocation] = useState<string | undefined | null>(student?.location)
   const [state, setState] = useState<string | undefined | null>(student?.state)
-  const [selectedTimezone, setSelectedTimezone] = useState<string | undefined | null>('')
   const [autoSelected, setAutoSelected] = useState<boolean>(false)
   const [autoSelectedLocation, setAutoSelectedLocation] = useState<string>('')
   const [autoSelectedState, setAutoSelectedState] = useState<string>('')
@@ -49,7 +48,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
       phoneNumber: phone !== '' ? phone : student?.phoneNumber,
       state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
       birthday: birthday !== '' ? birthday : student?.birthday,
-      timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : student?.timezone
+      timezone: form.getFieldValue('timezone')
     })
     dispatch({
       type:"update",
@@ -62,7 +61,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
         phoneNumber: phone !== '' ? phone : student?.phoneNumber,
         state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
         birthday: birthday !== '' ? birthday : student?.birthday,
-        timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : student?.timezone
+        timezone: form.getFieldValue('timezone')
       }
     })
   }
@@ -103,13 +102,14 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const handleSwitchCase = (val: boolean) => {
     setAutoSelected(val)
     if(val == true){
+      form.setFieldValue('timezone', localTimezone.label);
       navigator.geolocation.getCurrentPosition(success, error)
     }
   }
 
   const customSelect = () => {
     return (
-      <Select value={autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : student?.timezone} style={{width: 328}} onChange={e => setSelectedTimezone(e)} disabled={ !editing }>
+      <Select style={{width: 328}} disabled={ !editing }>
         {options.map(option => (
           <Option key={option.label} value={option.label}>{option.label}</Option>
         ))}
@@ -117,8 +117,8 @@ const BasicInfoForm: FC<any> = ({props}) => {
     )
   }
 
-  const optionsLocation: string[]= profileStaticData.location.map(l => l.title)
-  const optionsState: string[]= profileStaticData.state.map(s => s.title)
+  const optionsLocation: string[]= profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title }))
+  const optionsState: string[]= profileStaticData.state.map(s => ({key:s.id, label:s.title, value :s.title }))
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -128,7 +128,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
 
         <Form
           className={"basic-information-form"}
-          initialValues={{ timezone: 'auto' }}
           form={form}
         >
           <Form.Item
@@ -190,7 +189,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             initialValue={student?.location}
           >
               <AutoComplete
-                options={optionsLocation.map((option) => ({ value: option }))}
+                options={optionsLocation}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
                 filterOption={handleFilter}
@@ -206,7 +205,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             initialValue={student?.state}
           >
               <AutoComplete
-                options={optionsState.map((option) => ({ value: option }))}
+                options={optionsState}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
                 filterOption={handleFilter}
@@ -217,7 +216,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
           </Form.Item>
           <Form.Item
             name={"timezone"}
-            label={"TimeZone"}
+            label={"Timezone"}
             rules={[{ required: true, }]}
             initialValue={student?.timezone}
           >

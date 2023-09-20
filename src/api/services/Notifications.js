@@ -11,6 +11,17 @@ const get = (customConfig) => {
   return http.get(`/notification/list`, {...headerConfig,...customConfig });
 };
 
+
+const getUnreadNotificationCount = (customConfig, data={}) => {
+  const token = `Bearer ${getToken()}`;
+  const headerConfig = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(`/notification/unread`, data,{...headerConfig,...customConfig });
+};
+
 const deleteNotification = (data) => {
   const token = `Bearer ${getToken()}`;
   const headerConfig = {
@@ -21,9 +32,22 @@ const deleteNotification = (data) => {
   return http.post(`/notification/delete`, data, headerConfig);
 };
 
+const update = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const headerConfig = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(`/notification/update`, data, headerConfig);
+};
+
+
 const Service = {
   get,
-  deleteNotification
+  deleteNotification,
+  update,
+  getUnreadNotificationCount
 };
 
 export default Service;
