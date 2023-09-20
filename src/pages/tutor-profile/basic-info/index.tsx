@@ -34,6 +34,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
   const updatedTutor =  async () => {
+    console.log(autoSelected, localTimezone, selectedTimezone, tutor?.timezone)
     await TutorService.updateProfile({
       fullName: fullName !== '' ? fullName : tutor?.fullName,
       gender: gender !== '' ? gender : tutor?.gender,
@@ -95,10 +96,10 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       navigator.geolocation.getCurrentPosition(success, error)
     }
   }
-
+console.log(autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone);
   const customSelect = () => {
     return (
-      <Select value={autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone} style={{width: 328}} onChange={e => setSelectedTimezone(e)} disabled={ !editing }>
+      <Select defaultValue={`(UTC-7:00) Pacific Time`} value={`(UTC-7:00) Pacific Time`} style={{width: 328}} onChange={e => setSelectedTimezone(e)} disabled={ !editing }>
         {options.map(option => (
           <Option key={option.label} value={option.label}>{option.label}</Option>
         ))}
@@ -106,6 +107,8 @@ const BasicInfoForm: FC<Any> = ({props}) => {
     )
   }
 
+  console.log("selectedTimezone", selectedTimezone);
+  console.log("timezone", tutor?.timezone);
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
   return(
@@ -169,14 +172,20 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           onChange={(value) => setLocation(value)}
         />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name={"timezone"}
           label={"Timezone"}
           rules={[{ required: true, message: 'Please enter your time zone' }]}
+          initialValue={`(UTC-7:00) Pacific Time`} 
         >
-          {customSelect()}
+          
 
-        </Form.Item>
+        </Form.Item> */}
+         <Select  disabled={ !editing }>
+        {options.map(option => (
+          <Option key={option.label} value={option.label}>{option.label}</Option>
+        ))}
+      </Select>
         <div className={"timezone-wrap"}>
             <div >
               <div className={"switch-wrap"}>

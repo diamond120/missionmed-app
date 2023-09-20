@@ -12,6 +12,7 @@ import {useTutorDispatch} from "../../api/providers/TutorProvider.jsx";
 import Tutor from  "../../api/services/Tutor.js";
 import ProfileStaticDataContext from "../../api/context/ProfileStaticDataContext";
 import CommonService from "../../api/services/Common";
+import NotificationContext from "../../api/context/NotificationContext";
 
 const { Sider, Content } = Layout
 
@@ -29,6 +30,7 @@ export const DefaultLayout: FC = () => {
   const studentDispatch = useStudentDispatch();
   const tutorDispatch = useTutorDispatch();
   const [profileStaticData, setProfileStaticData] =useState({});
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
   const resetTutorContext = () => {
     tutorDispatch({
@@ -151,6 +153,7 @@ export const DefaultLayout: FC = () => {
   const { isTablet } = useBreakpoints()
   return (
     <ProfileStaticDataContext.Provider value={profileStaticData}>
+      <NotificationContext.Provider value={{unreadNotificationCount, setUnreadNotificationCount}}>
       <Layout className={"default"} hasSider>
         {!isTablet && <SidebarMenu/>}
         <Content>
@@ -159,6 +162,7 @@ export const DefaultLayout: FC = () => {
           </Suspense>
         </Content>
       </Layout>
+      </NotificationContext.Provider>
     </ProfileStaticDataContext.Provider>
   )
 }

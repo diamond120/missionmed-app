@@ -36,9 +36,10 @@ const BasicInfoForm: FC<any> = ({props}) => {
     ...allTimezones,
   }
 
+  console.log(form.getFieldsValue(), student);
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
-
+ 
   const updatedStudent = async () => {
     await StudentService.updateProfile({
       fullName: fullName !== '' ? fullName : student?.fullName,

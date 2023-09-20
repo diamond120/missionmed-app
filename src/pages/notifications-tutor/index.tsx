@@ -7,9 +7,10 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, Key } from 'antd/es/table/interface';
 import { HomeOutlined, DeleteOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
-import {formatDate} from "../../common/common";
+import {formatDate, stringToBoolean} from "../../common/common";
 import { useNavigate } from "react-router-dom";
 import NotificationsService from "../../api/services/Notifications"
+import {useNotificationContext}  from "../../api/context/NotificationContext"
 
 interface DataType {
   date: string;
@@ -36,6 +37,7 @@ const NotificationsTutor: FC = () => {
 
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
   const [selectedRows, setSelectedRows] = useState<Key[]>([]);
+  const {setUnreadNotificationCount} = useNotificationContext();
 
   const handleSelectRow = (record: any) => {
     const selectedKey = record.key;
@@ -53,16 +55,31 @@ const NotificationsTutor: FC = () => {
     setSelectedRows(checked ? notification.map((record) => record.key as Key) : []);
   };
 
+  const updateNotification = async (notificationId: string) => {
+    const result = await NotificationsService.update({
+      notificationId:notificationId,
+      isRead:true
+    })
+
+    if(result.data.success){
+      const updatedNotification = notification.map((item) => {
+        if(item.key == notificationId){
+          return {...item, isRead:true}
+        }else{
+          return item
+        }
+      });
+      setNotification(updatedNotification)
+      setUnreadNotificationCount((prevCount) => --prevCount);
+    }else{
+      console.log(result);
+    }
+  };
+
   const handleViewMore = (id: string, idNotification: string) => {
     navigate(`/tutor/reviewing_process/${id}`);
-    // updateNotification({
-    //   variables: {
-    //     id: idNotification,
-    //     input: {
-    //       is_read: true
-    //     }
-    //   }
-    // })
+    updateNotification(idNotification);
+    
   };
 
   const deletedNotification = async (notificationId: string) => {
@@ -76,6 +93,8 @@ const NotificationsTutor: FC = () => {
       console.log(result);
     }
   };
+
+  
 
   const handleSearch = (value: string) => {
     setSearchText(value);
@@ -97,7 +116,8 @@ const NotificationsTutor: FC = () => {
       setNotification( response.map((res) => ({
         "key":res.id,
         "date":formatDate(res.created_at),
-        "notification":res.message
+        "notification":res.message,
+        "isRead":stringToBoolean(res.is_read)
       })))
       setPagination(prevPagination => ({...prevPagination, total:totalCount}))
     }else{

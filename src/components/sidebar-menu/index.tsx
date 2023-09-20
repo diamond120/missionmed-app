@@ -7,6 +7,8 @@ import {useUser} from "../../api/providers/UserProvider";
 import {useStudent} from "../../api/providers/StudentProvider";
 import {useTutor} from "../../api/providers/TutorProvider";
 import {useAuthContext} from "../../api/context/AuthContext.js";
+import NotificationsService from "../../api/services/Notifications"
+import {useNotificationContext}  from "../../api/context/NotificationContext"
 import "./index.less"
 
 const { Sider } = Layout;
@@ -17,8 +19,10 @@ const SidebarMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
   const [appReviewPage,setAppReviewPage]=useState("")
-  const [notificationsPage,setNotificationsPage]=useState("")
+ 
   const [avatarProfile,setAvatarProfile]= useState<string | undefined | null>("")
+  const {unreadNotificationCount, setUnreadNotificationCount} = useNotificationContext();
+
   const navigate = useNavigate()
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -53,37 +57,33 @@ const SidebarMenu: React.FC = () => {
     navigate("/sign_in");
     window.location.reload()
   };
-  const [dot,setDot] = useState(false)
-  // const tutorNotifications = tutortSelected?.attributes?.notifications?.data
-  // const studentNotifications = studentSelected?.attributes?.notifications?.data
 
+  const getUnreadNotificationCount = async () => {
+    const config = { 
+      params: {
+        role:user.role,
+      }
+    };
+    try{
+      const result = await NotificationsService.getUnreadNotificationCount(config);
+      if(result.data.success){
+       const unreadCount  = result.data.data.count;
+       setUnreadNotificationCount(unreadCount);
+      }else{
+        console.log(result.data.message);
+      }
+    }catch(e){
+      console.log(e);
+    }
+    
+  }
 
-  // const countStudentUnreadNotifications = () => {
-  //   if (!studentNotifications) {
-  //     return 0;
-  //   }
+  useEffect(() => {
+    if(user.role){
+      getUnreadNotificationCount();
+    }
+  },[user.role]);
 
-  //   return studentNotifications.filter(
-  //     notification => notification.attributes && !notification.attributes.is_read
-  //   ).length;
-  // };
-
-  // const countTutorUnreadNotifications = () => {
-  //   if (!tutorNotifications) {
-  //     return 0;
-  //   }
-
-  //   return tutorNotifications.filter(
-  //     notification => notification.attributes && !notification.attributes.is_read
-  //   ).length;
-  // };
-  // useEffect(() => {
-  //   if (student) {
-  //     setDot(countStudentUnreadNotifications() > 0);
-  //   } else if (tutor) {
-  //     setDot(countTutorUnreadNotifications() > 0);
-  //   }
-  // }, [studentNotifications?.length, tutorNotifications?.length, countStudentUnreadNotifications,countTutorUnreadNotifications,]);
   return (
     <Sider
       collapsible
@@ -101,11 +101,9 @@ const SidebarMenu: React.FC = () => {
         <Menu.Item onClick={applicationReviewNavigate}  key={"1"} icon={<FileDoneOutlined  style={{fontSize: "24px", }} />} className={"custom-application-review-item"}>
           Application Review
         </Menu.Item>
-        <Menu.Item onClick={() =>{navigate(isStudent ? 'student_notifications' : 'tutor_notifications')}} style={{position:"fixed", bottom:"128px",width: "280px"}} key={"12"} icon={<Badge dot={dot}> <BellOutlined style={{fontSize: "24px"}} /> </Badge>}  className={"notification-item custom-notification-item"}>
+        <Menu.Item onClick={() =>{navigate(isStudent ? 'student_notifications' : 'tutor_notifications')}} style={{position:"fixed", bottom:"128px",width: "280px"}} key={"12"} icon={<Badge dot={unreadNotificationCount > 0}> <BellOutlined style={{fontSize: "24px"}} /> </Badge>}  className={"notification-item custom-notification-item"}>
           Notifications
         </Menu.Item>
-       
-
         <Menu.Item
           style={{ position: "fixed", bottom: "72px", width: "280px" }}
           key={"13"}
@@ -124,7 +122,6 @@ const SidebarMenu: React.FC = () => {
         <Menu.Item onClick={handleSignOut} style={{position:"fixed", bottom:"24px",width: "280px"}} key={"14"}  icon={<LogoutOutlined style={{fontSize: 32, }} />  }  className={"custom-profile-item"}>
           Sign out
         </Menu.Item>
-
       </Menu>
     </Sider>
   );
