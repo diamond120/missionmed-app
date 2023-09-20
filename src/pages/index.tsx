@@ -17,12 +17,13 @@ const StudentProfile= lazy(/*application-page-bundle*/ () => import("./student-p
 const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profile"))
 const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notifications-tutor"))
 const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./notifications-student"))
+const TutorMockInterview = lazy(() => import("./tutor-mock-interview"))
+
 const routes: RouteObject[] = [
   {
     Component: DefaultLayout,
     loader: () => <Loader spinning />,
     children: [
-
       {
         Component: Home,
         path: "",
@@ -71,6 +72,11 @@ const routes: RouteObject[] = [
       {
         Component: NotificationsStudent,
         path: "/student_notifications",
+        index: true,
+      },
+      {
+        Component: TutorMockInterview,
+        path: "/tutor/mock-interview",
         index: true,
       },
       {

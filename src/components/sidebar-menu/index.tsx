@@ -121,6 +121,9 @@ const SidebarMenu: React.FC = () => {
         >
           My Profile
         </Menu.Item>
+        <Menu.Item  onClick={() =>{navigate('tutor/mock-interview')}}  className={"custom-profile-item"} icon={<FileDoneOutlined  style={{fontSize: "24px", }} />} >
+          Mock Interview
+        </Menu.Item>
         <Menu.Item onClick={handleSignOut} style={{position:"fixed", bottom:"24px",width: "280px"}} key={"14"}  icon={<LogoutOutlined style={{fontSize: 32, }} />  }  className={"custom-profile-item"}>
           Sign out
         </Menu.Item>
