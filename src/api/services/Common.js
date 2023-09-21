@@ -15,9 +15,20 @@ const getUniversityList = () => {
   return http.get("/university-list", config);
 };
 
+const getUniversityTutorList = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(`/university-tutors-list`, data, config);
+}
+
 const Service = {
     getProfileStaticData,
-    getUniversityList
+    getUniversityList,
+    getUniversityTutorList
 };
 
 export default Service;
