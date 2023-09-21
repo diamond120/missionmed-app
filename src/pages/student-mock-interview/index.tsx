@@ -12,12 +12,14 @@ import {
   Select,
   Radio,
   Collapse,
-  Avatar,
+  Avatar
 } from "antd";
 import {
   HomeOutlined,
   ShoppingCartOutlined,
   UserOutlined,
+  CalendarOutlined,
+  DownOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import ProgressCard from "../../components/shared-ui/ProgressCard";
@@ -149,14 +151,18 @@ const StudentMockInterview = () => {
     return (
       <>
         <Radio key={tutor.id} value={tutor.id}>
-          <Avatar
-            src={tutor.profile_picture}
-            size={32}
-            icon={<UserOutlined />}
-          />
-          {tutor.full_name}
-          <div>
-            <span>{tutor.degree}</span> <span>{tutor.school}</span>
+          <div className={"avatar"}>
+            <Avatar
+              src={tutor.profile_picture}
+              size={40}
+              icon={<UserOutlined />}
+            />
+            <div className={"name-degree"}>
+              <h4 className={"tutor-name"}>{tutor.full_name}</h4> 
+              <div style={{display:"flex",columnGap:10,rowGap:5,flexWrap:'wrap',color:'#6B7393',fontSize:12}}>
+                  <span>{tutor.degree}</span>  &#8226; <span>{tutor.school}</span>
+              </div>
+            </div>
           </div>
         </Radio>
       </>
@@ -174,7 +180,9 @@ const StudentMockInterview = () => {
           bordered={false}
           defaultActiveKey={["1"]}
           expandIconPosition={`end`}
+          expandIcon={({ isActive }) => <DownOutlined style={{fontSize:'17px',color:'#9096AE;'}}  rotate={isActive ? -180 : 0} />}
           className="site-collapse-custom-collapse"
+          
         >
           {tutors.map((tutor) => (
             <Panel
@@ -215,10 +223,12 @@ const StudentMockInterview = () => {
 
     return (
       <>
-        <div>Recommended for you</div>
-        <Form.Item name="tutor" label="" rules={[{ required: true }]}>
-          <TutorCollapse tutors={tutors} />
-        </Form.Item>
+        <div className={"choose-tutor"}>
+          <h3 className={"title"}>Recommended for you</h3>
+          <Form.Item name="tutor" label="" rules={[{ required: true }]}>
+            <TutorCollapse tutors={tutors} />
+          </Form.Item>
+        </div>
       </>
     );
   });
@@ -237,20 +247,31 @@ const StudentMockInterview = () => {
           <Breadcrumb.Item>Mock Interview</Breadcrumb.Item>
         </Breadcrumb>
 
-        <div>
-          <h2>Mock Interview</h2>
-          <Button type="primary" onClick={showModal}>
-            Book Interview
-          </Button>
+        <div className="mock-interview">
+          <div className={"con-section-wrap"}>
+            <h2 className={"tab-title"}>Mock Interview</h2>
+            <div className={"con-box"}>
+              <div className={"con-box-wrap"} style={{textAlign:'center'}}>
+                <CalendarOutlined style={{ fontSize: '50px', color: '#A9A2F8',marginBottom:'17px' }}/>
+                <h2 className={"con-box-title"}>You Don’t Have Any Booked Interviews</h2>
+                <div style={{marginBottom:'16px'}}>You can choose tutor and book your first mock <br /> interview by pressing “Book Interview” button below.</div>
+                <Button className={"primary-button"} onClick={showModal}>
+                  Book Interview
+                </Button>
+              </div>
+            </div>
+          </div>
 
           <Modal
             title={modalTitle}
             open={isModalOpen}
             onOk={handleOk}
             onCancel={handleCancel}
+            width={'600px'}
+            className={"mock-interview-modal"}
             footer={[
               <span>Step {activeStep} of 4</span>,
-              <Button key="submit" type="primary" onClick={next}>
+              <Button key="submit" className={"secondary-button"} onClick={next}>
                 Next Step
               </Button>,
             ]}

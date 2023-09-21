@@ -20,21 +20,16 @@ const TutorMockInterview = () => {
         </Breadcrumb>
 
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
-            <div style={{display:"flex",alignItems:"center", justifyContent:"space-between"}}>
+            <div className={"grid-col-2"}>
                 <h2 className={"tab-title"}>UCAT Sessions</h2>
                 <Button className={"primary-button"}><FileSearchOutlined /> Useful Resources</Button>
             </div>
-            <div style={{display:"flex",columnGap:"24px"}}>
+            <div className={"display-f-24"}>
                 <Upcsession/>
                 <Ucatagenda />
             </div>
             <Mysessions />
         </div>
-
-        
-
-
-
     </Section>
     </>
     )
