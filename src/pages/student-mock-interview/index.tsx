@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Breadcrumb, message } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
+import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
 import MockInterviewDetails from "./mock-interview-details";
@@ -20,21 +20,30 @@ const StudentMockInterview = () => {
 
   const formatSessionList = (sessions) => {
     const formatedSessions = sessions.reduce((obj, session) => {
-      obj[session.date] = obj[session.date] ||[];
+      obj[session.date] = obj[session.date] || [];
       obj[session.date].push(session);
       return obj;
-    }, {})
+    }, {});
     return formatedSessions;
-  }
+  };
 
   const getMockInterviewDetails = async () => {
     try {
       const response = await MockInterviewsService.getStudentMockInterviews({});
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.uplcomingInterview ?? {});
-        setUpcomingSessions(response.data?.data?.upcomingsessions ? formatSessionList(response.data?.data?.upcomingsessions) : {})
-        setPastSessions(response.data?.data?.pastsessions ? formatSessionList(response.data?.data?.pastsessions) : {})
-        setAgenda(response.data?.data?.agenda ?? null)
+        //setUpcomingInterview({});
+        setUpcomingSessions(
+          response.data?.data?.upcomingsessions
+            ? formatSessionList(response.data?.data?.upcomingsessions)
+            : {}
+        );
+        setPastSessions(
+          response.data?.data?.pastsessions
+            ? formatSessionList(response.data?.data?.pastsessions)
+            : {}
+        );
+        setAgenda(response.data?.data?.agenda ?? null);
       } else {
         throw new Error(response.data.message);
       }
@@ -44,8 +53,8 @@ const StudentMockInterview = () => {
   };
 
   const handleEditAgenda = (agendaDetails) => {
-    setAgenda(agendaDetails)
-  }
+    setAgenda(agendaDetails);
+  };
 
   useEffect(() => {
     getMockInterviewDetails();
@@ -68,7 +77,7 @@ const StudentMockInterview = () => {
               justifyContent: "space-between",
             }}
           >
-            <h2 className={"tab-title"}>UCAT Sessions</h2>
+            <h2 className={"tab-title"}>Mock Interview</h2>
             {Object.values(upcomingInterview).length > 0 && <BookInterview />}
           </div>
           {Object.values(upcomingInterview).length > 0 ? (
@@ -81,7 +90,32 @@ const StudentMockInterview = () => {
               handleEditAgenda={handleEditAgenda}
             />
           ) : (
-            <BookInterview key="bookInterview" />
+            <div className="mock-interview">
+              <div className={"con-section-wrap"}>
+                <div className={"con-box"}>
+                  <div
+                    className={"con-box-wrap"}
+                    style={{ textAlign: "center" }}
+                  >
+                    <CalendarOutlined
+                      style={{
+                        fontSize: "50px",
+                        color: "#A9A2F8",
+                        marginBottom: "17px",
+                      }}
+                    />
+                    <h2 className={"con-box-title"}>
+                      You Don’t Have Any Booked Interviews
+                    </h2>
+                    <div style={{ marginBottom: "16px" }}>
+                      You can choose tutor and book your first mock <br />{" "}
+                      interview by pressing “Book Interview” button below.
+                    </div>
+                    <BookInterview key="bookInterview" />{" "}
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </Section>

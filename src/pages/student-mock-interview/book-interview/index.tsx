@@ -1,5 +1,14 @@
 import { memo, useState } from "react";
-import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio} from "antd";
+import {
+  Button,
+  Form,
+  Modal,
+  message,
+  Select,
+  Collapse,
+  Avatar,
+  Radio,
+} from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
 import "./index.less";
@@ -135,14 +144,27 @@ const BookInterview = () => {
     return (
       <>
         <Radio key={tutor.id} value={tutor.id}>
-          <Avatar
-            src={tutor.profile_picture}
-            size={32}
-            icon={<UserOutlined />}
-          />
-          {tutor.full_name}
-          <div>
-            <span>{tutor.degree}</span> <span>{tutor.school}</span>
+          <div className={"avatar"}>
+            <Avatar
+              src={tutor.profile_picture}
+              size={40}
+              icon={<UserOutlined />}
+            />
+            <div className={"name-degree"}>
+              <h4 className={"tutor-name"}>{tutor.full_name}</h4>
+              <div
+                style={{
+                  display: "flex",
+                  columnGap: 10,
+                  rowGap: 5,
+                  flexWrap: "wrap",
+                  color: "#6B7393",
+                  fontSize: 12,
+                }}
+              >
+                <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span>
+              </div>
+            </div>
           </div>
         </Radio>
       </>
@@ -179,10 +201,12 @@ const BookInterview = () => {
   const Step2Form = memo(function Step2Form({ tutors }) {
     return (
       <>
-        <div>Recommended for you</div>
-        <Form.Item name="tutor" label="" rules={[{ required: true }]}>
-          <TutorCollapse tutors={tutors} />
-        </Form.Item>
+        <div className={"choose-tutor"}>
+          <h3 className={"title"}>Recommended for you</h3>
+          <Form.Item name="tutor" label="" rules={[{ required: true }]}>
+            <TutorCollapse tutors={tutors} />
+          </Form.Item>
+        </div>
       </>
     );
   });
@@ -193,18 +217,19 @@ const BookInterview = () => {
 
   return (
     <>
-      <Button type="primary" className={"primary-button"} onClick={showModal}>
+      <Button className={"primary-button"} onClick={showModal}>
         Book Interview
       </Button>
-
       <Modal
         title={modalTitle}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        className={"mock-interview-modal"}
+        width={"600px"}
         footer={[
           <span>Step {activeStep} of 4</span>,
-          <Button key="submit" type="primary" onClick={next}>
+          <Button key="submit" className={"secondary-button"} onClick={next}>
             Next Step
           </Button>,
         ]}

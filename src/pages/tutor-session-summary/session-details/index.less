@@ -1,0 +1,31 @@
+.session-details{
+     .date-time{
+          display: flex;
+          column-gap: 32px;
+          margin-top: 17px;
+          .date{
+               margin-right: 34px;
+          }
+          .title{
+               font-weight: 600;
+               color: #465078;
+          }
+          .text{
+               color: #312D42;
+               font-size: 16px;
+          }
+     }
+}
+
+@media (max-width:767px){
+     .session-details {
+          .date-time {
+               column-gap: 17px;
+               margin-top: 15px;
+               justify-content: space-between;
+               .date {
+                    margin-right: 23px;
+               }
+          }
+     }
+}

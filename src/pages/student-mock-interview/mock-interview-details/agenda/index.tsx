@@ -1,15 +1,24 @@
-import { Button } from 'antd';
+import { Button, Form, Modal,Input } from 'antd';
 import './index.less'
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { useState } from 'react';
+const { TextArea } = Input;
 
 const Agenda = ({agenda, handleEditAgenda}) => {
 
-  const [isEdit, setIsEdit] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleClick = () => {
-    setIsEdit(true)
+    setIsModalOpen(true)
     handleEditAgenda()
   }
+
+  const handleSubmit = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
     <>
       <div className={"upc-agenda con-box"}>
@@ -25,6 +34,31 @@ const Agenda = ({agenda, handleEditAgenda}) => {
                </div>
           </div>
       </div>
+      <Modal
+        title="Edit Agenda"
+        open={isModalOpen}
+        onOk={handleSubmit}
+        onCancel={handleCancel}
+        className={"mock-interview-modal"}
+        width={"600px"}
+        footer={[
+          <p key="discard" type="dashed" onClick={handleCancel}>
+           Discard 
+          </p>,
+          <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+          Save Changes
+        </Button>,
+        ]}
+      >
+        <Form layout="vertical">
+            <Form.Item label="Here you can put down your thoughts and questions to your tutor on the upcoming session" name="agenda" rules={[{required:true}]}>
+            <TextArea
+              style={{ height: 200 }}
+              placeholder="can resize"
+            />
+        </Form.Item>
+        </Form>
+      </Modal>
     </>
   )
 }
