@@ -26,29 +26,62 @@ import CommonService from "../../api/services/Common";
 
 const { Panel } = Collapse;
 
-const text = (
-  <p style={{ paddingLeft: 24 }}>
-    A dog is a type of domesticated animal. Known for its loyalty and
-    faithfulness, it can be found as a welcome guest in many households across
-    the world.
-  </p>
-);
-
 const StudentMockInterview = () => {
   const data = [];
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
+  const [sessionDetails, setSessionDetails] = useState({});
+  const [universityList, setUniversityList] = useState([]);
+  const [tutors, setTutors] = useState([]);
+
+  const getUniversityList = async () => {
+    try {
+      const response = await CommonService.getUniversityList();
+      if (response.data.success) {
+        setUniversityList(
+          response.data.data.map((university) => ({
+            key: university.id,
+            label: university.title,
+            value: university.title,
+          }))
+        );
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+
+  const getUniversityTutorList = async () => {
+    try {
+      const data = {
+        university: form.getFieldValue("university"),
+      };
+      const response = await CommonService.getUniversityTutorList(data);
+      if (response.data.success) {
+        const tutorList = response.data.data ?? [];
+        setTutors(tutorList);
+      } else {
+        message.error(response.data.message);
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
 
   const next = async () => {
     console.log(form.getFieldsValue());
     await form.validateFields();
     const nextStep = activeStep + 1;
     setActiveStep(nextStep);
+    if(nextStep == "2"){
+      getUniversityTutorList();
+    }
     setModalTitle("Choose Tutor");
   };
 
@@ -59,6 +92,7 @@ const StudentMockInterview = () => {
   const showModal = () => {
     setIsModalOpen(true);
     setActiveStep(1);
+    getUniversityList();
     setModalTitle("Specify Your Priorites");
   };
 
@@ -81,32 +115,7 @@ const StudentMockInterview = () => {
   };
   const selectUniversity = Form.useWatch("university", form);
 
-  const Step1Form = () => {
-    const [universityList, setUniversityList] = useState([]);
-
-    const getUniversityList = async () => {
-      try {
-        const response = await CommonService.getUniversityList();
-        if (response.data.success) {
-          setUniversityList(
-            response.data.data.map((university) => ({
-              key: university.id,
-              label: university.title,
-              value: university.title,
-            }))
-          );
-        } else {
-          throw new Error(response.data.message);
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
-    };
-
-    useEffect(() => {
-      getUniversityList();
-    }, []);
-
+  const Step1Form = ({universityList, getMockInterviewList}) => {
     return (
       <>
         <Form.Item
@@ -190,28 +199,7 @@ const StudentMockInterview = () => {
     );
   });
 
-  const Step2Form = memo(function Step2Form() {
-    const [tutors, setTutors] = useState([]);
-
-    const getUniversityTutorList = async () => {
-      try {
-        const data = {
-          university: form.getFieldValue("university"),
-        };
-        const response = await CommonService.getUniversityTutorList(data);
-        if (response.data.success) {
-          const tutorList = response.data.data ?? [];
-          setTutors(tutorList);
-        } else {
-          message.error(response.data.message);
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
-    };
-    useEffect(() => {
-      getUniversityTutorList();
-    }, []);
+  const Step2Form = memo(function Step2Form({tutors}) {
 
     return (
       <>
@@ -256,8 +244,8 @@ const StudentMockInterview = () => {
             ]}
           >
             <Form form={form} layout="vertical">
-              {activeStep == 1 && <Step1Form />}
-              {activeStep == 2 && <Step2Form />}
+              {activeStep == 1 && <Step1Form universityList={universityList} getMockInterviewList={getMockInterviewList}/>}
+              {activeStep == 2 && <Step2Form tutors={tutors}/>}
               {activeStep == 3 && <Step3From />}
             </Form>
           </Modal>
