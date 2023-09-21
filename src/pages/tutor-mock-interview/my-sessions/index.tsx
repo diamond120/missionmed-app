@@ -1,8 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import "./index.less"
-import { Breadcrumb,  Button, Tabs} from "antd"
+import { Form,Modal,Button, Tabs, Rate,Input} from "antd"
+import { useEffect, useState } from "react";
 
+const { TextArea } = Input;
+import {SmileOutlined} from '@ant-design/icons';
 const Mysessions = () => {
+     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+     const [modalTitle, setModalTitle] = useState("");
+
+     const showModal = () => {
+          setIsModalOpen(true);
+          
+          setModalTitle("Rate Session");
+     };
+     const handleCancel = () => {
+          setIsModalOpen(false);
+     };
+     const handleOk = () => {
+          setIsModalOpen(false);
+     };
+
      const { TabPane } = Tabs;
      const navigation = useNavigate();
      return (
@@ -18,27 +36,35 @@ const Mysessions = () => {
                               <h4 className="sessions-date">Fri, 16 Jun 2023</h4>
                               <ul className="sessions-list"> 
                                    <li className="item">
-                                        <div className="time">
-                                             <div style={{paddingBottom:"5px"}}><strong>3:00 pm</strong></div>
-                                             <div className={"end-time"}>3:00 pm</div>
-                                        </div>
+                                        <div style={{display:"flex"}}>
+                                             <div className="time">
+                                                  <div style={{paddingBottom:"5px"}}><strong>3:00 pm</strong></div>
+                                                  <div className={"end-time"}>3:00 pm</div>
+                                             </div>
 
-                                        <div>
-                                             <div style={{paddingBottom:"5px"}}><strong>UCAT Teaching Session</strong></div>
-                                             <div className={"mock_interview"}>Cameron Williamson</div>
+                                             <div>
+                                                  <div style={{paddingBottom:"5px"}}><strong>UCAT Teaching Session</strong></div>
+                                                  <div className={"mock_interview"}>Cameron Williamson</div>
+                                             </div>
                                         </div>
-                                        <Button className={"secondary-button"}>Reschedule</Button>
+                                        <div className={"button-group"} style={{display:'flex',columnGap:'16px'}}>
+                                             <Button className={"secondary-button"} onClick={showModal}>Rate Session</Button>
+                                             <Button className={"secondary-button"}>Reschedule</Button>
+
+                                        </div>
                                    </li>
                                    
                                    <li className="item">
-                                        <div className="time">
-                                             <div style={{paddingBottom:"5px"}}><strong>3:00 pm</strong></div>
-                                             <div className={"end-time"}>3:00 pm</div>
-                                        </div>
+                                        <div style={{display:"flex"}}> 
+                                             <div className="time">
+                                                  <div style={{paddingBottom:"5px"}}><strong>3:00 pm</strong></div>
+                                                  <div className={"end-time"}>3:00 pm</div>
+                                             </div>
 
-                                        <div>
-                                             <div style={{paddingBottom:"5px"}}><strong>UCAT Teaching Session</strong></div>
-                                             <div className={"mock_interview"}>Cameron Williamson</div>
+                                             <div>
+                                                  <div style={{paddingBottom:"5px"}}><strong>UCAT Teaching Session</strong></div>
+                                                  <div className={"mock_interview"}>Cameron Williamson</div>
+                                             </div>
                                         </div>
                                         <Button className={"secondary-button"}>Reschedule</Button>
                                    </li>
@@ -54,7 +80,6 @@ const Mysessions = () => {
                                                   <div style={{paddingBottom:"5px"}}><strong>3:00 pm</strong></div>
                                                   <div className={"end-time"}>3:00 pm</div>
                                              </div>
-
                                              <div>
                                                   <div style={{paddingBottom:"5px"}}><strong>UCAT Teaching Session</strong></div>
                                                   <div className={"mock_interview"}>Cameron Williamson</div>
@@ -105,7 +130,7 @@ const Mysessions = () => {
                                                   <div className={"mock_interview"}>Cameron Williamson</div>
                                              </div>
                                         </div>
-                                        <Button className={"secondary-button"}>Session Summary</Button>
+                                        <Button className={"secondary-button"} onClick={() => navigation('/tutor/session-summary')}>Session Summary</Button>
                                    </li>
                                    <li className="item">
                                         <div style={{display:"flex"}}>
@@ -119,17 +144,68 @@ const Mysessions = () => {
                                                   <div className={"mock_interview"}>Cameron Williamson</div>
                                              </div>
                                         </div>
-                                        <Button className={"secondary-button"}>Session Summary</Button>
+                                        <Button className={"secondary-button"} onClick={() => navigation('/tutor/session-summary')}>Session Summary</Button>
                                    </li>
-
-                                   
-                                   
                               </ul>
                          </div>
                     </div>
                </TabPane>
           </Tabs>
      </div>
+     
+     <Modal
+          title={modalTitle}
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width={'600px'}
+          className={"rate-session-modal"}
+          footer={[
+          <div className={"button-group"}>
+               <Button className={"secondary-button"}>Cancel</Button>
+               <Button className={"secondary-button rate-button"}>Rate Session</Button>
+          </div>
+          ]}
+     >
+          <div style={{textAlign:'center'}}>
+               <SmileOutlined style={{fontSize:100,color:'#A9A2F8'}}/>
+               <h3 className={"title"}>How Was Your Session?</h3>
+               <div className={"text"}>We pride ourselves on quality and take your feedback very seriously. Please rate your today’s interaction with a tutor according to the following properties:</div>
+               <div className={"ratings-group"}>
+                    <div className={"ratings"}>
+                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+                         <div className={"ratings-wrap"}>
+                              <Rate allowHalf/>
+                         </div>
+                    </div>
+                    <div className={"ratings"}>
+                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+                         <div className={"ratings-wrap"}>
+                              <Rate allowHalf/>
+                         </div>
+                    </div>
+                    <div className={"rating"}>
+                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+                         <div className={"ratings-wrap"}>
+                              <Rate allowHalf/>
+                         </div>
+                    </div>
+                    <div className={"ratings"}>
+                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+                         <div className={"ratings-wrap"}>
+                              <Rate allowHalf />
+                         </div>
+                    </div>
+               </div>
+               <Form style={{marginTop:'32px'}}>
+                    <Form.Item label="TextArea">
+                         <TextArea rows={4} />
+                    </Form.Item>
+
+               </Form>
+          </div>
+     </Modal>
+     
      </>
      )
 }
