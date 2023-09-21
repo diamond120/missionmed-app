@@ -1,241 +1,64 @@
 import "./index.less";
-import React, { memo } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import {
-  Breadcrumb,
-  Modal,
-  Button,
-  Input,
-  Form,
-  message,
-  Select,
-  Radio,
-  Collapse,
-  Avatar
-} from "antd";
-import {
-  HomeOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
-  CalendarOutlined,
-  DownOutlined
-} from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import ProgressCard from "../../components/shared-ui/ProgressCard";
+import { useState } from "react";
+import { Breadcrumb, message } from "antd";
+import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
-import CommonService from "../../api/services/Common";
-
-const { Panel } = Collapse;
-
-const text = (
-  <p style={{ paddingLeft: 24 }}>
-    A dog is a type of domesticated animal. Known for its loyalty and
-    faithfulness, it can be found as a welcome guest in many households across
-    the world.
-  </p>
-);
+import BookInterview from "./book-interview";
+import MockInterviewDetails from "./mock-interview-details";
+import MockInterviewsService from "../../api/services/MockInterviews";
 
 const StudentMockInterview = () => {
   const data = [];
   const navigate = useNavigate();
-  const [form] = Form.useForm();
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [upcomingInterview, setUpcomingInterview] = useState({});
+  const [upcomingSessions, setUpcomingSessions] = useState({});
+  const [pastSessions, setPastSessions] = useState({});
+  const [agenda, setAgenda] = useState(null);
 
-  const [activeStep, setActiveStep] = useState(1);
-  const [modalTitle, setModalTitle] = useState("");
-
-  const next = async () => {
-    console.log(form.getFieldsValue());
-    await form.validateFields();
-    const nextStep = activeStep + 1;
-    setActiveStep(nextStep);
-    setModalTitle("Choose Tutor");
+  const formatSessionList = (sessions) => {
+    const formatedSessions = sessions.reduce((obj, session) => {
+      obj[session.date] = obj[session.date] || [];
+      obj[session.date].push(session);
+      return obj;
+    }, {});
+    return formatedSessions;
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-    setActiveStep(1);
-    setModalTitle("Specify Your Priorites");
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const mockInterviewList = [
-    { id: 1, value: "Mock Interview#1" },
-    { id: 2, value: "Mock Interview#2" },
-    { id: 3, value: "Mock Interview#3" },
-  ];
-
-  const getMockInterviewList = () => {
-    return mockInterviewList;
-  };
-
-  const handleChange = (value: string) => {
-    console.log(`Selected: ${value}`);
-  };
-  const selectUniversity = Form.useWatch("university", form);
-
-  const Step1Form = () => {
-    const [universityList, setUniversityList] = useState([]);
-
-    const getUniversityList = async () => {
-      try {
-        const response = await CommonService.getUniversityList();
-        if (response.data.success) {
-          setUniversityList(
-            response.data.data.map((university) => ({
-              key: university.id,
-              label: university.title,
-              value: university.title,
-            }))
-          );
-        } else {
-          throw new Error(response.data.message);
-        }
-      } catch (e) {
-        message.error(e.message);
+  const getMockInterviewDetails = async () => {
+    try {
+      const response = await MockInterviewsService.getStudentMockInterviews({});
+      if (response.data.success) {
+        setUpcomingInterview(response.data?.data?.uplcomingInterview ?? {});
+        //setUpcomingInterview({});
+        setUpcomingSessions(
+          response.data?.data?.upcomingsessions
+            ? formatSessionList(response.data?.data?.upcomingsessions)
+            : {}
+        );
+        setPastSessions(
+          response.data?.data?.pastsessions
+            ? formatSessionList(response.data?.data?.pastsessions)
+            : {}
+        );
+        setAgenda(response.data?.data?.agenda ?? null);
+      } else {
+        throw new Error(response.data.message);
       }
-    };
-
-    useEffect(() => {
-      getUniversityList();
-    }, []);
-
-    return (
-      <>
-        <Form.Item
-          name="university"
-          label="Which university are you sitting a mock interview for?"
-          rules={[{ required: true }]}
-        >
-          <Select
-            showSearch
-            placeholder="--- Select University ---"
-            optionFilterProp="children"
-            onChange={handleChange}
-            // onSearch={onSearch}
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            options={universityList}
-          />
-        </Form.Item>
-        {selectUniversity && (
-          <Form.Item
-            name="mockInterview"
-            label="Which mock interview are you sitting?"
-            rules={[{ required: true }]}
-          >
-            <Radio.Group>
-              {getMockInterviewList(selectUniversity).map((interview) => (
-                <Radio key={interview.id} value={interview.value}>
-                  {interview.value}
-                </Radio>
-              ))}
-            </Radio.Group>
-          </Form.Item>
-        )}
-      </>
-    );
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
-  const TutorPanelHeader = memo(function TutorPanelHeader({ tutor }) {
-    return (
-      <>
-        <Radio key={tutor.id} value={tutor.id}>
-          <div className={"avatar"}>
-            <Avatar
-              src={tutor.profile_picture}
-              size={40}
-              icon={<UserOutlined />}
-            />
-            <div className={"name-degree"}>
-              <h4 className={"tutor-name"}>{tutor.full_name}</h4> 
-              <div style={{display:"flex",columnGap:10,rowGap:5,flexWrap:'wrap',color:'#6B7393',fontSize:12}}>
-                  <span>{tutor.degree}</span>  &#8226; <span>{tutor.school}</span>
-              </div>
-            </div>
-          </div>
-        </Radio>
-      </>
-    );
-  });
-
-  const TutorCollapse = memo(function TutorCollapse({
-    value = null,
-    onChange,
-    tutors,
-  }) {
-    return (
-      <Radio.Group onChange={onChange} value={value}>
-        <Collapse
-          bordered={false}
-          defaultActiveKey={["1"]}
-          expandIconPosition={`end`}
-          expandIcon={({ isActive }) => <DownOutlined style={{fontSize:'17px',color:'#9096AE;'}}  rotate={isActive ? -180 : 0} />}
-          className="site-collapse-custom-collapse"
-          
-        >
-          {tutors.map((tutor) => (
-            <Panel
-              header={<TutorPanelHeader tutor={tutor} />}
-              key={tutor.id}
-              className="site-collapse-custom-panel"
-            >
-              {tutor.biography}
-            </Panel>
-          ))}
-        </Collapse>
-      </Radio.Group>
-    );
-  });
-
-  const Step2Form = memo(function Step2Form() {
-    const [tutors, setTutors] = useState([]);
-
-    const getUniversityTutorList = async () => {
-      try {
-        const data = {
-          university: form.getFieldValue("university"),
-        };
-        const response = await CommonService.getUniversityTutorList(data);
-        if (response.data.success) {
-          const tutorList = response.data.data ?? [];
-          setTutors(tutorList);
-        } else {
-          message.error(response.data.message);
-        }
-      } catch (e) {
-        message.error(e.message);
-      }
-    };
-    useEffect(() => {
-      getUniversityTutorList();
-    }, []);
-
-    return (
-      <>
-        <div className={"choose-tutor"}>
-          <h3 className={"title"}>Recommended for you</h3>
-          <Form.Item name="tutor" label="" rules={[{ required: true }]}>
-            <TutorCollapse tutors={tutors} />
-          </Form.Item>
-        </div>
-      </>
-    );
-  });
-
-  const Step3From = () => {
-    return <>Calender</>;
+  const handleEditAgenda = (agendaDetails) => {
+    setAgenda(agendaDetails);
   };
+
+  useEffect(() => {
+    getMockInterviewDetails();
+  }, []);
 
   return (
     <React.Fragment>
@@ -246,42 +69,54 @@ const StudentMockInterview = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>Mock Interview</Breadcrumb.Item>
         </Breadcrumb>
-
-        <div className="mock-interview">
-          <div className={"con-section-wrap"}>
+        <div className={"con-section-wrap tutor-mock-section-wrap"}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            <div className={"con-box"}>
-              <div className={"con-box-wrap"} style={{textAlign:'center'}}>
-                <CalendarOutlined style={{ fontSize: '50px', color: '#A9A2F8',marginBottom:'17px' }}/>
-                <h2 className={"con-box-title"}>You Don’t Have Any Booked Interviews</h2>
-                <div style={{marginBottom:'16px'}}>You can choose tutor and book your first mock <br /> interview by pressing “Book Interview” button below.</div>
-                <Button className={"primary-button"} onClick={showModal}>
-                  Book Interview
-                </Button>
+            {Object.values(upcomingInterview).length > 0 && <BookInterview />}
+          </div>
+          {Object.values(upcomingInterview).length > 0 ? (
+            <MockInterviewDetails
+              key="mockInterviewDetails"
+              upcomingInterview={upcomingInterview}
+              upcomingSessions={upcomingSessions}
+              pastSessions={pastSessions}
+              agenda={agenda}
+              handleEditAgenda={handleEditAgenda}
+            />
+          ) : (
+            <div className="mock-interview">
+              <div className={"con-section-wrap"}>
+                <div className={"con-box"}>
+                  <div
+                    className={"con-box-wrap"}
+                    style={{ textAlign: "center" }}
+                  >
+                    <CalendarOutlined
+                      style={{
+                        fontSize: "50px",
+                        color: "#A9A2F8",
+                        marginBottom: "17px",
+                      }}
+                    />
+                    <h2 className={"con-box-title"}>
+                      You Don’t Have Any Booked Interviews
+                    </h2>
+                    <div style={{ marginBottom: "16px" }}>
+                      You can choose tutor and book your first mock <br />{" "}
+                      interview by pressing “Book Interview” button below.
+                    </div>
+                    <BookInterview key="bookInterview" />{" "}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <Modal
-            title={modalTitle}
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width={'600px'}
-            className={"mock-interview-modal"}
-            footer={[
-              <span>Step {activeStep} of 4</span>,
-              <Button key="submit" className={"secondary-button"} onClick={next}>
-                Next Step
-              </Button>,
-            ]}
-          >
-            <Form form={form} layout="vertical">
-              {activeStep == 1 && <Step1Form />}
-              {activeStep == 2 && <Step2Form />}
-              {activeStep == 3 && <Step3From />}
-            </Form>
-          </Modal>
+          )}
         </div>
       </Section>
     </React.Fragment>

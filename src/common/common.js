@@ -58,3 +58,7 @@ export const tutorWorkingHours = (workingHours) => {
 export const formatDate = (dateTime) => {
     return moment(dateTime).format("MM/DD/YYYY");
 }
+
+export const formatDateV1 = (dateTime) => {
+    return moment(dateTime).format("ddd, DD MMM YYYY");
+}
