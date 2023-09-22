@@ -12,6 +12,7 @@ import {
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
 import "./index.less";
+import Calender from "../calender";
 
 const { Panel } = Collapse;
 
@@ -212,7 +213,9 @@ const BookInterview = () => {
   });
 
   const Step3From = () => {
-    return <>Calender</>;
+    return <>
+      <Calender/>
+    </>;
   };
 
   return (

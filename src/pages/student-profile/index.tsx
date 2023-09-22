@@ -12,7 +12,6 @@ import Personality from "./personality"
 import Applications from "./applications"
 import ApplicationInfo from "./application-info"
 import ExtraInfo from "./extra-info"
-import Calender from "./calender"
 import {useStudent} from "../../api/providers/StudentProvider";
 
 const StudentProfile = () => {
@@ -21,7 +20,6 @@ const StudentProfile = () => {
  
     return(
     <Section >
-      <Calender />
       <Breadcrumb>
         <Breadcrumb.Item href={"/"}>
           <HomeOutlined />

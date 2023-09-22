@@ -91,7 +91,7 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            {Object.values(upcomingInterview).length > 0 && <BookInterview />}
+            {(Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0) && <BookInterview />}
           </div>
           { (Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0)  ? (
             <MockInterviewDetails
