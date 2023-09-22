@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "./index.less"
-import { Form,Modal,Button, Tabs, Rate,Input} from "antd"
+import { Form,Modal,Button, Tabs, Rate,Input, Row, Col} from "antd"
 import { useEffect, useState } from "react";
 
 const { TextArea } = Input;
@@ -171,35 +171,29 @@ const Mysessions = () => {
                <SmileOutlined style={{fontSize:100,color:'#A9A2F8'}}/>
                <h3 className={"title"}>How Was Your Session?</h3>
                <div className={"text"}>We pride ourselves on quality and take your feedback very seriously. Please rate your today’s interaction with a tutor according to the following properties:</div>
-               <div className={"ratings-group"}>
-                    <div className={"ratings"}>
+               
+               <Row className={"ratings-group"} gutter={[5,24]}>
+                    <Col xs={24} xl={12} className='ratings'>
                          <h4 className={"rat-title"}>Knowledge & Expertise</h4>
-                         <div className={"ratings-wrap"}>
-                              <Rate allowHalf/>
-                         </div>
-                    </div>
-                    <div className={"ratings"}>
-                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
-                         <div className={"ratings-wrap"}>
-                              <Rate allowHalf/>
-                         </div>
-                    </div>
-                    <div className={"rating"}>
-                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
-                         <div className={"ratings-wrap"}>
-                              <Rate allowHalf/>
-                         </div>
-                    </div>
-                    <div className={"ratings"}>
-                         <h4 className={"rat-title"}>Knowledge & Expertise</h4>
-                         <div className={"ratings-wrap"}>
-                              <Rate allowHalf />
-                         </div>
-                    </div>
-               </div>
-               <Form style={{marginTop:'32px'}}>
-                    <Form.Item label="TextArea">
-                         <TextArea rows={4} />
+                         <Rate allowHalf/>
+                    </Col>
+                    <Col sm={24} xl={12} className='ratings'>
+                         <h4 className={"rat-title"}>Engagement & Enthusiasm</h4>
+                         <Rate allowHalf/>
+                    </Col>
+                    <Col xs={24} xl={12} className='ratings'>
+                         <h4 className={"rat-title"}>Clarity & Understandability</h4>
+                         <Rate allowHalf/>
+                    </Col>
+                    <Col xs={24} xl={12} className='ratings'>
+                         <h4 className={"rat-title"}>Punctuality & Preparedness</h4>
+                         <Rate allowHalf />
+                    </Col>
+               </Row>
+
+               <Form style={{marginTop:'32px'}}  layout="vertical">
+                    <Form.Item label="Extra Comments" style={{marginBottom:0}}>
+                         <TextArea rows={3} />
                     </Form.Item>
 
                </Form>

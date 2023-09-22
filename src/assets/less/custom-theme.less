@@ -106,6 +106,14 @@ h1,h2,h3,h4,h5,h6, ul, li, ol{
 }
 .ant-form{
   .ant-form-item{
+    .ant-input{
+      border: 1px solid #00000026;
+      border-radius: 8px;
+      &:focus{
+        border-color: @med-main-btn;
+        box-shadow: 0 0 0 2px rgba(40, 22, 238, 0.2);
+      }
+    }
     .input{
       width: 352px;
       color: rgb(0 0 0 / 88%);

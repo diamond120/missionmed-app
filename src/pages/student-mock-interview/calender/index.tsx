@@ -3,6 +3,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { useEffect, useState } from "react";
+
 import {
   message
 } from "antd";
@@ -75,18 +76,20 @@ const Calender = ({tutorId}) => {
 
     return (
       <FullCalendar
-     plugins={[dayGridPlugin, timeGridPlugin]}
+        plugins={[dayGridPlugin, timeGridPlugin]}
         initialView="timeGridWeek"
-        dayHeaders={true}
+        dayHeaders={true}    
         headerToolbar={{
-          left: "prev,next",
-          center: "title",
-          right: "timeGridWeek,timeGridDay"
+          left:'today',
+          center: "prev,title,next",
+          right: "timeGridWeek,dayGridMonth" 
         }}
 
         events={slotsList}
+        eventColor='#2816EE'
         selectable={true} 
         eventClick={handleEventClick}
+        borderColor='0'
       />
   )
 
