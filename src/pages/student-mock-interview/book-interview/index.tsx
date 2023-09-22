@@ -214,7 +214,9 @@ const BookInterview = () => {
 
   const Step3From = () => {
     return <>
-      <Calender/>
+     <div className={"calender-model"}>
+      <Calender tutorId={form.getFieldValue('tutor')}/>
+      </div>
     </>;
   };
 
