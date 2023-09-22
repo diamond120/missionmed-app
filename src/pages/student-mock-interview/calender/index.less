@@ -1,0 +1,129 @@
+.book-time-cal{
+     .fc-timeGridWeek-view{
+          .fc-timegrid-col-events{
+               .fc-event{
+                    padding: 7px 10px;
+                    .fc-event-time{
+                         font-size:16px;
+                         color: #2816EE;
+                         font-weight: 600;
+                    }
+                    .fc-event-title{
+                         font-size: 14px;
+                         color: #312D42;
+                    }
+               }
+          }
+          .fc-day-today{
+               background-color: #fff
+          }
+          .fc-scrollgrid{
+               border: 0;
+               .fc-col-header {
+                    border-bottom: 1px solid #D6D7E0;
+                    border-top: 1px solid #D6D7E0;
+                    tr {
+                         th{
+                              border: 0;
+                              padding: 16px 5px;
+                              a{
+                                   color:#312D42;
+                                   font-weight: 400;    
+                              }
+                              &.fc-day-today{
+                                   border-right: 1px solid #D6D7E0;
+                                   border-left: 1px solid #D6D7E0;
+                                   background-color: #fff;
+                              }
+                         }
+                    }
+               }
+          }
+     }
+     .fc-media-screen{
+          .fc-view-harness{
+               height: 55vh !important;
+               margin-bottom: -23px;
+               .fc-scroller{
+                    &::-webkit-scrollbar {
+                         width: 8px;
+                    }
+                    /* Track */
+                    &::-webkit-scrollbar-track {
+                         background: #f1f1f1;
+                    }
+                    /* Handle */
+                    &::-webkit-scrollbar-thumb {
+                         background:   #B5B9C9;
+                         border-radius: 15px;
+                    }
+               }
+          }
+     }
+     .fc-header-toolbar{
+          .fc-toolbar-chunk{
+               .fc-today-button{
+                    &.fc-button{
+                         padding: 5px 16px;
+                         border-radius: 6px;
+                         border: 1px solid #D6D7E0;
+                         background-color: transparent;
+                         color: #312D42;
+                         text-transform: capitalize;
+                         &:hover{
+                              color: #2816EE;
+                              border-color: #2816EE;
+                              box-shadow: none !important;
+                         }
+                         &:disabled{
+                              background-color: transparent;
+                              color: #312D42;
+                              border: 1px solid #D6D7E0;
+                         }
+                    }
+               }
+               .fc-button-group{
+                    gap: 0;
+                    .fc-button{
+                         border: 1px solid #00000026;
+                         padding: 7px 16px;
+                         text-transform: capitalize;
+                         color: #312D42;
+                         &.fc-timeGridWeek-button{
+                              border-radius:6px 0  0 6px;
+                         }
+                         &.fc-button-active, &:focus, &:hover{
+                              background-color: transparent;
+                              color: #2816EE;
+                              border-color: #2816EE;
+                              box-shadow: none;
+                         }
+                         &.fc-dayGridMonth-button{
+                              border-radius:  0 6px 6px 0;
+                         }
+                    }
+               }
+               &>div{
+                    display: flex;
+                    gap: 16px;
+                    align-items: center;
+                    button {
+                         background: transparent;
+                         border: 0;
+                         color: #9096AE;
+                         &:focus, &:active{
+                              box-shadow: none !important;
+                              background-color: transparent !important;
+                              color: #9096AE !important;
+                         }
+                    }
+                    .fc-toolbar-title{
+                         font-size: 20px;
+                         font-weight: 600;
+                         color: #312D42;
+                         margin-bottom: -7px;
+                    }
+               }
+          }
+     }
+}

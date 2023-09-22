@@ -1,4 +1,4 @@
-import { Button, Form, Modal,Input, Row, Col } from 'antd';
+import { Button, Form, Modal,Input, Row, Col, message } from 'antd';
 import './index.less'
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { useState } from 'react';
@@ -6,19 +6,24 @@ const { TextArea } = Input;
 
 const Agenda = ({agenda, handleEditAgenda}) => {
 
+  console.log(agenda)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalDetails, setisModalDetails] = useState(false);
+  const [form] = Form.useForm();
+
   const handleClick = () => {
     setIsModalOpen(true)
     handleEditAgenda()
   }
-  const handleDeClick = () => {
-    setisModalDetails(true)
-    handleEditAgenda()
-  }
 
-  const handleSubmit = () => {
-    setIsModalOpen(false);
+  const handleSubmit = async () => {
+    try{
+      const values = await form.validateFields();
+      handleEditAgenda(values.agenda);
+      setIsModalOpen(false);
+    }catch(e){
+      message.error(e.message);
+    }
   };
 
   const handleCancel = () => {
@@ -41,7 +46,7 @@ const Agenda = ({agenda, handleEditAgenda}) => {
                 
                 <div style={{display:'flex',gap:20}}>
                   <Button className={"secondary-button"} onClick={handleClick}>Edit Agenda</Button>
-                  <Button className={"primary-button"} onClick={handleDeClick}>Check Last Details</Button>
+                  {/* <Button className={"primary-button"} onClick={handleDeClick}>Check Last Details</Button> */}
                 </div>
 
               </div>
@@ -65,8 +70,13 @@ const Agenda = ({agenda, handleEditAgenda}) => {
           </div>
         ]}
       >
-        <Form layout="vertical">
-            <Form.Item label="Here you can put down your thoughts and questions to your tutor on the upcoming session" name="agenda" rules={[{required:true}]}>
+        <Form form={form} layout="vertical">
+            <Form.Item 
+            label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
+            name="agenda" 
+            rules={[{required:true}]}
+            initialValue={agenda}
+            >
             <TextArea
               style={{ height: 200 }}
               placeholder="can resize"
