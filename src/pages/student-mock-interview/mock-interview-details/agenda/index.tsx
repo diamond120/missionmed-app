@@ -5,8 +5,6 @@ import { useState } from 'react';
 const { TextArea } = Input;
 
 const Agenda = ({agenda, handleEditAgenda}) => {
-
-  console.log(agenda)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalDetails, setisModalDetails] = useState(false);
   const [form] = Form.useForm();

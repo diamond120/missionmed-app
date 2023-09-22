@@ -22,6 +22,17 @@ const updateProfile = (data) => {
   return http.post(`/tutor/update`, data, config);
 };
 
+
+const sessionRate = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(`/tutor/sessionrate`, data, config);
+};
+
 // const getAll = () => {
 //   return http.get("/tutorials");
 // };
@@ -53,6 +64,7 @@ const updateProfile = (data) => {
 const Service = {
   getProfile,
   updateProfile,
+  sessionRate
 };
 
 export default Service;

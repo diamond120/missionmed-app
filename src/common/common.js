@@ -62,3 +62,7 @@ export const formatDate = (dateTime) => {
 export const formatDateV1 = (dateTime) => {
     return moment(dateTime).format("ddd, DD MMM YYYY");
 }
+
+export const checkSessionOnToday = (sessionDate) => {
+    return moment().isSameOrAfter(sessionDate)
+}

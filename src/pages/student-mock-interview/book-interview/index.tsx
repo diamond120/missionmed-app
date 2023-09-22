@@ -97,46 +97,41 @@ const BookInterview = () => {
     return mockInterviewList;
   };
 
-  const handleChange = (value: string) => {
-    console.log(`Selected: ${value}`);
-  };
   const selectUniversity = Form.useWatch("university", form);
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
     return (
       <>
+        <Form.Item
+          name="university"
+          label="Which university are you sitting a mock interview for?"
+          rules={[{ required: true }]}
+        >
+          <Select
+            showSearch
+            placeholder="--- Select University ---"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={universityList}
+          />
+        </Form.Item>
+        {selectUniversity && (
           <Form.Item
-            name="university"
-            label="Which university are you sitting a mock interview for?"
+            name="mockInterview"
+            label="Which mock interview are you sitting?"
             rules={[{ required: true }]}
           >
-            <Select
-              showSearch
-              placeholder="--- Select University ---"
-              optionFilterProp="children"
-              onChange={handleChange}
-              // onSearch={onSearch}
-              filterOption={(input, option) =>
-                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-              }
-              options={universityList}
-            />
+            <Radio.Group>
+              {getMockInterviewList(selectUniversity).map((interview) => (
+                <Radio key={interview.id} value={interview.value}>
+                  {interview.value}
+                </Radio>
+              ))}
+            </Radio.Group>
           </Form.Item>
-          {selectUniversity && (
-            <Form.Item
-              name="mockInterview"
-              label="Which mock interview are you sitting?"
-              rules={[{ required: true }]}
-            >
-              <Radio.Group>
-                {getMockInterviewList(selectUniversity).map((interview) => (
-                  <Radio key={interview.id} value={interview.value}>
-                    {interview.value}
-                  </Radio>
-                ))}
-              </Radio.Group>
-            </Form.Item>
-          )}
+        )}
       </>
     );
   };

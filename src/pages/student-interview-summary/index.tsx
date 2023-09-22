@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Breadcrumb, Button, message } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
@@ -8,7 +8,7 @@ import { useStudent } from "../../api/providers/StudentProvider";
 import { formatDateV1 } from "../../common/common";
 import "./index.less";
 import SectionDetails from "./section-details";
-import Summarypreview from "./report";
+import Report from "./report";
 
 const StudentInterviewSummary = () => {
   let { mockInterviewId } = useParams();
@@ -31,9 +31,13 @@ const StudentInterviewSummary = () => {
   };
 
   useEffect(() => {
-    getInterviewSummary();
+     console.log("mockInterviewId :",mockInterviewId)
+     if(mockInterviewId != "undefined"){
+          getInterviewSummary();
+     }
   }, [mockInterviewId]);
 
+  const backUrl = `/student/mock-interview`;
   return (
     <>
       <Section>
@@ -41,13 +45,13 @@ const StudentInterviewSummary = () => {
           <Breadcrumb.Item href={"/"}>
             <HomeOutlined />
           </Breadcrumb.Item>
-          <Breadcrumb.Item href={"/tutor/mock-interview"}>
-            UCAT Sessions
+          <Breadcrumb.Item key={backUrl}>
+               <Link to={backUrl}>Mock Interview</Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Session Summary</Breadcrumb.Item>
+          <Breadcrumb.Item>Interview Summary</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap session-summary-section-wrap"}>
-          <h2 className={"tab-title"}>Session Summary</h2>
+          <h2 className={"tab-title"}>Interview Summary</h2>
 
           <div className={"grid-col-2"}>
             <div style={{ width: "504px" }}>
@@ -94,11 +98,11 @@ const StudentInterviewSummary = () => {
                   </li>
                   <li>Ask tutor to explain how to work through syllogisms.</li>
                 </ul>
-                <Button className={"secondary-button"}>Add New Task</Button>
+                {/* <Button className={"secondary-button"}>Add New Task</Button> */}
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>
-              <Summarypreview />
+              <Report report={interviewSummary?.report ?? null} />
             </div>
           </div>
         </div>
