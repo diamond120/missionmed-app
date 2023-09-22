@@ -7,6 +7,7 @@ import Summarypreview from "./summary-preview";
 import Sessionagenda from "./session-agenda";
 import Sessionsummary from "./session-summary";
 import Postsessiontasks from "./post-session-tasks";
+import Sessionrate from "./session-rate";
 
 const TutorSessionSummary = () => {
 
@@ -31,16 +32,16 @@ const TutorSessionSummary = () => {
                               <div style={{margin:"40px 0"}}>
                                    <Sessionagenda />
                               </div>
-                              <div style={{marginBottom:"40px"}}>
-                                   <Sessionsummary />
+                              <Sessionsummary />
+                              <div style={{margin:"40px 0"}}>
+                                   <Postsessiontasks />
                               </div>
-                              <Postsessiontasks />
+                              <Sessionrate />
                          </div>
                          <div style={{width:"504px"}}>
                               <Summarypreview />
                          </div>
                     </div>
-
                </div>
           </Section>
      </>

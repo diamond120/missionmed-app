@@ -105,38 +105,38 @@ const BookInterview = () => {
   const Step1Form = ({ universityList, getMockInterviewList }) => {
     return (
       <>
-        <Form.Item
-          name="university"
-          label="Which university are you sitting a mock interview for?"
-          rules={[{ required: true }]}
-        >
-          <Select
-            showSearch
-            placeholder="--- Select University ---"
-            optionFilterProp="children"
-            onChange={handleChange}
-            // onSearch={onSearch}
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            options={universityList}
-          />
-        </Form.Item>
-        {selectUniversity && (
           <Form.Item
-            name="mockInterview"
-            label="Which mock interview are you sitting?"
+            name="university"
+            label="Which university are you sitting a mock interview for?"
             rules={[{ required: true }]}
           >
-            <Radio.Group>
-              {getMockInterviewList(selectUniversity).map((interview) => (
-                <Radio key={interview.id} value={interview.value}>
-                  {interview.value}
-                </Radio>
-              ))}
-            </Radio.Group>
+            <Select
+              showSearch
+              placeholder="--- Select University ---"
+              optionFilterProp="children"
+              onChange={handleChange}
+              // onSearch={onSearch}
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              }
+              options={universityList}
+            />
           </Form.Item>
-        )}
+          {selectUniversity && (
+            <Form.Item
+              name="mockInterview"
+              label="Which mock interview are you sitting?"
+              rules={[{ required: true }]}
+            >
+              <Radio.Group>
+                {getMockInterviewList(selectUniversity).map((interview) => (
+                  <Radio key={interview.id} value={interview.value}>
+                    {interview.value}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            </Form.Item>
+          )}
       </>
     );
   };
@@ -214,7 +214,7 @@ const BookInterview = () => {
 
   const Step3From = () => {
     return <>
-     <div className={"calender-model"}>
+      <div className={"book-time-cal"}>
       <Calender tutorId={form.getFieldValue('tutor')}/>
       </div>
     </>;
@@ -230,8 +230,8 @@ const BookInterview = () => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        className={"mock-interview-modal"}
-        width={"600px"}
+        className={"mock-interview-modal "}
+        width={"max-content"}
         footer={[
           <span className={"steps"}>Step {activeStep} of 4</span>,
           <Button key="submit" className={"secondary-button"} onClick={next}>
@@ -241,13 +241,24 @@ const BookInterview = () => {
       >
         <Form form={form} layout="vertical">
           {activeStep == 1 && (
-            <Step1Form
-              universityList={universityList}
-              getMockInterviewList={getMockInterviewList}
-            />
+            <div style={{width:'555px'}}>
+              <Step1Form
+                universityList={universityList}
+                getMockInterviewList={getMockInterviewList}
+              />
+            </div>
           )}
-          {activeStep == 2 && <Step2Form tutors={tutors} />}
-          {activeStep == 3 && <Step3From />}
+          {activeStep == 2 && ( 
+            <div style={{width:'555px'}}>
+              <Step2Form tutors={tutors} 
+              /> 
+            </div>
+            )}
+          {activeStep == 3 && (
+            <div style={{width:'1155px'}}>
+              <Step3From />
+            </div>
+          )}
         </Form>
       </Modal>
     </>

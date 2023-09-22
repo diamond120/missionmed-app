@@ -53,6 +53,13 @@
 
 .ant-modal-wrap{
      .rate-session-modal {
+          .ant-modal-body{
+               .ant-form{
+                    .ant-form-item{
+                         margin-bottom: 0;
+                    }
+               }
+          }
           .ant-modal-footer{
                padding: 19px 32px;
                display: flex;
@@ -84,15 +91,10 @@
                margin-bottom: 24px;
           }
           .ratings-group{
-               display: grid;
-               grid-template-columns: repeat(2, minmax(0, 1fr));
-               gap: 24px;
                max-width: 435px;
                width: 100%;
-               margin: 0 auto;
+               margin: 0 auto !important;
                text-align: left;
-          }
-          .ratings-group{
                .rat-title{
                     margin-bottom: 0;
                     color: #465078;
@@ -119,7 +121,6 @@
                .item{
                     gap: 14px;
                     flex-wrap: wrap;
-                    justify-content: start;
                }
           }
      }
