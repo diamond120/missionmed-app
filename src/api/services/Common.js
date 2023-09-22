@@ -25,10 +25,21 @@ const getUniversityTutorList = (data) => {
   return http.post(`/university-tutors-list`, data, config);
 }
 
+const getSlotslist = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post("/student/slots", data, config);
+};
+
 const Service = {
     getProfileStaticData,
     getUniversityList,
-    getUniversityTutorList
+    getUniversityTutorList,
+    getSlotslist
 };
 
 export default Service;
