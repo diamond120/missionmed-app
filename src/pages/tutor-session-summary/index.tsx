@@ -1,13 +1,48 @@
 import "./index.less"
+import { Breadcrumb} from "antd"
+import { HomeOutlined} from "@ant-design/icons";
+import Section from "../../components/shared-ui/Section";
+import Sessiondetails from "./session-details";
+import Summarypreview from "./summary-preview";
+import Sessionagenda from "./session-agenda";
+import Sessionsummary from "./session-summary";
+import Postsessiontasks from "./post-session-tasks";
 
 const TutorSessionSummary = () => {
 
      return (
      <>
-     <div className={"upc-agenda con-box"} style={{marginTop:'55px'}}>
-          <h2 className={"secondary-title"}>Session Summary </h2>
-         Session Summary
-     </div>
+          <Section>
+
+               <Breadcrumb>
+                    <Breadcrumb.Item href={"/"}>
+                         <HomeOutlined />
+                         </Breadcrumb.Item>
+                    <Breadcrumb.Item href={"/tutor/mock-interview"}>UCAT Sessions</Breadcrumb.Item>
+                    <Breadcrumb.Item>Session Summary</Breadcrumb.Item>
+               </Breadcrumb>
+
+               <div className={"con-section-wrap session-summary-section-wrap"}>
+                    <h2 className={"tab-title"}>Session Summary</h2>
+
+                    <div className={"grid-col-2"}>
+                         <div style={{width:"504px"}}>
+                              <Sessiondetails />
+                              <div style={{margin:"40px 0"}}>
+                                   <Sessionagenda />
+                              </div>
+                              <div style={{marginBottom:"40px"}}>
+                                   <Sessionsummary />
+                              </div>
+                              <Postsessiontasks />
+                         </div>
+                         <div style={{width:"504px"}}>
+                              <Summarypreview />
+                         </div>
+                    </div>
+
+               </div>
+          </Section>
      </>
      )
 }

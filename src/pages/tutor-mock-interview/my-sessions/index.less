@@ -49,3 +49,78 @@
 
      }
 }
+
+
+.ant-modal-wrap{
+     .rate-session-modal {
+          .ant-modal-footer{
+               padding: 19px 32px;
+               display: flex;
+               justify-content: end;
+               .button-group{
+                    .ant-btn{
+                         position: unset;
+                         transform: unset;
+                         &.rate-button{
+                              background: linear-gradient(0deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
+                              color: #00000040;
+                              &:hover{
+                                   background-color: #0958D9;
+                                   color: #fff;
+                              }
+                         }
+                    }
+               }
+          }
+          .title{
+               font-size: 20px;
+               margin-top: 24px;
+               color: #312D42;
+               font-weight: 600;
+          }
+          .text{
+               margin: 0 50px;
+               color: #312D42;
+               margin-bottom: 24px;
+          }
+          .ratings-group{
+               display: grid;
+               grid-template-columns: repeat(2, minmax(0, 1fr));
+               gap: 24px;
+               max-width: 435px;
+               width: 100%;
+               margin: 0 auto;
+               text-align: left;
+          }
+          .ratings-group{
+               .rat-title{
+                    margin-bottom: 0;
+                    color: #465078;
+                    font-weight: 600;
+                    font-size: 14px;
+               }
+               .ant-rate-star{
+                    svg{
+                         fill: #0000000F;
+                    }
+                    &.ant-rate-star-full, &.ant-rate-star-half{
+                         svg{
+                              fill: #FADB14;
+                         }
+                    } 
+               }
+          }
+     }
+} 
+
+@media (max-width: 767px){
+     .sessions{
+          .sessions-list {
+               .item{
+                    gap: 14px;
+                    flex-wrap: wrap;
+                    justify-content: start;
+               }
+          }
+     }
+}
