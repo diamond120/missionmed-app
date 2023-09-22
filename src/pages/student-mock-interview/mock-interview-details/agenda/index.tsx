@@ -42,12 +42,14 @@ const Agenda = ({agenda, handleEditAgenda}) => {
         className={"mock-interview-modal"}
         width={"600px"}
         footer={[
-          <p key="discard" type="dashed" onClick={handleCancel}>
-           Discard 
-          </p>,
-          <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
-          Save Changes
-        </Button>,
+          <div className='button-group'>
+            <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+              Discard 
+            </Button>
+            <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+              Save Changes
+            </Button>
+          </div>
         ]}
       >
         <Form layout="vertical">

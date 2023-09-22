@@ -228,7 +228,7 @@ const BookInterview = () => {
         className={"mock-interview-modal"}
         width={"600px"}
         footer={[
-          <span>Step {activeStep} of 4</span>,
+          <span className={"steps"}>Step {activeStep} of 4</span>,
           <Button key="submit" className={"secondary-button"} onClick={next}>
             Next Step
           </Button>,

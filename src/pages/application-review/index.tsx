@@ -66,7 +66,7 @@ const ApplicationReview = () => {
         <div className={"application-review-section-title-wrap"}>
           <h2 className={"application-review-section-title"}>Application Review</h2>
 
-          <Link to={"https://missionmed.com.au/checkout_step/unsw-application-review-checkout/"} rel={"noreferrer"} className={"buy-more-btn"}>
+          <Link to={"https://missionmed.com.au/checkout_step/unsw-application-review-checkout/"} rel={"noreferrer"} className={"primary-button"}>
             <ShoppingCartOutlined style={{fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />
             Buy More Reviews
           </Link>
