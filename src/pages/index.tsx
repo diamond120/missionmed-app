@@ -6,6 +6,7 @@ import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from "react-
 import { DefaultLayout } from "../components/layout";
 import { Loader } from "../components/layout/Loader";
 import SignInLayout from "../components/layout/SignInLayout"
+;
 
 const Home = lazy<FC>(/*home-page-bundle*/ () => import("./home"));
 const ApplicationsReview = lazy(/*application-review-page-bundle*/ () => import("./application-review"));
@@ -20,6 +21,7 @@ const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./not
 const TutorMockInterview = lazy(() => import("./tutor-mock-interview"))
 const StudentMockInterview = lazy(() => import("./student-mock-interview"))
 const TutorSessionSummary = lazy(() => import("./tutor-session-summary"))
+const StudentInterviewSummary = lazy(() => import("./student-interview-summary"))
 
 const routes: RouteObject[] = [
   {
@@ -84,6 +86,11 @@ const routes: RouteObject[] = [
       {
         Component: StudentMockInterview,
         path: "/student/mock-interview",
+        index: true,
+      },
+      {
+        path: "/student/interview-summary/:mockInterviewId",
+        Component: StudentInterviewSummary,
         index: true,
       },
       {

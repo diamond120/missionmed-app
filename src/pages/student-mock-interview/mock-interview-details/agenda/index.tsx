@@ -1,4 +1,4 @@
-import { Button, Form, Modal,Input } from 'antd';
+import { Button, Form, Modal,Input, message } from 'antd';
 import './index.less'
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { useState } from 'react';
@@ -6,14 +6,22 @@ const { TextArea } = Input;
 
 const Agenda = ({agenda, handleEditAgenda}) => {
 
+  console.log(agenda)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
+
   const handleClick = () => {
     setIsModalOpen(true)
-    handleEditAgenda()
   }
 
-  const handleSubmit = () => {
-    setIsModalOpen(false);
+  const handleSubmit = async () => {
+    try{
+      const values = await form.validateFields();
+      handleEditAgenda(values.agenda);
+      setIsModalOpen(false);
+    }catch(e){
+      message.error(e.message);
+    }
   };
 
   const handleCancel = () => {
@@ -52,8 +60,13 @@ const Agenda = ({agenda, handleEditAgenda}) => {
           </div>
         ]}
       >
-        <Form layout="vertical">
-            <Form.Item label="Here you can put down your thoughts and questions to your tutor on the upcoming session" name="agenda" rules={[{required:true}]}>
+        <Form form={form} layout="vertical">
+            <Form.Item 
+            label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
+            name="agenda" 
+            rules={[{required:true}]}
+            initialValue={agenda}
+            >
             <TextArea
               style={{ height: 200 }}
               placeholder="can resize"
