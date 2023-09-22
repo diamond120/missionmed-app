@@ -30,8 +30,10 @@ const SessionItem = ({session, type}) => (
          {type == "upcoming" && <Button className={"secondary-button"}>Reschedule</Button>}
          {type == "past" &&  
          <>
-         <Button className={"secondary-button"}>Rate Session</Button>
-         <Button className={"secondary-button"}>View Summary</Button>
+          <div className={"button-group"} style={{display:'flex',columnGap:'16px'}}>
+                    <Button className={"secondary-button"}>Rate Session</Button>
+                    <Button className={"secondary-button"}>View Summary</Button>
+          </div>
          </>}
      </li>
 )
