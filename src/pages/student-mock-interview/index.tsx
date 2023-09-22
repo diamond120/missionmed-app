@@ -1,5 +1,5 @@
 import "./index.less";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Breadcrumb, message } from "antd";
@@ -27,11 +27,12 @@ const StudentMockInterview = () => {
     return formatedSessions;
   };
 
+
   const getMockInterviewDetails = async () => {
     try {
       const response = await MockInterviewsService.getStudentMockInterviews({});
       if (response.data.success) {
-        setUpcomingInterview(response.data?.data?.uplcomingInterview ?? {});
+        setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         //setUpcomingInterview({});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -43,7 +44,7 @@ const StudentMockInterview = () => {
             ? formatSessionList(response.data?.data?.pastsessions)
             : {}
         );
-        setAgenda(response.data?.data?.agenda ?? null);
+        setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
       } else {
         throw new Error(response.data.message);
       }
@@ -52,8 +53,20 @@ const StudentMockInterview = () => {
     }
   };
 
-  const handleEditAgenda = (agendaDetails) => {
-    setAgenda(agendaDetails);
+  const handleEditAgenda = async(agendaDetails) => {
+    try{
+      const response = await MockInterviewsService.updateMockInterviewAgenda({
+        "mockInterviewId":upcomingInterview?.id,
+        "agenda":agendaDetails,
+      });
+      if(response.data.success){
+        setAgenda(agendaDetails);
+      }else{
+        throw new Error(response.data.message)
+      }
+    }catch(e){
+      message.error(e.message);
+    }
   };
 
   useEffect(() => {
@@ -78,9 +91,9 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            {Object.values(upcomingInterview).length > 0 && <BookInterview />}
+            {(Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0) && <BookInterview />}
           </div>
-          {Object.values(upcomingInterview).length > 0 ? (
+          { (Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0)  ? (
             <MockInterviewDetails
               key="mockInterviewDetails"
               upcomingInterview={upcomingInterview}
@@ -111,7 +124,7 @@ const StudentMockInterview = () => {
                       You can choose tutor and book your first mock <br />{" "}
                       interview by pressing “Book Interview” button below.
                     </div>
-                    <BookInterview key="bookInterview" />{" "}
+                    <BookInterview key="bookInterview" />
                   </div>
                 </div>
               </div>

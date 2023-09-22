@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Breadcrumb,  Button, Tabs} from "antd"
 import {formatDateV1} from "../../../../common/common";
 
@@ -32,7 +32,7 @@ const SessionItem = ({session, type}) => (
          <>
           <div className={"button-group"} style={{display:'flex',columnGap:'16px'}}>
                     <Button className={"secondary-button"}>Rate Session</Button>
-                    <Button className={"secondary-button"}>View Summary</Button>
+                    <Link to={`/student/interview-summary/${session.id}`}><Button className={"secondary-button"}>View Summary</Button></Link>
           </div>
          </>}
      </li>
@@ -41,7 +41,6 @@ const SessionItem = ({session, type}) => (
 const Mysessions = ({upcomingSessions, pastSessions}) => {
      const { TabPane } = Tabs;
      const navigation = useNavigate();
-     console.log(upcomingSessions)
      return (
      <>
      <div className={"upc-agenda con-box"} style={{marginTop:'55px'}}>
