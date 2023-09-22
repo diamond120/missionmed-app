@@ -28,7 +28,7 @@ const getInterviewSummary = (mockInterviewId) => {
       'Authorization': token
     },
     params: {
-      mockinterviewId:mockInterviewId,
+      mockInterviewId:mockInterviewId,
     }
   }
   return http.get(`/student/interview-summary`,config);

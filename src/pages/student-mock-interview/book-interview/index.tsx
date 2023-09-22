@@ -214,7 +214,7 @@ const BookInterview = () => {
 
   const Step3From = () => {
     return <>
-      <Calender/>
+      <Calender tutorId={form.getFieldValue('tutor')}/>
     </>;
   };
 

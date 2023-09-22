@@ -9,7 +9,7 @@ import {
 import CommonService from "../../../api/services/Common";
 
 
-const Calender = () => {
+const Calender = ({tutorId}) => {
 
   const [slotsList, setSlots] = useState([]);
     const data = {
