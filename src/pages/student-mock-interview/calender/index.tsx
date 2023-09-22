@@ -8,12 +8,29 @@ import {
 } from "antd";
 import CommonService from "../../../api/services/Common";
 
+function formatDate(inputDateStr) {
+  const inputDate = new Date(inputDateStr);
+  const year = inputDate.getFullYear();
+  const month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed
+  const day = inputDate.getDate().toString().padStart(2, '0');
+  const hours = inputDate.getHours().toString().padStart(2, '0');
+  const minutes = inputDate.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+
+  // Convert hours from 24-hour format to 12-hour format
+  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day} ${formattedHours}:${minutes} ${ampm}`;
+
+  return formattedDate;
+}
+
 
 const Calender = ({tutorId}) => {
 
   const [slotsList, setSlots] = useState([]);
     const data = {
-      tutorId: 1,
+      tutorId: tutorId,
     };
     const getSlotsist = async () => {
       try {
@@ -32,7 +49,30 @@ const Calender = ({tutorId}) => {
     useEffect(() => {
       getSlotsist();
     }, []);
-    console.log(slotsList)
+    
+    let selectedEvent = null;
+    const handleEventClick = async (info) => {
+      const clickedEvent = info.event;
+      if(clickedEvent.title == 'availabel'){
+        console.log(clickedEvent)
+        if (selectedEvent) {
+          selectedEvent.setProp('backgroundColor', '#ffffff');
+          selectedEvent.setProp('textColor', '#2816EE'); // Reset the color to default (empty string)
+        }
+        clickedEvent.setProp('backgroundColor', '#2816EE');
+        clickedEvent.setProp('textColor', '#ffffff');
+
+        selectedEvent = clickedEvent;
+
+        const startDate = formatDate(clickedEvent.start);
+        const endDate = formatDate(clickedEvent.end);
+        console.log('Event title:', clickedEvent.title);
+        console.log('Event date:', clickedEvent.extendedProps.day);
+        console.log('Event Start:', startDate);
+        console.log('Event End:', endDate);
+      }
+    };
+
     return (
       <FullCalendar
      plugins={[dayGridPlugin, timeGridPlugin]}
@@ -41,13 +81,15 @@ const Calender = ({tutorId}) => {
         headerToolbar={{
           left: "prev,next",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay"
+          right: "timeGridWeek,timeGridDay"
         }}
+
         events={slotsList}
-        eventColor='#378006'
-       
+        selectable={true} 
+        eventClick={handleEventClick}
       />
   )
+
 }
 
 export default Calender

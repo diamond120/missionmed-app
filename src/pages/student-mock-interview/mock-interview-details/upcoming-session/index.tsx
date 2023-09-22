@@ -11,7 +11,6 @@ const UpcomingSession = ({upcomingInterview}) => {
     () => checkSessionOnToday(upcomingInterview.date),
     [upcomingInterview.date]
   );
-  console.log(isSessionOnToday)
   return (
     <>
       <div className={"upcoming-session con-box"}>

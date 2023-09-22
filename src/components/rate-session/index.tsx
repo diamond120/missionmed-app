@@ -1,7 +1,8 @@
-import { Button, Modal, Rate, Input, Form } from "antd";
+import { Button, Modal, Rate, Input, Form, message } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import "./index.less";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import TutorService from "../../api/services/Tutor";
 
 const { TextArea } = Input;
 
@@ -12,11 +13,34 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
     handleRateCancel();
+    form.resetFields();
   };
-  console.log(session);
 
-  const handleOk = () => {
-    return "fgdfgdfg";
+  const giveSessionRate = async (data) => {
+    try{
+     const response = await TutorService.sessionRate(data)
+     if(response.data.success){
+          message.error(response.data.message)
+     }
+    }catch(e){
+     message.error(e.message)
+    }
+  }
+
+  const handleOk = async () => {
+    try{
+     const values = await form.validateFields();
+     const formData = {...values, 
+          tutorId:session.tutor_id,
+     }
+     giveSessionRate(formData);
+    }catch(e){
+     message.error(e.message);
+    }finally{
+     handleRateCancel();
+     form.resetFields();
+    }
+    
   };
   useEffect(() => {
     setIsModalOpen(isOpen);
@@ -32,8 +56,8 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
       className={"rate-session-modal"}
       footer={[
         <div key="btnGrp" className={"button-group"}>
-          <Button className={"secondary-button"}>Cancel</Button>
-          <Button className={"secondary-button rate-button"}>
+          <Button className={"secondary-button"} onClick={handleCancel}>Cancel</Button>
+          <Button className={"secondary-button rate-button"} onClick={handleOk}>
             Rate Session
           </Button>
         </div>,
@@ -52,31 +76,31 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Knowledge & Expertise</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item>
+                <Form.Item name="knowledgeExpertise">
                   <Rate />
                 </Form.Item>
               </div>
             </div>
             <div className={"ratings"}>
-              <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+              <h4 className={"rat-title"}>Engagement & Enthusiasm</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item>
+                <Form.Item name="engagementEnthusiasm">
                   <Rate />
                 </Form.Item>
               </div>
             </div>
             <div className={"rating"}>
-              <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+              <h4 className={"rat-title"}>Clarity & Understandability</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item>
+                <Form.Item name="clarityUnderstandability">
                   <Rate />
                 </Form.Item>
               </div>
             </div>
             <div className={"ratings"}>
-              <h4 className={"rat-title"}>Knowledge & Expertise</h4>
+              <h4 className={"rat-title"}>Punctuality & Preparedness</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item>
+                <Form.Item name="punctualityPreparedness">
                   <Rate />
                 </Form.Item>
               </div>
@@ -84,7 +108,7 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
           </div>
           <Form.Item
             label="Extra Comments"
-            name="extraComment"
+            name="comments"
             style={{ marginTop: "32px" }}
           >
             <TextArea rows={4} />

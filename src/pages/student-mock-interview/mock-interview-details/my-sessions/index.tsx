@@ -68,14 +68,12 @@ const Mysessions = ({ upcomingSessions, pastSessions }) => {
   const [rateSession, setRateSession] = useState(null);
 
   const handleRateSession = (event, session) => {
-    console.log("session:", session);
     setRateSession(session);
   };
 
   const handleRateCancel = () => {
      setRateSession(null);
   }
-  console.log(rateSession)
 
   return (
     <>

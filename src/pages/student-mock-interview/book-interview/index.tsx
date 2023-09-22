@@ -97,9 +97,6 @@ const BookInterview = () => {
     return mockInterviewList;
   };
 
-  const handleChange = (value: string) => {
-    console.log(`Selected: ${value}`);
-  };
   const selectUniversity = Form.useWatch("university", form);
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
@@ -114,8 +111,6 @@ const BookInterview = () => {
             showSearch
             placeholder="--- Select University ---"
             optionFilterProp="children"
-            onChange={handleChange}
-            // onSearch={onSearch}
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
@@ -214,7 +209,9 @@ const BookInterview = () => {
 
   const Step3From = () => {
     return <>
+     <div className={"calender-model"}>
       <Calender tutorId={form.getFieldValue('tutor')}/>
+      </div>
     </>;
   };
 

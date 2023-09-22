@@ -98,7 +98,7 @@ const StudentInterviewSummary = () => {
                   </li>
                   <li>Ask tutor to explain how to work through syllogisms.</li>
                 </ul>
-                <Button className={"secondary-button"}>Add New Task</Button>
+                {/* <Button className={"secondary-button"}>Add New Task</Button> */}
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>
