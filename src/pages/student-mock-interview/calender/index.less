@@ -1,16 +1,48 @@
 .book-time-cal{
+     .fc-scrollgrid-section {
+          height: 0 !important;
+          background: transparent;
+          .fc-timegrid-divider{
+               &.fc-cell-shaded{
+                    border: 0;
+                    height: 0 !important;
+               }
+          }
+      }
+
+     .fc-theme-standard {
+          td, th{
+               border-top: 0;
+          }
+      }
+     .fc {
+          .fc-timegrid-slot-minor {
+               border-top: 1px solid #D6D7E0;
+          }
+          .fc-timegrid-slot {
+               height: 2.5em;
+               .fc-timegrid-slot-label-frame {
+                    position: relative;
+                    bottom: -17px;
+                    padding: 3px 10px;
+                    background: whitesmoke;
+                    width: 48px !important;
+                    color: #6B7393;
+                    text-align: left;
+               }
+          }
+      }
      .fc-timeGridWeek-view{
           .fc-timegrid-col-events{
                .fc-event{
                     padding: 7px 10px;
+                    border-radius: 4px;
                     .fc-event-time{
                          font-size:16px;
-                         color: #2816EE;
                          font-weight: 600;
                     }
                     .fc-event-title{
                          font-size: 14px;
-                         color: #312D42;
                     }
                }
           }
@@ -34,6 +66,10 @@
                                    border-right: 1px solid #D6D7E0;
                                    border-left: 1px solid #D6D7E0;
                                    background-color: #fff;
+                                   a{
+                                        color: #2816EE;
+                                        font-weight: 600;
+                                   }
                               }
                          }
                     }
@@ -44,6 +80,7 @@
           .fc-view-harness{
                height: 55vh !important;
                margin-bottom: -23px;
+               padding-bottom: 20px !important;
                .fc-scroller{
                     &::-webkit-scrollbar {
                          width: 8px;
@@ -94,7 +131,7 @@
                          }
                          &.fc-button-active, &:focus, &:hover{
                               background-color: transparent;
-                              color: #2816EE;
+                              color: #2816EE !important;
                               border-color: #2816EE;
                               box-shadow: none;
                          }
