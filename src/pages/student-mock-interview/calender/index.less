@@ -1,20 +1,38 @@
 .book-time-cal{
+     .fc-timegrid-slots {
+          tbody{
+                tr{
+                    &>:first-child{
+                         border: 0 !important;
+                         &>*{
+                              border: 0 !important;
+                         }
+                    }
+                   
+                    &:nth-child(even){
+                         .fc-timegrid-slot-minor{
+                              border-top: 0 !important;
+                         }
+                    }
+                }
+          }
+     }
      .fc-scrollgrid-section {
           height: 0 !important;
           background: transparent;
+          &>td{
+               border-right: 0;
+          }
+          &>th{
+               border-right: 0;
+          }
           .fc-timegrid-divider{
                &.fc-cell-shaded{
                     border: 0;
                     height: 0 !important;
                }
           }
-      }
-
-     .fc-theme-standard {
-          td, th{
-               border-top: 0;
-          }
-      }
+     }
      .fc {
           .fc-timegrid-slot-minor {
                border-top: 1px solid #D6D7E0;
@@ -23,10 +41,9 @@
                height: 2.5em;
                .fc-timegrid-slot-label-frame {
                     position: relative;
-                    bottom: -17px;
+                    top: -17px;
                     padding: 3px 10px;
                     background: whitesmoke;
-                    width: 48px !important;
                     color: #6B7393;
                     text-align: left;
                }
