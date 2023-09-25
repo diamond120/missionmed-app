@@ -9,6 +9,7 @@ import { formatDateV1 } from "../../common/common";
 import "./index.less";
 import SectionDetails from "./section-details";
 import Report from "./report";
+import { NoSessionRate, SessionRateDetails } from "./session-rate";
 
 const StudentInterviewSummary = () => {
   let { mockInterviewId } = useParams();
@@ -31,10 +32,9 @@ const StudentInterviewSummary = () => {
   };
 
   useEffect(() => {
-     console.log("mockInterviewId :",mockInterviewId)
-     if(mockInterviewId != "undefined"){
-          getInterviewSummary();
-     }
+    if (mockInterviewId != "undefined") {
+      getInterviewSummary();
+    }
   }, [mockInterviewId]);
 
   const backUrl = `/student/mock-interview`;
@@ -46,7 +46,7 @@ const StudentInterviewSummary = () => {
             <HomeOutlined />
           </Breadcrumb.Item>
           <Breadcrumb.Item key={backUrl}>
-               <Link to={backUrl}>Mock Interview</Link>
+            <Link to={backUrl}>Mock Interview</Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>Interview Summary</Breadcrumb.Item>
         </Breadcrumb>
@@ -65,40 +65,36 @@ const StudentInterviewSummary = () => {
                   <div className={"date"}>
                     <div className={"title"}>Date</div>
                     <div className={"text"}>
-                      {formatDateV1(interviewSummary.date)}
+                      {formatDateV1(interviewSummary?.date)}
                     </div>
                   </div>
                   <div className={"start-time"}>
                     <div className={"title"}>Start Time</div>
                     <div className={"text"}>
-                      {interviewSummary.session_start_time}
+                      {interviewSummary?.session_start_time}
                     </div>
                   </div>
                   <div className={"end-time"}>
                     <div className={"title"}>End Time</div>
                     <div className={"text"}>
-                      {interviewSummary.session_end_time}
+                      {interviewSummary?.session_end_time}
                     </div>
                   </div>
                 </div>
               </SectionDetails>
-              <div style={{ margin: "40px 0" }}>
-                <SectionDetails className={`summary-section`} title="Agenda">
-                  {interviewSummary.agenda}
-                </SectionDetails>
-              </div>
+
+              <SectionDetails className={`summary-section`} title="Agenda">
+                {interviewSummary?.agenda}
+              </SectionDetails>
               <SectionDetails
                 className={`summary-section`}
                 title="Post-Session Tasks"
               >
-                <ul className={"list-disc"} style={{ marginBottom: 32 }}>
-                  <li>
-                    Ask about how tutor was able to mentally reach the answer
-                    for Q34 in Mock 2 of Medify.
-                  </li>
-                  <li>Ask tutor to explain how to work through syllogisms.</li>
-                </ul>
-                {/* <Button className={"secondary-button"}>Add New Task</Button> */}
+                {interviewSummary?.post_session_tasks}
+              </SectionDetails>
+              <SectionDetails className={`session-rate`} title="Session Rate">
+                <NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} />
+                <SessionRateDetails />
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>

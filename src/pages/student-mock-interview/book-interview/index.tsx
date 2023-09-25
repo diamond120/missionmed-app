@@ -8,15 +8,25 @@ import {
   Collapse,
   Avatar,
   Radio,
+  Row,
+  Col,
+  Input,
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
-import "./index.less";
+import MockInterviewService from "../../../api/services/MockInterviews";
 import Calender from "../calender";
+import {formatDateV1} from "../../../common/common";
+import moment from "moment";
+import "./index.less";
+import { useNavigate } from "react-router-dom";
 
 const { Panel } = Collapse;
+const { TextArea } = Input;
+
 
 const BookInterview = () => {
+  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -24,6 +34,7 @@ const BookInterview = () => {
   const [modalTitle, setModalTitle] = useState("");
   const [universityList, setUniversityList] = useState([]);
   const [tutors, setTutors] = useState([]);
+  const totalSteps = 4;
 
   const getUniversityList = async () => {
     try {
@@ -61,19 +72,49 @@ const BookInterview = () => {
     }
   };
 
+  const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Interview','Check Last Details'];
+
   const next = async () => {
-    console.log(form.getFieldsValue());
-    await form.validateFields();
-    const nextStep = activeStep + 1;
-    setActiveStep(nextStep);
-    if (nextStep == 2) {
-      getUniversityTutorList();
+    try{
+      const values = await form.validateFields();
+      console.log(values);
+      const nextStep = activeStep + 1;
+      setActiveStep(nextStep);
+      setModalTitle(stepsTitles[nextStep-1]);
+    }catch(e){
+      if (activeStep == 3) {
+        message.error("Please select slot.");
+      }
     }
-    setModalTitle("Choose Tutor");
   };
+
+  const prev = ()  => {
+    const prevStep = activeStep - 1;
+    setActiveStep(prevStep);
+    setModalTitle(stepsTitles[prevStep-1]);
+  }
+
+  const handleSubmit = async () => {
+    console.log(form.getFieldsValue(true));
+    const formData = form.getFieldsValue(true);
+    try{
+     const response = await MockInterviewService.bookInterview(formData);
+     if(response.data.success){
+      navigate("/student/mock-interview")
+      message.success('You’ve successfully booked mock interview');
+     }else{
+      throw new Error(response.data.message)
+     }
+    }catch(e){
+      message.error(e.message);
+    }
+    handleCancel()
+    
+  }
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields();
   };
 
   const showModal = () => {
@@ -98,6 +139,7 @@ const BookInterview = () => {
   };
 
   const selectUniversity = Form.useWatch("university", form);
+  
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
     return (
@@ -114,6 +156,7 @@ const BookInterview = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            onChange={getUniversityTutorList}
             options={universityList}
           />
         </Form.Item>
@@ -172,6 +215,7 @@ const BookInterview = () => {
     onChange,
     tutors,
   }) {
+    console.log(tutors)
     return (
       <Radio.Group onChange={onChange} value={value}>
         <Collapse
@@ -199,7 +243,7 @@ const BookInterview = () => {
       <>
         <div className={"choose-tutor"}>
           <h3 className={"title"}>Recommended for you</h3>
-          <Form.Item name="tutor" label="" rules={[{ required: true }]}>
+          <Form.Item name="tutorId" label="" rules={[{ required: true }]}>
             <TutorCollapse tutors={tutors} />
           </Form.Item>
         </div>
@@ -210,9 +254,77 @@ const BookInterview = () => {
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutor')}/>
+      <Calender tutorId={form.getFieldValue('tutorId')} form={form}/>
       </div>
     </>;
+  };
+
+  const Step4From = ({form}) => {
+    const formData = form.getFieldsValue(true);
+    const dateTimeFormat = "YYYY-MM-DD HH:mm a"
+    const timeFormat = "HH:mm a"
+    const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
+    const sessionDate =  formatDateV1(moment(formData.sessionStartTime, dateTimeFormat))
+    const sessionStartTime =  moment(moment(formData.sessionStartTime, dateTimeFormat)).format("HH:mm a")
+    const sessionEndTime =  moment(moment(formData.sessionEndTime, dateTimeFormat)).format("HH:mm a")
+    return (
+      <>
+        <div className={"session-details"} style={{ padding: "0 10px" }}>
+          <h3 style={{ fontSize: 16, color: "#312D42", fontWeight: "600" }}>
+            Session Details
+          </h3>
+          <div style={{ marginBottom: 21 }}>
+            <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+              University
+            </h4>
+            <div style={{ fontSize: 16 }}>{formData.university}</div>
+          </div>
+
+          <Row style={{ marginBottom: 17 }}>
+            <Col span={10} sm={8}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                Interview Type
+              </h4>
+              <div style={{ fontSize: 16 }}>{formData.mockInterview}</div>
+            </Col>
+            <Col span={14} sm={16}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                Tutor
+              </h4>
+              <div style={{ fontSize: 16 }}>{tutorName}</div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={10} sm={8}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                Date
+              </h4>
+              <div style={{ fontSize: 16 }}>{sessionDate}</div>
+            </Col>
+            <Col span={7} sm={5}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                Start Time
+              </h4>
+              <div style={{ fontSize: 16 }}>{sessionStartTime}</div>
+            </Col>
+            <Col span={7} sm={11}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                End Time
+              </h4>
+              <div style={{ fontSize: 16 }}>{sessionEndTime}</div>
+            </Col>
+          </Row>
+        </div>
+        <Form.Item
+          style={{ marginTop: "17px", marginBottom: "0px"}}
+          label="Leave a quick note"
+          name="note"
+        >
+          <TextArea rows={3} placeholder="Textarea" style={{ fontSize: 16 }} />
+        </Form.Item>
+      </>
+    );
   };
 
   return (
@@ -228,30 +340,49 @@ const BookInterview = () => {
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
+          activeStep > 1 && (
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Previous Step
+            </Button>
+          ),
           <span className={"steps"}>Step {activeStep} of 4</span>,
-          <Button key="submit" className={"secondary-button"} onClick={next}>
-            Next Step
-          </Button>,
+          activeStep < totalSteps && (
+            <Button
+              className={"secondary-button"}
+              onClick={next}
+            >
+              Next Step
+            </Button>
+          ),
+          activeStep === totalSteps && (
+            <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
+              Book Interview
+            </Button>
+          ),
         ]}
       >
         <Form form={form} layout="vertical">
           {activeStep == 1 && (
-            <div style={{width:'555px'}}>
+            <div style={{ width: "555px" }}>
               <Step1Form
                 universityList={universityList}
                 getMockInterviewList={getMockInterviewList}
               />
             </div>
           )}
-          {activeStep == 2 && ( 
-            <div style={{width:'555px'}}>
-              <Step2Form tutors={tutors} 
-              /> 
+          {activeStep == 2 && (
+            <div style={{ width: "555px" }}>
+              <Step2Form tutors={tutors} />
             </div>
-            )}
+          )}
           {activeStep == 3 && (
-            <div style={{width:'1155px'}}>
+            <div style={{ width: "1155px" }}>
               <Step3From />
+            </div>
+          )}
+          {activeStep == 4 && (
+            <div style={{ width: "600px" }}>
+              <Step4From form={form}/>
             </div>
           )}
         </Form>

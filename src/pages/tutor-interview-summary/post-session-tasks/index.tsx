@@ -3,7 +3,7 @@ import { Button} from "antd"
 const Postsessiontasks = () => {
   return (
     <>
-      <div className={"post-session-tasks con-box"}>
+      <div className={"post-session-tasks con-box"} style={{margin:"40px 0"}}>
         <h2 className={"secondary-title"}>Post-Session Tasks</h2>
         <div className={"con-box-wrap"}>
           <ul className={'list-disc'} style={{marginBottom:32}}>

@@ -1,31 +1,20 @@
 import "./index.less";
-import React, { useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import { useState } from "react";
-import { Breadcrumb, Button, message } from "antd";
+import { Breadcrumb, message } from "antd";
 import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
-import MockInterviewDetails from "./mock-interview-details";
 import MockInterviewsService from "../../api/services/MockInterviews";
+import {groupSessionsByDate} from "../../common/common";
+import MockInterviewDetails from "../../components/mock-interview-details";
 
 const StudentMockInterview = () => {
-  const data = [];
-  const navigate = useNavigate();
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState({});
   const [pastSessions, setPastSessions] = useState({});
   const [agenda, setAgenda] = useState(null);
-
-  const formatSessionList = (sessions) => {
-    const formatedSessions = sessions.reduce((obj, session) => {
-      obj[session.date] = obj[session.date] || [];
-      obj[session.date].push(session);
-      return obj;
-    }, {});
-    return formatedSessions;
-  };
 
 
   const getMockInterviewDetails = async () => {
@@ -36,12 +25,12 @@ const StudentMockInterview = () => {
         //setUpcomingInterview({});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
-            ? formatSessionList(response.data?.data?.upcomingsessions)
+            ? groupSessionsByDate(response.data?.data?.upcomingsessions)
             : {}
         );
         setPastSessions(
           response.data?.data?.pastsessions
-            ? formatSessionList(response.data?.data?.pastsessions)
+            ? groupSessionsByDate(response.data?.data?.pastsessions)
             : {}
         );
         setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
