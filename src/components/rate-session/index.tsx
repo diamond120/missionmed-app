@@ -31,7 +31,8 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
     try{
      const values = await form.validateFields();
      const formData = {...values, 
-          tutorId:session.tutor_id,
+          tutorId:session.tutorId,
+          mockInterviewId:session.id
      }
      giveSessionRate(formData);
     }catch(e){

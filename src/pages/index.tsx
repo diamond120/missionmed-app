@@ -20,7 +20,7 @@ const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notif
 const NotificationsStudent= lazy(/*application-page-bundle*/ () => import("./notifications-student"))
 const TutorMockInterview = lazy(() => import("./tutor-mock-interview"))
 const StudentMockInterview = lazy(() => import("./student-mock-interview"))
-const TutorSessionSummary = lazy(() => import("./tutor-session-summary"))
+const TutorInterviewSummary = lazy(() => import("./tutor-interview-summary"))
 const StudentInterviewSummary = lazy(() => import("./student-interview-summary"))
 
 const routes: RouteObject[] = [
@@ -89,13 +89,13 @@ const routes: RouteObject[] = [
         index: true,
       },
       {
-        path: "/student/interview-summary/:mockInterviewId",
         Component: StudentInterviewSummary,
+        path: "/student/interview-summary/:mockInterviewId",
         index: true,
       },
       {
-        Component: TutorSessionSummary,
-        path: "/tutor/session-summary",
+        Component: TutorInterviewSummary,
+        path: "/tutor/interview-summary/:mockInterviewId",
         index: true,
       },
       {

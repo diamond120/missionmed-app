@@ -66,3 +66,12 @@ export const formatDateV1 = (dateTime) => {
 export const checkSessionOnToday = (sessionDate) => {
     return moment().isSameOrAfter(sessionDate)
 }
+
+export const groupSessionsByDate = (sessions) => {
+    const formatedSessions = sessions.reduce((obj, session) => {
+      obj[session.date] = obj[session.date] || [];
+      obj[session.date].push(session);
+      return obj;
+    }, {});
+    return formatedSessions;
+  };

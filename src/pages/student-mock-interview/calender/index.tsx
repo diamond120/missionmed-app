@@ -5,6 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import { useEffect, useState } from "react";
 
 import {
+  Form,
   message
 } from "antd";
 import CommonService from "../../../api/services/Common";
@@ -27,7 +28,7 @@ function formatDate(inputDateStr) {
 }
 
 
-const Calender = ({tutorId}) => {
+const Calender = ({tutorId, form}) => {
 
   const [slotsList, setSlots] = useState([]);
     const data = {
@@ -55,7 +56,7 @@ const Calender = ({tutorId}) => {
     const handleEventClick = async (info) => {
       const clickedEvent = info.event;
       if(clickedEvent.title == 'availabel'){
-        console.log(clickedEvent)
+        //console.log(clickedEvent)
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
           selectedEvent.setProp('textColor', '#2816EE'); // Reset the color to default (empty string)
@@ -67,14 +68,20 @@ const Calender = ({tutorId}) => {
 
         const startDate = formatDate(clickedEvent.start);
         const endDate = formatDate(clickedEvent.end);
-        console.log('Event title:', clickedEvent.title);
-        console.log('Event date:', clickedEvent.extendedProps.day);
-        console.log('Event Start:', startDate);
-        console.log('Event End:', endDate);
+        form.setFieldValue('sessionStartTime', startDate);
+        form.setFieldValue('sessionEndTime', endDate);
+        
+        // console.log('Event title:', clickedEvent.title);
+        // console.log('Event date:', clickedEvent.extendedProps.day);
+        // console.log('Event Start:', startDate);
+        // console.log('Event End:', endDate);
       }
     };
 
     return (
+      <>
+      <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true , message:"Please select slot"}]}></Form.Item>
+      <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true,  message:"Please select slot"}]}></Form.Item>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}
         initialView="timeGridWeek"
@@ -91,6 +98,8 @@ const Calender = ({tutorId}) => {
         eventClick={handleEventClick}
         borderColor='0'
       />
+      </>
+      
   )
 
 }
