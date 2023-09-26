@@ -10,16 +10,19 @@ import {
 } from "antd";
 import CommonService from "../../../api/services/Common";
 
-function formatDate(inputDate) {
-  const date = new Date(inputDate);
-  
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
+function formatDate(inputDateStr) {
+  const inputDate = new Date(inputDateStr);
+  const year = inputDate.getFullYear();
+  const month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed
+  const day = inputDate.getDate().toString().padStart(2, '0');
+  const hours = inputDate.getHours().toString().padStart(2, '0');
+  const minutes = inputDate.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
 
-  const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+  // Convert hours from 24-hour format to 12-hour format
+  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+
+  const formattedDate = `${year}-${month}-${day} ${formattedHours}:${minutes} ${ampm}`;
 
   return formattedDate;
 }
@@ -49,23 +52,24 @@ const Calender = ({tutorId, form}) => {
     useEffect(() => {
       getSlotsist();
     }, []);
-    
+
     let selectedEvent = null;
     const handleEventClick = async (info) => {
       const clickedEvent = info.event;
 
       console.log(clickedEvent);
       if(clickedEvent.title == 'availabel'){
-        
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
-          selectedEvent.setProp('textColor', '#2816EE'); // Reset the color to default (empty string)
+          selectedEvent.setProp('textColor', '#2816EE');
+           // Reset the color to default (empty string)
         }
         clickedEvent.setProp('backgroundColor', '#2816EE');
         clickedEvent.setProp('textColor', '#ffffff');
 
         selectedEvent = clickedEvent;
         const startDate = formatDate(clickedEvent.start);
+        
         const endDate = formatDate(clickedEvent.end);
         const date = clickedEvent.extendedProps.day;
         
@@ -73,10 +77,10 @@ const Calender = ({tutorId, form}) => {
         form.setFieldValue('sessionEndTime', endDate);
         form.setFieldValue('date', date);
         
-        // console.log('Event title:', clickedEvent.title);
-        // console.log('Event date:', clickedEvent.extendedProps.day);
-        // console.log('Event Start:', startDate);
-        // console.log('Event End:', endDate);
+        console.log('Event title:', clickedEvent.title);
+        console.log('Event date:', clickedEvent.extendedProps.day);
+        console.log('Event Start:', startDate);
+        console.log('Event End:', endDate);
       }
     };
 
@@ -108,6 +112,5 @@ const Calender = ({tutorId, form}) => {
 }
 
 export default Calender
-
 
 
