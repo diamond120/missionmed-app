@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Breadcrumb, Button, Rate, Tabs, message } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
-import {groupSessionsByDate, formatTime} from "../../../common/common";
+import {groupSessionsByDate, formatTime, checkSessionOnToday} from "../../../common/common";
 import "./index.less";
+import RescheduleInterview from "../reschedule-interview";
 
 const SessionList = ({
   date,
   sessions,
   type,
   handleRateSession = () => {},
+  handleReschedule
 }) => (
   <div className="sessions">
     <h4 className="sessions-date">{formatDateV1(date)}</h4>
@@ -21,6 +23,7 @@ const SessionList = ({
           session={session}
           type={type}
           handleRateSession={handleRateSession}
+          handleReschedule={handleReschedule}
           key={session.id}
         />
       ))}
@@ -28,10 +31,10 @@ const SessionList = ({
   </div>
 );
 
-const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
+const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule}) => {
   const user = useUser();
   const userRole = user.role;
-  const checkSessionOnToday = () => checkSessionOnToday(session.date)
+  
   return (
     <li className="item">
       <div style={{ display: "flex" }}>
@@ -51,7 +54,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
         </div>
       </div>
       {userRole == "student" && type == "upcoming" && (
-        <Button disabled={() => checkSessionOnToday()} className={"secondary-button"}>Reschedule</Button>
+        <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={handleReschedule}>Reschedule</Button>
       )}
       {type == "past" && (
         <>
@@ -101,6 +104,9 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
     setRateSession(null);
   };
 
+  const handleReschedule = () => {
+    console.log("handleReschedule")
+  }
   return (
     <>
       <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
@@ -113,6 +119,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
                   date={date}
                   sessions={formatedUpcomingSessios[date]}
                   type={"upcoming"}
+                  handleReschedule={handleReschedule}
                   key={`upcomingSessions${index}`}
                 />
               ))}
@@ -140,6 +147,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
         handleRateCancel={handleRateCancel}
         updatePastSession={updatePastSession}
       />
+      <RescheduleInterview addUpcomingSession={addUpcomingSession}/>
     </>
   );
 };
