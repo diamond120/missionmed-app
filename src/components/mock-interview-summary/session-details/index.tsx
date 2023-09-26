@@ -1,10 +1,11 @@
-import { formatDateV1 } from "../../../common/common";
+import { formatDateV1, formatTime } from "../../../common/common";
+import "./index.less";
 
-const SessionDetails = () => {
+const SessionDetails = ({interviewSummary}) => {
   return (
     <>
       <div style={{ fontWeight: "600" }}>Student</div>
-      <div style={{ fontSize: "16px" }}>{student.fullName}</div>
+      <div style={{ fontSize: "16px" }}>{interviewSummary.studentName}</div>
       <div className={"date-time"}>
         <div className={"date"}>
           <div className={"title"}>Date</div>
@@ -12,11 +13,11 @@ const SessionDetails = () => {
         </div>
         <div className={"start-time"}>
           <div className={"title"}>Start Time</div>
-          <div className={"text"}>{interviewSummary?.session_start_time}</div>
+          <div className={"text"}>{formatTime(interviewSummary?.session_start_time)}</div>
         </div>
         <div className={"end-time"}>
           <div className={"title"}>End Time</div>
-          <div className={"text"}>{interviewSummary?.session_end_time}</div>
+          <div className={"text"}>{formatTime(interviewSummary?.session_end_time)}</div>
         </div>
       </div>
     </>

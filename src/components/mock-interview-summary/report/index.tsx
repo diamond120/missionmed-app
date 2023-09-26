@@ -3,11 +3,11 @@ import SummaryPreviewimg from "./summary-img/Summary-Preview.jpg";
 import { ReactComponent as SummaryPreviewIcon } from "../../../components/icon/assets/session-summary.svg";
 import { Button } from "antd";
 
-const Report = ({ report }) => {
+const Report = ({ report, title="Diagnostic Report" }) => {
   return (
     <>
       <div className={"session-preview con-box"}>
-        <h2 className={"secondary-title"}>Diagnostic Report</h2>
+        <h2 className={"secondary-title"}>{title}</h2>
         {report &&  <Button className={"primary-button"}>Download</Button>}
         <div className={"con-box-wrap"}>
           {report ? (

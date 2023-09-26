@@ -4,7 +4,7 @@ import { Breadcrumb, Button, Rate, Tabs, message } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
-import {groupSessionsByDate} from "../../../common/common";
+import {groupSessionsByDate, formatTime} from "../../../common/common";
 import "./index.less";
 
 const SessionList = ({
@@ -37,9 +37,9 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
       <div style={{ display: "flex" }}>
         <div className="time">
           <div style={{ paddingBottom: "5px" }}>
-            <strong>{session.session_start_time}</strong>
+            <strong>{formatTime(session.session_start_time)}</strong>
           </div>
-          <div className={"end-time"}>{session.session_end_time}</div>
+          <div className={"end-time"}>{formatTime(session.session_end_time)}</div>
         </div>
         <div>
           <div style={{ paddingBottom: "5px" }}>

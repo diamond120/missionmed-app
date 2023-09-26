@@ -7,6 +7,7 @@ import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
 import MockInterviewsService from "../../api/services/MockInterviews";
 import MockInterviewDetails from "../../components/mock-interview-details";
+import moment from "moment";
 
 const StudentMockInterview = () => {
 
@@ -15,23 +16,24 @@ const StudentMockInterview = () => {
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
 
+
   const addUpcomingSession = (session) => {
     console.log(session)
-    setUpcomingSessions({...upcomingSessions, [session.date]:[...(upcomingSessions[session.date] ?? []) ,session]})
+    setUpcomingSessions([...upcomingSessions, session]);
+
+    if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
+      setUpcomingInterview({
+        id:session.id,
+        date:session.date,
+        session_start_time:session.session_start_time,
+        session_end_time:session.session_end_time,
+        agenda:null
+      })
+      setAgenda(null);
+    }
   }
 
   const updatePastSession = (id, data={}) => {
-    //const updatedSessions = {};
-    // for (const date in pastSessions) {
-    //   const updatedSession  = pastSessions[date].map(session => {
-    //     if(session.id == id){
-    //       return {...session, ...data};
-    //     }else{
-    //       return session;
-    //     }
-    //   })
-    //   updatedSessions[date] = updatedSession
-    // }
     const updatedSessions = pastSessions.map(session => {
       if(session.id == id){
         return {...session, ...data};
@@ -46,6 +48,7 @@ const StudentMockInterview = () => {
       const response = await MockInterviewsService.getStudentMockInterviews({});
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
+        //setUpcomingInterview({});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
             ?  response.data?.data?.upcomingsessions
@@ -67,7 +70,7 @@ const StudentMockInterview = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      const response = await MockInterviewsService.updateMockInterviewAgenda({
+      const response = await MockInterviewsService.updateMockInterviewData({
         "mockInterviewId":upcomingInterview?.id,
         "agenda":agendaDetails,
       });
@@ -103,9 +106,9 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            {(Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0) && <BookInterview  addUpcomingSession={addUpcomingSession}/>}
+            {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookInterview  addUpcomingSession={addUpcomingSession}/>}
           </div>
-          { (Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0)  ? (
+          { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
             <MockInterviewDetails
               key="mockInterviewDetails"
               upcomingInterview={upcomingInterview}

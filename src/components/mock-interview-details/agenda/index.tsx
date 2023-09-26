@@ -6,7 +6,6 @@ const { TextArea } = Input;
 
 const Agenda = ({agenda, handleEditAgenda}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalDetails, setisModalDetails] = useState(false);
   const [form] = Form.useForm();
 
   const handleClick = () => {

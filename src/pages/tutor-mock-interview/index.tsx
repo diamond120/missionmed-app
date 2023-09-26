@@ -38,7 +38,7 @@ const TutorMockInterview = () => {
 
   const handleEditAgenda = async (agendaDetails) => {
     try {
-      const response = await MockInterviewsService.updateMockInterviewAgenda({
+      const response = await MockInterviewsService.updateMockInterviewData({
         mockInterviewId: upcomingInterview?.id,
         agenda: agendaDetails,
       });

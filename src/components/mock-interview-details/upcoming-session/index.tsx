@@ -1,7 +1,7 @@
 import { Button, Tooltip } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import { useUser } from "../../../api/providers/UserProvider";
-import { formatDateV1, checkSessionOnToday } from "../../../common/common";
+import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/common";
 import "./index.less";
 import { useMemo } from "react";
 
@@ -12,7 +12,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType }) => {
     [upcomingInterview.date]
   );
   const title = sessionType == "interview" ? "Interview" : "";
-
+  
   return (
     <>
       <div className={"upcoming-session con-box"}>
@@ -31,7 +31,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType }) => {
               <strong>Date: </strong> {formatDateV1(upcomingInterview.date)}
             </li>
             <li>
-              <strong>Time: </strong> {upcomingInterview.time}
+              <strong>Time: </strong> {`${formatTime(upcomingInterview['session_start_time'])} - ${formatTime(upcomingInterview['session_end_time'])}`}
             </li>
           </ul>
 

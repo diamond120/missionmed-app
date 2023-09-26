@@ -62,12 +62,15 @@ export const formatDateV1 = (dateTime) => {
     return moment(dateTime).format("ddd, DD MMM YYYY");
 }
 
+export const formatTime = (dateTime, dateTimeFormat="YYYY-MM-DD hh:mm a", format="h:mm a") => {
+    return moment(dateTime, dateTimeFormat).format(format);
+}
+
 export const checkSessionOnToday = (sessionDate) => {
     return moment().isSameOrAfter(sessionDate)
 }
 
 export const groupSessionsByDate = (sessions, orderBy="asc") => {
-    console.log("sessions:",sessions)
     if(orderBy=="asc"){
         sessions.sort( function ( a, b ) { return moment(a.date) - moment(b.date); } );
     }else{
