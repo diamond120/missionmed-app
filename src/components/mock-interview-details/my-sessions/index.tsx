@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Breadcrumb, Button, Rate, Tabs, message } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
+import {groupSessionsByDate, formatTime, checkSessionOnToday} from "../../../common/common";
 import "./index.less";
+import RescheduleInterview from "../reschedule-interview";
 
 const SessionList = ({
   date,
   sessions,
   type,
   handleRateSession = () => {},
+  handleReschedule
 }) => (
   <div className="sessions">
     <h4 className="sessions-date">{formatDateV1(date)}</h4>
@@ -20,6 +23,7 @@ const SessionList = ({
           session={session}
           type={type}
           handleRateSession={handleRateSession}
+          handleReschedule={handleReschedule}
           key={session.id}
         />
       ))}
@@ -27,17 +31,18 @@ const SessionList = ({
   </div>
 );
 
-const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
+const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule}) => {
   const user = useUser();
   const userRole = user.role;
+  
   return (
     <li className="item">
       <div style={{ display: "flex" }}>
         <div className="time">
           <div style={{ paddingBottom: "5px" }}>
-            <strong>{session.session_start_time}</strong>
+            <strong>{formatTime(session.session_start_time)}</strong>
           </div>
-          <div className={"end-time"}>{session.session_end_time}</div>
+          <div className={"end-time"}>{formatTime(session.session_end_time)}</div>
         </div>
         <div>
           <div style={{ paddingBottom: "5px" }}>
@@ -49,7 +54,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
         </div>
       </div>
       {userRole == "student" && type == "upcoming" && (
-        <Button className={"secondary-button"}>Reschedule</Button>
+        <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={handleReschedule}>Reschedule</Button>
       )}
       {type == "past" && (
         <>
@@ -59,12 +64,12 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
           >
             {userRole == "student" && (
               <>
-                <Button
+                {!session?.hasSessionRate  && <Button
                   className={"secondary-button"}
                   onClick={(event) => handleRateSession(event, session)}
                 >
                   Rate Session
-                </Button>
+                </Button>}
                 <Link to={`/student/interview-summary/${session.id}`}>
                   <Button className={"secondary-button"}>View Summary</Button>
                 </Link>
@@ -84,10 +89,12 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
   );
 };
 
-const Mysessions = ({ upcomingSessions, pastSessions }) => {
+const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
+  const formatedpastSessions= groupSessionsByDate(pastSessions, "desc");
 
   const handleRateSession = (event, session) => {
     setRateSession({ id: session.id, tutorId: session.tutor_id });
@@ -97,18 +104,22 @@ const Mysessions = ({ upcomingSessions, pastSessions }) => {
     setRateSession(null);
   };
 
+  const handleReschedule = () => {
+    console.log("handleReschedule")
+  }
   return (
     <>
       <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
         <h2 className={"secondary-title"}>My Sessions </h2>
-        <Tabs defaultActiveKey={"profile"}>
+        <Tabs defaultActiveKey={"Upcoming"}>
           <TabPane tab={"Upcoming"} key={"Upcoming"}>
             <div className={"upcoming-sessions"}>
-              {Object.keys(upcomingSessions).map((date, index) => (
+              {Object.keys(formatedUpcomingSessios).map((date, index) => (
                 <SessionList
                   date={date}
-                  sessions={upcomingSessions[date]}
+                  sessions={formatedUpcomingSessios[date]}
                   type={"upcoming"}
+                  handleReschedule={handleReschedule}
                   key={`upcomingSessions${index}`}
                 />
               ))}
@@ -117,10 +128,10 @@ const Mysessions = ({ upcomingSessions, pastSessions }) => {
 
           <TabPane tab={"Past"} key={"Past"}>
             <div className={"upcoming-past"}>
-              {Object.keys(pastSessions).map((date, index) => (
+              {Object.keys(formatedpastSessions).map((date, index) => (
                 <SessionList
                   date={date}
-                  sessions={pastSessions[date]}
+                  sessions={formatedpastSessions[date]}
                   type={"past"}
                   handleRateSession={handleRateSession}
                   key={`pastSessions${index}`}
@@ -134,7 +145,9 @@ const Mysessions = ({ upcomingSessions, pastSessions }) => {
         session={rateSession}
         isOpen={Object.keys(rateSession ?? {}).length > 0}
         handleRateCancel={handleRateCancel}
+        updatePastSession={updatePastSession}
       />
+      <RescheduleInterview addUpcomingSession={addUpcomingSession}/>
     </>
   );
 };

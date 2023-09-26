@@ -25,7 +25,7 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 
 
-const BookInterview = ({addUpcomingSession}) => {
+const RescheduleInterview = ({addUpcomingSession}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   
@@ -402,4 +402,4 @@ const BookInterview = ({addUpcomingSession}) => {
   );
 };
 
-export default BookInterview;
+export default RescheduleInterview;

@@ -5,11 +5,11 @@ import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import MockInterviewsService from "../../api/services/MockInterviews";
 import { useStudent } from "../../api/providers/StudentProvider";
-import { formatDateV1 } from "../../common/common";
+import SectionDetails from "../../components/mock-interview-summary/section-details";
+import { NoSessionRate, SessionRateDetails } from "../../components/mock-interview-summary/session-rate";
+import SessionDetails from "../../components/mock-interview-summary/session-details";
+import Report from "../../components/mock-interview-summary/report";
 import "./index.less";
-import SectionDetails from "./section-details";
-import Report from "./report";
-import { NoSessionRate, SessionRateDetails } from "./session-rate";
 
 const StudentInterviewSummary = () => {
   let { mockInterviewId } = useParams();
@@ -38,6 +38,10 @@ const StudentInterviewSummary = () => {
   }, [mockInterviewId]);
 
   const backUrl = `/student/mock-interview`;
+
+  const handleUpdateSummary = (rateDetails) => {
+    setInterviewSummary({...interviewSummary, sessionrate:rateDetails})
+  }
   return (
     <>
       <Section>
@@ -55,34 +59,9 @@ const StudentInterviewSummary = () => {
 
           <div className={"grid-col-2"}>
             <div style={{ width: "504px" }}>
-              <SectionDetails
-                className={`summary-section`}
-                title="Session Details"
-              >
-                <div style={{ fontWeight: "600" }}>Student</div>
-                <div style={{ fontSize: "16px" }}>{student.fullName}</div>
-                <div className={"date-time"}>
-                  <div className={"date"}>
-                    <div className={"title"}>Date</div>
-                    <div className={"text"}>
-                      {formatDateV1(interviewSummary?.date)}
-                    </div>
-                  </div>
-                  <div className={"start-time"}>
-                    <div className={"title"}>Start Time</div>
-                    <div className={"text"}>
-                      {interviewSummary?.session_start_time}
-                    </div>
-                  </div>
-                  <div className={"end-time"}>
-                    <div className={"title"}>End Time</div>
-                    <div className={"text"}>
-                      {interviewSummary?.session_end_time}
-                    </div>
-                  </div>
-                </div>
-              </SectionDetails>
-
+            <SectionDetails className={`summary-section`} title="Session Details">
+              <SessionDetails interviewSummary={interviewSummary}/>
+            </SectionDetails>
               <SectionDetails className={`summary-section`} title="Agenda">
                 {interviewSummary?.agenda}
               </SectionDetails>
@@ -93,8 +72,8 @@ const StudentInterviewSummary = () => {
                 {interviewSummary?.post_session_tasks}
               </SectionDetails>
               <SectionDetails className={`session-rate`} title="Session Rate">
-                <NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} />
-                <SessionRateDetails />
+                {!interviewSummary.sessionrate &&<NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} handleUpdateSummary={handleUpdateSummary}/>}
+                {interviewSummary.sessionrate &&<SessionRateDetails rateDetails={interviewSummary.sessionrate} />}
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>

@@ -1,17 +1,15 @@
 import "./index.less";
-import { Breadcrumb } from "antd";
+import { Breadcrumb, message } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
-import Sessiondetails from "./session-details";
-import Summarypreview from "./summary-preview";
-import Sessionagenda from "./session-agenda";
 import Sessionsummary from "./session-summary";
-import Postsessiontasks from "./post-session-tasks";
-import Sessionrate from "./session-rate";
+import PostSessionTasks from "./post-session-tasks";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MockInterviewsService from "../../api/services/MockInterviews"
-import MockInterviewSummary from "../../components/mock-interview-summary";
+import SectionDetails from "../../components/mock-interview-summary/section-details";
+import SessionDetails from "../../components/mock-interview-summary/session-details";
+import Report from "../../components/mock-interview-summary/report";
 
 const TutorInterviewSummary = () => {
      let { mockInterviewId } = useParams();
@@ -39,6 +37,21 @@ const TutorInterviewSummary = () => {
      }
    }, [mockInterviewId]);
  
+   const addPostSessionTasks = async (task) => {
+    try{
+      const response = await MockInterviewsService.updateMockInterviewData({
+        "mockInterviewId":interviewSummary.id,
+        "postSessionTasks":task,
+      });
+      if(response.data.success){
+        setInterviewSummary({...interviewSummary, post_session_tasks: task});
+      }else{
+        throw new Error(response.data.message)
+      }
+    }catch(e){
+      message.error(e.message);
+    }
+  }
    const backUrl = `/tutor/mock-interview`;
   return (
     <>
@@ -55,21 +68,21 @@ const TutorInterviewSummary = () => {
 
         <div className={"con-section-wrap session-summary-section-wrap"}>
           <h2 className={"tab-title"}>Interview Summary</h2>
-          {/* <MockInterviewSummary /> */}
           <div className={"grid-col-2"}>
             <div style={{ width: "504px" }}>
-              <Sessiondetails />
-              <div style={{ margin: "40px 0" }}>
-                <Sessionagenda />
-              </div>
+            <SectionDetails className={`summary-section`} title="Session Details">
+              <SessionDetails interviewSummary={interviewSummary}/>
+            </SectionDetails>
+            <SectionDetails className={`summary-section`} title="Agenda">
+                {interviewSummary?.agenda}
+              </SectionDetails>
               <Sessionsummary />
               <div style={{ margin: "40px 0" }}>
-                <Postsessiontasks />
+                <PostSessionTasks tasks={interviewSummary?.post_session_tasks} addPostSessionTasks={addPostSessionTasks}/>
               </div>
-              <Sessionrate />
             </div>
             <div style={{ width: "504px" }}>
-              <Summarypreview />
+              <Report report={interviewSummary?.report ?? null} title={"Session Preview"}/>
             </div>
           </div>
         </div>

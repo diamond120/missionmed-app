@@ -4,7 +4,7 @@ import "./index.less";
 import RateSession from "../../../components/rate-session";
 import { useState } from "react";
 
-const NoSessionRate = ({ session }) => {
+const NoSessionRate = ({ session, handleUpdateSummary }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRateCancel = () => {
@@ -26,30 +26,31 @@ const NoSessionRate = ({ session }) => {
         session={session}
         isOpen={isOpen}
         handleRateCancel={handleRateCancel}
+        handleUpdateSummary={handleUpdateSummary}
       />
     </>
   );
 };
 
-const SessionRateDetails = () => {
+const SessionRateDetails = ({rateDetails}) => {
   return (
     <div className={"rat-comments"}>
       <Row className={"ratings-group"} gutter={[5, 24]}>
         <Col xs={24} xl={12} className="ratings">
           <h4 className={"rat-title"}>Knowledge & Expertise</h4>
-          <Rate disabled defaultValue={4.5} allowHalf />
+          <Rate disabled defaultValue={rateDetails.Knowledge_Expertise ?? 0} allowHalf />
         </Col>
         <Col xs={24} xl={12} className="ratings">
           <h4 className={"rat-title"}>Engagement & Enthusiasm</h4>
-          <Rate disabled defaultValue={5} allowHalf />
+          <Rate disabled  defaultValue={rateDetails.Engagement_Enthusiasm ?? 0} allowHalf />
         </Col>
         <Col xs={24} xl={12} className="ratings">
           <h4 className={"rat-title"}>Clarity & Understandability</h4>
-          <Rate disabled defaultValue={5} allowHalf />
+          <Rate disabled  defaultValue={rateDetails.Clarity_Understandability ?? 0}  allowHalf />
         </Col>
         <Col xs={24} xl={12} className="ratings">
           <h4 className={"rat-title"}>Punctuality & Preparedness</h4>
-          <Rate disabled defaultValue={4} allowHalf />
+          <Rate disabled defaultValue={rateDetails.Punctuality_Preparedness ?? 0}  allowHalf />
         </Col>
       </Row>
 
@@ -58,8 +59,7 @@ const SessionRateDetails = () => {
           Extra Comments
         </h4>
         <div style={{ color: "#312D42" }}>
-          Wonderful tutor! Explains clearly. Lots of fun activities during the
-          session.{" "}
+          {rateDetails.comments ?? ""}
         </div>
       </div>
     </div>

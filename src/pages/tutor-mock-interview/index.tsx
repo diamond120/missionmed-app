@@ -4,13 +4,12 @@ import { HomeOutlined, FileSearchOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import MockInterviewDetails from "../../components/mock-interview-details";
 import MockInterviewsService from "../../api/services/MockInterviews";
-import { groupSessionsByDate } from "../../common/common";
 import "./index.less";
 
 const TutorMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
-  const [upcomingSessions, setUpcomingSessions] = useState({});
-  const [pastSessions, setPastSessions] = useState({});
+  const [upcomingSessions, setUpcomingSessions] = useState([]);
+  const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
 
   const getMockInterviewDetails = async () => {
@@ -20,13 +19,13 @@ const TutorMockInterview = () => {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
-            ? groupSessionsByDate(response.data?.data?.upcomingsessions)
-            : {}
+            ? response.data?.data?.upcomingsessions
+            : []
         );
         setPastSessions(
           response.data?.data?.pastsessions
-            ? groupSessionsByDate(response.data?.data?.pastsessions)
-            : {}
+            ? response.data?.data?.pastsessions
+            : []
         );
         setAgenda(response.data?.data?.agenda ?? null);
       } else {
@@ -39,7 +38,7 @@ const TutorMockInterview = () => {
 
   const handleEditAgenda = async (agendaDetails) => {
     try {
-      const response = await MockInterviewsService.updateMockInterviewAgenda({
+      const response = await MockInterviewsService.updateMockInterviewData({
         mockInterviewId: upcomingInterview?.id,
         agenda: agendaDetails,
       });

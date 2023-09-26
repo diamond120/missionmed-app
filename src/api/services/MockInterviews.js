@@ -11,15 +11,17 @@ const getStudentMockInterviews = (customConfig={}) => {
   return http.get(`/student/interview-details`, {...headerConfig,...customConfig });
 };
 
-const updateMockInterviewAgenda = (data,customConfig={}) => {
+const updateMockInterviewData = (data,customConfig={}) => {
   const token = `Bearer ${getToken()}`;
   const headerConfig = {
     headers:{
       'Authorization': token
     }
   }
-  return http.post(`/student/interview-data`,data, {...headerConfig,...customConfig });
+  return http.post(`/interview-data`,data, {...headerConfig,...customConfig });
 };
+
+
 
 const getInterviewSummary = (mockInterviewId) => {
   const token = `Bearer ${getToken()}`;
@@ -31,7 +33,7 @@ const getInterviewSummary = (mockInterviewId) => {
       mockInterviewId:mockInterviewId,
     }
   }
-  return http.get(`/student/interview-summary`,config);
+  return http.get(`/interview-summary`,config);
 }
 
 const bookInterview = (data) => {
@@ -55,7 +57,7 @@ const getTutorMockInterviews = (customConfig={}) => {
 }; 
 const Service = {
   getStudentMockInterviews,
-  updateMockInterviewAgenda,
+  updateMockInterviewData,
   getInterviewSummary,
   bookInterview,
   getTutorMockInterviews

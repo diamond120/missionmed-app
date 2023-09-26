@@ -6,7 +6,7 @@ import TutorService from "../../api/services/Tutor";
 
 const { TextArea } = Input;
 
-const RateSession = ({ session, isOpen, handleRateCancel }) => {
+const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, handleUpdateSummary }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(isOpen);
   const [form] = Form.useForm();
 
@@ -20,7 +20,13 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
     try{
      const response = await TutorService.sessionRate(data)
      if(response.data.success){
-          message.error(response.data.message)
+      if(updatePastSession){
+        updatePastSession(session.id, {hasSessionRate:true})
+      }
+      if(handleUpdateSummary){
+        handleUpdateSummary(response.data.data)
+      }
+      message.success(response.data.message)
      }
     }catch(e){
      message.error(e.message)
@@ -35,11 +41,11 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
           mockInterviewId:session.id
      }
      giveSessionRate(formData);
-    }catch(e){
-     message.error(e.message);
-    }finally{
      handleRateCancel();
      form.resetFields();
+    }catch(e){
+     console.log(e.message);
+     return false;
     }
     
   };
@@ -77,7 +83,7 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Knowledge & Expertise</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="knowledgeExpertise">
+                <Form.Item name="knowledgeExpertise" rules={[{required:true}]}>
                   <Rate />
                 </Form.Item>
               </div>
@@ -85,7 +91,7 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Engagement & Enthusiasm</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="engagementEnthusiasm">
+                <Form.Item name="engagementEnthusiasm" rules={[{required:true}]}>
                   <Rate />
                 </Form.Item>
               </div>
@@ -93,7 +99,7 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
             <div className={"rating"}>
               <h4 className={"rat-title"}>Clarity & Understandability</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="clarityUnderstandability">
+                <Form.Item name="clarityUnderstandability" rules={[{required:true}]}>
                   <Rate />
                 </Form.Item>
               </div>
@@ -101,7 +107,7 @@ const RateSession = ({ session, isOpen, handleRateCancel }) => {
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Punctuality & Preparedness</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="punctualityPreparedness">
+                <Form.Item name="punctualityPreparedness" rules={[{required:true}]}>
                   <Rate />
                 </Form.Item>
               </div>
