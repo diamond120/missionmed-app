@@ -33,12 +33,11 @@ const Agenda = ({agenda, handleEditAgenda}) => {
           <h2 className={"secondary-title"}>Agenda<QuestionCircleFilled  style={{marginLeft:"8px"}}/></h2>
           <div className={"con-box-wrap"}>
                 <div style={{display:'flex',flexDirection:'column',alignItems:'start', justifyContent:'space-between',height:'100%'}}>
-                <ul className={'list-disc'}>
+                {/* <ul className={'list-disc'}> */}
                       {/* <li>Ask about how tutor was able to mentally reach the answer for Q34 in Mock 2 of Medify.</li>
                       <li>Ask tutor to explain how to work through syllogisms.</li> */}
-                      {agenda}
-                </ul>
-                
+                {/* </ul> */}
+                {agenda}
                 <div style={{display:'flex',gap:20}}>
                   <Button className={"secondary-button"} onClick={handleClick}>Edit Agenda</Button>
                 </div>
@@ -54,7 +53,7 @@ const Agenda = ({agenda, handleEditAgenda}) => {
         className={"mock-interview-modal"}
         width={"600px"}
         footer={[
-          <div className='button-group'>
+          <div key="buttonGroup" className='button-group'>
             <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
               Discard 
             </Button>

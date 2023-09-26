@@ -25,7 +25,7 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 
 
-const BookInterview = () => {
+const BookInterview = ({addUpcomingSession}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
@@ -100,6 +100,7 @@ const BookInterview = () => {
     try{
      const response = await MockInterviewService.bookInterview(formData);
      if(response.data.success){
+      addUpcomingSession(response.data.data);
       navigate("/student/mock-interview")
       message.success('You’ve successfully booked mock interview');
      }else{
@@ -264,7 +265,7 @@ const BookInterview = () => {
     const dateTimeFormat = "YYYY-MM-DD HH:mm a"
     const timeFormat = "HH:mm a"
     const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
-    const sessionDate =  formatDateV1(moment(formData.sessionStartTime, dateTimeFormat))
+    const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     const sessionStartTime =  moment(moment(formData.sessionStartTime, dateTimeFormat)).format("HH:mm a")
     const sessionEndTime =  moment(moment(formData.sessionEndTime, dateTimeFormat)).format("HH:mm a")
     return (

@@ -72,7 +72,8 @@ const Calender = ({tutorId, form}) => {
         
         form.setFieldValue('sessionStartTime', startDate);
         form.setFieldValue('sessionEndTime', endDate);
-        form.setFieldValue('date', date);
+        //form.setFieldValue('date', date);
+        form.setFieldValue('date', "2023-09-26");
         
         // console.log('Event title:', clickedEvent.title);
         // console.log('Event date:', clickedEvent.extendedProps.day);

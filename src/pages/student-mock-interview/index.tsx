@@ -16,6 +16,24 @@ const StudentMockInterview = () => {
   const [pastSessions, setPastSessions] = useState({});
   const [agenda, setAgenda] = useState(null);
 
+  const addUpcomingSession = (session) => {
+    console.log(session)
+  }
+
+  const updatePastSession = (id, data={}) => {
+    const updatedSessions = {};
+    for (const date in pastSessions) {
+      const updatedSession  = pastSessions[date].map(session => {
+        if(session.id == id){
+          return {...session, ...data};
+        }else{
+          return session;
+        }
+      })
+      updatedSessions[date] = updatedSession
+    }
+    setPastSessions(updatedSessions);
+  }
 
   const getMockInterviewDetails = async () => {
     try {
@@ -90,6 +108,7 @@ const StudentMockInterview = () => {
               pastSessions={pastSessions}
               agenda={agenda}
               handleEditAgenda={handleEditAgenda}
+              updatePastSession={updatePastSession}
             />
           ) : (
             <div className="mock-interview">
@@ -113,7 +132,7 @@ const StudentMockInterview = () => {
                       You can choose tutor and book your first mock <br />{" "}
                       interview by pressing “Book Interview” button below.
                     </div>
-                    <BookInterview key="bookInterview" />
+                    <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession}/>
                   </div>
                 </div>
               </div>

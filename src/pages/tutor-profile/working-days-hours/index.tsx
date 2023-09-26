@@ -57,7 +57,7 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
       {day:"Saturday", "hours":Saturday,"dayOff": values.isSaturdayOff},
       {day:"Sunday", "hours": Sunday,"dayOff": values.isSundayOff}
     ]
-    console.log(values.Monday);
+
     await TutorService.updateProfile({
       workingHours:workingHours
     });

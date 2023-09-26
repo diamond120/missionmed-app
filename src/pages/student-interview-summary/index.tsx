@@ -38,6 +38,10 @@ const StudentInterviewSummary = () => {
   }, [mockInterviewId]);
 
   const backUrl = `/student/mock-interview`;
+
+  const handleUpdateSummary = (rateDetails) => {
+    setInterviewSummary({...interviewSummary, sessionrate:rateDetails})
+  }
   return (
     <>
       <Section>
@@ -93,8 +97,8 @@ const StudentInterviewSummary = () => {
                 {interviewSummary?.post_session_tasks}
               </SectionDetails>
               <SectionDetails className={`session-rate`} title="Session Rate">
-                <NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} />
-                <SessionRateDetails />
+                {!interviewSummary.sessionrate &&<NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} handleUpdateSummary={handleUpdateSummary}/>}
+                {interviewSummary.sessionrate &&<SessionRateDetails rateDetails={interviewSummary.sessionrate} />}
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>

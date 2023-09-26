@@ -59,12 +59,12 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
           >
             {userRole == "student" && (
               <>
-                <Button
+                {!session?.hasSessionRate  && <Button
                   className={"secondary-button"}
                   onClick={(event) => handleRateSession(event, session)}
                 >
                   Rate Session
-                </Button>
+                </Button>}
                 <Link to={`/student/interview-summary/${session.id}`}>
                   <Button className={"secondary-button"}>View Summary</Button>
                 </Link>
@@ -84,7 +84,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
   );
 };
 
-const Mysessions = ({ upcomingSessions, pastSessions }) => {
+const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
@@ -134,6 +134,7 @@ const Mysessions = ({ upcomingSessions, pastSessions }) => {
         session={rateSession}
         isOpen={Object.keys(rateSession ?? {}).length > 0}
         handleRateCancel={handleRateCancel}
+        updatePastSession={updatePastSession}
       />
     </>
   );
