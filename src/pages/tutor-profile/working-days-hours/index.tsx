@@ -21,14 +21,17 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
   const isSaturdayOff = Form.useWatch('isSaturdayOff', form); 
   const isSundayOff = Form.useWatch('isSundayOff', form); 
   
-  const formattedWorkingHours = useMemo(() => tutorWorkingHours(tutor.workingHours), [tutor.workingHours]);
+
+  //const format = 'HH:mm';
+  const format = 'h:mm a';
+
+  const formattedWorkingHours = useMemo(() => tutorWorkingHours(tutor.workingHours, format), [tutor.workingHours]);
  
   const handleEditClick = (e) => {
     setEditing(true);
     e.preventDefault();
   };
 
-  const format = 'HH:mm';
   
   const formatTimeArr = (timeArr) => {
     if( timeArr.length > 0 ){
@@ -54,7 +57,7 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
       {day:"Saturday", "hours":Saturday,"dayOff": values.isSaturdayOff},
       {day:"Sunday", "hours": Sunday,"dayOff": values.isSundayOff}
     ]
-
+    console.log(values.Monday);
     await TutorService.updateProfile({
       workingHours:workingHours
     });
@@ -115,7 +118,7 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                           style={{ width: "140px" }}
                           className={"input"}
                           disabled={(form.getFieldValue('isMondayOff') == true || !editing)}
-                          
+                          use12Hours
                         />
                   </Form.Item>
                   <Form.Item

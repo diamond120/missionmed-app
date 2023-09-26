@@ -21,8 +21,7 @@ export const stringToBoolean = (value) => {
     }
 }
 
-const formatHours= (hours) => {
-    const format = 'HH:mm';
+const formatHours= (hours, format = 'HH:mm') => {
     if(hours && hours.length > 0){
         return hours.map(hours => ({start: moment(hours.start, format), end: moment(hours.end, format)}))
     }else{
@@ -30,22 +29,22 @@ const formatHours= (hours) => {
     }
 }
 
-export const tutorWorkingHours = (workingHours) => {
+export const tutorWorkingHours = (workingHours, format) => {
     const formattedWorkingHours = workingHours.reduce((obj, workingHour) => {
         if(workingHour.day == "Monday"){
-            return {...obj , isMondayOff: workingHour.dayOff, Monday:workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours)}
+            return {...obj , isMondayOff: workingHour.dayOff, Monday:workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format)}
         }else if(workingHour.day == "Tuesday"){
-            return {...obj , isTuesdayOff: workingHour.dayOff, Tuesday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
+            return {...obj , isTuesdayOff: workingHour.dayOff, Tuesday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format) }
         }else if(workingHour.day == "Wednesday"){
-            return {...obj , isWednesdayOff: workingHour.dayOff, Wednesday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
+            return {...obj , isWednesdayOff: workingHour.dayOff, Wednesday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format) }
         }else if(workingHour.day == "Thursday"){
-            return {...obj , isThursdayOff: workingHour.dayOff, Thursday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
+            return {...obj , isThursdayOff: workingHour.dayOff, Thursday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format) }
         }else if(workingHour.day == "Friday"){
-            return {...obj , isFridayOff: workingHour.dayOff, Friday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
+            return {...obj , isFridayOff: workingHour.dayOff, Friday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format) }
         }else if(workingHour.day == "Saturday"){
-            return {...obj , isSaturdayOff: workingHour.dayOff, Saturday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
+            return {...obj , isSaturdayOff: workingHour.dayOff, Saturday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format) }
         }else if(workingHour.day == "Sunday"){
-            return {...obj , isSundayOff: workingHour.dayOff, Sunday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours) }
+            return {...obj , isSundayOff: workingHour.dayOff, Sunday: workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format) }
         }else{
             return obj
         }
