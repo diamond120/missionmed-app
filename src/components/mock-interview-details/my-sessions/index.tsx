@@ -4,6 +4,7 @@ import { Breadcrumb, Button, Rate, Tabs, message } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
+import {groupSessionsByDate} from "../../../common/common";
 import "./index.less";
 
 const SessionList = ({
@@ -30,6 +31,7 @@ const SessionList = ({
 const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
   const user = useUser();
   const userRole = user.role;
+  const checkSessionOnToday = () => checkSessionOnToday(session.date)
   return (
     <li className="item">
       <div style={{ display: "flex" }}>
@@ -49,7 +51,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} }) => {
         </div>
       </div>
       {userRole == "student" && type == "upcoming" && (
-        <Button className={"secondary-button"}>Reschedule</Button>
+        <Button disabled={() => checkSessionOnToday()} className={"secondary-button"}>Reschedule</Button>
       )}
       {type == "past" && (
         <>
@@ -88,6 +90,8 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
+  const formatedpastSessions= groupSessionsByDate(pastSessions, "desc");
 
   const handleRateSession = (event, session) => {
     setRateSession({ id: session.id, tutorId: session.tutor_id });
@@ -101,13 +105,13 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
     <>
       <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
         <h2 className={"secondary-title"}>My Sessions </h2>
-        <Tabs defaultActiveKey={"profile"}>
+        <Tabs defaultActiveKey={"Upcoming"}>
           <TabPane tab={"Upcoming"} key={"Upcoming"}>
             <div className={"upcoming-sessions"}>
-              {Object.keys(upcomingSessions).map((date, index) => (
+              {Object.keys(formatedUpcomingSessios).map((date, index) => (
                 <SessionList
                   date={date}
-                  sessions={upcomingSessions[date]}
+                  sessions={formatedUpcomingSessios[date]}
                   type={"upcoming"}
                   key={`upcomingSessions${index}`}
                 />
@@ -117,10 +121,10 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
 
           <TabPane tab={"Past"} key={"Past"}>
             <div className={"upcoming-past"}>
-              {Object.keys(pastSessions).map((date, index) => (
+              {Object.keys(formatedpastSessions).map((date, index) => (
                 <SessionList
                   date={date}
-                  sessions={pastSessions[date]}
+                  sessions={formatedpastSessions[date]}
                   type={"past"}
                   handleRateSession={handleRateSession}
                   key={`pastSessions${index}`}

@@ -11,7 +11,6 @@ const Mysessions = () => {
 
      const showModal = () => {
           setIsModalOpen(true);
-          
           setModalTitle("Rate Session");
      };
      const handleCancel = () => {

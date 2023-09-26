@@ -28,7 +28,7 @@ const { TextArea } = Input;
 const BookInterview = ({addUpcomingSession}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-
+  
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
@@ -100,7 +100,18 @@ const BookInterview = ({addUpcomingSession}) => {
     try{
      const response = await MockInterviewService.bookInterview(formData);
      if(response.data.success){
-      addUpcomingSession(response.data.data);
+      const result = response.data.data;
+      addUpcomingSession({
+        date:result.date,
+        hasSessionRate:false,
+        id:result.id,
+        mock_interview:result.mock_interview,
+        session_end_time:result.session_end_time,
+        session_start_time:result.session_start_time,
+        student_id:result.student_id,
+        tutor_id:result.tutor_id,
+        tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
+      });
       navigate("/student/mock-interview")
       message.success('You’ve successfully booked mock interview');
      }else{
@@ -216,7 +227,6 @@ const BookInterview = ({addUpcomingSession}) => {
     onChange,
     tutors,
   }) {
-    console.log(tutors)
     return (
       <Radio.Group onChange={onChange} value={value}>
         <Collapse

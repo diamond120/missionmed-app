@@ -6,32 +6,38 @@ import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
 import MockInterviewsService from "../../api/services/MockInterviews";
-import {groupSessionsByDate} from "../../common/common";
 import MockInterviewDetails from "../../components/mock-interview-details";
 
 const StudentMockInterview = () => {
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
-  const [upcomingSessions, setUpcomingSessions] = useState({});
-  const [pastSessions, setPastSessions] = useState({});
+  const [upcomingSessions, setUpcomingSessions] = useState([]);
+  const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
 
   const addUpcomingSession = (session) => {
     console.log(session)
+    setUpcomingSessions({...upcomingSessions, [session.date]:[...(upcomingSessions[session.date] ?? []) ,session]})
   }
 
   const updatePastSession = (id, data={}) => {
-    const updatedSessions = {};
-    for (const date in pastSessions) {
-      const updatedSession  = pastSessions[date].map(session => {
-        if(session.id == id){
-          return {...session, ...data};
-        }else{
-          return session;
-        }
-      })
-      updatedSessions[date] = updatedSession
-    }
+    //const updatedSessions = {};
+    // for (const date in pastSessions) {
+    //   const updatedSession  = pastSessions[date].map(session => {
+    //     if(session.id == id){
+    //       return {...session, ...data};
+    //     }else{
+    //       return session;
+    //     }
+    //   })
+    //   updatedSessions[date] = updatedSession
+    // }
+    const updatedSessions = pastSessions.map(session => {
+      if(session.id == id){
+        return {...session, ...data};
+      }else{
+        return session;
+      }})
     setPastSessions(updatedSessions);
   }
 
@@ -40,16 +46,15 @@ const StudentMockInterview = () => {
       const response = await MockInterviewsService.getStudentMockInterviews({});
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
-        //setUpcomingInterview({});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
-            ? groupSessionsByDate(response.data?.data?.upcomingsessions)
-            : {}
+            ?  response.data?.data?.upcomingsessions
+            : []
         );
         setPastSessions(
           response.data?.data?.pastsessions
-            ? groupSessionsByDate(response.data?.data?.pastsessions)
-            : {}
+            ? response.data?.data?.pastsessions
+            : []
         );
         setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
       } else {
@@ -98,7 +103,7 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            {(Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0) && <BookInterview />}
+            {(Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0) && <BookInterview  addUpcomingSession={addUpcomingSession}/>}
           </div>
           { (Object.values(upcomingSessions).length > 0 || Object.values(pastSessions).length > 0)  ? (
             <MockInterviewDetails

@@ -66,7 +66,13 @@ export const checkSessionOnToday = (sessionDate) => {
     return moment().isSameOrAfter(sessionDate)
 }
 
-export const groupSessionsByDate = (sessions) => {
+export const groupSessionsByDate = (sessions, orderBy="asc") => {
+    console.log("sessions:",sessions)
+    if(orderBy=="asc"){
+        sessions.sort( function ( a, b ) { return moment(a.date) - moment(b.date); } );
+    }else{
+        sessions.sort( function ( a, b ) { return moment(b.date) - moment(a.date); } );
+    }
     const formatedSessions = sessions.reduce((obj, session) => {
       obj[session.date] = obj[session.date] || [];
       obj[session.date].push(session);
