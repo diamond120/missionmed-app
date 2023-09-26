@@ -68,8 +68,11 @@ const Calender = ({tutorId, form}) => {
 
         const startDate = formatDate(clickedEvent.start);
         const endDate = formatDate(clickedEvent.end);
+        const date = clickedEvent.extendedProps.day;
+        
         form.setFieldValue('sessionStartTime', startDate);
         form.setFieldValue('sessionEndTime', endDate);
+        form.setFieldValue('date', date);
         
         // console.log('Event title:', clickedEvent.title);
         // console.log('Event date:', clickedEvent.extendedProps.day);
@@ -80,6 +83,7 @@ const Calender = ({tutorId, form}) => {
 
     return (
       <>
+      <Form.Item name="date" hidden={true} rules={[{ required: true , message:"Please select date"}]}></Form.Item>
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true , message:"Please select slot"}]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true,  message:"Please select slot"}]}></Form.Item>
       <FullCalendar
