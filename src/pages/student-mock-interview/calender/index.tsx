@@ -10,23 +10,19 @@ import {
 } from "antd";
 import CommonService from "../../../api/services/Common";
 
-function formatDate(inputDateStr) {
-  const inputDate = new Date(inputDateStr);
-  const year = inputDate.getFullYear();
-  const month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed
-  const day = inputDate.getDate().toString().padStart(2, '0');
-  const hours = inputDate.getHours().toString().padStart(2, '0');
-  const minutes = inputDate.getMinutes().toString().padStart(2, '0');
-  const ampm = hours >= 12 ? 'pm' : 'am';
+function formatDate(inputDate) {
+  const date = new Date(inputDate);
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
 
-  // Convert hours from 24-hour format to 12-hour format
-  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
-
-  const formattedDate = `${year}-${month}-${day} ${formattedHours}:${minutes} ${ampm}`;
+  const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
 
   return formattedDate;
 }
-
 
 const Calender = ({tutorId, form}) => {
 
@@ -34,11 +30,13 @@ const Calender = ({tutorId, form}) => {
     const data = {
       tutorId: tutorId,
     };
+    console.log(tutorId)
     const getSlotsist = async () => {
       try {
         const response = await CommonService.getSlotslist(data);
         if (response.data.success) {
             const slotList = response.data.data ?? [];
+            console.log(slotList)
             setSlots(slotList);       
           } else {
           throw new Error(response.data.message); 
@@ -55,8 +53,10 @@ const Calender = ({tutorId, form}) => {
     let selectedEvent = null;
     const handleEventClick = async (info) => {
       const clickedEvent = info.event;
+
+      console.log(clickedEvent);
       if(clickedEvent.title == 'availabel'){
-        //console.log(clickedEvent)
+        
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
           selectedEvent.setProp('textColor', '#2816EE'); // Reset the color to default (empty string)
@@ -65,7 +65,6 @@ const Calender = ({tutorId, form}) => {
         clickedEvent.setProp('textColor', '#ffffff');
 
         selectedEvent = clickedEvent;
-
         const startDate = formatDate(clickedEvent.start);
         const endDate = formatDate(clickedEvent.end);
         const date = clickedEvent.extendedProps.day;
