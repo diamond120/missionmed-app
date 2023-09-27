@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -12,29 +12,47 @@ import {
   Col,
   Input,
 } from "antd";
-import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
-import MockInterviewService from "../../../api/services/MockInterviews";
+import MockInterviewsService from "../../../api/services/MockInterviews";
 import Calender from "../calender";
-import {formatDateV1} from "../../../common/common";
+import { formatDateV1, formatTime } from "../../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
+import "./index.less";
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
-
-const RescheduleInterview = ({addUpcomingSession}) => {
+const RescheduleInterview = ({
+  updateUpcomingSession,
+  isOpen,
+  handleOpen,
+  sessionId,
+}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
   const [universityList, setUniversityList] = useState([]);
-  const [tutors, setTutors] = useState([]);
-  const totalSteps = 4;
+  const totalSteps = 3;
+
+  const [interviewSummary, setInterviewSummary] = useState(null);
+
+  const getInterviewSummary = async (sessionId) => {
+    try {
+      const response = await MockInterviewsService.getInterviewSummary(
+        sessionId
+      );
+      if (response.data.success) {
+        setInterviewSummary(response.data.data);
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
 
   const getUniversityList = async () => {
     try {
@@ -55,89 +73,75 @@ const RescheduleInterview = ({addUpcomingSession}) => {
     }
   };
 
-  const getUniversityTutorList = async () => {
-    try {
-      const data = {
-        university: form.getFieldValue("university"),
-      };
-      const response = await CommonService.getUniversityTutorList(data);
-      if (response.data.success) {
-        const tutorList = response.data.data ?? [];
-        setTutors(tutorList);
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (e) {
-      message.error(e.message);
+  useEffect(() => {
+    if (sessionId) {
+      getInterviewSummary(sessionId);
     }
-  };
+    setModalTitle("Reschedule Interview");
+    setActiveStep(1);
+  }, [sessionId,isOpen]);
 
-  const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Interview','Check Last Details'];
+  useEffect(() => {
+    getUniversityList();
+  },[])
+
+
+  const stepsTitles = [
+    "Reschedule Interview",
+    "Book New Time for Interview",
+    "Check Last Details",
+  ];
 
   const next = async () => {
-    try{
+    try {
       const values = await form.validateFields();
-      console.log(values);
       const nextStep = activeStep + 1;
       setActiveStep(nextStep);
-      setModalTitle(stepsTitles[nextStep-1]);
-    }catch(e){
-      if (activeStep == 3) {
+      setModalTitle(stepsTitles[nextStep - 1]);
+    } catch (e) {
+      if (activeStep == 2) {
         message.error("Please select slot.");
       }
     }
   };
 
-  const prev = ()  => {
+  const prev = () => {
     const prevStep = activeStep - 1;
     setActiveStep(prevStep);
-    setModalTitle(stepsTitles[prevStep-1]);
-  }
+    setModalTitle(stepsTitles[prevStep - 1]);
+  };
 
   const handleSubmit = async () => {
-    console.log(form.getFieldsValue(true));
     const formData = form.getFieldsValue(true);
-    try{
-     const response = await MockInterviewService.bookInterview(formData);
-     if(response.data.success){
-      const result = response.data.data;
-      addUpcomingSession({
-        date:result.date,
-        hasSessionRate:false,
-        id:result.id,
-        mock_interview:result.mock_interview,
-        session_end_time:result.session_end_time,
-        session_start_time:result.session_start_time,
-        student_id:result.student_id,
-        tutor_id:result.tutor_id,
-        tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
-      });
-      navigate("/student/mock-interview")
-      message.success('You’ve successfully booked mock interview');
-     }else{
-      throw new Error(response.data.message)
-     }
-    }catch(e){
+    try {
+      const response = await MockInterviewsService.rescheduleInterview({...formData, mockinterviewId:interviewSummary?.id});
+      if (response.data.success) {
+        const result = response.data.data;
+        updateUpcomingSession(result.id, {
+          date: result.date,
+          mock_interview: result.mock_interview,
+          session_end_time: result.session_end_time,
+          session_start_time: result.session_start_time,
+        });
+        navigate("/student/mock-interview");
+        message.success("You've successfully rescheduled mock interview");
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (e) {
       message.error(e.message);
     }
-    handleCancel()
-    
-  }
+    handleCancel();
+  };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    handleOpen(false);
     form.resetFields();
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-    setActiveStep(1);
-    getUniversityList();
-    setModalTitle("Specify Your Priorites");
-  };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+    handleOpen(false);
   };
 
   const mockInterviewList = [
@@ -151,15 +155,48 @@ const RescheduleInterview = ({addUpcomingSession}) => {
   };
 
   const selectUniversity = Form.useWatch("university", form);
-  
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
     return (
       <>
+          <div className={"session-details"} style={{ padding: "10px" }}>
+          <h3 style={{ fontSize: 16, color: "#312D42", fontWeight: "600" }}>
+            Session Details
+          </h3>
+          <div style={{ marginBottom: 21 }}>
+            <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+              Tutor
+            </h4>
+            <div style={{ fontSize: 16 }}>{interviewSummary?.tutorName}</div>
+          </div>
+
+          <Row>
+            <Col span={10} sm={8}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                Date
+              </h4>
+              <div style={{ fontSize: 16 }}>{formatDateV1(interviewSummary?.date)}</div>
+            </Col>
+            <Col span={7} sm={5}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                Start Time
+              </h4>
+              <div style={{ fontSize: 16 }}>{formatTime(interviewSummary?.session_start_time)}</div>
+            </Col>
+            <Col span={7} sm={11}>
+              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
+                End Time
+              </h4>
+              <div style={{ fontSize: 16 }}>{formatTime(interviewSummary?.session_end_time)}</div>
+            </Col>
+          </Row>
+        </div>
+        
         <Form.Item
           name="university"
           label="Which university are you sitting a mock interview for?"
           rules={[{ required: true }]}
+          initialValue={interviewSummary?.university}
         >
           <Select
             showSearch
@@ -168,8 +205,8 @@ const RescheduleInterview = ({addUpcomingSession}) => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            onChange={getUniversityTutorList}
             options={universityList}
+            disabled={true}
           />
         </Form.Item>
         {selectUniversity && (
@@ -177,6 +214,7 @@ const RescheduleInterview = ({addUpcomingSession}) => {
             name="mockInterview"
             label="Which mock interview are you sitting?"
             rules={[{ required: true }]}
+            initialValue={interviewSummary?.mock_interview}
           >
             <Radio.Group>
               {getMockInterviewList(selectUniversity).map((interview) => (
@@ -191,90 +229,20 @@ const RescheduleInterview = ({addUpcomingSession}) => {
     );
   };
 
-  const TutorPanelHeader = memo(function TutorPanelHeader({ tutor }) {
-    return (
-      <>
-        <Radio key={tutor.id} value={tutor.id}>
-          <div className={"avatar"}>
-            <Avatar
-              src={tutor.profile_picture}
-              size={40}
-              icon={<UserOutlined />}
-            />
-            <div className={"name-degree"}>
-              <h4 className={"tutor-name"}>{tutor.full_name}</h4>
-              <div
-                style={{
-                  display: "flex",
-                  columnGap: 10,
-                  rowGap: 5,
-                  flexWrap: "wrap",
-                  color: "#6B7393",
-                  fontSize: 12,
-                }}
-              >
-                <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span>
-              </div>
-            </div>
-          </div>
-        </Radio>
-      </>
-    );
-  });
 
-  const TutorCollapse = memo(function TutorCollapse({
-    value = null,
-    onChange,
-    tutors,
-  }) {
-    return (
-      <Radio.Group onChange={onChange} value={value}>
-        <Collapse
-          bordered={false}
-          defaultActiveKey={["1"]}
-          expandIconPosition={`end`}
-          className="site-collapse-custom-collapse"
-        >
-          {tutors.map((tutor) => (
-            <Panel
-              header={<TutorPanelHeader tutor={tutor} />}
-              key={tutor.id}
-              className="site-collapse-custom-panel"
-            >
-              {tutor.biography}
-            </Panel>
-          ))}
-        </Collapse>
-      </Radio.Group>
-    );
-  });
-
-  const Step2Form = memo(function Step2Form({ tutors }) {
-    return (
-      <>
-        <div className={"choose-tutor"}>
-          <h3 className={"title"}>Recommended for you</h3>
-          <Form.Item name="tutorId" label="" rules={[{ required: true }]}>
-            <TutorCollapse tutors={tutors} />
-          </Form.Item>
-        </div>
-      </>
-    );
-  });
-
-  const Step3From = () => {
+  const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutorId')} form={form}/>
+      <Calender tutorId={interviewSummary?.tutor_id} form={form}/>
       </div>
     </>;
   };
 
-  const Step4From = ({form}) => {
+  const Step3From = ({form}) => {
     const formData = form.getFieldsValue(true);
     const dateTimeFormat = "YYYY-MM-DD HH:mm a"
     const timeFormat = "HH:mm a"
-    const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
+    const tutorName = interviewSummary?.tutorName
     const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     const sessionStartTime =  moment(moment(formData.sessionStartTime, dateTimeFormat)).format("HH:mm a")
     const sessionEndTime =  moment(moment(formData.sessionEndTime, dateTimeFormat)).format("HH:mm a")
@@ -340,12 +308,9 @@ const RescheduleInterview = ({addUpcomingSession}) => {
 
   return (
     <>
-      <Button className={"primary-button"} onClick={showModal}>
-        Book Interview
-      </Button>
       <Modal
         title={modalTitle}
-        open={isModalOpen}
+        open={isOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         className={"mock-interview-modal "}
@@ -356,18 +321,19 @@ const RescheduleInterview = ({addUpcomingSession}) => {
               Previous Step
             </Button>
           ),
-          <span className={"steps"}>Step {activeStep} of 4</span>,
+          <span className={"steps"}>Step {activeStep} of {stepsTitles.length}</span>,
           activeStep < totalSteps && (
-            <Button
-              className={"secondary-button"}
-              onClick={next}
-            >
+            <Button className={"secondary-button"} onClick={next}>
               Next Step
             </Button>
           ),
           activeStep === totalSteps && (
-            <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-              Book Interview
+            <Button
+              className={"primary-button"}
+              htmlType="submit"
+              onClick={handleSubmit}
+            >
+              Confirm
             </Button>
           ),
         ]}
@@ -378,22 +344,18 @@ const RescheduleInterview = ({addUpcomingSession}) => {
               <Step1Form
                 universityList={universityList}
                 getMockInterviewList={getMockInterviewList}
+                interviewSummary={interviewSummary}
               />
             </div>
           )}
           {activeStep == 2 && (
-            <div style={{ width: "555px" }}>
-              <Step2Form tutors={tutors} />
+            <div style={{ width: "1155px" }}>
+              <Step2From />
             </div>
           )}
           {activeStep == 3 && (
-            <div style={{ width: "1155px" }}>
-              <Step3From />
-            </div>
-          )}
-          {activeStep == 4 && (
             <div style={{ width: "600px" }}>
-              <Step4From form={form}/>
+              <Step3From form={form} />
             </div>
           )}
         </Form>

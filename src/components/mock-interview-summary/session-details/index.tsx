@@ -10,13 +10,13 @@ const SessionDetails = ({ interviewSummary }) => {
       {userRole == "tutor" && (
         <>
           <div style={{ fontWeight: "600" }}>Student</div>
-          <div style={{ fontSize: "16px" }}>{interviewSummary.studentName}</div>
+          <div style={{ fontSize: "16px" }}>{interviewSummary?.studentName}</div>
         </>
       )}
       {userRole == "student" && (
         <>
           <div style={{ fontWeight: "600" }}>University</div>
-          <div style={{ fontSize: "16px" }}>{interviewSummary.university}</div>
+          <div style={{ fontSize: "16px" }}>{interviewSummary?.university}</div>
           <div  className={"date-time"}>
             <div className={"date"}>
               <div className={"title"}>Interview Type</div>

@@ -30,16 +30,16 @@ function formatDate(inputDateStr) {
 const Calender = ({tutorId, form}) => {
 
   const [slotsList, setSlots] = useState([]);
-    const data = {
-      tutorId: tutorId,
-    };
-    console.log(tutorId)
-    const getSlotsist = async () => {
+    
+    const getSlotsist = async (tutorId) => {
       try {
+        const data = {
+          tutorId: tutorId,
+        };
         const response = await CommonService.getSlotslist(data);
         if (response.data.success) {
             const slotList = response.data.data ?? [];
-            console.log(slotList)
+            //console.log(slotList)
             setSlots(slotList);       
           } else {
           throw new Error(response.data.message); 
@@ -50,14 +50,14 @@ const Calender = ({tutorId, form}) => {
     };
 
     useEffect(() => {
-      getSlotsist();
-    }, []);
+      getSlotsist(tutorId);
+    }, [tutorId]);
 
     let selectedEvent = null;
     const handleEventClick = async (info) => {
       const clickedEvent = info.event;
 
-      console.log(clickedEvent);
+      // console.log(clickedEvent);
       if(clickedEvent.title == 'availabel'){
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
@@ -77,10 +77,10 @@ const Calender = ({tutorId, form}) => {
         form.setFieldValue('sessionEndTime', endDate);
         form.setFieldValue('date', date);
         
-        console.log('Event title:', clickedEvent.title);
-        console.log('Event date:', clickedEvent.extendedProps.day);
-        console.log('Event Start:', startDate);
-        console.log('Event End:', endDate);
+        // console.log('Event title:', clickedEvent.title);
+        // console.log('Event date:', clickedEvent.extendedProps.day);
+        // console.log('Event Start:', startDate);
+        // console.log('Event End:', endDate);
       }
     };
 

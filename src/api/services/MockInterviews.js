@@ -46,6 +46,17 @@ const bookInterview = (data) => {
   return http.post(`/student/book-interview`, data, config);
 }
 
+const rescheduleInterview = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    },
+  }
+  return http.post(`/student/reschedule-interview`, data, config);
+}
+
+
 const getTutorMockInterviews = (customConfig={}) => {
   const token = `Bearer ${getToken()}`;
   const headerConfig = {
@@ -55,11 +66,13 @@ const getTutorMockInterviews = (customConfig={}) => {
   }
   return http.get(`/tutor/session-details`, {...headerConfig,...customConfig });
 }; 
+
 const Service = {
   getStudentMockInterviews,
   updateMockInterviewData,
   getInterviewSummary,
   bookInterview,
+  rescheduleInterview,
   getTutorMockInterviews
 };
 
