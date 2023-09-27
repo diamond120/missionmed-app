@@ -5,7 +5,7 @@ import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/c
 import "./index.less";
 import { useMemo } from "react";
 
-const UpcomingSession = ({ upcomingInterview, sessionType }) => {
+const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule }) => {
   const user = useUser();
   const isSessionOnToday = useMemo(
     () => checkSessionOnToday(upcomingInterview.date),
@@ -56,7 +56,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType }) => {
                   </Button>
                 </Tooltip>
               ) : (
-                <Button className={"secondary-button"}> Reschedule </Button>
+                <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
           </div>

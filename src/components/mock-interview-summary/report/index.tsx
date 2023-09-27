@@ -8,7 +8,8 @@ const Report = ({ report, title="Diagnostic Report" }) => {
     <>
       <div className={"session-preview con-box"}>
         <h2 className={"secondary-title"}>{title}</h2>
-        {report &&  <Button className={"primary-button"}>Download</Button>}
+        {report &&  <Button key="download" href={report}
+              target="_blank" className={"primary-button"}>Download</Button>}
         <div className={"con-box-wrap"}>
           {report ? (
             <div className={"session-preview-view"}>

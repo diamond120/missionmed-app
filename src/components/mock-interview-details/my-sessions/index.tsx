@@ -54,7 +54,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
         </div>
       </div>
       {userRole == "student" && type == "upcoming" && (
-        <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={handleReschedule}>Reschedule</Button>
+        <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
       )}
       {type == "past" && (
         <>
@@ -89,12 +89,13 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
   );
 };
 
-const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
+const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleReschedule}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
   const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
   const formatedpastSessions= groupSessionsByDate(pastSessions, "desc");
+  
 
   const handleRateSession = (event, session) => {
     setRateSession({ id: session.id, tutorId: session.tutor_id });
@@ -104,9 +105,6 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
     setRateSession(null);
   };
 
-  const handleReschedule = () => {
-    console.log("handleReschedule")
-  }
   return (
     <>
       <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
@@ -147,7 +145,6 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession}) => {
         handleRateCancel={handleRateCancel}
         updatePastSession={updatePastSession}
       />
-      <RescheduleInterview addUpcomingSession={addUpcomingSession}/>
     </>
   );
 };

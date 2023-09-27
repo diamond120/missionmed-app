@@ -14,12 +14,12 @@ import {
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
-import MockInterviewService from "../../../api/services/MockInterviews";
-import Calender from "../calender";
+import MockInterviewsService from "../../../api/services/MockInterviews";
 import {formatDateV1} from "../../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
+import Calender from "../../../components/mock-interview-details/calender";
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -77,7 +77,6 @@ const BookInterview = ({addUpcomingSession}) => {
   const next = async () => {
     try{
       const values = await form.validateFields();
-      console.log(values);
       const nextStep = activeStep + 1;
       setActiveStep(nextStep);
       setModalTitle(stepsTitles[nextStep-1]);
@@ -95,10 +94,9 @@ const BookInterview = ({addUpcomingSession}) => {
   }
 
   const handleSubmit = async () => {
-    console.log(form.getFieldsValue(true));
     const formData = form.getFieldsValue(true);
     try{
-     const response = await MockInterviewService.bookInterview(formData);
+     const response = await MockInterviewsService.bookInterview(formData);
      if(response.data.success){
       const result = response.data.data;
       addUpcomingSession({

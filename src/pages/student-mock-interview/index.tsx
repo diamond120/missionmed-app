@@ -8,6 +8,7 @@ import BookInterview from "./book-interview";
 import MockInterviewsService from "../../api/services/MockInterviews";
 import MockInterviewDetails from "../../components/mock-interview-details";
 import moment from "moment";
+import RescheduleInterview from "../../components/mock-interview-details/reschedule-interview";
 
 const StudentMockInterview = () => {
 
@@ -15,7 +16,17 @@ const StudentMockInterview = () => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
+  const [isOpenReschedule, setIsOpenReschedule] = useState(false);
+  const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
 
+  const handleReschedule = (sessionId) => {
+    setIsOpenReschedule(true);
+    setRescheduleSessionId(sessionId);
+  }
+
+  const handleOpen = (state) => {
+    setIsOpenReschedule(state);
+  }
 
   const addUpcomingSession = (session) => {
     console.log(session)
@@ -30,6 +41,24 @@ const StudentMockInterview = () => {
         agenda:null
       })
       setAgenda(null);
+    }
+  }
+
+  const updateUpcomingSession = (sessionId, data) => {
+    const updatedSessions = upcomingSessions.map(session => {
+      if(session.id == sessionId ){
+        return {...session, ...data}
+      }else{
+        return session;
+      }
+    })
+    setUpcomingSessions(updatedSessions);
+    if(sessionId == upcomingInterview.id){
+      setUpcomingInterview(prev => ({...prev, ...{
+        date:data.date,
+        session_start_time:data.session_start_time,
+        session_end_time:data.session_end_time,
+      }}))
     }
   }
 
@@ -117,6 +146,7 @@ const StudentMockInterview = () => {
               agenda={agenda}
               handleEditAgenda={handleEditAgenda}
               updatePastSession={updatePastSession}
+              handleReschedule={handleReschedule}
             />
           ) : (
             <div className="mock-interview">
@@ -147,6 +177,7 @@ const StudentMockInterview = () => {
             </div>
           )}
         </div>
+        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession}/>
       </Section>
     </React.Fragment>
   );

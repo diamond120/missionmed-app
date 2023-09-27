@@ -2,7 +2,7 @@ import "./index.less";
 import { Breadcrumb, message } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
-import Sessionsummary from "./session-summary";
+import SessionSummary from "./session-summary";
 import PostSessionTasks from "./post-session-tasks";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -52,7 +52,26 @@ const TutorInterviewSummary = () => {
       message.error(e.message);
     }
   }
-   const backUrl = `/tutor/mock-interview`;
+
+  const uploadReport = async(fileUrl) => {
+    try{
+      const response = await MockInterviewsService.updateMockInterviewData({
+        "mockInterviewId":interviewSummary.id,
+        "report":fileUrl,
+      });
+      console.log(response.data)
+      if(response.data.success){
+        setInterviewSummary({...interviewSummary, report: fileUrl});
+      }else{
+        throw new Error(response.data.message)
+      }
+    }catch(e){
+      message.error(e.message);
+    }
+  }
+
+  const backUrl = `/tutor/mock-interview`;
+
   return (
     <>
       <Section>
@@ -76,7 +95,7 @@ const TutorInterviewSummary = () => {
             <SectionDetails className={`summary-section`} title="Agenda">
                 {interviewSummary?.agenda}
               </SectionDetails>
-              <Sessionsummary />
+              <SessionSummary uploadReport={uploadReport} reportUrl={interviewSummary.report ?? null} />
               <div style={{ margin: "40px 0" }}>
                 <PostSessionTasks tasks={interviewSummary?.post_session_tasks} addPostSessionTasks={addPostSessionTasks}/>
               </div>

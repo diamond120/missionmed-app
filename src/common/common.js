@@ -83,3 +83,24 @@ export const groupSessionsByDate = (sessions, orderBy="asc") => {
     }, {});
     return formatedSessions;
   };
+
+export const fileName = (url) => {
+    let filename = '';
+    try {
+      filename = new URL(url).pathname.split('/').pop();
+    } catch (e) {
+      console.error(e);
+    }
+    return filename;
+}
+
+
+export const onDownload = (url) => {
+    const link = document.createElement("a");
+    link.download = `download.txt`;
+    link.href = url;
+    link.target = "_blank";
+    //document.body.appendChild(link);
+    link.click();
+    //link.parentNode.removeChild(link)
+};
