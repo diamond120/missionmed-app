@@ -77,26 +77,3 @@ const Service = {
 };
 
 export default Service;
-
-// {
-//   "success": true,
-//   "status_code": 200,
-//   "message": "Interview Reschedule Successfully",
-//   "data": {
-//       "id": 1,
-//       "tutor_id": 1,
-//       "student_id": 1,
-//       "university": "The University of Melbourne",
-//       "mock_interview": "Mock Interview#2",
-//       "date": "2023-09-28",
-//       "session_start_time": "2023-09-28 09:00 am",
-//       "session_end_time": "2023-09-28 11:00 am",
-//       "note": "dfdsfdsfdsffsfdsfs",
-//       "agenda": null,
-//       "post_session_tasks": null,
-//       "report": null,
-//       "created_at": "2023-09-26T11:37:42.000000Z",
-//       "updated_at": "2023-09-27T11:47:02.000000Z",
-//       "deleted_at": null
-//   }
-// }
