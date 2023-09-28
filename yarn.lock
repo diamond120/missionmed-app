@@ -276,7 +276,7 @@
 
 "@cyntler/react-doc-viewer@^1.13.0":
   version "1.13.0"
-  resolved "https://registry.npmjs.org/@cyntler/react-doc-viewer/-/react-doc-viewer-1.13.0.tgz"
+  resolved "https://registry.yarnpkg.com/@cyntler/react-doc-viewer/-/react-doc-viewer-1.13.0.tgz#8685c2112aa76f4e0a4ead054f1c1e1a9ecce03d"
   integrity sha512-skrgvgpRQw7yhS8VmHP6vkBU9HiWAkvwQYNY1u7JZWOSN6Tro/iKZzrZ8Fv/cOheAnhliHxWbj1TZeMz4b+A9Q==
   dependencies:
     "@types/mustache" "^4.2.2"
