@@ -63,13 +63,13 @@ const StudentInterviewSummary = () => {
               <SessionDetails interviewSummary={interviewSummary}/>
             </SectionDetails>
               <SectionDetails className={`summary-section`} title="Agenda">
-                {interviewSummary?.agenda}
+                {interviewSummary?.agenda ? interviewSummary?.agenda : 'No agenda found'}
               </SectionDetails>
               <SectionDetails
                 className={`summary-section`}
                 title="Post-Session Tasks"
               >
-                {interviewSummary?.post_session_tasks}
+                {interviewSummary?.post_session_tasks ? interviewSummary?.post_session_tasks: 'No tasks found' }
               </SectionDetails>
               <SectionDetails className={`session-rate`} title="Session Rate">
                 {!interviewSummary.sessionrate &&<NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} handleUpdateSummary={handleUpdateSummary}/>}

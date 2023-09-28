@@ -93,7 +93,7 @@ const TutorInterviewSummary = () => {
               <SessionDetails interviewSummary={interviewSummary}/>
             </SectionDetails>
             <SectionDetails className={`summary-section`} title="Agenda">
-                {interviewSummary?.agenda}
+                {interviewSummary?.agenda ? interviewSummary?.agenda : "No agenda found"}
               </SectionDetails>
               <SessionSummary uploadReport={uploadReport} reportUrl={interviewSummary.report ?? null} />
               <div style={{ margin: "40px 0" }}>

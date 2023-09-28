@@ -240,12 +240,10 @@ const RescheduleInterview = ({
 
   const Step3From = ({form}) => {
     const formData = form.getFieldsValue(true);
-    const dateTimeFormat = "YYYY-MM-DD HH:mm a"
-    const timeFormat = "HH:mm a"
     const tutorName = interviewSummary?.tutorName
     const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
-    const sessionStartTime =  moment(moment(formData.sessionStartTime, dateTimeFormat)).format("HH:mm a")
-    const sessionEndTime =  moment(moment(formData.sessionEndTime, dateTimeFormat)).format("HH:mm a")
+    const sessionStartTime =  formatTime(formData.sessionStartTime)
+    const sessionEndTime =  formatTime(formData.sessionEndTime)
     return (
       <>
         <div className={"session-details"} style={{ padding: "0 10px" }}>
@@ -317,7 +315,7 @@ const RescheduleInterview = ({
         width={"max-content"}
         footer={[
           activeStep > 1 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+            <Button className={"secondary-button previous-button"} onClick={() => prev()}>
               Previous Step
             </Button>
           ),

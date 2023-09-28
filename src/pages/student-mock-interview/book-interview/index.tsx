@@ -15,7 +15,7 @@ import {
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
 import MockInterviewsService from "../../../api/services/MockInterviews";
-import {formatDateV1} from "../../../common/common";
+import {formatDateV1, formatTime} from "../../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
@@ -157,7 +157,7 @@ const BookInterview = ({addUpcomingSession}) => {
         <Form.Item
           name="university"
           label="Which university are you sitting a mock interview for?"
-          rules={[{ required: true }]}
+          rules={[{ required: true , message:"Please select university"}]}
         >
           <Select
             showSearch
@@ -174,7 +174,7 @@ const BookInterview = ({addUpcomingSession}) => {
           <Form.Item
             name="mockInterview"
             label="Which mock interview are you sitting?"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message:"Please select mock interview" }]}
           >
             <Radio.Group>
               {getMockInterviewList(selectUniversity).map((interview) => (
@@ -252,7 +252,7 @@ const BookInterview = ({addUpcomingSession}) => {
       <>
         <div className={"choose-tutor"}>
           <h3 className={"title"}>Recommended for you</h3>
-          <Form.Item name="tutorId" label="" rules={[{ required: true }]}>
+          <Form.Item name="tutorId" label="" rules={[{ required: true, message:"Please select tutor" }]}>
             <TutorCollapse tutors={tutors} />
           </Form.Item>
         </div>
@@ -270,12 +270,10 @@ const BookInterview = ({addUpcomingSession}) => {
 
   const Step4From = ({form}) => {
     const formData = form.getFieldsValue(true);
-    const dateTimeFormat = "YYYY-MM-DD HH:mm a"
-    const timeFormat = "HH:mm a"
     const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
     const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
-    const sessionStartTime =  moment(moment(formData.sessionStartTime, dateTimeFormat)).format("HH:mm a")
-    const sessionEndTime =  moment(moment(formData.sessionEndTime, dateTimeFormat)).format("HH:mm a")
+    const sessionStartTime =  formatTime(formData.sessionStartTime)
+    const sessionEndTime =  formatTime(formData.sessionEndTime)
     return (
       <>
         <div className={"session-details"} style={{ padding: "0 10px" }}>

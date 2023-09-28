@@ -3,7 +3,7 @@ import { ReactComponent as SummaryPreviewIcon } from "../../../components/icon/a
 import { Button } from "antd";
 
 const DocViewer = ({report}) => {
-  return <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(report)}&embedded=true`} width="100%" height="100%" />
+  return <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(report)}&embedded=true`} width="100%" height="100%"/>
 }
 
 

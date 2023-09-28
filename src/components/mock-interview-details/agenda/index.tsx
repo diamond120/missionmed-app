@@ -36,7 +36,7 @@ const Agenda = ({agenda, handleEditAgenda}) => {
                       {/* <li>Ask about how tutor was able to mentally reach the answer for Q34 in Mock 2 of Medify.</li>
                       <li>Ask tutor to explain how to work through syllogisms.</li> */}
                 {/* </ul> */}
-                {agenda}
+                {agenda ? agenda : 'No agenda found'}
                 <div style={{display:'flex',gap:20}}>
                   <Button className={"secondary-button"} onClick={handleClick}>Edit Agenda</Button>
                 </div>
