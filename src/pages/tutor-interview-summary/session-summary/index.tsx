@@ -23,11 +23,9 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
     name: "file",
     maxCount: 1,
     beforeUpload: (file: RcFile) => {
-      const isDocOrPdf =
-        file.type === "application/pdf" ||
-        file.type === "application/msword" ||
-        file.type ===
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      const extension = file.name.split(".").pop();
+
+      const isDocOrPdf = extension === "pdf" || extension === "doc" || extension === "docx";
       if (!isDocOrPdf) {
         setFileList([]);
         message.error("You can only upload PDF,DOC or DOCX file!");
@@ -66,12 +64,12 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
 
   const handleSubmit = () => {
     uploadReport(fileUrl);
-    setReUpload(false)
+    setReUpload(false);
   };
   const handleReUpload = () => {
-    setReUpload(true)
+    setReUpload(true);
     setFileList([]);
-  }
+  };
 
   return (
     <>
@@ -90,7 +88,7 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
             />{" "}
             :
           </div>
-          {(!reportUrl || reUpload==true) ? (
+          {!reportUrl || reUpload == true ? (
             <Form form={form}>
               <Form.Item valuePropName="report">
                 <Upload {...uploadProps} className={"upload-file"}>
@@ -139,27 +137,29 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
             </Form>
           ) : (
             <div>
-              <div><PaperClipOutlined />{fileName(reportUrl)}</div>
+              <div>
+                <PaperClipOutlined />
+                {fileName(reportUrl)}
+              </div>
               <div style={{marginTop:10,display:"flex",justifyContent:"start",gap:10}}>
                 <Button
-                key="download"
-                href={reportUrl}
-                target="_blank"
-                className={"secondary-button"}
-              >
-                Download
-              </Button>
-            
-              <Button
-                key="reUpload"
-                className={"secondary-button"}
-                onClick={handleReUpload}
-              >
-                Re-upload
-              </Button>
+                  key="download"
+                  href={reportUrl}
+                  target="_blank"
+                  className={"secondary-button"}
+                >
+                  Download
+                </Button>
+  
+                <Button
+                  key="reUpload"
+                  className={"secondary-button"}
+                  onClick={handleReUpload}
+                >
+                  Re-upload
+                </Button>
               </div>
             </div>
-            
           )}
         </div>
       </div>
