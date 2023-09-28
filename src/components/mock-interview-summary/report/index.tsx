@@ -30,9 +30,12 @@ const Report = ({ report, title="Diagnostic Report" }) => {
   return (
     <>
       <div className={"session-preview con-box"}>
-        <h2 className={"secondary-title"}>{title}</h2>
-        {report &&  <Button key="download" href={report}
-              target="_blank" className={"primary-button"}>Download</Button>}
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+          <h2 className={"secondary-title"}>{title}</h2>
+          {report &&  <Button key="download" href={report}
+                target="_blank" className={"primary-button"} style={{lineHeight:'1.3',padding:'8px 16px !important',marginBottom:"10px"}}>Download</Button>}
+
+        </div>
         <div className={"con-box-wrap"}>
           {report ? (
             <ReportViewer report={report}/>
