@@ -350,7 +350,7 @@ const BookInterview = ({addUpcomingSession}) => {
         width={"max-content"}
         footer={[
           activeStep > 1 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+            <Button className={"secondary-button previous-button"} onClick={() => prev()}>
               Previous Step
             </Button>
           ),

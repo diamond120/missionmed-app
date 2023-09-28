@@ -140,22 +140,24 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
           ) : (
             <div>
               <div><PaperClipOutlined />{fileName(reportUrl)}</div>
+              <div style={{marginTop:10,display:"flex",justifyContent:"start",gap:10}}>
+                <Button
+                key="download"
+                href={reportUrl}
+                target="_blank"
+                className={"secondary-button"}
+              >
+                Download
+              </Button>
+            
               <Button
-              key="download"
-              href={reportUrl}
-              target="_blank"
-              className={"secondary-button"}
-            >
-              Download
-            </Button>
-          
-            <Button
-              key="reUpload"
-              className={"secondary-button"}
-              onClick={handleReUpload}
-            >
-              Re-upload
-            </Button>
+                key="reUpload"
+                className={"secondary-button"}
+                onClick={handleReUpload}
+              >
+                Re-upload
+              </Button>
+              </div>
             </div>
             
           )}
