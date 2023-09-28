@@ -39,8 +39,8 @@ const Calender = ({tutorId, form}) => {
         const response = await CommonService.getSlotslist(data);
         if (response.data.success) {
             const slotList = response.data.data ?? [];
-            //console.log(slotList)
-            setSlots(slotList);       
+             //console.log(slotList)
+             setSlots(slotList); 
           } else {
           throw new Error(response.data.message); 
         }
@@ -58,7 +58,7 @@ const Calender = ({tutorId, form}) => {
       const clickedEvent = info.event;
 
       // console.log(clickedEvent);
-      if(clickedEvent.title == 'availabel'){
+      if(clickedEvent.title == 'Available'){
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
           selectedEvent.setProp('textColor', '#2816EE');
@@ -100,7 +100,6 @@ const Calender = ({tutorId, form}) => {
         }}
 
         events={slotsList}
-        eventColor='#2816EE'
         selectable={true} 
         eventClick={handleEventClick}
         borderColor='0'

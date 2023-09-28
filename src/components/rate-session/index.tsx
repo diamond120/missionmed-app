@@ -83,7 +83,7 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Knowledge & Expertise</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="knowledgeExpertise" rules={[{required:true}]}>
+                <Form.Item name="knowledgeExpertise" rules={[{required:true, "message":"Add rate of Knowledge & Expertise"}]}>
                   <Rate />
                 </Form.Item>
               </div>
@@ -91,7 +91,7 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Engagement & Enthusiasm</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="engagementEnthusiasm" rules={[{required:true}]}>
+                <Form.Item name="engagementEnthusiasm" rules={[{required:true, "message":"Add rate of Engagement & Enthusiasm"}]}>
                   <Rate />
                 </Form.Item>
               </div>
@@ -99,7 +99,7 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
             <div className={"rating"}>
               <h4 className={"rat-title"}>Clarity & Understandability</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="clarityUnderstandability" rules={[{required:true}]}>
+                <Form.Item name="clarityUnderstandability" rules={[{required:true, "message":"Add rate of Clarity & Understandability"}]}>
                   <Rate />
                 </Form.Item>
               </div>
@@ -107,7 +107,7 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
             <div className={"ratings"}>
               <h4 className={"rat-title"}>Punctuality & Preparedness</h4>
               <div className={"ratings-wrap"}>
-                <Form.Item name="punctualityPreparedness" rules={[{required:true}]}>
+                <Form.Item name="punctualityPreparedness" rules={[{required:true, "message":"Add rate of Punctuality & Preparedness"}]}>
                   <Rate />
                 </Form.Item>
               </div>

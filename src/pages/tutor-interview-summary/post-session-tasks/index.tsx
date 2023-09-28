@@ -42,7 +42,7 @@ const PostSessionTasks = ({tasks, addPostSessionTasks}) => {
             <li>Ask tutor to explain how to work through syllogisms.</li>
           </ul> */}
           <div style={{marginBottom:32}}>
-            {tasks}
+            {tasks ? tasks : "No tasks found"}
           </div>
           <Button className={"secondary-button"} onClick={handleTaskClick}>Add New Task</Button>
         </div>
