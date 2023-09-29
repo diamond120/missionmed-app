@@ -20,7 +20,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule }) =
         <div className={"con-box-wrap"}>
           <CalendarOutlined style={{ fontSize: "50px", color: "#A9A2F8" }} />
 
-          <h2 className={"con-box-title"}>Next Session Will Be</h2>
+          <h2 className={"con-box-title"}>Next Interview Will Be</h2>
           <ul>
             {user.role == "tutor" && (
               <li>

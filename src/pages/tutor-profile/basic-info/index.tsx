@@ -8,6 +8,7 @@ import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 import TutorService from "../../../api/services/Tutor";
 import {GOOGLE_MAP_API_KEY} from "../../../config/app-config";
 import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
+import {AgeList} from "../../../common/common";
 
 const BasicInfoForm: FC<Any> = ({props}) => {
   const [form] = Form.useForm();
@@ -106,97 +107,126 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   }
   const handleFilter = (inputValue: string, option: any) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
 
-  return(
+  return (
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
 
-      <Form
-        className={"basic-information-form"}
-        form={form}
-      >
+      <Form className={"basic-information-form"} form={form}>
         <Form.Item
           name={"fullName"}
           label={"Full Name"}
-          rules={[{ required: true, }]}
-          initialValue={tutor?.fullName ?? ''}
+          rules={[{ required: true }]}
+          initialValue={tutor?.fullName ?? ""}
         >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }}   onChange={e => setFullName(e.target.value)}  />
+          <Input
+            className={"input"}
+            disabled={!editing}
+            style={{
+              color: !editing ? "#bfbfbf" : "",
+              backgroundColor: !editing ? "#f5f5f5" : "",
+            }}
+            onChange={(e) => setFullName(e.target.value)}
+          />
         </Form.Item>
         <Form.Item
           name={"gender"}
           label={"Gender"}
-          rules={[{ required: true, }]}
-          initialValue={tutor?.gender ?? ''}
+          rules={[{ required: true }]}
+          initialValue={tutor?.gender ?? ""}
         >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}   onChange={e => setGender(e.target.value)} />
+          <Select
+            options={AgeList.map((option) => ({ value: option }))}
+            style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
+            disabled={!editing}
+            onChange={(value) => setGender(value)}
+          />
         </Form.Item>
         <Form.Item
           name={"pronouns"}
           label={"Pronouns"}
-          rules={[{ required: true,}]}
-          initialValue={tutor?.pronouns ?? ''}
+          rules={[{ required: true }]}
+          initialValue={tutor?.pronouns ?? ""}
         >
-          
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}   onChange={e => setPronouns(e.target.value)} />
-          
+          <Input
+            className={"input"}
+            disabled={!editing}
+            style={{
+              color: !editing ? "#bfbfbf" : "",
+              backgroundColor: !editing ? "#f5f5f5" : "",
+            }}
+            onChange={(e) => setPronouns(e.target.value)}
+          />
         </Form.Item>
         <Form.Item
           name={"email"}
           label={"Email Address"}
           rules={[
-            { required: true, message: 'Please enter your email address' },
-            { type: 'email', message: 'Please enter a valid email address' },
+            { required: true, message: "Please enter your email address" },
+            { type: "email", message: "Please enter a valid email address" },
           ]}
-          initialValue={tutor?.email ?? ''} 
+          initialValue={tutor?.email ?? ""}
         >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}  onChange={e => setEmail(e.target.value)} />
+          <Input
+            className={"input"}
+            disabled={!editing}
+            style={{
+              color: !editing ? "#bfbfbf" : "",
+              backgroundColor: !editing ? "#f5f5f5" : "",
+            }}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Form.Item>
         <Form.Item
           name={"location"}
           label={"Location"}
           initialValue={tutor?.location}
-          rules={[{ required: true, message: 'Please enter your location' }]}
+          rules={[{ required: true, message: "Please enter your location" }]}
         >
-        <AutoComplete
-          options={optionsLocation}
-          style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
-          placeholder={"Enter a value"}
-          filterOption={handleFilter}
-          value={autoSelected ? autoSelectedLocation : location }
-          disabled={!editing}
-          onChange={(value) => setLocation(value)}
-        />
+          <AutoComplete
+            options={optionsLocation}
+            style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
+            placeholder={"Enter a value"}
+            filterOption={handleFilter}
+            value={autoSelected ? autoSelectedLocation : location}
+            disabled={!editing}
+            onChange={(value) => setLocation(value)}
+          />
         </Form.Item>
         <Form.Item
-            name={"timezone"}
-            label={"Timezone"}
-            rules={[{ required: true, }]}
-            initialValue={tutor?.timezone}
-          >
-            {customSelect()}
-          </Form.Item>
+          name={"timezone"}
+          label={"Timezone"}
+          rules={[{ required: true }]}
+          initialValue={tutor?.timezone}
+        >
+          {customSelect()}
+        </Form.Item>
         <div className={"timezone-wrap"}>
-            <div >
-              <div className={"switch-wrap"}>
-                <Switch disabled={!editing} onChange={(e) => handleSwitchCase(e)} />
-                <p className={"switch-text"}>Set automatically</p>
-              </div>
+          <div>
+            <div className={"switch-wrap"}>
+              <Switch
+                disabled={!editing}
+                onChange={(e) => handleSwitchCase(e)}
+              />
+              <p className={"switch-text"}>Set automatically</p>
             </div>
           </div>
+        </div>
         {editing ? (
-            <div className={"form-basic-button-wrap"}>
-              <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
-            </div>
+          <div className={"form-basic-button-wrap"}>
+            <Button className={"form-button"} onClick={handleSaveClick}>
+              Save
+            </Button>
+          </div>
         ) : (
-            <div className={"form-basic-button-wrap"}>
-              <Button className={"form-button"} onClick={handleEditClick}>Edit</Button>
-            </div>
+          <div className={"form-basic-button-wrap"}>
+            <Button className={"form-button"} onClick={handleEditClick}>
+              Edit
+            </Button>
+          </div>
         )}
       </Form>
-
-
     </div>
-  )
+  );
 }
 
 export default BasicInfoForm

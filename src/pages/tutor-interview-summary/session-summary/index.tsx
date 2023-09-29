@@ -13,6 +13,7 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
   const [fileUrl, setFileUrl] = useState<string>("");
   const [form] = Form.useForm();
   const [reUpload, setReUpload] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const uploadProps: UploadProps = {
     accept: ".doc,.docx,.pdf",
@@ -47,23 +48,32 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
       setFileList(newFileList);
     },
     onChange: (info) => {
-      !!info.file.response && !!info.fileList.length
-        ? setFileUrl(info.file.response.data)
-        : setFileUrl("");
-      // !!info.file.response && setIdFile(info.file.response[0].id)
       const { status, percent } = info.file;
-      if (status === "uploading" && percent === 100) {
-        message.success(`${info.file.name} file upload success.`);
+      if (status === "uploading") {
+        setUploading(true);
+        return;
       }
       if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
+      if(status === "done"){
+        if(info.file.response && info.file.response.success){
+          setFileUrl(info.file.response.data);
+          message.success(`${info.file.name} file upload success.`)
+        }else{
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      }
+      setUploading(false);
     },
     fileList,
   };
 
   const handleSubmit = () => {
-    uploadReport(fileUrl);
+    uploadReport(fileUrl).then(() => {
+      setFileList([])
+      setFileUrl("")
+    });
     setReUpload(false);
   };
   const handleReUpload = () => {
@@ -115,11 +125,12 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
               </Form.Item>
 
               <Form.Item style={{ marginBottom: 0 }}>
-                {fileList.length == 0 ? (
+                {(fileList.length == 0 || fileUrl== "") ? (
                   <Button
                     key="submit"
                     disabled={true}
                     className={"secondary-button"}
+                    loading={uploading}
                   >
                     Submit
                   </Button>

@@ -59,7 +59,7 @@ const TutorInterviewSummary = () => {
         "mockInterviewId":interviewSummary.id,
         "report":fileUrl,
       });
-      console.log(response.data)
+
       if(response.data.success){
         setInterviewSummary({...interviewSummary, report: fileUrl});
       }else{
