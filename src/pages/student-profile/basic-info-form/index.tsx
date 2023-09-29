@@ -51,7 +51,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
       location: autoSelected ? autoSelectedLocation : location !== '' ? location : student?.location,
       phoneNumber: phone !== '' ? phone : student?.phoneNumber,
       state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
-      birthday: birthday !== '' ? moment(birthday,dateFormat).format('YYYY-MM-DD') : student?.birthday,
+      birthday: birthday !== '' ? moment(birthday.dateFormat).format('YYYY-MM-DD') : student?.birthday,
       timezone: form.getFieldValue('timezone')
     })
     dispatch({
