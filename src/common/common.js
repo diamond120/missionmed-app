@@ -104,3 +104,8 @@ export const onDownload = (url) => {
     link.click();
     //link.parentNode.removeChild(link)
 };
+
+export const AgeList = [
+    'Female',
+    'Male'
+]

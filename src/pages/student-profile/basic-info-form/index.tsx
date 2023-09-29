@@ -1,14 +1,16 @@
 
 import "./index.less"
-import { Form, Input, Select, Switch, Button, AutoComplete } from "antd"
+import { Form, Input, Select, Switch, Button, AutoComplete, InputNumber, DatePicker } from "antd"
 import { FC, useState } from "react"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
-// import { useUpdateStudentMutation } from "../../../graphql"
 import { AddressDetails } from "../../../types/AddressDetails"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import {default as StudentService} from "../../../api/services/Student";
 import {GOOGLE_MAP_API_KEY} from "../../../config/app-config";
 import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
+import {AgeList} from "../../../common/common";
+import moment from "moment"
+import type { RangePickerProps } from 'antd/es/date-picker';
 
 const { Option } = Select;
 
@@ -38,6 +40,8 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
+  const dateFormat = 'DD/MM/YYYY';
+
   const updatedStudent = async () => {
     await StudentService.updateProfile({
       fullName: fullName !== '' ? fullName : student?.fullName,
@@ -47,7 +51,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
       location: autoSelected ? autoSelectedLocation : location !== '' ? location : student?.location,
       phoneNumber: phone !== '' ? phone : student?.phoneNumber,
       state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
-      birthday: birthday !== '' ? birthday : student?.birthday,
+      birthday: birthday !== '' ? moment(birthday,dateFormat).format('YYYY-MM-DD') : student?.birthday,
       timezone: form.getFieldValue('timezone')
     })
     dispatch({
@@ -60,7 +64,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
         location: autoSelected ? autoSelectedLocation : location !== '' ? location : student?.location,
         phoneNumber: phone !== '' ? phone : student?.phoneNumber,
         state: autoSelected ? autoSelectedState : state !== '' ? state : student?.state,
-        birthday: birthday !== '' ? birthday : student?.birthday,
+        birthday: birthday !== '' ?  moment(birthday,dateFormat).format('YYYY-MM-DD') : student?.birthday,
         timezone: form.getFieldValue('timezone')
       }
     })
@@ -122,6 +126,13 @@ const BasicInfoForm: FC<any> = ({props}) => {
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+
+
+  const disabledDate: RangePickerProps['disabledDate'] = current => {
+      return current && current > moment().endOf('day');
+    };
+
+
   return (
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
@@ -136,7 +147,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             rules={[{ required: true,  }]}
             label={"Full Name"}
           >
-              <Input className={"input"} disabled={ !editing } defaultValue={student?.fullName ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={e => setFullName(e.target.value)} />
+              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={e => setFullName(e.target.value)} />
           </Form.Item>
           <Form.Item
             name={"gender"}
@@ -144,7 +155,12 @@ const BasicInfoForm: FC<any> = ({props}) => {
             initialValue={student?.gender}
             rules={[{ required: false, }]}
           >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.gender ?? ''} onChange={e => setGender(e.target.value)} />
+            <Select
+            options={AgeList.map((option) => ({ value: option }))}
+            style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
+            disabled={!editing}
+            onChange={(value) => setGender(value)}
+          />
           </Form.Item>
           <Form.Item
             name={"pronouns"}
@@ -152,15 +168,16 @@ const BasicInfoForm: FC<any> = ({props}) => {
             initialValue={student?.pronouns}
             rules={[{ required: false,}]}
           >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.pronouns ?? ''} onChange={e => setPronouns(e.target.value)}/>
+            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}  onChange={e => setPronouns(e.target.value)}/>
           </Form.Item>
           <Form.Item
             name={"birthday"}
             label={"Birthday"}
             rules={[{ required: true,}]}
-            initialValue={birthday}
+            initialValue={birthday ? moment(birthday): ""}
           >
-            <Input className={"input"} disabled={ !editing } type={"date"} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={birthday ?? ''} onChange={e => setBirthday(e.target.value)}/>
+            <DatePicker className={"input"}  disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} placeholder="dd/mm/yyyy"  disabledDate={disabledDate} format={dateFormat}  onChange={(value, valueString) => setBirthday(valueString)}/>
+           
           </Form.Item>
           <Form.Item
             name={"email"}
@@ -171,15 +188,21 @@ const BasicInfoForm: FC<any> = ({props}) => {
               { type: 'email', message: 'Please enter a valid email address' },
             ]}
           >
-              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} type={"email"} defaultValue={student?.email ?? ''} onChange={e => setEmail(e.target.value)} />
+              <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} type={"email"}  onChange={e => setEmail(e.target.value)} />
           </Form.Item>
           <Form.Item
             name={"phone"}
             initialValue={phone}
             label={"Phone Number"}
-            rules={[{ required: false,  }]}
+            rules={[
+              { required: false, },
+              {
+                pattern: /^[\d]{0,10}$/,
+                message: "Phone number should have maximum 10 characters"
+              }
+            ]}
           >
-            <Input className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={phone ?? ""} onChange={e => setPhone(e.target.value !== '' ? e.target.value : student?.phoneNumber)}/>
+            <InputNumber className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}}  onChange={value => setPhone(value !== null ? value : student?.phoneNumber)}/>
           </Form.Item>
 
           <Form.Item

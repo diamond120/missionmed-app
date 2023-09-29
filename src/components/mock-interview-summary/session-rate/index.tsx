@@ -14,7 +14,7 @@ const NoSessionRate = ({ session, handleUpdateSummary }) => {
     <>
       <div style={{ textAlign: "center" }}>
         <SmileOutlined style={{ fontSize: 47, color: "#A9A2F8" }} />
-        <h3 className={"title"}>How Was Your Session?</h3>
+        <h3 className={"title"}>You Haven't Rate This Session Yet</h3>
         <div className="text">
           You can do it any other time by pressing “Rate Session” button below
         </div>
@@ -59,7 +59,7 @@ const SessionRateDetails = ({rateDetails}) => {
           Extra Comments
         </h4>
         <div style={{ color: "#312D42" }}>
-          {rateDetails.comments ?? ""}
+          {rateDetails.comments ?? <span>&#8212;</span>}
         </div>
       </div>
     </div>
