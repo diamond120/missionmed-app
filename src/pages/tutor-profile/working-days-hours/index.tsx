@@ -21,9 +21,91 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
   const isSaturdayOff = Form.useWatch('isSaturdayOff', form); 
   const isSundayOff = Form.useWatch('isSundayOff', form); 
   
+  const range = (start: number, end: number) => {
+    const result = [];
+    for (let i = start; i < end; i++) {
+      result.push(i);
+    }
+    return result;
+  };
 
-  //const format = 'HH:mm';
+  // const disabledDateTime = (day, type) => {
+    
+  //   const formatStartEnd = (timeArr) => {
+  //     if( timeArr.length > 0 ){
+  //       return timeArr.map(time => ({start: time.start.format(format), end:time.end.format(format)}));
+  //     }
+  //     return [];
+      
+  //   }
+  //   switch (day) {
+  //     case 'monday':
+  //       console.log(day, type)
+  //       console.log(formatTimeArr(form.getFieldValue('Monday')))
+  //       break;
+  //     case 'tuesday':
+  //     case 'wend':
+  //       console.log('Mangoes and papayas are $2.79 a pound.');
+  //       // Expected output: "Mangoes and papayas are $2.79 a pound."
+  //       break;
+  //     default:
+  //       console.log(`Sorry, we are out of ${day}.`);
+  //   }
+  //   return {
+  //     disabledHours: () => range(0, 12).splice(1,1),
+  //     disabledMinutes: () => range(30, 60),
+  //   }
+  // };
+
+
   const format = 'h:mm a';
+
+  const checkTimeFrame = async (rule, value) => {
+    const [day, index, type] = rule.field.split(".");
+    const currentTimeSlots = form.getFieldValue(day);
+    console.log(currentTimeSlots, day, index, type);
+    if (currentTimeSlots.length > 0 && value) {
+      let slotStartTime = null;
+      if(type == "end"){
+        slotStartTime = currentTimeSlots[index].start 
+        console.log("slotStartTime", slotStartTime)
+      }
+      currentTimeSlots.forEach((slot, i) => {
+        console.log( i);
+        const beforeTime = moment(slot.start, format);
+        const afterTime = moment(slot.end, format);
+        console.log(beforeTime, afterTime, value)
+        if (i != index) {
+          if(slotStartTime){
+            if (value.isBetween(beforeTime, afterTime) && slotStartTime.isBetween(beforeTime, afterTime)) {
+              throw new Error("Selected time is overlap with otherslot time!");
+            } 
+          }else{
+            if (value.isBetween(beforeTime, afterTime)) {
+              throw new Error("Selected time is overlap with otherslot time!");
+            } 
+          }
+        }else{
+          console.log(type, (type == "start" && value.isSame(afterTime)))
+          if((type == "start" && value.isSame(afterTime)) || (type == "end" && value.isSame(beforeTime))){
+            throw new Error(
+              "Slot already selected, please select different one!"
+            );
+          }
+          if(type == "start" && value.isAfter(afterTime)){
+            throw new Error(
+              "Start time must be less than end time"
+            );
+          }
+          if(type =="end" &&  value.isBefore(beforeTime)){
+            throw new Error(
+              "End time must be less than start time"
+            );
+          }
+        }
+      });
+    }
+  };
 
   const formattedWorkingHours = useMemo(() => tutorWorkingHours(tutor.workingHours, format), [tutor.workingHours]);
  
@@ -109,7 +191,7 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                   <Form.Item
                     {...restField}
                     name={[name, 'start']}
-                    rules={[{ required: (form.getFieldValue('isMondayOff') == false), message: 'start time required' }]}
+                    rules={[{ required: (form.getFieldValue('isMondayOff') == false), message: 'start time required' }, {validator: checkTimeFrame }]}
                     initialValue={moment("9:00", format)}
                   >
                     <TimePicker
@@ -119,12 +201,13 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                           className={"input"}
                           disabled={(form.getFieldValue('isMondayOff') == true || !editing)}
                           use12Hours
+                          //disabledTime={() => disabledDateTime('monday', 'start')}
                         />
                   </Form.Item>
                   <Form.Item
                     {...restField}
                     name={[name, 'end']}
-                    rules={[{ required: (form.getFieldValue('isMondayOff') == false ), message: 'end time required' }]}
+                    rules={[{ required: (form.getFieldValue('isMondayOff') == false ), message: 'end time required' }, {validator: checkTimeFrame }]}
                     initialValue={moment("9:00", format)}
                   >
                     <TimePicker
@@ -133,7 +216,7 @@ const WorkingDaysHours: FC<Any> = ({props}) => {
                           style={{ width: "140px" }}
                           className={"input"}
                           disabled={form.getFieldValue('isMondayOff') == true || !editing}
-                        
+                          //disabledTime={() => disabledDateTime('monday', 'end')}
                         />
                   </Form.Item>
                   <Button type="text" disabled={(form.getFieldValue('isMondayOff') == true || !editing)}  onClick={() => remove(name)} block icon={<MinusCircleOutlined />} />
