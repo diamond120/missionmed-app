@@ -7,7 +7,8 @@ import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 const Specializations: FC<Any> = ({props}) => {
   const tutor = useTutor();
   const dispatch = useTutorDispatch();
-  const [lessionTypeID, setLessionTypeID] = useState(tutor?.lessionTypeID.split(',') ?? []);
+  const  lession = (tutor.lessionTypeID) ? tutor.lessionTypeID.split(',') : [];
+  const [lessionTypeID, setLessionTypeID] = useState(lession ?? []);
   const [editing, setEditing] = useState(false);
   const [checkboxlist, setCheckbox] = useState([]);
 
