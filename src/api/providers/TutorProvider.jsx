@@ -33,6 +33,7 @@ export function useTutorDispatch() {
 function TutorReducer(tutor, action) {
     switch (action.type) {
         case 'add': {
+          
           return {
             id:action.id,
             userId:action.userId,
@@ -57,6 +58,7 @@ function TutorReducer(tutor, action) {
             applicationReviewPrice:action.applicationReviewPrice,
             profilePicture:action.profilePicture,
             educations:action.educations,
+            lessionTypeID:action.lessionTypeID
           };
         }
         case 'update': {

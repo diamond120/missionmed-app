@@ -61,10 +61,21 @@ const sessionRate = (data) => {
 //   return http.get<Array<ITutorialData>>(`/tutorials?title=${title}`);
 // };
 
+const lessionTypes = () => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.get(`/lessiontypes`, config);
+};
+
 const Service = {
   getProfile,
   updateProfile,
-  sessionRate
+  sessionRate,
+  lessionTypes
 };
 
 export default Service;

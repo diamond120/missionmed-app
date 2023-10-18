@@ -58,6 +58,7 @@ const BookInterview = ({addUpcomingSession}) => {
   const getUniversityTutorList = async () => {
     try {
       const data = {
+        lessionType:'Mock interviews', 
         university: form.getFieldValue("university"),
       };
       const response = await CommonService.getUniversityTutorList(data);

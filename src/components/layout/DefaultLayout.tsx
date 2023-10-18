@@ -137,7 +137,8 @@ export const DefaultLayout: FC = () => {
             applicationReview:result.data.data.application_review ?? null,
             applicationReviewPrice:result.data.data.application_review_price ?? null,
             profilePicture:result.data.data.profile_picture ?? null,
-            educations:result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""})) : []
+            educations:result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""})) : [],
+            lessionTypeID:result.data.data.lession_type_id ?? null
           })
         }
         getTutorProfile();
