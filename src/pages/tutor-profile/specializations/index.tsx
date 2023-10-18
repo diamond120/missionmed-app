@@ -28,6 +28,7 @@ const Specializations: FC<Any> = ({props}) => {
 
   useEffect(() => {
     lessionType()
+    // setLessionTypeID(lession ?? []);
   }, [tutor]);
 
   const updatedTutor = async() => {
@@ -38,7 +39,9 @@ const Specializations: FC<Any> = ({props}) => {
     await TutorService.updateProfile(formData);
     dispatch({
       type:"update",
-      tutor:formData
+      tutor:{
+        lessionTypeID : lessionTypeID.join()
+      }
     })
   }
 
