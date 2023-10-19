@@ -24,17 +24,22 @@ const SignIn = () => {
     const { email, password } = values;
     try {
       const result = await Authentication.login({email, password});
-      if (result.data.data && result.data.data.token) {
-        setAuthenticated(true);
-        localStorage.setItem("jwt", result.data.data.token)
-        dispatch({
-          type:"set",
-          id:result.data.data.id,
-          name:result.data.data.name,
-          email:result.data.data.email,
-          role:result.data.data.role
-        })
-        navigate("/")
+      if(result.data.success) {
+        if (result.data.data && result.data.data.token) {
+          setAuthenticated(true);
+          localStorage.setItem("jwt", result.data.data.token)
+          dispatch({
+            type:"set",
+            id:result.data.data.id,
+            name:result.data.data.name,
+            email:result.data.data.email,
+            role:result.data.data.role
+          })
+          navigate("/")
+        }
+      }
+      else {
+        throw new Error(result.data.message);
       }
     } catch (e) {
       console.log(e);
