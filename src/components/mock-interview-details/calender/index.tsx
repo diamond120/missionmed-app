@@ -30,11 +30,24 @@ function formatDate(inputDateStr) {
 const Calender = ({tutorId, form}) => {
 
   const [slotsList, setSlots] = useState([]);
+  const [filterDate, setfilterDate] = useState({});
     
+    const handleDateClick = (dateInfo) => {
+      const dateObjectEnd = new Date(dateInfo.endStr);
+      const dateObjectStart = new Date(dateInfo.startStr); 
+      const data = {
+        'startDate' :  dateObjectStart.toISOString().split('T')[0],
+        'endDate' : dateObjectEnd.toISOString().split('T')[0],
+      };
+      setfilterDate(data);
+    }
+
     const getSlotsist = async (tutorId) => {
       try {
         const data = {
           tutorId: tutorId,
+          startDate : filterDate.startDate,
+          endDate : filterDate.endDate
         };
         const response = await CommonService.getSlotslist(data);
         if (response.data.success) {
@@ -51,13 +64,11 @@ const Calender = ({tutorId, form}) => {
 
     useEffect(() => {
       getSlotsist(tutorId);
-    }, [tutorId]);
+    }, [tutorId,filterDate]);
 
     let selectedEvent = null;
     const handleEventClick = async (info) => {
       const clickedEvent = info.event;
-
-      // console.log(clickedEvent);
       if(clickedEvent.title == 'Available'){
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
@@ -76,11 +87,6 @@ const Calender = ({tutorId, form}) => {
         form.setFieldValue('sessionStartTime', startDate);
         form.setFieldValue('sessionEndTime', endDate);
         form.setFieldValue('date', date);
-        
-        // console.log('Event title:', clickedEvent.title);
-        // console.log('Event date:', clickedEvent.extendedProps.day);
-        // console.log('Event Start:', startDate);
-        // console.log('Event End:', endDate);
       }
     };
 
@@ -98,11 +104,11 @@ const Calender = ({tutorId, form}) => {
           center: "prev,title,next",
           right: "timeGridWeek,dayGridMonth" 
         }}
-
+        datesSet={handleDateClick}
         events={slotsList}
         selectable={true} 
         eventClick={handleEventClick}
-        borderColor='0'
+        eventBorderColor='0'
       />
       </>
       
