@@ -31,6 +31,7 @@ export function useStudentDispatch() {
 }
 
 function StudentReducer(student, action) {
+  console.log('helo', action);
     switch (action.type) {
         case 'add': {
           return {
@@ -51,6 +52,7 @@ function StudentReducer(student, action) {
               applicantTypeId:action.applicantTypeId,
               atar:action.atar,
               gpa:action.gpa,
+              credit:action.credit,
               statusOfResidence:action.statusOfResidence,
               specification:action.specification,
               atsi:stringToBoolean(action.atsi),

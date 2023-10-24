@@ -71,7 +71,7 @@ export const DefaultLayout: FC = () => {
         applicantType:res.data.data.applicantType
         })
       })();
-      navigate("/")
+      // navigate("/")
     }
   }, []);
 
@@ -106,6 +106,7 @@ export const DefaultLayout: FC = () => {
             rural:result.data.data.rural ?? null,
             financialHardship:result.data.data.financial_hardship ?? null,
             gws:result.data.data.gws ?? null,
+            credit:result.data.data.credit ?? 0,
           })
         }
         getStudentProfile();
