@@ -172,7 +172,7 @@ const StudentTeachingSession = () => {
             </Space>
             }
             {(upcomingSessions.length > 0 || pastSessions.length > 0) && 
-            <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession}/>}
+            <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching" />}
           </div>
 
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
