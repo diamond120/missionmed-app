@@ -22,6 +22,11 @@ const TutorMockInterview = lazy(() => import("./tutor-mock-interview"))
 const StudentMockInterview = lazy(() => import("./student-mock-interview"))
 const TutorInterviewSummary = lazy(() => import("./tutor-interview-summary"))
 const StudentInterviewSummary = lazy(() => import("./student-interview-summary"))
+const StudentUCATSession = lazy(() => import("./student-ucat-session"))
+const TutorUCATSession = lazy(() => import("./tutor-ucat-session"))
+const StudentTeachingSession = lazy(() => import("./student-teaching-session"))
+const TutorTeachingSession = lazy(() => import("./tutor-teaching-session"))
+
 
 const routes: RouteObject[] = [
   {
@@ -90,14 +95,35 @@ const routes: RouteObject[] = [
       },
       {
         Component: StudentInterviewSummary,
-        path: "/student/interview-summary/:mockInterviewId",
+        path: "/student/interview-summary/:mockInterviewId/:type?",
         index: true,
       },
       {
         Component: TutorInterviewSummary,
-        path: "/tutor/interview-summary/:mockInterviewId",
+        path: "/tutor/interview-summary/:mockInterviewId/:type?",
         index: true,
       },
+      {
+        Component: TutorTeachingSession,
+        path: "/tutor/teaching-session",
+        index: true,
+      },
+      {
+        Component: StudentTeachingSession,
+        path: "/student/teaching-session",
+        index: true,
+      },
+      {
+        Component: StudentUCATSession,
+        path: "/student/ucat-session",
+        index: true,
+      },
+      {
+        Component: TutorUCATSession,
+        path: "/tutor/ucat-session",
+        index: true,
+      },
+      
       {
         Component: Outlet,
         path: "*",

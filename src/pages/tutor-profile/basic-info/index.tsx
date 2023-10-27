@@ -53,8 +53,8 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       }
     })
   }
-
-  const optionsLocation: string[]= profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title }))
+  
+  const optionsLocation: string[]= ( profileStaticData.location ? profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title })): [] )
 
   const handleEditClick = () => {
     setEditing(true);

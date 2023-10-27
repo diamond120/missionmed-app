@@ -7,7 +7,7 @@ const DocViewer = ({report}) => {
 }
 
 
-const Report = ({ report, title="Diagnostic Report" }) => {
+const Report = ({ report, title }) => {
   return (
     <>
       <div className={"session-preview con-box"}>

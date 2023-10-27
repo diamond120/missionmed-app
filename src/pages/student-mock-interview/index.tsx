@@ -9,9 +9,9 @@ import MockInterviewsService from "../../api/services/MockInterviews";
 import MockInterviewDetails from "../../components/mock-interview-details";
 import moment from "moment";
 import RescheduleInterview from "../../components/mock-interview-details/reschedule-interview";
+import {useStudent} from "../../api/providers/StudentProvider";
 
 const StudentMockInterview = () => {
-
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
@@ -117,6 +117,8 @@ const StudentMockInterview = () => {
     getMockInterviewDetails();
   }, []);
 
+  const student = useStudent();
+
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -135,7 +137,8 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookInterview  addUpcomingSession={addUpcomingSession}/>}
+            <div>Student credit: {student.credit}</div>
+            { ( student.credit > 0) && <BookInterview  addUpcomingSession={addUpcomingSession}/>}
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
             <MockInterviewDetails
@@ -170,7 +173,9 @@ const StudentMockInterview = () => {
                       You can choose tutor and book your first mock <br />{" "}
                       interview by pressing “Book Interview” button below.
                     </div>
-                    <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession}/>
+                    { ( student.credit > 0) ?
+                    <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession}/> : <></>
+                    }
                   </div>
                 </div>
               </div>

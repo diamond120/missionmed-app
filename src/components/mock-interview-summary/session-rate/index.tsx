@@ -4,7 +4,7 @@ import "./index.less";
 import RateSession from "../../../components/rate-session";
 import { useState } from "react";
 
-const NoSessionRate = ({ session, handleUpdateSummary }) => {
+const NoSessionRate = ({ session, handleUpdateSummary,pagesession }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRateCancel = () => {
@@ -27,6 +27,7 @@ const NoSessionRate = ({ session, handleUpdateSummary }) => {
         isOpen={isOpen}
         handleRateCancel={handleRateCancel}
         handleUpdateSummary={handleUpdateSummary}
+        pagesession={pagesession}
       />
     </>
   );

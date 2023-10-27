@@ -3,10 +3,12 @@ import { SmileOutlined } from "@ant-design/icons";
 import "./index.less";
 import { useEffect, useRef, useState } from "react";
 import TutorService from "../../api/services/Tutor";
+import UCATSessionService from "../../api/services/UCATSession";
+import TeachingSessionService from "../../api/services/TeachingSession";
 
 const { TextArea } = Input;
 
-const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, handleUpdateSummary }) => {
+const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, handleUpdateSummary,pagesession }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(isOpen);
   const [form] = Form.useForm();
 
@@ -18,7 +20,28 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
 
   const giveSessionRate = async (data) => {
     try{
-     const response = await TutorService.sessionRate(data)
+      let response;
+      if(pagesession == 'ucat') {
+        const updatedObject = {
+          ...data, // Copy the original object
+          ucatBookingId: data.mockInterviewId, // Replace the key
+        };
+
+        delete updatedObject.mockInterviewId;
+
+        response = await UCATSessionService.sessionRate(updatedObject)
+      } else if(pagesession == 'teaching') {
+        const updatedObject = {
+          ...data, // Copy the original object
+          teachingSessionId : data.mockInterviewId, // Replace the key
+        };
+        delete updatedObject.mockInterviewId;
+        
+        response = await TeachingSessionService.sessionRate(updatedObject)
+      } 
+      else {
+        response = await TutorService.sessionRate(data)
+      }
      if(response.data.success){
       if(updatePastSession){
         updatePastSession(session.id, {hasSessionRate:true})

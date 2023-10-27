@@ -1,0 +1,42 @@
+[data-theme='compact'] .site-collapse-custom-collapse .site-collapse-custom-panel,
+.site-collapse-custom-collapse .site-collapse-custom-panel {
+  margin-bottom: 24px;
+  overflow: hidden;
+  background: #f7f7f7;
+  border: 0px;
+  border-radius: 2px;
+}
+
+.summary-section {
+  margin-bottom: 40px;
+.date-time {
+ display: flex;
+ column-gap: 32px;
+ margin-top: 17px;
+ .date {
+   margin-right: 34px;
+ }
+ .title {
+   font-weight: 600;
+   color: #465078;
+ }
+ .text {
+   color: #312d42;
+   font-size: 16px;
+ }
+}
+}
+
+@media (max-width: 767px) {
+.summary-section {
+ .date-time {
+   column-gap: 17px;
+   margin-top: 15px;
+   justify-content: space-between;
+   .date {
+     margin-right: 23px;
+   }
+ }
+}
+}
+
