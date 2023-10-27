@@ -4,6 +4,8 @@ import { Breadcrumb, Button, message } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import MockInterviewsService from "../../api/services/MockInterviews";
+import UCATSessionService from "../../api/services/UCATSession";
+import TeachingSessionService from "../../api/services/TeachingSession";
 import { useStudent } from "../../api/providers/StudentProvider";
 import SectionDetails from "../../components/mock-interview-summary/section-details";
 import { NoSessionRate, SessionRateDetails } from "../../components/mock-interview-summary/session-rate";
@@ -15,12 +17,25 @@ const StudentInterviewSummary = () => {
   let { mockInterviewId } = useParams();
   const [interviewSummary, setInterviewSummary] = useState({});
   const student = useStudent();
+  let { type } = useParams();
 
   const getInterviewSummary = async () => {
     try {
-      const response = await MockInterviewsService.getInterviewSummary(
-        mockInterviewId
-      );
+      let response;
+      if(type == 'ucat') {
+        response = await UCATSessionService.getSessionummary(
+          mockInterviewId
+        );
+      } else if(type == 'teaching'){
+        response = await TeachingSessionService.getSessionummary(
+          mockInterviewId
+        );
+      } else {
+        response = await MockInterviewsService.getInterviewSummary(
+          mockInterviewId
+        );
+      }
+      
       if (response.data.success) {
         setInterviewSummary(response.data.data);
       } else {
@@ -50,17 +65,18 @@ const StudentInterviewSummary = () => {
             <HomeOutlined />
           </Breadcrumb.Item>
           <Breadcrumb.Item key={backUrl}>
-            <Link to={backUrl}>Mock Interview</Link>
+            <Link to={backUrl}>{type === "ucat" ? 'UCAT Teaching Sessions' : (type === "teaching" ? 'Interview Teaching Sessions' : 'Mock Interview')}
+           </Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Interview Summary</Breadcrumb.Item>
+          <Breadcrumb.Item>{(type == "ucat"  || type == 'teaching') ? 'Session Summary' : 'Interview Summary'}</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap session-summary-section-wrap"}>
-          <h2 className={"tab-title"}>Interview Summary</h2>
+          <h2 className={"tab-title"}>{(type == "ucat"  || type == 'teaching')  ? 'Session Summary' : 'Interview Summary'}</h2>
 
           <div className={"grid-col-2"}>
             <div style={{ width: "504px" }}>
             <SectionDetails className={`summary-section`} title="Session Details">
-              <SessionDetails interviewSummary={interviewSummary}/>
+              <SessionDetails interviewSummary={interviewSummary} pagesession={type}/>
             </SectionDetails>
               <SectionDetails className={`summary-section`} title="Agenda">
                 {interviewSummary?.agenda ? interviewSummary?.agenda : 'No agenda found'}
@@ -72,12 +88,12 @@ const StudentInterviewSummary = () => {
                 {interviewSummary?.post_session_tasks ? interviewSummary?.post_session_tasks: 'No tasks found' }
               </SectionDetails>
               <SectionDetails className={`session-rate`} title="Session Rate">
-                {!interviewSummary.sessionrate &&<NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} handleUpdateSummary={handleUpdateSummary}/>}
+                {!interviewSummary.sessionrate &&<NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} pagesession={type} handleUpdateSummary={handleUpdateSummary}/>}
                 {interviewSummary.sessionrate &&<SessionRateDetails rateDetails={interviewSummary.sessionrate} />}
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>
-              <Report report={interviewSummary?.report ?? null} />
+              <Report report={interviewSummary?.report ?? null}  title={(type == "ucat" || type == 'teaching' ) ?"Tutor's Summary" : "Diagnostic Report"} />
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { formatDateV1, formatTime } from "../../../common/common";
 import "./index.less";
 import { useUser } from "../../../api/providers/UserProvider";
 
-const SessionDetails = ({ interviewSummary }) => {
+const SessionDetails = ({ interviewSummary ,pagesession}) => {
   const user = useUser();
   const userRole = user.role;
   return (
@@ -15,15 +15,25 @@ const SessionDetails = ({ interviewSummary }) => {
       )}
       {userRole == "student" && (
         <>
-          <div style={{ fontWeight: "600" }}>University</div>
-          <div style={{ fontSize: "16px" }}>{interviewSummary?.university}</div>
+        {!pagesession && (
+          <>
+           <div style={{ fontWeight: "600" }}>University</div>
+           <div style={{ fontSize: "16px" }}>{interviewSummary?.university}</div>
+          </>
+        )
+        }
           <div  className={"date-time"}>
+            {!pagesession && (
+            <>
             <div className={"date"}>
-              <div className={"title"}>Interview Type</div>
-              <div className={"text"}>
-                {interviewSummary?.mock_interview}
+                <div className={"title"}>Interview Type</div>
+                <div className={"text"}>
+                  {interviewSummary?.mock_interview}
+                </div>
               </div>
-            </div>
+            </>)
+            }
+         
             <div className={"start-time"}>
               <div className={"title"}>Tutor</div>
               <div className={"text"}>

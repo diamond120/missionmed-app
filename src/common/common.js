@@ -62,7 +62,7 @@ export const formatDateV1 = (dateTime) => {
     return moment(dateTime).format("ddd, DD MMM YYYY");
 }
 
-export const formatTime = (dateTime, dateTimeFormat="YYYY-MM-DD hh:mm a", format="h:mm a") => {
+export const formatTime = (dateTime, dateTimeFormat="YYYY-MM-DD hh:mm a", format="hh:mm a") => {
     return moment(dateTime, dateTimeFormat).format(format);
 }
 
@@ -109,3 +109,7 @@ export const AgeList = [
     'Female',
     'Male'
 ]
+
+export const getDay = (dateTime) => {
+    return moment(dateTime).format('dddd');
+}

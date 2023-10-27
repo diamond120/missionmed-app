@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
-import { Breadcrumb, Button, message } from "antd";
-import { HomeOutlined, FileSearchOutlined,CalendarOutlined } from "@ant-design/icons";
-import Section from "../../components/shared-ui/Section";
-import MockInterviewDetails from "../../components/mock-interview-details";
-import MockInterviewsService from "../../api/services/MockInterviews";
 import "./index.less";
+import React, { useEffect, useState } from "react";
+import Section from "../../components/shared-ui/Section";
+import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, message } from "antd";
+import SessionDetails from "../../components/session-details";
+import UCATSessionService from "../../api/services/UCATSession";
 
-const TutorMockInterview = () => {
+
+const TutorUCATSession = () => {
+
+
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
@@ -14,7 +17,7 @@ const TutorMockInterview = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-      const response = await MockInterviewsService.getTutorMockInterviews({});
+      const response = await UCATSessionService.getTutorUcatSession({});
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
@@ -36,21 +39,31 @@ const TutorMockInterview = () => {
     }
   };
 
-  const handleEditAgenda = async (agendaDetails) => {
-    try {
-      const response = await MockInterviewsService.updateMockInterviewData({
-        mockInterviewId: upcomingInterview?.id,
-        agenda: agendaDetails,
+  const handleEditAgenda = async(agendaDetails) => {
+    try{
+      const response = await UCATSessionService.updateUCATSessionData({
+        "ucatBookingId":upcomingInterview?.id,
+        "agenda":agendaDetails,
       });
-      if (response.data.success) {
+      if(response.data.success){
         setAgenda(agendaDetails);
-      } else {
-        throw new Error(response.data.message);
+      }else{
+        throw new Error(response.data.message)
       }
-    } catch (e) {
+    }catch(e){
       message.error(e.message);
     }
   };
+
+  const updatePastSession = (id, data={}) => {
+    const updatedSessions = pastSessions.map(session => {
+      if(session.id == id){
+        return {...session, ...data};
+      }else{
+        return session;
+      }})
+    setPastSessions(updatedSessions);
+  }
 
   useEffect(() => {
     getMockInterviewDetails();
@@ -63,18 +76,19 @@ const TutorMockInterview = () => {
           <Breadcrumb.Item href={"/"}>
             <HomeOutlined />
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Mock Interview</Breadcrumb.Item>
+          <Breadcrumb.Item>UCAT Sessions</Breadcrumb.Item>
         </Breadcrumb>
 
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
           <div className={"grid-col-2"}>
-            <h2 className={"tab-title"}>Mock Interview</h2>
+            <h2 className={"tab-title"}>UCAT Sessions</h2>
             <Button className={"primary-button"}>
               <FileSearchOutlined /> Useful Resources
             </Button>
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
-          <MockInterviewDetails
+          <SessionDetails
+            moduleType="ucat"
             upcomingInterview={upcomingInterview}
             upcomingSessions={upcomingSessions}
             pastSessions={pastSessions}
@@ -82,7 +96,7 @@ const TutorMockInterview = () => {
             handleEditAgenda={handleEditAgenda}
           />
           ) : (
-          <div className="mock-interview">
+            <div className="mock-interview">
             <div className={"con-section-wrap"}>
               <div className={"con-box"}>
                 <div
@@ -97,17 +111,18 @@ const TutorMockInterview = () => {
                     }}
                   />
                   <h2 className={"con-box-title"}>
-                    You Don’t Have Any Booked Interviews
+                    You Don’t Have Any Booked UCAT Session
                   </h2>
                 </div>
               </div>
             </div>
-          </div>
-          )
-          }
+          </div>  
+          ) }
         </div>
+        
       </Section>
     </>
   );
 };
-export default TutorMockInterview;
+
+export default TutorUCATSession;

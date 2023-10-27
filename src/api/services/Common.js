@@ -35,11 +35,61 @@ const getSlotslist = (data) => {
   return http.post("/student/slots", data, config);
 };
 
+// UCAT Session
+
+const getUCATSlotslist = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post("/student/ucat-booking-slots", data, config);
+};
+
+const getTutorList = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(`/ucat-tutors-list`, data, config);
+}
+
+const checkSession = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    },
+  }
+  return http.post(`/student/check-sessions`, data, config);
+}
+
+// End UCAT Session api
+
+// Student Teaching Session
+const getTeachingSlotslist = (data) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post("/student/student-teachingsession-slots", data, config);
+};
+// End Student Teaching Session
+
 const Service = {
     getProfileStaticData,
     getUniversityList,
     getUniversityTutorList,
-    getSlotslist
+    getSlotslist,
+    getUCATSlotslist,
+    getTutorList,
+    checkSession,
+    getTeachingSlotslist
 };
 
 export default Service;

@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useState, useEffect } from "react";
 import {
   Button,
   Form,
@@ -14,56 +14,49 @@ import {
   Spin
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import CommonService from "../../../api/services/Common";
-import MockInterviewsService from "../../../api/services/MockInterviews";
-import {formatDateV1, formatTime,getDay} from "../../../common/common";
+import CommonService from "../../api/services/Common";
+import UCATSessionService from "../../api/services/UCATSession";
+import TeachingSessionService from "../../api/services/TeachingSession";
+import {formatDateV1, formatTime, getDay} from "../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
-import Calender from "../../../components/mock-interview-details/calender";
+import Calender from "../../components/session-details/calender";
+
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
 
-const BookInterview = ({addUpcomingSession}) => {
+const BookSession = ({addUpcomingSession,title,moduleType}) => {
   const navigate = useNavigate();
-  const [form] = Form.useForm();
-  
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
-  const [universityList, setUniversityList] = useState([]);
   const [tutors, setTutors] = useState([]);
-  const totalSteps = 4;
+  const totalSteps = 3;
+  const [showDropdown, setShowDropdown] = useState(true);
+  const [dayOfWeek, setDayOfWeek] = useState('Weekly on Monday');
+  const [form] = Form.useForm();
+  const [recurringAvailable, setRecurringAvailable] = useState(false);
+  const [selectedVal,setSelectedVal] = useState("Individual Session");
   const [loading, setLoading] = useState(false);
   
-  const getUniversityList = async () => {
-    try {
-      const response = await CommonService.getUniversityList();
-      if (response.data.success) {
-        setUniversityList(
-          response.data.data.map((university) => ({
-            key: university.id,
-            label: university.title,
-            value: university.title,
-          }))
-        );
-      } else {
-        throw new Error(response.data.message);
-      }
-    } catch (e) {
-      message.error(e.message);
-    }
-  };
+
 
   const getUniversityTutorList = async () => {
     try {
+      let type = 'Mock interviews';
+      if(moduleType == 'ucatStudent') {
+        type = 'UCAT 1-to-1 Tutoring';
+      } else if(moduleType == 'teaching') {
+        type = 'Interview 1-to-1 Tutoring';
+      }
       const data = {
-        lessionType:'Mock interviews', 
-        university: form.getFieldValue("university"),
+        lessionType : type
       };
-      const response = await CommonService.getUniversityTutorList(data);
+      const response = await CommonService.getTutorList(data);
       if (response.data.success) {
         const tutorList = response.data.data ?? [];
         setTutors(tutorList);
@@ -75,13 +68,21 @@ const BookInterview = ({addUpcomingSession}) => {
     }
   };
 
-  const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Interview','Check Last Details'];
+  // const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Sessions','Check Last Details'];
+  const stepsTitles = ['Choose Tutor','Book Time for Sessions','Check Last Details'];
 
   const next = async () => {
     try{
       const values = await form.validateFields();
       const nextStep = activeStep + 1;
       setActiveStep(nextStep);
+        if(nextStep == 3) {
+          const formData = form.getFieldsValue(true);
+          const sessionStartTime =  formatTime(formData.sessionStartTime)
+          const sessionEndTime =  formatTime(formData.sessionEndTime)
+          const getday = getDay(moment(formData.date));
+          checkingDate(formData.date,sessionStartTime,sessionEndTime,getday);
+        }
       setModalTitle(stepsTitles[nextStep-1]);
     }catch(e){
       if (activeStep == 3) {
@@ -98,11 +99,23 @@ const BookInterview = ({addUpcomingSession}) => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const formData = form.getFieldsValue(true);
+    await form.validateFields();
+    let formData = form.getFieldsValue(true);
+    console.log(formData);
+    if(!formData.frequency) {
+      formData.frequency = dayOfWeek;
+    }
+    formData.startTime =  formatTime(formData.sessionStartTime);
+    formData.endTime =  formatTime(formData.sessionEndTime);
+    formData.day = getDay(moment(formData.date));
     try{
-      formData.day = getDay(moment(formData.date));
-     const response = await MockInterviewsService.bookInterview(formData);
-     if(response.data.success && response.data.status_code == 200){
+      let response;
+      if(moduleType == 'ucatStudent') {
+        response = await UCATSessionService.bookSession(formData);
+      } else {
+        response = await TeachingSessionService.bookSession(formData);
+      }
+      if(response.data.success){
       const result = response.data.data;
       addUpcomingSession({
         date:result.date,
@@ -116,8 +129,13 @@ const BookInterview = ({addUpcomingSession}) => {
         tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
       });
       setLoading(false);
-      navigate("/student/mock-interview")
-      message.success('You’ve successfully booked mock interview');
+      if(moduleType== 'ucatStudent'){
+        navigate("/student/ucat-session")
+      } else {
+        navigate("/student/teaching-session")
+      }
+      
+      message.success('You’ve successfully booked session');
      }else{
       setLoading(false);
       throw new Error(response.data.message)
@@ -136,66 +154,20 @@ const BookInterview = ({addUpcomingSession}) => {
   };
 
   const showModal = () => {
+    getUniversityTutorList();
     setIsModalOpen(true);
     setActiveStep(1);
-    getUniversityList();
-    setModalTitle("Specify Your Priorites");
+    setModalTitle("Choose Tutor");
   };
 
   const handleOk = () => {
     setIsModalOpen(false);
   };
 
-  const mockInterviewList = [
-    { id: 1, value: "Mock Interview#1" },
-    { id: 2, value: "Mock Interview#2" },
-    { id: 3, value: "Mock Interview#3" },
-  ];
-
-  const getMockInterviewList = () => {
-    return mockInterviewList;
-  };
-
-  const selectUniversity = Form.useWatch("university", form);
   
-
-  const Step1Form = ({ universityList, getMockInterviewList }) => {
-    return (
-      <>
-        <Form.Item
-          name="university"
-          label="Which university are you sitting a mock interview for?"
-          rules={[{ required: true , message:"Please select university"}]}
-        >
-          <Select
-            showSearch
-            placeholder="--- Select University ---"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            onChange={getUniversityTutorList}
-            options={universityList}
-          />
-        </Form.Item>
-        {selectUniversity && (
-          <Form.Item
-            name="mockInterview"
-            label="Which mock interview are you sitting?"
-            rules={[{ required: true, message:"Please select mock interview" }]}
-          >
-            <Radio.Group>
-              {getMockInterviewList(selectUniversity).map((interview) => (
-                <Radio key={interview.id} value={interview.value}>
-                  {interview.value}
-                </Radio>
-              ))}
-            </Radio.Group>
-          </Form.Item>
-        )}
-      </>
-    );
-  };
+  const handleRadioChange = (e) => {
+    setShowDropdown(e.target.value === 'Recurring Session');
+  }
 
   const TutorPanelHeader = memo(function TutorPanelHeader({ tutor }) {
     return (
@@ -268,20 +240,52 @@ const BookInterview = ({addUpcomingSession}) => {
     );
   });
 
+
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutorId')} form={form}/>
+      <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType}  />
       </div>
     </>;
   };
 
+  const checkingDate = async (date,startTime,endTime,getday) => {
+    const data = {
+      date : date,
+      startTime : startTime,
+      endTime : endTime,
+      day :getday
+    };
+    const response = await CommonService.checkSession(data);
+
+    try {
+      if (response.data.success) {
+        setRecurringAvailable(response.data.data.recurring);
+          if(response.data.data.recurring == true) {
+            form.setFieldsValue({ sessionType: 'Individual Session' });
+            setShowDropdown(false);
+          } else {
+            form.setFieldsValue({ sessionType: 'Recurring Session' });
+            setShowDropdown(true);
+          }
+      } else {
+          throw new Error(response.data.message); 
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+}
+
   const Step4From = ({form}) => {
+   
     const formData = form.getFieldsValue(true);
+  
     const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
+    setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
     const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     const sessionStartTime =  formatTime(formData.sessionStartTime)
     const sessionEndTime =  formatTime(formData.sessionEndTime)
+
     return (
       <>
         <div className={"session-details"} style={{ padding: "0 10px" }}>
@@ -290,25 +294,10 @@ const BookInterview = ({addUpcomingSession}) => {
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-              University
+            Tutor
             </h4>
-            <div style={{ fontSize: 16 }}>{formData.university}</div>
+            <div style={{ fontSize: 16 }}>{tutorName}</div>
           </div>
-
-          <Row style={{ marginBottom: 17 }}>
-            <Col span={10} sm={8}>
-              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-                Interview Type
-              </h4>
-              <div style={{ fontSize: 16 }}>{formData.mockInterview}</div>
-            </Col>
-            <Col span={14} sm={16}>
-              <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-                Tutor
-              </h4>
-              <div style={{ fontSize: 16 }}>{tutorName}</div>
-            </Col>
-          </Row>
 
           <Row>
             <Col span={10} sm={8}>
@@ -331,6 +320,38 @@ const BookInterview = ({addUpcomingSession}) => {
             </Col>
           </Row>
         </div>
+
+        <Form.Item
+          style={{ marginTop: "17px", marginBottom: "0px"}}
+          label="Type"
+          name="sessionType"
+          rules={[{ required: true, message:"Please select session type" }]}
+        > 
+         <Radio.Group onChange={handleRadioChange} >
+            <Radio value="Individual Session">Individual Session</Radio>
+            <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session</Radio>
+         </Radio.Group>
+        </Form.Item>
+        {showDropdown && (
+        <Form.Item
+          style={{ marginTop: "17px", marginBottom: "0px"}}
+          label="Frequency"
+          name="frequency"
+        >
+            <Select placeholder="Select an option" value={dayOfWeek}
+                 onChange={(value) => {
+                  setDayOfWeek(value); // Update dayOfWeek state
+                  form.setFieldsValue({ frequency: value }); // Update the form field value
+                }} defaultValue={dayOfWeek} >
+                <Select.Option value="Weekly on Monday">Weekly on Monday</Select.Option>
+                <Select.Option value="Weekly on Tuesday">Weekly on Tuesday</Select.Option>
+                <Select.Option value="Weekly on Wednesday">Weekly on Wednesday</Select.Option>
+                <Select.Option value="Weekly on Thursday">Weekly on Thursday</Select.Option>
+                <Select.Option value="Weekly on Friday">Weekly on Friday</Select.Option>
+                <Select.Option value="Weekly on Saturday">Weekly on Saturday</Select.Option>
+            </Select>
+        </Form.Item>
+        )}
         <Form.Item
           style={{ marginTop: "17px", marginBottom: "0px"}}
           label="Leave a quick note"
@@ -342,10 +363,13 @@ const BookInterview = ({addUpcomingSession}) => {
     );
   };
 
+  useEffect(() => {
+  }, [dayOfWeek,recurringAvailable]); 
+
   return (
     <>
       <Button className={"primary-button"} onClick={showModal}>
-        Book Interview
+        {title}
       </Button>
       <Modal
         title={modalTitle}
@@ -360,7 +384,7 @@ const BookInterview = ({addUpcomingSession}) => {
               Previous Step
             </Button>
           ),
-          <span className={"steps"}>Step {activeStep} of 4</span>,
+          <span className={"steps"}>Step {activeStep} of {totalSteps}</span>,
           activeStep < totalSteps && (
             <Button
               className={"secondary-button"}
@@ -374,26 +398,23 @@ const BookInterview = ({addUpcomingSession}) => {
           ) : (
           activeStep === totalSteps && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-                Book Interview
+                Book Session
                 {/* {loading == false ? ("false") : ("true")} */}
               </Button>
             )
           ),
-          // activeStep === totalSteps (
-            
+          // activeStep === totalSteps && (
           //   <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-          //     Book Interviewss
+          //     Book Session
           //   </Button>
           // ),
         ]}
       >
-        <Form form={form} layout="vertical">
+        {/* <Form form={form} layout="vertical" 
+          initialValues={{ sessionType: 'Recurring Session'}} >
           {activeStep == 1 && (
             <div style={{ width: "555px" }}>
-              <Step1Form
-                universityList={universityList}
-                getMockInterviewList={getMockInterviewList}
-              />
+              <Step1Form universityList={universityList} />
             </div>
           )}
           {activeStep == 2 && (
@@ -411,10 +432,33 @@ const BookInterview = ({addUpcomingSession}) => {
               <Step4From form={form}/>
             </div>
           )}
+        </Form> */}
+        <Form form={form} layout="vertical" 
+          // initialValues={{ sessionType: 'Recurring Session'}} 
+          >
+          {activeStep == 1 && (
+            <div style={{ width: "555px" }}>
+              <Step2Form tutors={tutors} />
+            </div>
+          )}
+          {activeStep == 2 && (
+            <div style={{ width: "1155px" }}>
+              <Step3From />
+            </div>
+          )}
+          {activeStep == 3 && (
+            <div style={{ width: "600px" }}>
+              <Step4From form={form}/>
+            </div>
+          )}
         </Form>
       </Modal>
     </>
   );
 };
 
-export default BookInterview;
+export default BookSession;
+// function useEffect(arg0: () => void, arg1: string[]) {
+//   throw new Error("Function not implemented.");
+// } 
+
