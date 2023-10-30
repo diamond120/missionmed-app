@@ -162,17 +162,19 @@ const StudentTeachingSession = () => {
             }}
           >
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
-            { (upcomingSessions.length > 0)  &&
-            <Space direction="vertical">
-              <Space wrap>
-                <Dropdown placement="bottomLeft" menu={{items}}>
-                <EllipsisOutlined />
-                </Dropdown>
+            <div style={{gap:15,display:'flex',flexWrap:'wrap',alignItems:'center'}}>
+              { (upcomingSessions.length > 0)  &&
+              <Space direction="vertical" >
+                <Space wrap >
+                  <Dropdown placement="bottomLeft" menu={{items}} overlayClassName="session-dropdown">
+                    <EllipsisOutlined style={{padding:11,borderRadius:8,border: '1px solid #00000026',backgroundColor:'#fff',cursor:'pointer'}}/>
+                  </Dropdown>
+                </Space>
               </Space>
-            </Space>
-            }
-            {(upcomingSessions.length > 0 || pastSessions.length > 0) && 
-            <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching" />}
+              }
+              {(upcomingSessions.length > 0 || pastSessions.length > 0) && 
+              <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching" />}
+            </div>
           </div>
 
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (

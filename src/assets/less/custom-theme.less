@@ -395,3 +395,44 @@ a{
     line-height: 1.3 !important;
   }
 }
+.sidebar-menu{
+  .ant-menu-submenu{
+    .ant-menu-title-content{
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 16px;
+    }
+    .ant-menu-sub{
+      background-color: #181041;
+      .ant-menu-item{
+        &:focus{
+          background-color: #181041 !important;
+        }
+      }
+    }
+  }
+}
+.sign-in-form{
+  &.ant-form{
+    .ant-btn{
+      background-color: #2816EE;
+      color: #fff;
+      &:hover{
+        opacity: 0.85;
+      }
+      span{
+        color: #fff !important;
+      }
+    }
+  }
+  .ant-form-item{
+    .ant-input-password{
+      .ant-input-affix-wrapper-focused,.ant-input-affix-wrapper-focused:focus, &:focus,&:hover,&:active {
+        border-color: #2816EE !important;
+        box-shadow: 0 0 0 2px rgba(40, 22, 238, 0.2) !important;
+      }
+      .ant-input{
+        border: 0;
+      }
+    }
+  }
+}
