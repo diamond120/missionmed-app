@@ -80,19 +80,21 @@ const StudentTeachingSession = () => {
     }
   
     const addUpcomingSession = (session) => {
-      console.log(session)
-      setUpcomingSessions([...upcomingSessions, session]);
+      // console.log(session)
+      // setUpcomingSessions([...upcomingSessions, session]);
   
-      if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
-        setUpcomingInterview({
-          id:session.id,
-          date:session.date,
-          session_start_time:session.session_start_time,
-          session_end_time:session.session_end_time,
-          agenda:null
-        })
-        setAgenda(null);
-      }
+      // if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
+      //   setUpcomingInterview({
+      //     id:session.id,
+      //     date:session.date,
+      //     session_start_time:session.session_start_time,
+      //     session_end_time:session.session_end_time,
+      //     agenda:null
+      //   })
+      //   setAgenda(null);
+      // }
+
+      getMockInterviewDetails();
     }
     
     const handleReschedule = (sessionId) => {
@@ -129,8 +131,7 @@ const StudentTeachingSession = () => {
     }
 
     const cancleUpSession =() => {
-      debugger;
-      console.log("adas");
+      getMockInterviewDetails();
     }
 
 
@@ -190,7 +191,8 @@ const StudentTeachingSession = () => {
               agenda={agenda}
               handleEditAgenda={handleEditAgenda}
               updatePastSession={updatePastSession}
-              handleReschedule={handleReschedule}/>
+              handleReschedule={handleReschedule}
+              cancleUpSession={cancleUpSession}/>
             ) : (
             <div className="mock-interview">
               <div className={"con-section-wrap"}>
