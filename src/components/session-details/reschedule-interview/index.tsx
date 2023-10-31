@@ -136,7 +136,6 @@ const RescheduleInterview = ({
   const handleSubmit = async () => {
     const formData = form.getFieldsValue(true);
     try {
-      console.log(formData);
       // let response;
       // if(moduleType == 'teaching') {
       //   response = await TeachingSessionService.rescheduleSession({...formData, teachingSessionId:interviewSummary?.id});
@@ -147,6 +146,9 @@ const RescheduleInterview = ({
       formData.day = getDay(moment(formData.date));
       formData.startTime =  formatTime(formData.sessionStartTime);
       formData.endTime =  formatTime(formData.sessionEndTime);
+      formData.frequency =  interviewSummary?.frequency;
+      formData.tutorId =  interviewSummary?.tutor_id;
+      formData.bookingFor =  interviewSummary?.booking_for;
       const response = await CommonService.postAPI('/student/reschedule-session',{...formData, sessionId:interviewSummary?.id});
       if (response.data.success) {
         const result = response.data.data;
