@@ -129,8 +129,7 @@ const StudentTeachingSession = () => {
     }
 
     const cancleUpSession =() => {
-      debugger;
-      console.log("adas");
+      getMockInterviewDetails();
     }
 
 
@@ -190,7 +189,8 @@ const StudentTeachingSession = () => {
               agenda={agenda}
               handleEditAgenda={handleEditAgenda}
               updatePastSession={updatePastSession}
-              handleReschedule={handleReschedule}/>
+              handleReschedule={handleReschedule}
+              cancleUpSession={cancleUpSession}/>
             ) : (
             <div className="mock-interview">
               <div className={"con-section-wrap"}>
