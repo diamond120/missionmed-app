@@ -12,6 +12,7 @@ import SessionDetails from "../../components/mock-interview-summary/session-deta
 import Report from "../../components/mock-interview-summary/report";
 import UCATSessionService from "../../api/services/UCATSession";
 import TeachingSessionService from "../../api/services/TeachingSession";
+import CommonService from "../../api/services/Common";
 
 const TutorInterviewSummary = () => {
   let { mockInterviewId } = useParams();
@@ -22,20 +23,27 @@ const TutorInterviewSummary = () => {
 
   const getInterviewSummary = async () => {
      try {
-      let response
-      if(type == 'ucat') {
-          response = await UCATSessionService.getSessionummary(
-          mockInterviewId
-          );
-        } else if(type == 'teaching') {
-          response = await TeachingSessionService.getSessionummary(
-          mockInterviewId
-          );
-        } else {
-          response = await MockInterviewsService.getInterviewSummary(
-          mockInterviewId
-          );
-        }
+      // let response
+      // if(type == 'ucat') {
+      //     response = await UCATSessionService.getSessionummary(
+      //     mockInterviewId
+      //     );
+      //   } else if(type == 'teaching') {
+      //     response = await TeachingSessionService.getSessionummary(
+      //     mockInterviewId
+      //     );
+      //   } else {
+      //     response = await MockInterviewsService.getInterviewSummary(
+      //     mockInterviewId
+      //     );
+      //   }
+
+      const data = {
+        sessionId : mockInterviewId,
+        bookingFor : type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'
+      };
+      const response = await CommonService.postAPI('/session-summary',data);
+      
        if (response.data.success) {
          setInterviewSummary(response.data.data);
        } else {

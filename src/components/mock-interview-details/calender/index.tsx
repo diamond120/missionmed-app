@@ -49,11 +49,10 @@ const Calender = ({tutorId, form}) => {
           startDate : filterDate.startDate,
           endDate : filterDate.endDate
         };
-        const response = await CommonService.getSlotslist(data);
+        const response = await CommonService.postAPI("/student/slots-list",data);
         if (response.data.success) {
             const slotList = response.data.data ?? [];
-             //console.log(slotList)
-             setSlots(slotList); 
+            setSlots(slotList); 
           } else {
           throw new Error(response.data.message); 
         }

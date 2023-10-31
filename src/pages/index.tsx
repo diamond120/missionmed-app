@@ -7,6 +7,7 @@ import { DefaultLayout } from "../components/layout";
 import { Loader } from "../components/layout/Loader";
 import SignInLayout from "../components/layout/SignInLayout"
 ;
+import ForgotPassword from "./forgot-password";
 
 const Home = lazy<FC>(/*home-page-bundle*/ () => import("./home"));
 const ApplicationsReview = lazy(/*application-review-page-bundle*/ () => import("./application-review"));
@@ -123,7 +124,6 @@ const routes: RouteObject[] = [
         path: "/tutor/ucat-session",
         index: true,
       },
-      
       {
         Component: Outlet,
         path: "*",
@@ -141,6 +141,11 @@ const routes: RouteObject[] = [
       {
         Component:  SignIn,
         path: "/sign_in",
+        index: true,
+      },
+      {
+        Component: ForgotPassword,
+        path: "/forgot-password",
         index: true,
       },
 

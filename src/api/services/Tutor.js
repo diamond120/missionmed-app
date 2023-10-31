@@ -23,15 +23,15 @@ const updateProfile = (data) => {
 };
 
 
-const sessionRate = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/tutor/sessionrate`, data, config);
-};
+// const sessionRate = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/tutor/sessionrate`, data, config);
+// };
 
 // const getAll = () => {
 //   return http.get("/tutorials");
@@ -74,7 +74,7 @@ const lessionTypes = () => {
 const Service = {
   getProfile,
   updateProfile,
-  sessionRate,
+  // sessionRate,
   lessionTypes
 };
 

@@ -10,6 +10,7 @@ import { BASE_URL } from "../../../config/app-config";
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 import confirm from "../../../components/confirm";
+import ChangePassword from "../../change-password";
 
 const ProfilePicture: FC<Any> = ({ props }) => {
   const tutor = useTutor();
@@ -125,6 +126,9 @@ const handleSave = ()=>{
             <Button onClick={handleRemove} disabled={fileUrl==""} className={"profile-picture-block-btn-remove"}>
               Remove
             </Button>
+          </div>
+          <div style={{ marginBottom: "16px", display: "flex", justifyContent: "center" }}>
+            <ChangePassword title='Change Password' moduleType={"tutor"}/>
           </div>
         </div>
       </div>

@@ -101,20 +101,23 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
     setLoading(true);
     await form.validateFields();
     let formData = form.getFieldsValue(true);
-    console.log(formData);
     if(!formData.frequency) {
       formData.frequency = dayOfWeek;
     }
     formData.startTime =  formatTime(formData.sessionStartTime);
     formData.endTime =  formatTime(formData.sessionEndTime);
     formData.day = getDay(moment(formData.date));
+    
+    let type = 'Mock interviews';
+    if(moduleType == 'ucatStudent') {
+      type = 'UCAT 1-to-1 Tutoring';
+    } else if(moduleType == 'teaching') {
+      type = 'Interview 1-to-1 Tutoring';
+    }
+    formData.bookingFor = type;
     try{
-      let response;
-      if(moduleType == 'ucatStudent') {
-        response = await UCATSessionService.bookSession(formData);
-      } else {
-        response = await TeachingSessionService.bookSession(formData);
-      }
+      const response = await CommonService.postAPI('/student/book-teaching-session',formData);
+
       if(response.data.success){
       const result = response.data.data;
       addUpcomingSession({
@@ -333,6 +336,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
          </Radio.Group>
         </Form.Item>
         {showDropdown && (
+          <>
         <Form.Item
           style={{ marginTop: "17px", marginBottom: "0px"}}
           label="Frequency"
@@ -351,6 +355,23 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
                 <Select.Option value="Weekly on Saturday">Weekly on Saturday</Select.Option>
             </Select>
         </Form.Item>
+        {/* <Form.Item
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="Recurring Week"
+            name="recurringWeeks"
+        >
+            <Select
+                style={{ width: '100%' }}
+                placeholder="Select Recurring Week"
+            >
+                {Array.from({ length: 200 }, (_, i) => (
+                    <Select.Option key={i+1} value={i+1}>
+                        {i+1} Week
+                    </Select.Option>
+                ))}
+            </Select>
+        </Form.Item> */}
+        </>        
         )}
         <Form.Item
           style={{ marginTop: "17px", marginBottom: "0px"}}

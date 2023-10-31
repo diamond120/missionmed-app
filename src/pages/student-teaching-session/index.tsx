@@ -11,6 +11,7 @@ import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import moment from "moment";
+import CommonService from "../../api/services/Common";
 
 
 const StudentTeachingSession = () => {
@@ -25,7 +26,11 @@ const StudentTeachingSession = () => {
   
     const getMockInterviewDetails = async () => {
       try {
-        const response = await TeachingSessionService.getStudentTeachingSession({});
+        // const response = await TeachingSessionService.getStudentTeachingSession({});
+        const data = {
+          bookingFor : 'Interview 1-to-1 Tutoring'
+        }
+        const response = await CommonService.postAPI("/student/session-details",data);
         if (response.data.success) {
           setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
           //setUpcomingInterview({});

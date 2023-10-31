@@ -1,15 +1,15 @@
 import http from "../http-common";
 import {getToken} from "../../common/common.js";
 
-const getStudentMockInterviews = (customConfig={}) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.get(`/student/interview-details`, {...headerConfig,...customConfig });
-};
+// const getStudentMockInterviews = (customConfig={}) => {
+//   const token = `Bearer ${getToken()}`;
+//   const headerConfig = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.get(`/student/interview-details`, {...headerConfig,...customConfig });
+// };
 
 const updateMockInterviewData = (data,customConfig={}) => {
   const token = `Bearer ${getToken()}`;
@@ -46,15 +46,15 @@ const bookInterview = (data) => {
   return http.post(`/student/book-interview`, data, config);
 }
 
-const rescheduleInterview = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-  }
-  return http.post(`/student/reschedule-interview`, data, config);
-}
+// const rescheduleInterview = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     },
+//   }
+//   return http.post(`/student/reschedule-interview`, data, config);
+// }
 
 
 const getTutorMockInterviews = (customConfig={}) => {
@@ -68,11 +68,11 @@ const getTutorMockInterviews = (customConfig={}) => {
 }; 
 
 const Service = {
-  getStudentMockInterviews,
+  // getStudentMockInterviews,
   updateMockInterviewData,
   getInterviewSummary,
   bookInterview,
-  rescheduleInterview,
+  // rescheduleInterview,
   getTutorMockInterviews
 };
 

@@ -5,15 +5,15 @@ const getProfileStaticData = (data) => {
   return http.get("/lists", data);
 };
 
-const getUniversityList = () => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.get("/university-list", config);
-};
+// const getUniversityList = () => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.get("/university-list", config);
+// };
 
 const getUniversityTutorList = (data) => {
   const token = `Bearer ${getToken()}`;
@@ -25,27 +25,27 @@ const getUniversityTutorList = (data) => {
   return http.post(`/university-tutors-list`, data, config);
 }
 
-const getSlotslist = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post("/student/slots", data, config);
-};
+// const getSlotslist = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post("/student/slots", data, config);
+// };
 
 // UCAT Session
 
-const getUCATSlotslist = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post("/student/ucat-booking-slots", data, config);
-};
+// const getUCATSlotslist = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post("/student/ucat-booking-slots", data, config);
+// };
 
 const getTutorList = (data) => {
   const token = `Bearer ${getToken()}`;
@@ -70,26 +70,51 @@ const checkSession = (data) => {
 // End UCAT Session api
 
 // Student Teaching Session
-const getTeachingSlotslist = (data) => {
+// const getTeachingSlotslist = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post("/student/student-teachingsession-slots", data, config);
+// };
+
+// End Student Teaching Session
+
+const getAPI = (path) => {
   const token = `Bearer ${getToken()}`;
   const config = {
     headers:{
       'Authorization': token
     }
   }
-  return http.post("/student/student-teachingsession-slots", data, config);
+  return http.get(path, config);
 };
-// End Student Teaching Session
+
+const postAPI = (path,data) => {
+  console.log("path");
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.post(path, data, config);
+};
+
 
 const Service = {
     getProfileStaticData,
-    getUniversityList,
+    // getUniversityList,
     getUniversityTutorList,
-    getSlotslist,
-    getUCATSlotslist,
+    // getSlotslist,
+    // getUCATSlotslist,
     getTutorList,
     checkSession,
-    getTeachingSlotslist
+    // getTeachingSlotslist,
+    getAPI,
+    postAPI
 };
 
 export default Service;

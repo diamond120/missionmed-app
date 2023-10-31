@@ -6,7 +6,7 @@ import "./index.less"
 import { Form, Input, Button, Checkbox } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import Authentication from "../../api/services/Authentication";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {useUserDispatch } from "../../api/providers/UserProvider.jsx";
 import {useAuthContext} from "../../api/context/AuthContext.js";
 
@@ -91,12 +91,13 @@ const SignIn = () => {
 
             <div className={"sign-in-left-remember"}>
               <Checkbox><span>Remember me</span></Checkbox>
-              <a className={"sign-in-left-remember-forgot"} href={"#"}>Forgot Password?</a>
+              <Link to={`/forgot-password`} className={"sign-in-left-remember-forgot"}>Forgot Password?</Link>
+              {/* <a className={"sign-in-left-remember-forgot"} href={"#"}>Forgot Password?</a> */}
             </div>
 
             <Button type={"default"} htmlType={"submit"} disabled={false} className={"btn-text"}
                     style={{ marginTop: "40px", width: "100%", borderRadius: "8px", }}>
-              Continue
+              Login
             </Button>
 
           </Form>
