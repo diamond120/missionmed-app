@@ -11,6 +11,7 @@ import StudentService from "../../../api/services/Student";
 import { getToken } from "../../../common/common";
 import { BASE_URL } from "../../../config/app-config";
 import confirm from "../../../components/confirm";
+import ChangePassword from "../../change-password";
 
 const ProfilePicture: FC<any> = ({props}) => {
   const student = useStudent();
@@ -125,6 +126,9 @@ const ProfilePicture: FC<any> = ({props}) => {
             <Button onClick={handleRemove} disabled={fileUrl==""} className={"profile-picture-block-btn-remove"}>
               Remove
             </Button>
+          </div>
+          <div style={{ marginBottom: "16px", display: "flex", justifyContent: "center" }}>
+            <ChangePassword title='Change Password' moduleType={"tutor"}/>
           </div>
         </div>
       </div>

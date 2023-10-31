@@ -16,7 +16,7 @@ import TeachingSessionService from "../../api/services/TeachingSession";
 import {formatDateV1, formatTime, formatDate,getDay} from "../../common/common";
 import moment from "moment";
 import type { RangePickerProps } from 'antd/es/date-picker';
-
+import CommonService from "../../api/services/Common";
 
 import { useNavigate } from "react-router-dom";
 
@@ -42,12 +42,13 @@ const FreezeSession = ({title,moduleType}) => {
       updatedObject.sessionStartDay = moment(formData.sessionStartDay).format('YYYY-MM-DD');
       updatedObject.sessionEndDay = moment(formData.sessionEndDay).format('YYYY-MM-DD');
       updatedObject.sessionType = formData.sessionType.join(', ');
-      let response;
-      if(moduleType == 'teaching') {
-        response = await TeachingSessionService.freezeSession(updatedObject);
-      } else {
-        response = await UCATSessionService.bookFreezeSession(updatedObject);
-      }
+      // let response;
+      // if(moduleType == 'teaching') {
+      //   response = await TeachingSessionService.freezeSession(updatedObject);
+      // } else {
+      //   response = await UCATSessionService.bookFreezeSession(updatedObject);
+      // }
+      const response = await CommonService.postAPI('/student/freeze-sessions',updatedObject);
       if(response.data.success){
         if(moduleType == 'teaching') {
           navigate("/student/teaching-session")
@@ -79,13 +80,15 @@ const FreezeSession = ({title,moduleType}) => {
   };
 
   const disabledDate: RangePickerProps['disabledDate'] = current => {
-    const parts = startDate.split('/');
+    if(typeof startDate == "string") {
+      const parts = startDate.split('/');
     if( parts.length == 3 ) {
       const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
       const currentDate = new Date(current);
       return current && current.isBefore(dateObject,'DD-MM-YYYY');
     } else {
       return false;
+    }
     }
   };
 
@@ -134,7 +137,22 @@ const FreezeSession = ({title,moduleType}) => {
                   <Form.Item
                       name={"sessionEndDay"}
                       label={"Freeze End Date *"}
-                      rules={[{ required: true  , message: 'Please enter End Date'}]}
+                      rules={[{ required: true  , message: 'Please enter End Date'},
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                            const startDateValue = getFieldValue('sessionStartDay');
+                            if (startDateValue && !value) {
+                                return Promise.reject('Please enter End Date');
+                            }
+                            if (!startDateValue && !value) {
+                                return Promise.resolve();
+                            }
+                            if (startDateValue && value && value >= startDateValue) {
+                                return Promise.resolve();
+                            }
+                            return Promise.reject('End Date must be after or equal to Start Date');
+                        },
+                    }), ]}
                   >
                       <DatePicker className={"input"}  placeholder="dd/mm/yyyy"  format={dateFormat}  onChange={(value, valueString) => setEndDate(valueString)} 
                       

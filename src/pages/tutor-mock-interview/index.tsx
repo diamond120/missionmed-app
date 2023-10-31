@@ -5,6 +5,7 @@ import Section from "../../components/shared-ui/Section";
 import MockInterviewDetails from "../../components/mock-interview-details";
 import MockInterviewsService from "../../api/services/MockInterviews";
 import "./index.less";
+import CommonService from "../../api/services/Common";
 
 const TutorMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -14,7 +15,11 @@ const TutorMockInterview = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-      const response = await MockInterviewsService.getTutorMockInterviews({});
+      // const response = await MockInterviewsService.getTutorMockInterviews({});
+      const data = {
+        bookingFor : 'Mock interviews'
+      }
+      const response = await CommonService.postAPI("/tutor/session-details",data);
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(

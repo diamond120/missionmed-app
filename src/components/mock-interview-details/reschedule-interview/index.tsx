@@ -15,7 +15,7 @@ import {
 import CommonService from "../../../api/services/Common";
 import MockInterviewsService from "../../../api/services/MockInterviews";
 import Calender from "../calender";
-import { formatDateV1, formatTime } from "../../../common/common";
+import { formatDateV1, formatTime, getDay } from "../../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
@@ -41,9 +41,14 @@ const RescheduleInterview = ({
 
   const getInterviewSummary = async (sessionId) => {
     try {
-      const response = await MockInterviewsService.getInterviewSummary(
-        sessionId
-      );
+      // const response = await MockInterviewsService.getInterviewSummary(
+      //   sessionId
+      // );
+      const data = {
+        sessionId : sessionId,
+        bookingFor : 'Mock interviews'
+      };
+      const response = await CommonService.postAPI('/session-summary',data);
       if (response.data.success) {
         setInterviewSummary(response.data.data);
       } else {
@@ -56,7 +61,7 @@ const RescheduleInterview = ({
 
   const getUniversityList = async () => {
     try {
-      const response = await CommonService.getUniversityList();
+      const response = await CommonService.getAPI("/university-list");
       if (response.data.success) {
         setUniversityList(
           response.data.data.map((university) => ({
@@ -113,8 +118,13 @@ const RescheduleInterview = ({
 
   const handleSubmit = async () => {
     const formData = form.getFieldsValue(true);
+    formData.bookingFor = 'Mock interviews';
     try {
-      const response = await MockInterviewsService.rescheduleInterview({...formData, mockinterviewId:interviewSummary?.id});
+      // const response = await MockInterviewsService.rescheduleInterview({...formData, mockinterviewId:interviewSummary?.id});
+      formData.day = getDay(moment(formData.date));
+      formData.startTime =  formatTime(formData.sessionStartTime);
+      formData.endTime =  formatTime(formData.sessionEndTime);
+      const response = await CommonService.postAPI('/student/reschedule-interview',{...formData, mockinterviewId:interviewSummary?.id});
       if (response.data.success) {
         const result = response.data.data;
         updateUpcomingSession(result.id, {

@@ -51,16 +51,12 @@ const Calender = ({tutorId, form,moduleType }) => {
           startDate : filterDate.startDate,
           endDate : filterDate.endDate,
         };
-        let response;
-        if(moduleType == 'teaching') {
-          response = await CommonService.getTeachingSlotslist(data);
-        } else {
-          response = await CommonService.getUCATSlotslist(data);
-        }
+        
+        let response = await CommonService.postAPI("/student/slots-list",data);
+        
         if (response.data.success) {
             const slotList = response.data.data ?? [];
-             //console.log(slotList)
-             setSlots(slotList); 
+            setSlots(slotList); 
           } else {
           throw new Error(response.data.message); 
         }

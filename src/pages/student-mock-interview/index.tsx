@@ -10,6 +10,7 @@ import MockInterviewDetails from "../../components/mock-interview-details";
 import moment from "moment";
 import RescheduleInterview from "../../components/mock-interview-details/reschedule-interview";
 import {useStudent} from "../../api/providers/StudentProvider";
+import CommonService from "../../api/services/Common";
 
 const StudentMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -74,7 +75,11 @@ const StudentMockInterview = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-      const response = await MockInterviewsService.getStudentMockInterviews({});
+      // const response = await MockInterviewsService.getStudentMockInterviews({});
+      const data = {
+        bookingFor : 'Mock interviews'
+      }
+      const response = await CommonService.postAPI("/student/session-details",data);
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         //setUpcomingInterview({});
@@ -169,10 +174,15 @@ const StudentMockInterview = () => {
                     <h2 className={"con-box-title"}>
                       You Don’t Have Any Booked Interviews
                     </h2>
+                    { ( student.credit > 0) ?
                     <div style={{ marginBottom: "16px" }}>
                       You can choose tutor and book your first mock <br />{" "}
                       interview by pressing “Book Interview” button below.
-                    </div>
+                    </div> :
+                    <div style={{ marginBottom: "16px" }}>
+                      Please add credit after that you can book interview.
+                      </div>
+                      }
                     { ( student.credit > 0) ?
                     <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession}/> : <></>
                     }

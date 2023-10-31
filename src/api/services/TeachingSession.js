@@ -21,69 +21,69 @@ const updateTeachingSessionData = (data,customConfig={}) => {
   return http.post(`/teachingsession-data`,data, {...headerConfig,...customConfig });
 };
 
-const getSessionummary = (teachingSessionId) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-    params: {
-      teachingSessionId:teachingSessionId,
-    }
-  }
-  return http.get(`/teachingsession-summary`,config);
-}
+// const getSessionummary = (teachingSessionId) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     },
+//     params: {
+//       teachingSessionId:teachingSessionId,
+//     }
+//   }
+//   return http.get(`/teachingsession-summary`,config);
+// }
 
-const bookSession = (data) => {
+// const bookSession = (data) => {
 
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-  }
-  return http.post(`/student/book-teaching-session`, data, config);
-}
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     },
+//   }
+//   return http.post(`/student/book-teaching-session`, data, config);
+// }
 
-const rescheduleSession = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-  }
-  return http.post(`/student/reschedule-teachingsession`, data, config);
-}
+// const rescheduleSession = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     },
+//   }
+//   return http.post(`/student/reschedule-teachingsession`, data, config);
+// }
 
-const getTutorTeachingSession = (customConfig={}) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.get(`/tutor/teaching-session-details`, {...headerConfig,...customConfig });
-}; 
+// const getTutorTeachingSession = (customConfig={}) => {
+//   const token = `Bearer ${getToken()}`;
+//   const headerConfig = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.get(`/tutor/teaching-session-details`, {...headerConfig,...customConfig });
+// }; 
 
-const sessionRate = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/tutor/teaching-sessionrate`, data, config);
-};
+// const sessionRate = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/tutor/teaching-sessionrate`, data, config);
+// };
 
-const freezeSession = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/student/freeze-student-teaching-sessions`, data, config);
-};
+// const freezeSession = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/student/freeze-student-teaching-sessions`, data, config);
+// };
 
 const cancleSession = (data) => {
   const token = `Bearer ${getToken()}`;
@@ -98,12 +98,12 @@ const cancleSession = (data) => {
 const Service = {
   getStudentTeachingSession,
   updateTeachingSessionData,
-  getSessionummary,
-  bookSession,
-  rescheduleSession,
-  getTutorTeachingSession,
-  sessionRate,
-  freezeSession,
+  // getSessionummary,
+  // bookSession,
+  // rescheduleSession,
+  // getTutorTeachingSession,
+  // sessionRate,
+  // freezeSession,
   cancleSession
 };
 

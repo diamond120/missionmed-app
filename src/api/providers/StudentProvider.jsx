@@ -31,7 +31,6 @@ export function useStudentDispatch() {
 }
 
 function StudentReducer(student, action) {
-  console.log('helo', action);
     switch (action.type) {
         case 'add': {
           return {
