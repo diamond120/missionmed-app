@@ -62,23 +62,31 @@ const TutorInterviewSummary = () => {
  
    const addPostSessionTasks = async (task) => {
     try{
-      let response 
-      if(type == 'ucat') {
-        response = await UCATSessionService.updateUCATSessionData({
-          "ucatBookingId":interviewSummary.id,
-          "postSessionTasks":task,
-        });
-      } else if (type == 'teaching'){
-        response = await TeachingSessionService.updateTeachingSessionData({
-          "teachingSessionId":interviewSummary.id,
-          "postSessionTasks":task,
-        });
-      }else  {
-        response = await MockInterviewsService.updateMockInterviewData({
-          "mockInterviewId":interviewSummary.id,
-          "postSessionTasks":task,
-        });
+      // let response 
+      // if(type == 'ucat') {
+      //   response = await UCATSessionService.updateUCATSessionData({
+      //     "ucatBookingId":interviewSummary.id,
+      //     "postSessionTasks":task,
+      //   });
+      // } else if (type == 'teaching'){
+      //   response = await TeachingSessionService.updateTeachingSessionData({
+      //     "teachingSessionId":interviewSummary.id,
+      //     "postSessionTasks":task,
+      //   });
+      // }else  {
+      //   response = await MockInterviewsService.updateMockInterviewData({
+      //     "mockInterviewId":interviewSummary.id,
+      //     "postSessionTasks":task,
+      //   });
+      // }
+
+      const data = {
+        "sessionId":interviewSummary?.id,
+        "postSessionTasks":task,
+        'bookingFor' : type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'
       }
+
+      const response = await CommonService.postAPI('/session-data',data)
       
       if(response.data.success){
         setInterviewSummary({...interviewSummary, post_session_tasks: task});
@@ -93,24 +101,31 @@ const TutorInterviewSummary = () => {
   const uploadReport = async(fileUrl) => {
     try{
 
-      let response 
-      if(type == 'ucat') {
-        response = await UCATSessionService.updateUCATSessionData({
-          "ucatBookingId":interviewSummary.id,
-          "report":fileUrl,
-        });
-      }  else if (type == 'teaching'){ 
-        response = await TeachingSessionService.updateTeachingSessionData({
-          "teachingSessionId":interviewSummary.id,
-          "report":fileUrl,
-        });
-      }else {
-        response = await MockInterviewsService.updateMockInterviewData({
-          "mockInterviewId":interviewSummary.id,
-          "report":fileUrl,
-        });
+      // let response 
+      // if(type == 'ucat') {
+      //   response = await UCATSessionService.updateUCATSessionData({
+      //     "ucatBookingId":interviewSummary.id,
+      //     "report":fileUrl,
+      //   });
+      // }  else if (type == 'teaching'){ 
+      //   response = await TeachingSessionService.updateTeachingSessionData({
+      //     "teachingSessionId":interviewSummary.id,
+      //     "report":fileUrl,
+      //   });
+      // }else {
+      //   response = await MockInterviewsService.updateMockInterviewData({
+      //     "mockInterviewId":interviewSummary.id,
+      //     "report":fileUrl,
+      //   });
+      // }
+
+      const data = {
+        "sessionId":interviewSummary?.id,
+        "report":fileUrl,
+        'bookingFor' : type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'
       }
-      
+
+      const response = await CommonService.postAPI('/session-data',data)
 
       if(response.data.success){
         setInterviewSummary({...interviewSummary, report: fileUrl});

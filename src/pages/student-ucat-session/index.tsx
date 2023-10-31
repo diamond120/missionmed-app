@@ -54,10 +54,18 @@ const StudentUCATSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      const response = await UCATSessionService.updateUCATSessionData({
-        "ucatBookingId":upcomingInterview?.id,
+      // const response = await UCATSessionService.updateUCATSessionData({
+      //   "ucatBookingId":upcomingInterview?.id,
+      //   "agenda":agendaDetails,
+      // });
+      const data = {
+        "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
-      });
+        'bookingFor' : 'UCAT 1-to-1 Tutoring'
+      }
+
+
+      const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         setAgenda(agendaDetails);
       }else{

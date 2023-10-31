@@ -11,15 +11,15 @@ import {getToken} from "../../common/common.js";
 //   return http.get(`/student/ucat-session-details`, {...headerConfig,...customConfig });
 // };
 
-const updateUCATSessionData = (data,customConfig={}) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/ucatbooking-data`,data, {...headerConfig,...customConfig });
-};
+// const updateUCATSessionData = (data,customConfig={}) => {
+//   const token = `Bearer ${getToken()}`;
+//   const headerConfig = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/ucatbooking-data`,data, {...headerConfig,...customConfig });
+// };
 
 // const getSessionummary = (ucatBookingId) => {
 //   const token = `Bearer ${getToken()}`;
@@ -98,7 +98,7 @@ const cancleSession = (data) => {
 
 const Service = {
   // getStudentUCATSession,
-  updateUCATSessionData,
+  // updateUCATSessionData,
   // getSessionummary,
   // bookSession,
   // rescheduleSession,
