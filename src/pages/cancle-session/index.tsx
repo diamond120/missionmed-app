@@ -56,7 +56,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
 
   return (
     <>
-      <Button onClick={showModal}>
+      <Button onClick={showModal} className={"secondary-button"}>
         {title}
       </Button>
       <Modal
@@ -68,7 +68,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         width={"max-content"}
         footer={[
             <>
-            <Button onClick={handleCancel}>Cancle</Button>
+            <Button className={"secondary-button"} onClick={handleCancel}>Cancle</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Cancle Sessions</Button>
             </>
         ]}

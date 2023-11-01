@@ -116,7 +116,7 @@ const SidebarMenu: React.FC = () => {
       collapsed={collapsed}
       onCollapse={toggleCollapsed}
       width={280}
-      style={{ height: 'auto' }}
+      style={{ height: 'auto',backgroundColor:'#1E1450'}}
       className={"sidebar-menu"}
       trigger={null}
     >
@@ -164,6 +164,7 @@ const SidebarMenu: React.FC = () => {
               key="interview-submenu"
               title = {"Interview"}
               icon={<FileDoneOutlined  style={{fontSize: "24px", color:"white"}}  key={"4"} 
+              
             />}
             >
             <Menu.Item onClick={() =>{navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview')}}  key={isStudent ?'/student/mock-interview' : '/tutor/mock-interview'} >Mock Interview </Menu.Item>

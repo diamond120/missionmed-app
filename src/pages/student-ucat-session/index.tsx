@@ -175,7 +175,7 @@ const StudentUCATSession = () => {
             { (upcomingSessions.length > 0)  &&
               <Space direction="vertical">
                 <Space wrap>
-                  <Dropdown placement="bottomLeft" menu={{items}}>
+                  <Dropdown placement="bottomLeft" menu={{items}} >
                   <EllipsisOutlined />
                   </Dropdown>
                 </Space>

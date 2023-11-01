@@ -72,9 +72,10 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
     
       {userRole == "student" && type == "upcoming" && (
         <>
+        <div style={{gap:15,display:'flex',flexWrap:'wrap'}}>
           <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-          <CancleSession title='Cancle Session' moduleType={pagesession} addUpcomingSession={session}  cancleUpcomingSession={cancleUpSession}/>
-        
+          <CancleSession title='Cancle Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession}/>
+        </div>
            
         </>
       )}

@@ -94,7 +94,7 @@ const FreezeSession = ({title,moduleType}) => {
 
   return (
     <>
-      <Button onClick={showModal}>
+      <Button onClick={showModal} className={"secondary-button"}>
         {title}
       </Button>
       <Modal
@@ -106,13 +106,13 @@ const FreezeSession = ({title,moduleType}) => {
         width={"max-content"}
         footer={[
             <>
-            <Button onClick={handleSubmit}>Cancle</Button>
+            <Button className={"secondary-button"} onClick={handleSubmit}>Cancle</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Freeze Sessions</Button>
           </>
            
         ]}
       >
-        <Form form={form} layout="vertical" initialValues= {{sessionType: ['Recurring Session']}}>
+        <Form form={form} className={'freeze-sessions'} layout="vertical" initialValues= {{sessionType: ['Recurring Session']}}>
             <div style={{ width: "600px" }}>
               <Form.Item
                 style={{ marginTop: "17px", marginBottom: "0px"}}
@@ -125,8 +125,10 @@ const FreezeSession = ({title,moduleType}) => {
                   <Checkbox value="Individual Session">All Other Session</Checkbox>
               </Checkbox.Group>
               </Form.Item>
+              <h5 style={{color:'#000000d9',fontSize:16,fontWeight:600,padding:10,marginTop:10}}>Choose types of sessions that you want to freeze</h5>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Form.Item
+                  <Form.Item 
+                      style={{width: '100%'}}
                       name={"sessionStartDay"}
                       label={"Freeze Start Date *"}
                       rules={[{ required: true , message: 'Please enter Start Date'}]}
@@ -135,6 +137,7 @@ const FreezeSession = ({title,moduleType}) => {
                   </Form.Item>
 
                   <Form.Item
+                      style={{width: '100%'}}
                       name={"sessionEndDay"}
                       label={"Freeze End Date *"}
                       rules={[{ required: true  , message: 'Please enter End Date'},
@@ -168,7 +171,7 @@ const FreezeSession = ({title,moduleType}) => {
                   </Form.Item>
               </div>
               <Form.Item
-                style={{ marginTop: "17px", marginBottom: "0px"}}
+                style={{marginBottom: "0px"}}
                 label="Reason *"
                 name="reason"
                 rules={[{ required: true , message: 'Please enter Reason'}]}
