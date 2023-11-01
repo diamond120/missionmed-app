@@ -5,6 +5,7 @@ import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/
 import { Breadcrumb, Button, message } from "antd";
 import SessionDetails from "../../components/session-details";
 import TeachingSessionService from "../../api/services/TeachingSession";
+import CommonService from "../../api/services/Common";
 
 const TutorTeachingSession = () => {
 
@@ -15,7 +16,10 @@ const TutorTeachingSession = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-      const response = await TeachingSessionService.getTutorTeachingSession({});
+      const data = {
+        bookingFor : 'Interview 1-to-1 Tutoring'
+      }
+      const response = await CommonService.postAPI('/tutor/session-details',data);
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(

@@ -10,7 +10,7 @@ import BookSession from "../book-session";
 import moment from "moment";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
-
+import CommonService from "../../api/services/Common";
 
 const StudentUCATSession = () => {
 
@@ -25,10 +25,14 @@ const StudentUCATSession = () => {
 
   const getUCATSessionDetails = async () => {
     try {
-      const response = await UCATSessionService.getStudentUCATSession({});
+      // const response = await UCATSessionService.getStudentUCATSession({});
+
+      const data = {
+        bookingFor : 'UCAT 1-to-1 Tutoring'
+      }
+      const response = await CommonService.postAPI("/student/session-details",data);
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
-        console.log("call");
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
             ?  response.data?.data?.upcomingsessions
@@ -50,10 +54,18 @@ const StudentUCATSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      const response = await UCATSessionService.updateUCATSessionData({
-        "ucatBookingId":upcomingInterview?.id,
+      // const response = await UCATSessionService.updateUCATSessionData({
+      //   "ucatBookingId":upcomingInterview?.id,
+      //   "agenda":agendaDetails,
+      // });
+      const data = {
+        "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
-      });
+        'bookingFor' : 'UCAT 1-to-1 Tutoring'
+      }
+
+
+      const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         setAgenda(agendaDetails);
       }else{
@@ -75,18 +87,19 @@ const StudentUCATSession = () => {
   }
 
   const addUpcomingSession = (session) => {
-    setUpcomingSessions([...upcomingSessions, session]);
+    // setUpcomingSessions([...upcomingSessions, session]);
 
-    if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
-      setUpcomingInterview({
-        id:session.id,
-        date:session.date,
-        session_start_time:session.session_start_time,
-        session_end_time:session.session_end_time,
-        agenda:null
-      })
-      setAgenda(null);
-    }
+    // if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
+    //   setUpcomingInterview({
+    //     id:session.id,
+    //     date:session.date,
+    //     session_start_time:session.session_start_time,
+    //     session_end_time:session.session_end_time,
+    //     agenda:null
+    //   })
+    //   setAgenda(null);
+    // }
+    getUCATSessionDetails();
   }
 
   
@@ -123,9 +136,7 @@ const StudentUCATSession = () => {
   }
 
   const cancleUpSession = (data) => {
-    console.log(data);
     getUCATSessionDetails();
-    // const updatedSessions = upcomingSessions.filter(session => session.id !== data.id);
   };
 
   const items = [

@@ -47,17 +47,23 @@ const RescheduleInterview = ({
 
   const getSessionummary = async (sessionId) => {
     try {
-      let response;
-      console.log(moduleType);
-      if(moduleType == 'teaching') {
-        response = await TeachingSessionService.getSessionummary(
-          sessionId
-        );
-      } else {
-        response = await UCATSessionService.getSessionummary(
-          sessionId
-        );        
-      }
+      // let response;
+      // console.log(moduleType);
+      // if(moduleType == 'teaching') {
+      //   response = await TeachingSessionService.getSessionummary(
+      //     sessionId
+      //   );
+      // } else {
+      //   response = await UCATSessionService.getSessionummary(
+      //     sessionId
+      //   );        
+      // }
+      
+      const data = {
+        sessionId : sessionId,
+        bookingFor : (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring'
+      };
+      const response = await CommonService.postAPI('/session-summary',data);
       
       if (response.data.success) {
         setInterviewSummary(response.data.data);
@@ -71,7 +77,7 @@ const RescheduleInterview = ({
 
   const getUniversityList = async () => {
     try {
-      const response = await CommonService.getUniversityList();
+      const response = await CommonService.getAPI("/university-list");
       if (response.data.success) {
         setUniversityList(
           response.data.data.map((university) => ({
@@ -130,13 +136,20 @@ const RescheduleInterview = ({
   const handleSubmit = async () => {
     const formData = form.getFieldsValue(true);
     try {
-      let response;
-      if(moduleType == 'teaching') {
-        response = await TeachingSessionService.rescheduleSession({...formData, teachingSessionId:interviewSummary?.id});
-      } else {
-        response = await UCATSessionService.rescheduleSession({...formData, ucatBookingId:interviewSummary?.id});
-      }
-      
+      // let response;
+      // if(moduleType == 'teaching') {
+      //   response = await TeachingSessionService.rescheduleSession({...formData, teachingSessionId:interviewSummary?.id});
+      // } else {
+      //   response = await UCATSessionService.rescheduleSession({...formData, ucatBookingId:interviewSummary?.id});
+      // }
+      formData.bookingFor = (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring';
+      formData.day = getDay(moment(formData.date));
+      formData.startTime =  formatTime(formData.sessionStartTime);
+      formData.endTime =  formatTime(formData.sessionEndTime);
+      formData.frequency =  interviewSummary?.frequency;
+      formData.tutorId =  interviewSummary?.tutor_id;
+      formData.bookingFor =  interviewSummary?.booking_for;
+      const response = await CommonService.postAPI('/student/reschedule-session',{...formData, sessionId:interviewSummary?.id});
       if (response.data.success) {
         const result = response.data.data;
         updateUpcomingSession(result.id, {

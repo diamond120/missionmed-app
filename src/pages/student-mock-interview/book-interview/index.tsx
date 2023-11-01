@@ -40,7 +40,7 @@ const BookInterview = ({addUpcomingSession}) => {
   
   const getUniversityList = async () => {
     try {
-      const response = await CommonService.getUniversityList();
+      const response = await CommonService.getAPI("/university-list");
       if (response.data.success) {
         setUniversityList(
           response.data.data.map((university) => ({
