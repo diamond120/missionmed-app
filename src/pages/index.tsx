@@ -8,6 +8,7 @@ import { Loader } from "../components/layout/Loader";
 import SignInLayout from "../components/layout/SignInLayout"
 ;
 import ForgotPassword from "./forgot-password";
+import ResetPassword from "./reset-password";
 
 const Home = lazy<FC>(/*home-page-bundle*/ () => import("./home"));
 const ApplicationsReview = lazy(/*application-review-page-bundle*/ () => import("./application-review"));
@@ -146,6 +147,11 @@ const routes: RouteObject[] = [
       {
         Component: ForgotPassword,
         path: "/forgot-password",
+        index: true,
+      },
+      {
+        Component: ResetPassword,
+        path: "/resetpassword/:token",
         index: true,
       },
 

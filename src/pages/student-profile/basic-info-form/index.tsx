@@ -120,9 +120,9 @@ const BasicInfoForm: FC<any> = ({props}) => {
       </Select>
     )
   }
-
-  const optionsLocation: string[]= profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title }))
-  const optionsState: string[]= profileStaticData.state.map(s => ({key:s.id, label:s.title, value :s.title }))
+   
+  const optionsLocation: string[]= (profileStaticData.location) ? profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title })) : {}
+  const optionsState: string[]= (profileStaticData.state) ? profileStaticData.state.map(s => ({key:s.id, label:s.title, value :s.title })) :{}
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1

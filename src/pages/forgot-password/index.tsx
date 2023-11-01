@@ -3,9 +3,9 @@
 
 import "./index.less"
 
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox,message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
-import Authentication from "../../api/services/Authentication";
+import CommonService from "../../api/services/Common";
 import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
 
@@ -14,29 +14,23 @@ const ForgotPassword = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const [errorMessage, setErrorMessage] = useState('');
-    const onFinish = async (values: any) => {
-        const { email } = values;
-        setErrorMessage("API is not integrated");
-        // try {
-        //     const result = await Authentication.login({email});
-        //     if(result.data.success) {
-        //         if (result.data.data && result.data.data.token) {
-                
-        //         navigate("/")
-        //         }
-        //     } else {
-            // setErrorMessage("We cannot find your email");
-        //         throw new Error(result.data.message);
-        //     }
-        // } catch (e) {
-        //     console.log(e);
-        //     alert('Error Your email or password is wrong!')
-        // }
-    };
-
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
+   
+    const handleSubmit = async () => {
+        try{
+            await form.validateFields();
+            const formData = form.getFieldsValue(true);
+            let response = await CommonService.postAPI('/forgot-password',formData);
+            if(response.data.success == true ){ 
+                // throw new Error(response.data.message) 
+                message.success(response.data.message);
+            } else {
+                throw new SUCCESS(response.data.message)
+            }
+        }catch(e){
+          message.error(e.message);
+        }
+      }
+    
 
     return (
         <div className={"sign-in"}>
@@ -52,9 +46,6 @@ const ForgotPassword = () => {
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 392 }}
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete={"off"}
                 className="sign-in-form"
             >
@@ -66,9 +57,9 @@ const ForgotPassword = () => {
                 >
                 
                 <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Email"} />
-                {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+                {/* {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>} */}
                 </Form.Item>
-                <Button type={"default"} htmlType={"submit"} disabled={false} className={"btn-text"}
+                <Button type={"default"} htmlType={"submit"} disabled={false} onClick={handleSubmit} className={"btn-text"}
                         style={{width: "100%", borderRadius: "8px", }}>
                 Submit
                 </Button>

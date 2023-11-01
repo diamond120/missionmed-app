@@ -2,7 +2,8 @@ import "./index.less";
 import { Button, Checkbox, Modal, Select, message ,Form, Input} from "antd";
 import React, { useEffect, useState } from "react";
 import {useNavigate } from "react-router-dom";
-import Authentication from "../../api/services/Authentication";
+import CommonService from "../../api/services/Common";
+
 
 const ChangePassword = ({title,moduleType}) => {
   const navigate = useNavigate();
@@ -14,13 +15,12 @@ const ChangePassword = ({title,moduleType}) => {
     try{
         await form.validateFields();
         const formData = form.getFieldsValue(true);
-        console.log(formData);
-        // let response = await Authentication.changePassword(formData);
-        // if(response.data.success){  
-        //     message.success('You’ve successfully change password');
-        // }else{
-        //     throw new Error(response.data.message)
-        // }
+        let response = await CommonService.postAPI('/change-password',formData);
+        if(response.data.success == true ){  
+            message.success('You’ve successfully change password');
+        } else {
+            throw new Error(response.data.message)
+        }
     }catch(e){
       message.error(e.message);
     }
