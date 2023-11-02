@@ -93,7 +93,6 @@ const getAPI = (path) => {
 };
 
 const postAPI = (path,data) => {
-  console.log("path");
   const token = `Bearer ${getToken()}`;
   const config = {
     headers:{
