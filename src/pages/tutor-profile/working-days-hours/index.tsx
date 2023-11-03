@@ -83,6 +83,10 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
     e.preventDefault();
   };
 
+  const  cancle = () => {
+    setEditing(false);
+  }
+
   const formatTimeArr = (timeArr) => {
     if (timeArr.length > 0) {
       return timeArr.map((time) => ({
@@ -909,6 +913,9 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} htmlType={"submit"}>
               Save
+            </Button>
+            <Button className={"form-button button-space"} onClick={cancle}>
+              Cancel
             </Button>
           </div>
         ) : (

@@ -1,6 +1,6 @@
 import "./index.less"
 import { AutoComplete, Button, Form, Input, Select, Switch } from "antd"
-import { FC, useState } from "react"
+import { FC, useEffect, useState } from "react"
 // import { useUpdateTutorMutation } from "../../../graphql"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 import { AddressDetails } from "../../../types/AddressDetails"
@@ -14,6 +14,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const [form] = Form.useForm();
   const { Option } = Select;
   const tutor = useTutor();
+
   const dispatch = useTutorDispatch();
   const profileStaticData = useProfileStaticDataContext();
   const [editing, setEditing] = useState(false);
@@ -31,7 +32,6 @@ const BasicInfoForm: FC<Any> = ({props}) => {
 
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
-
   const updatedTutor =  async () => {
     await TutorService.updateProfile({
       fullName: fullName !== '' ? fullName : tutor?.fullName,
@@ -71,6 +71,10 @@ const BasicInfoForm: FC<Any> = ({props}) => {
     return false;
   };
 
+  const  cancle = () => {
+    setEditing(false);
+  }
+ 
   const success = (pos:{ coords: { latitude: number; longitude: number }}) => {
     const myLat = pos.coords.latitude
     const myLng = pos.coords.longitude
@@ -212,11 +216,17 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           </div>
         </div>
         {editing ? (
+          <>
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} onClick={handleSaveClick}>
               Save
             </Button>
+            <Button className={"form-button button-space"} onClick={cancle}>
+              Cancel
+            </Button>
           </div>
+          </>
+          
         ) : (
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} onClick={handleEditClick}>

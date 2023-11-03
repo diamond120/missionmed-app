@@ -135,6 +135,20 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   key={`pastSessions${index}`}
                 />
               ))}
+              {
+                (Object.keys(formatedpastSessions).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No past sessions found.</strong></h1>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                )
+              }
             </div>
           </TabPane>
         </Tabs>

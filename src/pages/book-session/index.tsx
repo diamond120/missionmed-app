@@ -26,7 +26,9 @@ import "./index.less";
 import { useNavigate } from "react-router-dom";
 import Calender from "../../components/session-details/calender";
 import Cards from 'react-credit-cards';
+import CreditCardInput from 'react-credit-card-input';
 import 'react-credit-cards/es/styles-compiled.css'
+import {useStudent} from "../../api/providers/StudentProvider";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
@@ -43,9 +45,8 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
   const [dayOfWeek, setDayOfWeek] = useState('Weekly on Monday');
   const [form] = Form.useForm();
   const [recurringAvailable, setRecurringAvailable] = useState(false);
-  const [selectedVal,setSelectedVal] = useState("Individual Session");
   const [loading, setLoading] = useState(false);
-  
+  const student = useStudent();
   
   const getUniversityTutorList = async () => {
     try {
@@ -58,7 +59,8 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
       const data = {
         lessionType : type
       };
-      const response = await CommonService.getTutorList(data);
+      // const response = await CommonService.getTutorList(data);
+      const response = await CommonService.postAPI('ucat-tutors-list',data);
       if (response.data.success) {
         const tutorList = response.data.data ?? [];
         setTutors(tutorList);
@@ -76,6 +78,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
   const next = async () => {
     try{
       const values = await form.validateFields();
+      
       const nextStep = activeStep + 1;
       setActiveStep(nextStep);
         if(nextStep == 3) {
@@ -204,7 +207,11 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
                   fontSize: 12,
                 }}
               >
-                <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span>
+                <span>
+                {tutor.university && tutor.university.map((item, index) => (
+                    <span key={index}>{item.school}({item.degree}) {tutor.university.length-1 != index && ','}</span>
+                ))}
+               </span> 
               </div>
             </div>
           </div>
@@ -253,7 +260,6 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
     );
   });
 
-
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
@@ -287,7 +293,8 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
     } catch (e) {
       message.error(e.message);
     }
-}
+  }
+
 
   const Step4From = ({form}) => {
    
@@ -354,8 +361,8 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
         >
             <Select placeholder="Select an option" value={dayOfWeek}
                  onChange={(value) => {
-                  setDayOfWeek(value); // Update dayOfWeek state
-                  form.setFieldsValue({ frequency: value }); // Update the form field value
+                  setDayOfWeek(value);
+                  form.setFieldsValue({ frequency: value });
                 }} defaultValue={dayOfWeek} >
                 <Select.Option value="Weekly on Monday">Weekly on Monday</Select.Option>
                 <Select.Option value="Weekly on Tuesday">Weekly on Tuesday</Select.Option>
@@ -365,22 +372,6 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
                 <Select.Option value="Weekly on Saturday">Weekly on Saturday</Select.Option>
             </Select>
         </Form.Item>
-        {/* <Form.Item
-            style={{ marginTop: "17px", marginBottom: "0px" }}
-            label="Recurring Week"
-            name="recurringWeeks"
-        >
-            <Select
-                style={{ width: '100%' }}
-                placeholder="Select Recurring Week"
-            >
-                {Array.from({ length: 200 }, (_, i) => (
-                    <Select.Option key={i+1} value={i+1}>
-                        {i+1} Week
-                    </Select.Option>
-                ))}
-            </Select>
-        </Form.Item> */}
         </>        
         )}
         <Form.Item
@@ -390,6 +381,16 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
         >
           <TextArea rows={3} placeholder="Textarea" style={{ fontSize: 16 }} />
         </Form.Item>
+        { (student.card_digit != null && student.card_digit != '') && (
+          <div className="credit-card">
+            <div className="credit-card-header"> 
+              <div className="card-brand">Card Number</div>
+              <div className="chip"><button  onClick={next} >Edit</button></div>
+            </div>
+            <div className="credit-card-number">{'**** **** **** '+student.card_digit}</div>
+          </div>
+          )
+        }
       </>
     );
   };
@@ -402,7 +403,6 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
     const [number, setNumber] = useState("");
     const [ focused ,setFocused] = useState("");
     const [issuer , setIssuer] = useState();
-   
 
     const handleInputChange = async (event: any) => {
       if (event.target.name === 'number') {
@@ -454,16 +454,12 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
               focused={focused}
               callback={handleCallback}
             />  
-
-
               <Form.Item
-               
                 style={{ marginTop: "17px", marginBottom: "0px"}}
                 label="Name"
                 name={"userName"}
                 rules={[{ required: true, message:"Please enter name" },
                       ]}
-              
               > 
                 <Input  className="form-control" style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} id="messagsse"   name={"userName"}  onChange={handleInputChange}  onFocus={handleInputFocus}   placeholder={"Name"} />
               </Form.Item>
@@ -481,7 +477,6 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
                 ]}
               > 
                 <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }}  name={"number"}  onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"Card Number"}  />
-                
               </Form.Item>
 
               <Form.Item
@@ -550,7 +545,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
             </Button>
           ),
           <span className={"steps"}>Step {activeStep} of {totalSteps}</span>,
-          activeStep < totalSteps && (
+          ((activeStep < totalSteps  && activeStep != 3 ) || (student.card_digit == '' &&  activeStep != 4 ) )   && (
             <Button
               className={"secondary-button"}
               onClick={next}
@@ -561,37 +556,14 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
           loading == true ? (
             <Spin />
           ) : (
-          activeStep === totalSteps  && (
+         ( (activeStep === totalSteps ||  activeStep == 3 && student.card_digit != '' ) ||  (student.card_digit == '' &&  activeStep == 4) )  && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-                Book Session 
+                Book Session {} 
               </Button>
             )
           )
         ]}
       >
-        {/* <Form form={form} layout="vertical" 
-          initialValues={{ sessionType: 'Recurring Session'}} >
-          {activeStep == 1 && (
-            <div style={{ width: "555px" }}>
-              <Step1Form universityList={universityList} />
-            </div>
-          )}
-          {activeStep == 2 && (
-            <div style={{ width: "555px" }}>
-              <Step2Form tutors={tutors} />
-            </div>
-          )}
-          {activeStep == 3 && (
-            <div style={{ width: "1155px" }}>
-              <Step3From />
-            </div>
-          )}
-          {activeStep == 4 && (
-            <div style={{ width: "600px" }}>
-              <Step4From form={form}/>
-            </div>
-          )}
-        </Form> */}
         <Form form={form} layout="vertical"
           >
           {activeStep == 1 && (

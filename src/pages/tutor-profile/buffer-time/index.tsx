@@ -22,6 +22,10 @@ const BufferTime: FC<Any> = ({props}) => {
       setEditing(false);
     };
 
+    const  cancle = () => {
+      setEditing(false);
+    }
+
     const updatedTutor = async() => {
       await TutorService.updateProfile({
         bufferTime: selectedTime !== '' ? selectedTime : tutor?.bufferTime,
@@ -53,7 +57,11 @@ const BufferTime: FC<Any> = ({props}) => {
 
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+                Cancel
+              </Button>
             </div>
+            
 
           ) : (
 

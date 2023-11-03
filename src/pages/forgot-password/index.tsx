@@ -3,7 +3,7 @@
 
 import "./index.less"
 
-import { Form, Input, Button, Checkbox,message } from 'antd';
+import { Form, Input, Button,message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import CommonService from "../../api/services/Common";
 import { Link, useNavigate } from "react-router-dom"
@@ -21,10 +21,9 @@ const ForgotPassword = () => {
             const formData = form.getFieldsValue(true);
             let response = await CommonService.postAPI('/forgot-password',formData);
             if(response.data.success == true ){ 
-                // throw new Error(response.data.message) 
                 message.success(response.data.message);
             } else {
-                throw new SUCCESS(response.data.message)
+                throw new Error(response.data.message)
             }
         }catch(e){
           message.error(e.message);
@@ -55,7 +54,7 @@ const ForgotPassword = () => {
                 rules={[{ required: true, message: 'Please enter your Email!' }]}
                 style={{ marginTop: 55 }}
                 >
-                
+
                 <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Email"} />
                 {/* {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>} */}
                 </Form.Item>
@@ -66,16 +65,11 @@ const ForgotPassword = () => {
                 <Link to={`/sign_in`} className={"sign-in-left-remember-forgot"}><Button className={"btn-text"}  style={{ marginTop: "5px", width: "100%", borderRadius: "8px", }}> Back To Login</Button></Link>
             
             </Form>
-            
             </div>
-
         </div>
         <div className={"sign-in-right"}></div>
-
         </div>
     )
 }
 
 export default ForgotPassword;
-
-

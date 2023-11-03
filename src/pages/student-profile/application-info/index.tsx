@@ -8,7 +8,7 @@ import StudentService from "../../../api/services/Student";
 const ApplicationInfo: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
-  const profileStaticData = useProfileStaticDataContext();
+    const profileStaticData = useProfileStaticDataContext();
 
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
@@ -72,7 +72,7 @@ const ApplicationInfo: FC<any> = ({props}) => {
             initialValue={student.applicantCycle}
           > 
             <AutoComplete
-              options={optionsApplicantCycle.map((option) => ({ value: option}))}
+              options={optionsApplicantCycle && optionsApplicantCycle.map((option) => ({ value: option}))}
               style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
               placeholder={"Enter a value"}
               filterOption={handleFilter}
@@ -89,7 +89,7 @@ const ApplicationInfo: FC<any> = ({props}) => {
             initialValue={student.applicantTypeId}
           >
               <Select
-                options={optionsApplicantType.map((option) => ({ value: option.id , label:option.title}))}
+                options={optionsApplicantType && optionsApplicantType.map((option) => ({ value: option.id , label:option.title}))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
                 value={applType}

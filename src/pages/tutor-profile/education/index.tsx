@@ -46,6 +46,9 @@ const Education: FC<Any> = ({ props }) => {
     }
     
   }
+  const  cancle = () => {
+    setEditing(false);
+  }
   const onFinish = (values: any) => {
     updatedTutor(values);
     setEditing(false);
@@ -98,19 +101,26 @@ const Education: FC<Any> = ({ props }) => {
                   ): null}
                 </React.Fragment>
               ))}
+              { editing && (
               <div className={"education-form-item add-item-btn"} style={{marginBottom: "20px" }}>
                 <div style={{ display: "flex", justifyContent: "left" }}>
                   <Button disabled={!editing} onClick={() => add()} icon={<PlusOutlined />}>Add Education</Button>
                 </div>
               </div>
+              )}
             </React.Fragment>
           )}
         </Form.List>
         <div className={"education-button-wrap"}>
           {editing ? (
+            <>
             <Form.Item>
               <Button className={"form-button"} htmlType={"submit"}>Save</Button>
             </Form.Item>
+            <Button className={"form-button button-space"} onClick={cancle}>
+              Cancel
+            </Button>
+            </>
           ) : (
             <Form.Item>
               <Button className={"form-button"} htmlType={"button"} onClick={handleEditClick}>Edit</Button>

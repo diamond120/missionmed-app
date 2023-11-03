@@ -12,19 +12,20 @@ const ChangePassword = ({title,moduleType}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState("");
   const handleSubmit = async () => {
+    await form.validateFields();
     try{
-        await form.validateFields();
         const formData = form.getFieldsValue(true);
         let response = await CommonService.postAPI('/change-password',formData);
         if(response.data.success == true ){  
             message.success('You’ve successfully change password');
+            handleCancel();
         } else {
-            throw new Error(response.data.message)
+          throw new Error(response.data.message)
         }
     }catch(e){
       message.error(e.message);
     }
-    handleCancel();
+    // handleCancel();
   }
 
   const handleCancel = () => {
@@ -54,7 +55,7 @@ const ChangePassword = ({title,moduleType}) => {
         width={"max-content"}
         footer={[
             <>
-            <Button onClick={handleCancel}>Cancle</Button>
+            <Button onClick={handleCancel}  className={"secondary-button"}> Cancle</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Change Password</Button>
             </>
         ]}

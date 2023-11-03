@@ -9,6 +9,11 @@ const Applications = () => {
       <div className={"applications-wrap"}>
         <div className={"applications-item"}>
           <div className={"applications-text-block"}>
+            <h2 className={"applications-title"}>No application booked yet!</h2>
+          </div>
+        </div>
+        {/* <div className={"applications-item"}>
+          <div className={"applications-text-block"}>
             <h2 className={"applications-title"}>James Cook University</h2>
             <p className={"applications-subtitle"}>MBBS</p>
           </div>
@@ -36,7 +41,7 @@ const Applications = () => {
             <Button className={"applications-actions-btn-more"}>More Details</Button>
             <Button className={"applications-actions-btn-heart"}><HeartFilled style={{color: "#2816EE"}} /></Button>
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>

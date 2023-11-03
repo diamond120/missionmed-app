@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer } from 'react';
 import { stringToBoolean } from '../../common/common';
+import { useEffect, useState } from "react";
 
 const StudentContext = createContext(null);
 
@@ -13,6 +14,20 @@ export function StudentProvider({ children }) {
     initialStudent
   );
 
+
+useEffect(() => {
+  const storedStudent = localStorage.getItem('student');
+  if (storedStudent) {
+    dispatch({ type: 'update', student: JSON.parse(storedStudent) });
+  }
+}, []);
+
+// Save student data to local storage whenever it changes
+useEffect(() => {
+  localStorage.setItem('student', JSON.stringify(student));
+}, [student]);
+
+
   return (
     <StudentContext.Provider value={student}>
       <StudentDispatchContext.Provider value={dispatch}>
@@ -21,6 +36,7 @@ export function StudentProvider({ children }) {
     </StudentContext.Provider>
   );
 }
+
 
 export function useStudent() {
   return useContext(StudentContext);
@@ -58,6 +74,7 @@ function StudentReducer(student, action) {
               rural:stringToBoolean(action.rural),
               financialHardship:stringToBoolean(action.financialHardship),
               gws:stringToBoolean(action.gws),
+              card_digit:action.card_digit,
           };
         }
         case 'update': {

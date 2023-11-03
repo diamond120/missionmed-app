@@ -114,7 +114,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const customSelect = () => {
     return (
       <Select style={{width: 328}} disabled={ !editing }>
-        {options.map(option => (
+        {options && options.map(option => (
           <Option key={option.label} value={option.label}>{option.label}</Option>
         ))}
       </Select>
@@ -156,7 +156,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             rules={[{ required: false, }]}
           >
             <Select
-            options={AgeList.map((option) => ({ value: option }))}
+            options={AgeList && AgeList.map((option) => ({ value: option }))}
             style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
             disabled={!editing}
             onChange={(value) => setGender(value)}

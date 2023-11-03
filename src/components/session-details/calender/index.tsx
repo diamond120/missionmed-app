@@ -32,6 +32,7 @@ const Calender = ({tutorId, form,moduleType }) => {
 
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
+  const [filterDateSet, setFilterDateSet] = useState(false);
 
 
     const handleDateClick = (dateInfo) => {
@@ -42,6 +43,7 @@ const Calender = ({tutorId, form,moduleType }) => {
         'endDate' : dateObjectEnd.toISOString().split('T')[0],
       };
       setfilterDate(data);
+      setFilterDateSet(true);
     }
 
     const getSlotsist = async (tutorId) => {
@@ -66,8 +68,10 @@ const Calender = ({tutorId, form,moduleType }) => {
     };
 
     useEffect(() => {
-      getSlotsist(tutorId);
-    }, [tutorId,filterDate]);
+      if(filterDateSet == true) {
+        getSlotsist(tutorId);
+      }
+    }, [tutorId,filterDate,filterDateSet]);
 
     let selectedEvent = null;
 

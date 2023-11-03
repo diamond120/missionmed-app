@@ -107,6 +107,7 @@ export const DefaultLayout: FC = () => {
             financialHardship:result.data.data.financial_hardship ?? null,
             gws:result.data.data.gws ?? null,
             credit:result.data.data.credit ?? 0,
+            card_digit : result.data.data.card_digit ?? ''
           })
         }
         getStudentProfile();

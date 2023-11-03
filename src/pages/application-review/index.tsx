@@ -26,7 +26,7 @@ const ApplicationReview = () => {
 
 
   useEffect(() => {
-    setIsModalOpen(
+        setIsModalOpen(
       !clickedCanceled &&
       (!student?.fullName ||
       !student?.birthday ||
@@ -63,16 +63,27 @@ const ApplicationReview = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>Application Review</Breadcrumb.Item>
         </Breadcrumb>
-        <div className={"application-review-section-title-wrap"}>
-          <h2 className={"application-review-section-title"}>Application Review</h2>
+        <div className={"application-review-section-title-wrap"} >
+          <h2 className={"application-review-section-title"}>Application Review  
+          
+            <span   className={"coming-soonapp"}  style={{position:'relative'}}>Coming Soon</span>
+          
+          </h2>
+        
 
-          <Link to={"https://missionmed.com.au/checkout_step/unsw-application-review-checkout/"} rel={"noreferrer"} className={"primary-button"}>
+          {/* <Link  disabled={true} to={"https://missionmed.com.au/checkout_step/unsw-application-review-checkout/"} rel={"noreferrer"}className={"primary-button"}>
             <ShoppingCartOutlined style={{fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />
             Buy More Reviews
-          </Link>
+            
+          </Link> */}
+          <span className={"primary-button"} >
+          <ShoppingCartOutlined style={{fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />
+            Buy More Reviews
+          </span>
         </div>
-        <div className={"application-review-progress-cards"}>
+        <div className={"application-review-progress-cards"}   >
           <h2 className={"application-review-progress-cards-title"}>Applications</h2>
+          
           <div className={"application-review-progress-cards-wrap"}>
             {data?.applications?.data?.map((application) => {
               let percent = 0;

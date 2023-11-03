@@ -219,7 +219,13 @@ const BookInterview = ({addUpcomingSession}) => {
                   fontSize: 12,
                 }}
               >
-                <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span>
+                {/* <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span> */}
+
+                <span>
+                {tutor.university && tutor.university.map((item, index) => (
+                    <span key={index}>{item.school}({item.degree}) {tutor.university.length-1 != index && ','}</span>
+                ))}
+               </span>
               </div>
             </div>
           </div>
