@@ -1,7 +1,6 @@
 
 import "./index.less"
-import { Breadcrumb, } from "antd";
-import { Tabs } from 'antd';
+import { Breadcrumb,Tabs, message } from 'antd';
 import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import BasicInfo from "./basic-info"
@@ -15,13 +14,41 @@ import BufferTime from "./buffer-time"
 import AverageRating from "./average-rating"
 import Rating from "./clarity-rating"
 import StudentsReview from "./students-review"
-import Billing from "./billing"
+import Billing from "./billing";
+import { useEffect, useState } from "react";
+import CommonService from "../../api/services/Common";
 // import { useMeQuery, useTutorsQuery } from "../../graphql"
 
 const TutorProfile = () => {
+  const [rating, setRating] = useState(null);
 
   // const tutorId = useMeQuery()?.data?.me?.tutor?.data?.id
   // const tutor = useTutorsQuery({ variables: { filter: { id: { eq: tutorId}}}})?.data?.tutors?.data[0]
+
+  const getRatingDetails = async () => {
+    try {
+     
+      const response = await CommonService.getAPI("/tutor/rating");
+      if (response.data.success) {
+        setRating(response.data.data );
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+
+  useEffect(() => {
+    getRatingDetails()
+    .then(() => {
+      console.log(rating); // This should log the updated value of rating
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }, []);
+
   
   const { TabPane } = Tabs;
 
@@ -59,14 +86,16 @@ const TutorProfile = () => {
           </TabPane>
 
           <TabPane tab={"Rating"} key={"rating"}>
-            <AverageRating />
+             {/* <h1>{JSON.stringify(rating?.KnowledgeExpertise)}</h1> */}
+            <AverageRating  student={rating?.students} average={rating?.alloverAverage}/>
             <div className={"ratings-wrap"}>
-              <Rating rating={4.5} one={0} two={0} three={10} four={75} five={90} title={"Knowledge & Expertise"}/>
-              <Rating rating={5} one={0} two={0} three={0} four={0} five={100} title={"Engagement & Enthusiasm"}/>
-              <Rating rating={4.5} one={0} two={0} three={5} four={75} five={90} title={"Clarity & Understandability"}/>
-              <Rating rating={4.5} one={0} two={0} three={10} four={80} five={75} title={"Punctuality & Preparedness"}/>
+             
+              <Rating rating={rating?.KnowledgeExpertise?.average} one={rating?.KnowledgeExpertise?.one} two={rating?.KnowledgeExpertise?.two} three={rating?.KnowledgeExpertise?.three} four={rating?.KnowledgeExpertise?.four} five={rating?.KnowledgeExpertise?.five} title={"Knowledge & Expertise"}/>
+              <Rating rating={rating?.EngagementEnthusiasm?.average} one={rating?.EngagementEnthusiasm?.one} two={rating?.EngagementEnthusiasm?.two} three={rating?.EngagementEnthusiasm?.three} four={rating?.EngagementEnthusiasm?.four} five={rating?.EngagementEnthusiasm?.five} title={"Engagement & Enthusiasm"}/>
+              <Rating rating={rating?.ClarityUnderstandability?.average} one={rating?.ClarityUnderstandability?.one} two={rating?.ClarityUnderstandability?.two} three={rating?.ClarityUnderstandability?.three} four={rating?.ClarityUnderstandability?.four} five={rating?.ClarityUnderstandability?.five} title={"Clarity & Understandability"}/>
+              <Rating rating={rating?.PunctualityPreparedness?.average} one={rating?.PunctualityPreparedness?.one} two={rating?.PunctualityPreparedness?.two} three={rating?.PunctualityPreparedness?.three} four={rating?.PunctualityPreparedness?.four} five={rating?.PunctualityPreparedness?.five} title={"Punctuality & Preparedness"}/>
             </div>
-            <StudentsReview />
+            <StudentsReview  reviews={rating?.student_reviews} />
           </TabPane>
 
           <TabPane tab={"Billing"} key={"billing"}>

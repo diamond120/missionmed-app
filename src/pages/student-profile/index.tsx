@@ -13,6 +13,7 @@ import Applications from "./applications"
 import ApplicationInfo from "./application-info"
 import ExtraInfo from "./extra-info"
 import {useStudent} from "../../api/providers/StudentProvider";
+import CardDatails from "./card-details";
 
 const StudentProfile = () => {
   const student = useStudent();
@@ -50,6 +51,9 @@ const StudentProfile = () => {
           <TabPane className={"custom-tab"} tab={"Application Information"} key={"2"}>
               {student && <ApplicationInfo/>}
               {student && <ExtraInfo student={student?.attributes as Student} id={student?.id ?? ''}/>}
+          </TabPane>
+          <TabPane className={"custom-tab"} tab={"Card Details"} key={"3"}>
+            {student && <CardDatails/>}
           </TabPane>
         </Tabs>
       </div>
