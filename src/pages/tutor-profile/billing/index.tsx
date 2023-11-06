@@ -4,6 +4,7 @@ import { valueType } from "antd/lib/statistic/utils";
 import { FC, useState } from "react"
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import { json } from "react-router-dom";
 
 const Billing: FC<Any> = ({props}) => {
   const tutor = useTutor();
@@ -36,6 +37,10 @@ const Billing: FC<Any> = ({props}) => {
     setEditing(true);
   };
 
+  const  cancle = () => {
+    setEditing(false);
+  }
+  
   const handleSaveClick =() => {
     updatedTutor()
     setEditing(false);
@@ -53,9 +58,10 @@ const Billing: FC<Any> = ({props}) => {
               <p className={"label"}>UCAT 1-to-1 Tutoring</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.ucatTutoringPrice ?? ""} onChange={e => setUcatTutoringPrice(e.target.value) }/>
+                  <input type="hidden" value={JSON.stringify(tutor)}/>
+                  <Input className={"input"} value={tutor?.ucatTutoringPrice } disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.ucatTutoringPrice ?? ""} onChange={e => setUcatTutoringPrice(e.target.value) }/>
                 </p>
-                <p className={"rate"}>Rate per Hour</p>
+                <p className={"rate"}>Rate per Session</p>
               </div>
             </div>
           </Form.Item>
@@ -67,9 +73,9 @@ const Billing: FC<Any> = ({props}) => {
               <p className={"label"}>Interview 1-to-1 Tutoring</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.interviewTutoringPrice ?? ""} onChange={e => setInterviewTutoringPrice(e.target.value)}/>
+                  <Input className={"input"}  value={tutor?.interviewTutoringPrice} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.interviewTutoringPrice ?? ""} onChange={e => setInterviewTutoringPrice(e.target.value)}/>
                 </p>
-                  <p className={"rate"}>Rate per Hour</p>
+                  <p className={"rate"}>Rate per Session</p>
               </div>
             </div>
           </Form.Item>
@@ -81,9 +87,9 @@ const Billing: FC<Any> = ({props}) => {
               <p className={"label"}>Mock Interview</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"}  disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.mockInterviewPrice ?? ""} onChange={e => setMockInterviewPrice(e.target.value)}/>
+                  <Input className={"input"} value={tutor?.mockInterviewPrice} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }} defaultValue={tutor?.mockInterviewPrice ?? ""} onChange={e => setMockInterviewPrice(e.target.value)}/>
                 </p>
-                <p className={"rate"}>Rate per Hour</p>
+                <p className={"rate"}>Rate per Session</p>
               </div>
             </div>
           </Form.Item>
@@ -95,22 +101,27 @@ const Billing: FC<Any> = ({props}) => {
               <p className={"label"}>Application Review</p>
               <div className={"price-wrap"}>
                 <p className={"price"}>
-                  <Input className={"input"} disabled={ !editing } style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }}  
-                  defaultValue={tutor?.applicationReviewPrice ?? ""} onChange={(e) => setApplicationReviewPrice(e.target.value)}/>
+                  <Input className={"input"} disabled={ !editing } value={tutor?.applicationReviewPrice} style={{width: 200, color: !editing? "#bfbfbf" : "", backgroundColor: !editing? "#f5f5f5" : "" }}  
+                  defaultValue={tutor?.applicationReviewPrice ?? "0"} onChange={(e) => setApplicationReviewPrice(e.target.value)}/>
                 </p>
-                <p className={"rate"}>Rate per Hour</p>
+                <p className={"rate"}>Rate per Session</p>
               </div>
             </div>
           </Form.Item>
-          {editing ? (
+          {editing && (
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+                Cancel
+              </Button>
             </div>
-          ) : (
-              <div className={"form-basic-button-wrap"}>
-                <Button className={"form-button"} onClick={handleEditClick}>Edit</Button>
-              </div>
-          )}
+          ) 
+          // : (
+              // <div className={"form-basic-button-wrap"}>
+              //   <Button className={"form-button"} onClick={handleEditClick}>Edit</Button>
+              // </div>
+          // )
+        }
         </Form>
 
     </div>

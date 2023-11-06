@@ -2,7 +2,8 @@ import "./index.less";
 import { Button, Checkbox, Modal, Select, message ,Form, Input} from "antd";
 import React, { useEffect, useState } from "react";
 import {useNavigate } from "react-router-dom";
-import Authentication from "../../api/services/Authentication";
+import CommonService from "../../api/services/Common";
+
 
 const ChangePassword = ({title,moduleType}) => {
   const navigate = useNavigate();
@@ -11,20 +12,20 @@ const ChangePassword = ({title,moduleType}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState("");
   const handleSubmit = async () => {
+    await form.validateFields();
     try{
-        await form.validateFields();
         const formData = form.getFieldsValue(true);
-        console.log(formData);
-        // let response = await Authentication.changePassword(formData);
-        // if(response.data.success){  
-        //     message.success('You’ve successfully change password');
-        // }else{
-        //     throw new Error(response.data.message)
-        // }
+        let response = await CommonService.postAPI('/change-password',formData);
+        if(response.data.success == true ){  
+            message.success('You’ve successfully change password');
+            handleCancel();
+        } else {
+          throw new Error(response.data.message)
+        }
     }catch(e){
       message.error(e.message);
     }
-    handleCancel();
+    // handleCancel();
   }
 
   const handleCancel = () => {
@@ -54,7 +55,7 @@ const ChangePassword = ({title,moduleType}) => {
         width={"max-content"}
         footer={[
             <>
-            <Button onClick={handleCancel}>Cancle</Button>
+            <Button onClick={handleCancel}  className={"secondary-button"}> Cancle</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Change Password</Button>
             </>
         ]}

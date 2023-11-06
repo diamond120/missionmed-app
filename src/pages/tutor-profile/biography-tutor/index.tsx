@@ -26,6 +26,10 @@ const BiographyTutor: FC<ANY> = ({props}) => {
     setEditing(true);
   };
 
+  const  cancle = () => {
+    setEditing(false);
+  }
+
   const handleSaveClick =() => {
     updatedTutor();
     setEditing(false);
@@ -38,11 +42,18 @@ const BiographyTutor: FC<ANY> = ({props}) => {
         <p className={"biography-text"}>You can write about your degrees, years of experience, industry, or skills. People also talk about their achievements or previous job experiences.</p>
         <Input.TextArea className={"biography-input"} placeholder={"Input your text here"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={tutor?.biography ?? ''}  onChange={e => setBiography(e.target.value)} />
         {editing ? (
-          <Form.Item>
+          <>
+           <Form.Item>
             <div className={"form-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+          Cancel
+          </Button>
             </div>
+            
           </Form.Item>
+        
+          </>
         ) : (
           <Form.Item>
             <div className={"form-button-wrap"}>

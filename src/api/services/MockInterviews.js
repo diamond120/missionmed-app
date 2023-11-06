@@ -11,15 +11,15 @@ import {getToken} from "../../common/common.js";
 //   return http.get(`/student/interview-details`, {...headerConfig,...customConfig });
 // };
 
-const updateMockInterviewData = (data,customConfig={}) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/interview-data`,data, {...headerConfig,...customConfig });
-};
+// const updateMockInterviewData = (data,customConfig={}) => {
+//   const token = `Bearer ${getToken()}`;
+//   const headerConfig = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/interview-data`,data, {...headerConfig,...customConfig });
+// };
 
 
 
@@ -69,7 +69,7 @@ const getTutorMockInterviews = (customConfig={}) => {
 
 const Service = {
   // getStudentMockInterviews,
-  updateMockInterviewData,
+  // updateMockInterviewData,
   getInterviewSummary,
   bookInterview,
   // rescheduleInterview,

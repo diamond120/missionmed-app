@@ -9,7 +9,7 @@ import StudentService from "../../../api/services/Student";
 const ExtraInfo: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
-  const [form] = Form.useForm();
+    const [form] = Form.useForm();
   const { Option } = Select;
   const [editing, setEditing] = useState(false);
   const [residenceStatus, setResidenceStatus] = useState<string | null | undefined>(student.statusOfResidence);
@@ -77,12 +77,13 @@ const ExtraInfo: FC<any> = ({props}) => {
               label={"Specification"}
               rules={[{ required: true, }]}
             >
+              <input type="hidden" value={specification} ></input>
               <Select
                 options={optionsSpecification.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
                 filterOption={handleFilter}
-                value={specification}
+                value={specification? specification :undefined }
                 disabled={!editing}
                 onChange={(value) => setSpecification(value)}
 

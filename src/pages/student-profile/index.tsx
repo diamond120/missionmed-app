@@ -31,16 +31,20 @@ const StudentProfile = () => {
         <Tabs style={{marginTop: 32}} defaultActiveKey={"1"}>
           <TabPane className={"custom-tab"} tab={"Profile"} key={"1"}>
             <div className={"top-form-group"}>
+              <div>
               {student && <BasicInfoForm/>}
+              
+              {student && <Biography student={student?.attributes as Student} id={student?.id ?? ''}/>}
+                <Personality/>Biography
+                <Applications/>
+
+              </div>
               <div className={"top-form-group-right"}>
                 {student && <ProfilePicture />}
                 <MyTeam/>
               </div>
             </div>
 
-            {student && <Biography student={student?.attributes as Student} id={student?.id ?? ''}/>}
-              <Personality/>
-              <Applications/>
 
           </TabPane>
           <TabPane className={"custom-tab"} tab={"Application Information"} key={"2"}>

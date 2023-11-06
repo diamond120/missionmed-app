@@ -130,10 +130,31 @@ const SidebarMenu: React.FC = () => {
         <Menu.Item key={isStudent ? '/student_notifications' : '/tutor_notifications'} onClick={() =>{navigate(isStudent ? 'student_notifications' : 'tutor_notifications')}} style={{position:"fixed", bottom:"128px",width: "280px"}}  icon={<Badge dot={unreadNotificationCount > 0}> <BellOutlined style={{fontSize: "24px"}} /> </Badge>}  className={"notification-item custom-notification-item"}>
           Notifications
         </Menu.Item>
+
+        {(tutor.profilePicture == '' || student.profilePicture == '' ) ? (
+          <Menu.Item
+          style={{ position: "fixed", bottom: "72px", width: "280px" }}
+          key={isStudent ? '/student_profile' : '/tutor_profile'} 
+          onClick={navigateProfilePage}
+          
+          icon={
+            <Avatar
+            
+              size={32}
+              icon={<UserOutlined />}
+            />
+          }
+          className={"custom-profile-item"}
+          >
+          My Profile
+          </Menu.Item>
+        ) :
+        (
         <Menu.Item
           style={{ position: "fixed", bottom: "72px", width: "280px" }}
           key={isStudent ? '/student_profile' : '/tutor_profile'} 
           onClick={navigateProfilePage}
+          
           icon={
             <Avatar
               src={isStudent ? student.profilePicture : tutor ? tutor.profilePicture: ""}
@@ -145,6 +166,11 @@ const SidebarMenu: React.FC = () => {
         >
           My Profile
         </Menu.Item>
+        )
+        }
+            
+      
+      
 
         {/* {!isStudent && (
           <>

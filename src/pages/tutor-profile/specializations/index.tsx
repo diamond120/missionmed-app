@@ -45,6 +45,10 @@ const Specializations: FC<Any> = ({props}) => {
     })
   }
 
+  const  cancle = () => {
+    setEditing(false);
+  }
+
   const handleCheckbox = async(id,event) => {
     if (event) {
       setLessionTypeID([...lessionTypeID, id.toString()]);
@@ -85,6 +89,9 @@ const Specializations: FC<Any> = ({props}) => {
 
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+            <Button className={"form-button button-space"} onClick={cancle}>
+              Cancel
+            </Button>
           </div>
 
           ) : (

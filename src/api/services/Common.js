@@ -47,15 +47,15 @@ const getUniversityTutorList = (data) => {
 //   return http.post("/student/ucat-booking-slots", data, config);
 // };
 
-const getTutorList = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/ucat-tutors-list`, data, config);
-}
+// const getTutorList = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/ucat-tutors-list`, data, config);
+// }
 
 const checkSession = (data) => {
   const token = `Bearer ${getToken()}`;
@@ -109,7 +109,7 @@ const Service = {
     getUniversityTutorList,
     // getSlotslist,
     // getUCATSlotslist,
-    getTutorList,
+    // getTutorList,
     checkSession,
     // getTeachingSlotslist,
     getAPI,

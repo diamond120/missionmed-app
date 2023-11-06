@@ -56,7 +56,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
 
   return (
     <>
-      <Button onClick={showModal} className={"secondary-button"}>
+      <Button onClick={showModal} disabled={addUpcomingSession.is_freeze == 1}  className={"secondary-button"}>
         {title}
       </Button>
       <Modal

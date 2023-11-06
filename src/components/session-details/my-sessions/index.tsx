@@ -10,6 +10,7 @@ import RescheduleInterview from "../reschedule-interview";
 import CancleSession from "../../../pages/cancle-session";
 import UCATSessionService from "../../../api/services/UCATSession";
 
+
 const SessionList = ({
   date,
   sessions,
@@ -42,7 +43,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
   const user = useUser();
   const userRole = user.role;
   return (
-    <li className="item">
+    <li className="item" style={{position :"relative"}}>
       <div style={{ display: "flex" }}>
         <div className="time">
           <div style={{ paddingBottom: "5px" }}>
@@ -72,11 +73,17 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
     
       {userRole == "student" && type == "upcoming" && (
         <>
+        {
+        session.is_freeze == 1 && (
+          <div className= {"freeze-div"} ><span   className = "freeze-span" >Freezed</span>
+          </div>) 
+        } 
+        
         <div style={{gap:15,display:'flex',flexWrap:'wrap'}}>
-          <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-          <CancleSession title='Cancle Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession}/>
+          <Button disabled={checkSessionOnToday(session.date) || session.is_freeze == 1 } className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+          <CancleSession title='Cancel Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession}/>
         </div>
-           
+        
         </>
       )}
       {type == "past" && (
@@ -163,6 +170,20 @@ const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSessi
                   pagesession={moduleType}
                 />
               ))}
+               {
+                (Object.keys(formatedpastSessions).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No past sessions found.</strong></h1>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                )
+              }
             </div>
           </TabPane>
         </Tabs>

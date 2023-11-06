@@ -33,7 +33,7 @@ export function useTutorDispatch() {
 function TutorReducer(tutor, action) {
     switch (action.type) {
         case 'add': {
-          
+          console.log(tutor)
           return {
             id:action.id,
             userId:action.userId,

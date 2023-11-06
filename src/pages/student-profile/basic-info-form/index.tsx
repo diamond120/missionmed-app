@@ -114,15 +114,15 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const customSelect = () => {
     return (
       <Select style={{width: 328}} disabled={ !editing }>
-        {options.map(option => (
+        {options && options.map(option => (
           <Option key={option.label} value={option.label}>{option.label}</Option>
         ))}
       </Select>
     )
   }
-
-  const optionsLocation: string[]= profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title }))
-  const optionsState: string[]= profileStaticData.state.map(s => ({key:s.id, label:s.title, value :s.title }))
+   
+  const optionsLocation: string[]= (profileStaticData.location) ? profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title })) : {}
+  const optionsState: string[]= (profileStaticData.state) ? profileStaticData.state.map(s => ({key:s.id, label:s.title, value :s.title })) :{}
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -156,7 +156,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             rules={[{ required: false, }]}
           >
             <Select
-            options={AgeList.map((option) => ({ value: option }))}
+            options={AgeList && AgeList.map((option) => ({ value: option }))}
             style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
             disabled={!editing}
             onChange={(value) => setGender(value)}

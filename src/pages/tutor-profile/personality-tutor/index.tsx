@@ -6,7 +6,10 @@ const PersonalityTutor = () => {
   return(
     <div className={"personality-tutor-section"}>
       <h2 className={"personality-section-title"}>Personality<QuestionCircleFilled  style={{marginLeft:"8px"}}/></h2>
-      <div className={"personality-tutor-wrap"}>
+      <div className={"personality-tutor-wrap"} style={{position:'relative'}}>
+        <div className={"coming-soon-tutor"} style={{}} >
+            <span   className = "freeze-span" >Coming Soon</span>
+        </div>
         <div className={"personality-info"}>
           <Avatar
             size={104}
