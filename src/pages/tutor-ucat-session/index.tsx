@@ -83,6 +83,30 @@ const TutorUCATSession = () => {
     getMockInterviewDetails();
   }, []);
 
+  const handleEditLink = async(link) => {
+    try{
+
+      const data = {
+        "sessionId":upcomingInterview?.id,
+        "sessionLink":link,
+        'bookingFor' : 'UCAT 1-to-1 Tutoring'
+      }
+      const response = await CommonService.postAPI('/session-data',data)
+
+      // const response = await TeachingSessionService.updateTeachingSessionData({
+        
+      // });
+      if(response.data.success){
+        message.success(response.data.message);
+        // setAgenda(link);
+      }else{
+        throw new Error(response.data.message)
+      }
+    }catch(e){
+      message.error(e.message);
+    }
+  }
+
   return (
     <>
       <Section>
@@ -108,6 +132,7 @@ const TutorUCATSession = () => {
             pastSessions={pastSessions}
             agenda={agenda}
             handleEditAgenda={handleEditAgenda}
+            handleEditLink= {handleEditLink}
           />
           ) : (
             <div className="mock-interview">

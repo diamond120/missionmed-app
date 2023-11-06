@@ -1,18 +1,41 @@
-import { Button, Tooltip } from "antd";
+import { Button, Form, Input, Modal, Tooltip,message } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
 import { useUser } from "../../../api/providers/UserProvider";
 import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/common";
 import "./index.less";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
-const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule }) => {
+const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink }) => {
   const user = useUser();
   const isSessionOnToday = useMemo(
     () => checkSessionOnToday(upcomingInterview.date),
     [upcomingInterview.date]
   );
   const title = sessionType == "interview" ? "Interview" : "Session";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { TextArea } = Input;
+  const [form] = Form.useForm();
   
+
+  const handleClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleSubmit = async () => {
+    try{
+      const values = await form.validateFields();
+      // debugger;
+      handleEditLink(values.sessionLink);
+      setIsModalOpen(false);
+    }catch(e){
+      message.error(e.message);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div className={"upcoming-session con-box"}>
@@ -34,9 +57,11 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule }) =
               <strong>Time: </strong> {`${formatTime(upcomingInterview['session_start_time'])} - ${formatTime(upcomingInterview['session_end_time'])}`}
             </li>
           </ul>
-
+          
           <div className="btn-group" style={{ marginTop: "32px" }}>
+            
             <Button className={"primary-button"}>Join Session </Button>
+          
             {user.role == "student" ? (
               isSessionOnToday ? (
                 <Tooltip
@@ -60,8 +85,46 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule }) =
               )
             ) : null}
           </div>
+          {user.role == "tutor" && (
+          <div className="btn-group" style={{ marginTop: "10px" }}>
+            <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+          </div>
+          )}
         </div>
       </div>
+
+      <Modal
+        title="Edit Session Link"
+        open={isModalOpen}
+        onOk={handleSubmit}
+        onCancel={handleCancel}
+        className={"mock-interview-modal"}
+        width={"600px"}
+        footer={[
+          <div key="buttonGroup" className='button-group'>
+            <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+              Discard 
+            </Button>
+            <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+              Save Changes
+            </Button>
+          </div>
+        ]}
+      >
+        <Form form={form} layout="vertical">
+            <Form.Item 
+            label="Edit Session Link" 
+            name="sessionLink" 
+            rules={[{required:true}]}
+            initialValue={upcomingInterview?.sessionLink}
+            >
+            <TextArea
+              style={{ height: 50 }}
+              placeholder=""
+            />
+        </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };

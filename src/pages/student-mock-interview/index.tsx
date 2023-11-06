@@ -129,6 +129,8 @@ const StudentMockInterview = () => {
     getMockInterviewDetails();
   }, []);
 
+ 
+
   const student = useStudent();
 
   return (

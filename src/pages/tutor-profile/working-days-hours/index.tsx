@@ -58,6 +58,10 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             if (value.isBetween(beforeTime, afterTime, undefined, "()")) {
               throw new Error("Selected time is overlap with other slot time!");
             }
+            const diff = value.diff(afterTime, 'minutes');
+            if(parseInt(tutor.bufferTime, 10) > diff ) {
+              alert("Your buffer time is "+tutor.bufferTime + '. slot time is getting mismatch.' );
+            }
             if (value.isSame(beforeTime)) {
               throw new Error("Slot already exist!");
             }
