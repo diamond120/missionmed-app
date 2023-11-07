@@ -112,7 +112,6 @@ const TutorMockInterview = () => {
             pastSessions={pastSessions}
             agenda={agenda}
             handleEditAgenda={handleEditAgenda}
-
             handleEditLink= {handleEditLink}
           />
           ) : (

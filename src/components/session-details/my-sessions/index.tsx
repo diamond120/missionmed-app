@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Breadcrumb, Button, Rate, Tabs, message } from "antd";
+import { Breadcrumb, Button, Form, Input, Modal, Rate, Tabs, message } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
@@ -18,7 +18,8 @@ const SessionList = ({
   handleRateSession = () => {},
   handleReschedule,
   pagesession,
-  cancleUpSession
+  cancleUpSession,
+  handleEditLink
 }) => (
   <div className="sessions">
     <h4 className="sessions-date">{formatDateV1(date)}</h4>
@@ -32,6 +33,7 @@ const SessionList = ({
           key={session.id}
           pagesession={pagesession}
           cancleUpSession={cancleUpSession}
+          handleEditLink={handleEditLink}
         />
       ))}
     </ul>
@@ -39,9 +41,35 @@ const SessionList = ({
 );
 
 
-const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule,pagesession,cancleUpSession}) => {
+const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule,pagesession,cancleUpSession,handleEditLink}) => {
   const user = useUser();
   const userRole = user.role;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
+  const { TextArea } = Input;
+
+  const handleClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleSubmit = async () => {
+      const values = await form.validateFields();
+      handleEditLink(values.sessionLink);
+      setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const validateURL = (rule, value, callback) => {
+    if (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(value)) {
+      callback('Please enter a valid URL');
+    } else {
+      callback();
+    }
+  };
+
   return (
     <li className="item" style={{position :"relative"}}>
       <div style={{ display: "flex" }}>
@@ -86,6 +114,46 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
         
         </>
       )}
+      { userRole == "tutor" && type == "upcoming" && (
+        <>
+        <div className="btn-group" style={{ marginTop: "10px" }}>
+         <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+        </div>
+        <Modal
+          title="Edit Session Link"
+          open={isModalOpen}
+          onOk={handleSubmit}
+          onCancel={handleCancel}
+          className={"mock-interview-modal"}
+          width={"600px"}
+          footer={[
+            <div key="buttonGroup" className='button-group'>
+              <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+                Discard 
+              </Button>
+              <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                Save Changes
+              </Button>
+            </div>
+          ]}
+        >
+        <Form form={form} layout="vertical">
+            <Form.Item 
+            label="Edit Session Link" 
+            name="sessionLink" 
+            rules={[{required:true},
+              { validator: validateURL }]}
+            initialValue={session?.sessionLink}
+            >
+            <TextArea
+              style={{ height: 50 }}
+              placeholder=""
+            />
+        </Form.Item>
+        </Form>
+      </Modal>
+      </>  
+      )}
       {type == "past" && (
         <>
           <div
@@ -111,16 +179,19 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
                 <Link to={`/tutor/interview-summary/${session.id}/${pagesession}`}>
                   <Button className={"secondary-button"}>Session Summary</Button>
                 </Link>
+              
+               
               </>
             )}
           </div>
         </>
       )}
     </li>
+    
   );
 };
 
-const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule,cancleUpSession}) => {
+const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule,cancleUpSession,handleEditLink}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
@@ -152,6 +223,7 @@ const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSessi
                   key={`upcomingSessions${index}`}
                   pagesession={moduleType}
                   cancleUpSession ={cancleUpSession}
+                  handleEditLink= {handleEditLink}
                   
                 />
               ))}

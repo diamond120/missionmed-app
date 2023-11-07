@@ -22,18 +22,21 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
   }
 
   const handleSubmit = async () => {
-    try{
       const values = await form.validateFields();
-      // debugger;
       handleEditLink(values.sessionLink);
       setIsModalOpen(false);
-    }catch(e){
-      message.error(e.message);
-    }
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const validateURL = (rule, value, callback) => {
+    if (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(value)) {
+      callback('Please enter a valid URL');
+    } else {
+      callback();
+    }
   };
 
   return (
@@ -59,9 +62,10 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
           </ul>
           
           <div className="btn-group" style={{ marginTop: "32px" }}>
+            <a href={upcomingInterview['sessionLink']} target="_blank">
+              <Button className={"primary-button"}>Join Session </Button>
+            </a>
             
-            <Button className={"primary-button"}>Join Session </Button>
-          
             {user.role == "student" ? (
               isSessionOnToday ? (
                 <Tooltip
@@ -115,7 +119,8 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             <Form.Item 
             label="Edit Session Link" 
             name="sessionLink" 
-            rules={[{required:true}]}
+            rules={[{required:true},
+              { validator: validateURL }]}
             initialValue={upcomingInterview?.sessionLink}
             >
             <TextArea

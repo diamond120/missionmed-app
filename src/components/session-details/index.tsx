@@ -15,7 +15,7 @@ const SessionDetails = ({test,moduleType,upcomingInterview, upcomingSessions, pa
             <Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} />
             </div>
           
-            <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} moduleType={moduleType} handleReschedule={handleReschedule} cancleUpSession={cancleUpSession} />
+            <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} moduleType={moduleType} handleReschedule={handleReschedule} cancleUpSession={cancleUpSession} handleEditLink={handleEditLink} />
         </>
     )
 }
