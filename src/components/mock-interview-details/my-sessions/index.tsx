@@ -163,6 +163,8 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
+ 
+
   const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
   const formatedpastSessions= groupSessionsByDate(pastSessions, "desc");
   
@@ -174,6 +176,8 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
   const handleRateCancel = () => {
     setRateSession(null);
   };
+
+
 
   return (
     <>

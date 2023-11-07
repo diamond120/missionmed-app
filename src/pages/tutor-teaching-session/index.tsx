@@ -43,10 +43,19 @@ const TutorTeachingSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      const response = await TeachingSessionService.updateTeachingSessionData({
-        "teachingSessionId":upcomingInterview?.id,
+      // const response = await TeachingSessionService.updateTeachingSessionData({
+      //   "teachingSessionId":upcomingInterview?.id,
+      //   "agenda":agendaDetails,
+      // });
+
+      const data = {
+        "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
-      });
+        'bookingFor' : 'Interview 1-to-1 Tutoring'
+      }
+
+
+      const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         setAgenda(agendaDetails);
       }else{
@@ -77,10 +86,8 @@ const TutorTeachingSession = () => {
       }
       const response = await CommonService.postAPI('/session-data',data)
 
-      // const response = await TeachingSessionService.updateTeachingSessionData({
-        
-      // });
       if(response.data.success){
+        getMockInterviewDetails();
         message.success(response.data.message);
         // setAgenda(link);
       }else{

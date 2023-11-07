@@ -187,7 +187,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
         }}
       >
         <div className="working_days_item">
-          {/* { timeMessage && ( */}
+          { tutor.bufferTime && (
             <Alert
             message="Warning"
             description={'You set '+tutor.bufferTime + ' buffer time. If you will not add '+tutor.bufferTime + ' buffer between 2 slot then it will not consider buffer time setting.'}
@@ -195,6 +195,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             showIcon
             style={{marginBottom :20}}
           />
+          )}
           
 
           <div className={"label"}>Monday</div>

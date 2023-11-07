@@ -79,6 +79,7 @@ const TutorMockInterview = () => {
 
      
       if(response.data.success){
+        getMockInterviewDetails();
         message.success(response.data.message);
       }else{
         throw new Error(response.data.message)
