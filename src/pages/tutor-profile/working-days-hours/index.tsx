@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Space, Switch, TimePicker } from "antd";
+import { Alert, Button, Form, Space, Switch, TimePicker } from "antd";
 import React, { FC, useMemo, useState } from "react";
 import "./index.less";
 import moment from "moment";
@@ -15,12 +15,14 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   const dispatch = useTutorDispatch();
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
+  // const [timeMessage, setTimeMessage] = useState("");
   const isMondayOff = Form.useWatch("isMondayOff", form);
   const isTuesdayOff = Form.useWatch("isTuesdayOff", form);
   const isWednesdayOff = Form.useWatch("isWednesdayOff", form);
   const isThursdayOff = Form.useWatch("isThursdayOff", form);
   const isSaturdayOff = Form.useWatch("isSaturdayOff", form);
   const isSundayOff = Form.useWatch("isSundayOff", form);
+  
 
   const range = (start: number, end: number) => {
     const result = [];
@@ -58,10 +60,12 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             if (value.isBetween(beforeTime, afterTime, undefined, "()")) {
               throw new Error("Selected time is overlap with other slot time!");
             }
-            const diff = value.diff(afterTime, 'minutes');
-            if(parseInt(tutor.bufferTime, 10) > diff ) {
-              alert("Your buffer time is "+tutor.bufferTime + '. slot time is getting mismatch.' );
-            }
+            // const diff = value.diff(afterTime, 'minutes');
+            // if(parseInt(tutor.bufferTime, 10) > diff ) {
+            //   setTimeMessage('You set '+tutor.bufferTime + ' buffer time. If you will not add '+tutor.bufferTime + ' buffer between 2 slot then it will not consider buffer time setting.' );
+            // } else {
+            //   setTimeMessage("");
+            // }
             if (value.isSame(beforeTime)) {
               throw new Error("Slot already exist!");
             }
@@ -183,6 +187,16 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
         }}
       >
         <div className="working_days_item">
+          {/* { timeMessage && ( */}
+            <Alert
+            message="Warning"
+            description={'You set '+tutor.bufferTime + ' buffer time. If you will not add '+tutor.bufferTime + ' buffer between 2 slot then it will not consider buffer time setting.'}
+            type="warning"
+            showIcon
+            style={{marginBottom :20}}
+          />
+          
+
           <div className={"label"}>Monday</div>
           <Form.List name="Monday">
             {(fields, { add, remove }) => (

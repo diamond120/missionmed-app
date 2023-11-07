@@ -233,7 +233,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
           expandIconPosition={`end`}
           className="site-collapse-custom-collapse"
         >
-          {tutors.map((tutor) => (
+          {tutors && tutors.map((tutor) => (
             <Panel
               header={<TutorPanelHeader tutor={tutor} />}
               key={tutor.id}

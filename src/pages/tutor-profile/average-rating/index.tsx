@@ -8,7 +8,7 @@ const AverageRating = ({student, average}) => {
       <h2 className={"average-rating-section-title"}>Average Rating</h2>
       <div className={"average-rating-wrap"}>
         <h2 className={"average-rating-value"}>{average} / 5</h2>
-        <Rate allowHalf defaultValue={4.5} />
+        <Rate allowHalf defaultValue={average} />
         <p className={"average-rating-quantity"}>{student} students ratings</p>
       </div>
     </div>
