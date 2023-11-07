@@ -11,8 +11,8 @@ const SessionDetails = ({test,moduleType,upcomingInterview, upcomingSessions, pa
             <div style={{display:"flex",columnGap:"24px"}}>
             {/* {Object.keys(upcomingInterview).length >0 &&<UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} sessionType="interview"/>} */}
             {/* {Object.keys(upcomingInterview).length >0 &&<Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} />} */}
-            <UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} handleEditLink={handleEditLink} sessionType="session"/>
-            <Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} />
+            {Object.keys(upcomingInterview).length >0 && <UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} handleEditLink={handleEditLink} sessionType="session"/> }
+            {Object.keys(upcomingInterview).length >0 &&<Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} />}
             </div>
           
             <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} moduleType={moduleType} handleReschedule={handleReschedule} cancleUpSession={cancleUpSession} handleEditLink={handleEditLink} />
