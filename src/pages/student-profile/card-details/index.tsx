@@ -80,6 +80,7 @@ const CardDatails: FC<any> = ({props}) => {
                 card_digit: card_digit !== '' ? card_digit : student?.card_digit,
               }
             })
+            handleAddCard();
             message.success('You’ve successfully added card');
         }else{
             throw new Error(response.data.message)
