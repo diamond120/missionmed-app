@@ -36,7 +36,7 @@ const StudentProfile = () => {
               {student && <BasicInfoForm/>}
               
               {student && <Biography student={student?.attributes as Student} id={student?.id ?? ''}/>}
-                <Personality/>Biography
+                <Personality/>
                 <Applications/>
 
               </div>

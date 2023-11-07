@@ -55,7 +55,7 @@ const ChangePassword = ({title,moduleType}) => {
         width={"max-content"}
         footer={[
             <>
-            <Button onClick={handleCancel}  className={"secondary-button"}> Cancle</Button>
+            <Button onClick={handleCancel}  className={"secondary-button"}> Cancel</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Change Password</Button>
             </>
         ]}

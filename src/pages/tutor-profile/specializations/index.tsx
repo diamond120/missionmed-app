@@ -1,5 +1,5 @@
 import "./index.less"
-import { Button, Form, Checkbox, Tooltip } from "antd";
+import { Button, Form, Checkbox, Tooltip, Spin } from "antd";
 import { FC, useState, useEffect } from "react";
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
@@ -57,7 +57,14 @@ const Specializations: FC<Any> = ({props}) => {
     }
     console.log("lessionTypeID",lessionTypeID);
   }
- 
+  
+
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
+  
   return (
     <div className={"specializations-section"}>
       <h2 className={"specializations-section-title"}>Specializations</h2>

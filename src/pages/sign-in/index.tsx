@@ -3,7 +3,7 @@
 
 import "./index.less"
 
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import Authentication from "../../api/services/Authentication";
 import { Link, useNavigate } from "react-router-dom"
@@ -42,8 +42,9 @@ const SignIn = () => {
         throw new Error(result.data.message);
       }
     } catch (e) {
-      console.log(e);
-      alert('Error Your email or password is wrong!')
+      // console.log(e);
+      message.error(e.message);
+      // alert('Error Your email or password is wrong!')
     }
   };
 
@@ -75,7 +76,7 @@ const SignIn = () => {
             <Form.Item
               label={""}
               name={"email"}
-              rules={[{ required: true, message: 'Please input your username!' }]}
+              rules={[{ required: true, message: 'Please enter your email!' }]}
               style={{ marginTop: 55 }}
             >
               <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Email"} />
@@ -84,7 +85,7 @@ const SignIn = () => {
             <Form.Item
               label={""}
               name={"password"}
-              rules={[{ required: true, message: 'Please input your password!' }]}
+              rules={[{ required: true, message: 'Please enter your password!' }]}
             >
               <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Password"} />
             </Form.Item>

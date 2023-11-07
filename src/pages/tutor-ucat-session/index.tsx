@@ -15,6 +15,7 @@ const TutorUCATSession = () => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
+  const [freezeSessions, setFreezeSessions] = useState([]);
 
   const getMockInterviewDetails = async () => {
     try {
@@ -37,6 +38,11 @@ const TutorUCATSession = () => {
             : []
         );
         setAgenda(response.data?.data?.agenda ?? null);
+        setFreezeSessions(
+          response.data?.data?.freezesessions
+            ? response.data?.data?.freezesessions
+            : []
+        );
       } else {
         throw new Error(response.data.message);
       }
@@ -133,6 +139,7 @@ const TutorUCATSession = () => {
             agenda={agenda}
             handleEditAgenda={handleEditAgenda}
             handleEditLink= {handleEditLink}
+            freezeSessions={freezeSessions}
           />
           ) : (
             <div className="mock-interview">

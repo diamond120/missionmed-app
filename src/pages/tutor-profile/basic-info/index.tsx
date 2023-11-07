@@ -1,5 +1,5 @@
 import "./index.less"
-import { AutoComplete, Button, Form, Input, Select, Switch } from "antd"
+import { AutoComplete, Button, Form, Input, Select, Switch,Spin } from "antd"
 import { FC, useEffect, useState } from "react"
 // import { useUpdateTutorMutation } from "../../../graphql"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
@@ -111,12 +111,17 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   }
   const handleFilter = (inputValue: string, option: any) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
 
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
   return (
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
 
       <Form className={"basic-information-form"} form={form}>
-        <Form.Item
+               <Form.Item
           name={"fullName"}
           label={"Full Name"}
           rules={[{ required: true }]}
@@ -132,7 +137,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
             onChange={(e) => setFullName(e.target.value)}
           />
         </Form.Item>
-        <Form.Item
+                <Form.Item
           name={"gender"}
           label={"Gender"}
           rules={[{ required: true }]}

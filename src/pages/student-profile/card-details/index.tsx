@@ -1,5 +1,5 @@
 import "./index.less"
-import { Button, Form, Input, message } from "antd"
+import { Button, Form, Input, Spin, message } from "antd"
 import { FC, useState } from "react"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import StudentService from "../../../api/services/Student";
@@ -95,6 +95,11 @@ const CardDatails: FC<any> = ({props}) => {
     }
   };
 
+  if(student?.loading){
+    return(
+      <Spin />
+    )
+  }
   
   return(
     <div className={"application-info-section"}>
@@ -192,7 +197,7 @@ const CardDatails: FC<any> = ({props}) => {
 
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button> &nbsp;
-              <Button className={"form-button"} onClick={handleAddCard}>Cancle</Button>
+              <Button className={"form-button"} onClick={handleAddCard}>Cancel</Button>
             </div>
 
         </Form>

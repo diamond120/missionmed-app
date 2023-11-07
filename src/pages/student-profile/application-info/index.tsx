@@ -1,5 +1,5 @@
 import "./index.less"
-import { AutoComplete, Button, Form, InputNumber, Select } from "antd"
+import { AutoComplete, Button, Form, InputNumber, Select, Spin } from "antd"
 import { FC, useState } from "react"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
@@ -56,7 +56,13 @@ const ApplicationInfo: FC<any> = ({props}) => {
       console.log(e);
       return false;
     }
-  };
+  };  
+
+  if(student?.loading){
+    return(
+      <Spin />
+    )
+  }
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1

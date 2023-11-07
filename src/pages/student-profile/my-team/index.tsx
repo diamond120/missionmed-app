@@ -34,8 +34,8 @@ const getTeamData = async () => {
     getTeamData();
     console.log(team);
   },[] );
-  
-  return(
+
+    return(
     <div className={"my-team-section"}>
       <h2 className={"my-team-section-title"}>My MissionMed Team</h2>
       <div className={"my-team-wrap"}>

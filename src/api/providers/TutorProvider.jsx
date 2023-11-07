@@ -5,7 +5,9 @@ const TutorContext = createContext(null);
 
 const TutorDispatchContext = createContext(null);
 
-const initialTutor = {};
+const initialTutor = {
+  loading:true
+};
 
 export function TutorProvider({ children }) {
   const [tutor, dispatch] = useReducer(
@@ -32,6 +34,9 @@ export function useTutorDispatch() {
 
 function TutorReducer(tutor, action) {
     switch (action.type) {
+        case 'loading':{
+          return{...tutor, loading:action.loading}
+        }
         case 'add': {
           console.log(tutor)
           return {

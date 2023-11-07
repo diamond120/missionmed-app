@@ -6,7 +6,9 @@ const StudentContext = createContext(null);
 
 const StudentDispatchContext = createContext(null);
 
-const initialStudent = {};
+const initialStudent = {
+  loading:false
+};
 
 export function StudentProvider({ children }) {
   const [student, dispatch] = useReducer(
@@ -48,6 +50,9 @@ export function useStudentDispatch() {
 
 function StudentReducer(student, action) {
     switch (action.type) {
+        case 'loading':{
+          return{...student, loading:action.loading}
+        }
         case 'add': {
           return {
               id:action.id,

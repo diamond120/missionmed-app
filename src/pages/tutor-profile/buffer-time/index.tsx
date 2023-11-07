@@ -1,7 +1,7 @@
 
 import "./index.less";
 import { FC, useState } from "react"
-import { Button, Form, Radio, RadioChangeEvent } from "antd"
+import { Button, Form, Radio, RadioChangeEvent, Spin } from "antd"
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 
@@ -36,6 +36,12 @@ const BufferTime: FC<Any> = ({props}) => {
           bufferTime: selectedTime !== '' ? selectedTime : tutor?.bufferTime,
         }
       })
+    }
+    
+    if(tutor?.loading){
+      return(
+        <Spin />
+      )
     }
     
     return (

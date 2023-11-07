@@ -1,5 +1,5 @@
 import "./index.less"
-import { Button, Form, Input } from "antd"
+import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
@@ -12,6 +12,7 @@ const BiographyTutor: FC<ANY> = ({props}) => {
 
   const updatedTutor = async() => {
     await TutorService.updateProfile({
+      addBiography: true,
       biography: biography !== '' ? biography: tutor?.biography,
     })
     dispatch({
@@ -34,6 +35,12 @@ const BiographyTutor: FC<ANY> = ({props}) => {
     updatedTutor();
     setEditing(false);
   };
+
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
 
   return(
     <div className={"biography-tutor-section"}>

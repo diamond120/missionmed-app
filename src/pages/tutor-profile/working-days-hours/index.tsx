@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Form, Space, Switch, TimePicker } from "antd";
+import { Alert, Button, Form, Space, Spin, Switch, TimePicker } from "antd";
 import React, { FC, useMemo, useState } from "react";
 import "./index.less";
 import moment from "moment";
@@ -148,6 +148,12 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
     }
   };
 
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
+  
   return (
     <div className={"working-section"}>
       <h2 className={"working-section-title"}>Working Days & Hours</h2>
