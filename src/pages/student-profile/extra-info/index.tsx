@@ -1,6 +1,6 @@
 
 import "./index.less";
-import { Form, Input, Select, Radio, Button, AutoComplete } from "antd"
+import { Form, Input, Select, Radio, Button, AutoComplete, Spin } from "antd"
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { FC, useState } from "react";
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
@@ -54,6 +54,12 @@ const ExtraInfo: FC<any> = ({props}) => {
     "Permanent Resident",
     "Other",
   ]
+  if(student?.loading){
+    return(
+      <Spin />
+    )
+  }
+  
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
   return (

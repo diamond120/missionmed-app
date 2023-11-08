@@ -1,5 +1,5 @@
 import "./index.less"
-import { Button, Form, Input } from "antd"
+import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
 //import { useUpdateStudentMutation } from "../../../graphql"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
@@ -14,13 +14,14 @@ const Biography: FC<any> = ({props}) => {
   const handleEditClick = () => {
     setEditing(true);
   };
-
+  
   const handleSaveClick =() => {
     updatedStudent()
     setEditing(false);
   };
   const updatedStudent = async () => {
     await StudentService.updateProfile({
+      addBiography: true,
       biography: biography !== '' ? biography : student?.biography,
     })
     dispatch({
@@ -31,6 +32,11 @@ const Biography: FC<any> = ({props}) => {
     })
   }
 
+  if(student?.loading){
+    return(
+      <Spin />
+    )
+  }
  
   return(
     <div className={"biography-section"}>

@@ -1,7 +1,7 @@
 
 import "./index.less"
 import { useState } from "react";
-import { Avatar, Button, message, Upload } from "antd"
+import { Avatar, Button, message, Spin, Upload } from "antd"
 import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { RcFile, UploadProps } from "antd/lib/upload/interface"
@@ -100,6 +100,12 @@ const handleSave = ()=>{
     })
   }
 
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
+  
   return (
     <div className={"tutor-profile-picture-section"}>
       <h2 className={"profile-picture-title"}>Profile Picture</h2>

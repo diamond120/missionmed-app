@@ -18,6 +18,7 @@ const StudentUCATSession = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
+  const [freezeSessions, setFreezeSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
@@ -32,6 +33,7 @@ const StudentUCATSession = () => {
       }
       const response = await CommonService.postAPI("/student/session-details",data);
       if (response.data.success) {
+        debugger;
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -44,6 +46,11 @@ const StudentUCATSession = () => {
             : []
         );
         setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
+        setFreezeSessions(
+          response.data?.data?.freezesessions
+            ? response.data?.data?.freezesessions
+            : []
+        );
       } else {
         throw new Error(response.data.message);
       }
@@ -54,10 +61,6 @@ const StudentUCATSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      // const response = await UCATSessionService.updateUCATSessionData({
-      //   "ucatBookingId":upcomingInterview?.id,
-      //   "agenda":agendaDetails,
-      // });
       const data = {
         "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
@@ -149,7 +152,7 @@ const StudentUCATSession = () => {
     {
       key: '2',
       label: (
-        <CancleSession title='Cancle Session' addUpcomingSession={upcomingInterview} moduleType={"ucat"}  cancleUpcomingSession={cancleUpSession} />
+        <CancleSession title='Cancel Session' addUpcomingSession={upcomingInterview} moduleType={"ucat"}  cancleUpcomingSession={cancleUpSession} />
       ),
     },
   ];
@@ -196,7 +199,8 @@ const StudentUCATSession = () => {
               handleEditAgenda={handleEditAgenda}
               updatePastSession={updatePastSession}
               handleReschedule={handleReschedule}
-              cancleUpSession={cancleUpSession}/>
+              cancleUpSession={cancleUpSession}
+              freezeSessions={freezeSessions}/>
             ) : (
             <div className="mock-interview">
               <div className={"con-section-wrap"}>

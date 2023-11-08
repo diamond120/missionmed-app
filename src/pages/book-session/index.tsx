@@ -46,6 +46,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
   const [form] = Form.useForm();
   const [recurringAvailable, setRecurringAvailable] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [card, setCard] = useState("");
   const student = useStudent();
   
   const getUniversityTutorList = async () => {
@@ -150,7 +151,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
       } else {
         navigate("/student/teaching-session")
       }
-      
+      cardDetails();
       message.success('You’ve successfully booked session');
      }else{
       setLoading(false);
@@ -363,7 +364,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
                  onChange={(value) => {
                   setDayOfWeek(value);
                   form.setFieldsValue({ frequency: value });
-                }} defaultValue={dayOfWeek} >
+                }} defaultValue={dayOfWeek} disabled={true} >
                 <Select.Option value="Weekly on Monday">Weekly on Monday</Select.Option>
                 <Select.Option value="Weekly on Tuesday">Weekly on Tuesday</Select.Option>
                 <Select.Option value="Weekly on Wednesday">Weekly on Wednesday</Select.Option>
@@ -381,13 +382,13 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
         >
           <TextArea rows={3} placeholder="Textarea" style={{ fontSize: 16 }} />
         </Form.Item>
-        { (student.card_digit != null && student.card_digit != '') && (
+        { (card != null && card != '') && (
           <div className="credit-card">
             <div className="credit-card-header"> 
               <div className="card-brand">Card Number</div>
               <div className="chip"><button  onClick={next} >Edit</button></div>
             </div>
-            <div className="credit-card-number">{'**** **** **** '+student.card_digit}</div>
+            <div className="credit-card-number">{'**** **** **** '+card}</div>
           </div>
           )
         }
@@ -522,9 +523,23 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
     );
   };
 
+  const cardDetails = async () => {
+    try {
+      const response = await CommonService.getAPI("/student/card-data");
+      if (response.data.success) {
+        setCard(response.data.data.cardDigit);
+        console.log(card);
+      } else {
+        throw new Error(response.data.message);
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+  }
+
   useEffect(() => {
-    console.log(name);
-  }, [dayOfWeek,recurringAvailable]); 
+    cardDetails();
+  }, [dayOfWeek,recurringAvailable,card]); 
 
   return (
     <>

@@ -1,6 +1,6 @@
 
 import "./index.less"
-import { Form, Input, Select, Switch, Button, AutoComplete, InputNumber, DatePicker } from "antd"
+import { Form, Input, Select, Switch, Button, AutoComplete, InputNumber, DatePicker, Spin } from "antd"
 import { FC, useState } from "react"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 import { AddressDetails } from "../../../types/AddressDetails"
@@ -132,6 +132,11 @@ const BasicInfoForm: FC<any> = ({props}) => {
       return current && current > moment().endOf('day');
     };
 
+  if(student?.loading){
+    return(
+      <Spin />
+    )
+  }
 
   return (
     <div className={"basic-information"}>
@@ -156,7 +161,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
             rules={[{ required: false, }]}
           >
             <Select
-            options={AgeList && AgeList.map((option) => ({ value: option }))}
+            options={AgeList && AgeList?.length>0 ? AgeList?.map((option) => ({ value: option })):[]}
             style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
             disabled={!editing}
             onChange={(value) => setGender(value)}

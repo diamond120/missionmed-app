@@ -80,42 +80,51 @@ export const DefaultLayout: FC = () => {
       if(user.role == "student"){
        // resetTutorContext();
         const getStudentProfile = async() => {
-          const result = await Student.getProfile();
-          studentDispatch({
-            type:"add",
-            id:result.data.data.id,
-            userId:result.data.data.user_id,
-            fullName:result.data.data.full_name ?? null,
-            gender:result.data.data.gender ?? null,
-            pronouns:result.data.data.pronouns ?? null,
-            birthday:result.data.data.birthday ?? null,
-            email:result.data.data.email ?? null,
-            phoneNumber:result.data.data.phone_number ?? null,
-            state:result.data.data.state ?? null,
-            location:result.data.data.location ?? null,
-            timezone:result.data.data.timezone ?? null,
-            biography:result.data.data.biography ?? null,
-            profilePicture:result.data.data.profile_picture ?? null,
-            applicantCycle:result.data.data.applicant_cycle ?? null,
-            applicantTypeId:result.data.data.applicant_type_id ?? null,
-            atar:result.data.data.atar ?? null,
-            gpa:result.data.data.gpa ?? null,
-            statusOfResidence:result.data.data.status_of_residence ?? null,
-            specification:result.data.data.specification ?? null,
-            atsi:result.data.data.atsi ?? null,
-            rural:result.data.data.rural ?? null,
-            financialHardship:result.data.data.financial_hardship ?? null,
-            gws:result.data.data.gws ?? null,
-            credit:result.data.data.credit ?? 0,
-            card_digit : result.data.data.card_digit ?? ''
-          })
+          try{ 
+            await studentDispatch({type:'loading', loading:true})
+            const result = await Student.getProfile();
+            studentDispatch({
+              type:"add",
+              id:result.data.data.id,
+              userId:result.data.data.user_id,
+              fullName:result.data.data.full_name ?? null,
+              gender:result.data.data.gender ?? null,
+              pronouns:result.data.data.pronouns ?? null,
+              birthday:result.data.data.birthday ?? null,
+              email:result.data.data.email ?? null,
+              phoneNumber:result.data.data.phone_number ?? null,
+              state:result.data.data.state ?? null,
+              location:result.data.data.location ?? null,
+              timezone:result.data.data.timezone ?? null,
+              biography:result.data.data.biography ?? null,
+              profilePicture:result.data.data.profile_picture ?? null,
+              applicantCycle:result.data.data.applicant_cycle ?? null,
+              applicantTypeId:result.data.data.applicant_type_id ?? null,
+              atar:result.data.data.atar ?? null,
+              gpa:result.data.data.gpa ?? null,
+              statusOfResidence:result.data.data.status_of_residence ?? null,
+              specification:result.data.data.specification ?? null,
+              atsi:result.data.data.atsi ?? null,
+              rural:result.data.data.rural ?? null,
+              financialHardship:result.data.data.financial_hardship ?? null,
+              gws:result.data.data.gws ?? null,
+              credit:result.data.data.credit ?? 0,
+              card_digit : result.data.data.card_digit ?? ''
+            })
+            await studentDispatch({type:'loading', loading:false})
+          } catch(error) {
+            console.log("test catch",error)
+            studentDispatch({type:'loading', loading:false})
+          }
         }
         getStudentProfile();
       }else{
         //resetStudentContext();
         const getTutorProfile = async() => {
+         try{
+          await tutorDispatch({type:'loading', loading:true})
           const result = await Tutor.getProfile();
-          tutorDispatch({
+          await tutorDispatch({
             type:"add",
             id:result.data.data.id,
             userId:result.data.data.user_id,
@@ -142,6 +151,11 @@ export const DefaultLayout: FC = () => {
             educations:result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""})) : [],
             lessionTypeID:result.data.data.lession_type_id ?? null
           })
+         await tutorDispatch({type:'loading', loading:false})
+        }catch(error){
+          console.log(error)
+          tutorDispatch({type:'loading', loading:false})
+        }
         }
         getTutorProfile();
       }

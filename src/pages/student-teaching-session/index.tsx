@@ -23,6 +23,7 @@ const StudentTeachingSession = () => {
     const [isOpenReschedule, setIsOpenReschedule] = useState(false);
     const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
     const [moduleType, setModuleType] = useState("teaching");
+    const [freezeSessions, setFreezeSessions] = useState([]);
   
     const getMockInterviewDetails = async () => {
       try {
@@ -45,6 +46,11 @@ const StudentTeachingSession = () => {
               : []
           );
           setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
+          setFreezeSessions(
+            response.data?.data?.freezesessions
+              ? response.data?.data?.freezesessions
+              : []
+          );
         } else {
           throw new Error(response.data.message);
         }
@@ -145,7 +151,7 @@ const StudentTeachingSession = () => {
       {
         key: '2',
         label: (
-          <CancleSession title='Cancle Session'  moduleType={moduleType} cancleUpcomingSession={cancleUpSession} addUpcomingSession={upcomingInterview} />
+          <CancleSession title='Cancel Session'  moduleType={moduleType} cancleUpcomingSession={cancleUpSession} addUpcomingSession={upcomingInterview} />
         ),
       },
     ];
@@ -194,7 +200,8 @@ const StudentTeachingSession = () => {
               handleEditAgenda={handleEditAgenda}
               updatePastSession={updatePastSession}
               handleReschedule={handleReschedule}
-              cancleUpSession={cancleUpSession}/>
+              cancleUpSession={cancleUpSession}
+              freezeSessions={freezeSessions}/>
             ) : (
             <div className="mock-interview">
               <div className={"con-section-wrap"}>

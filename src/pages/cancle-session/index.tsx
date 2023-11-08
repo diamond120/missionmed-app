@@ -31,7 +31,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         else {
           navigate("/student/ucat-session")
         }
-        message.success('You’ve successfully cancle session');
+        message.success('You’ve successfully cancel session');
       }else{
         throw new Error(response.data.message)
       }
@@ -68,13 +68,13 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         width={"max-content"}
         footer={[
             <>
-            <Button className={"secondary-button"} onClick={handleCancel}>Cancle</Button>
-            <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Cancle Sessions</Button>
+            <Button className={"secondary-button"} onClick={handleCancel}>Cancel</Button>
+            <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Cancel Sessions</Button>
             </>
         ]}
         >
         <div>
-            <h2>Are you sure you want to cancle session? </h2>
+            <h2>Are you sure you want to cancel session? </h2>
         </div>
       </Modal>
     </>

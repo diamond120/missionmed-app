@@ -1,5 +1,5 @@
 import "./index.less"
-import { Button, Form, Input } from "antd"
+import { Button, Form, Input, Spin } from "antd"
 import { valueType } from "antd/lib/statistic/utils";
 import { FC, useState } from "react"
 import TutorService from "../../../api/services/Tutor";
@@ -45,6 +45,12 @@ const Billing: FC<Any> = ({props}) => {
     updatedTutor()
     setEditing(false);
   };
+
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
 
   return(
     <div className={"billing-section"}>

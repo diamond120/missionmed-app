@@ -13,6 +13,7 @@ const TutorTeachingSession = () => {
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
+  const [freezeSessions, setFreezeSessions] = useState([]);
 
   const getMockInterviewDetails = async () => {
     try {
@@ -20,7 +21,7 @@ const TutorTeachingSession = () => {
         bookingFor : 'Interview 1-to-1 Tutoring'
       }
       const response = await CommonService.postAPI('/tutor/session-details',data);
-      if (response.data.success) {
+            if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -33,6 +34,11 @@ const TutorTeachingSession = () => {
             : []
         );
         setAgenda(response.data?.data?.agenda ?? null);
+        setFreezeSessions(
+          response.data?.data?.freezesessions
+            ? response.data?.data?.freezesessions
+            : []
+        );
       } else {
         throw new Error(response.data.message);
       }
@@ -86,6 +92,7 @@ const TutorTeachingSession = () => {
       }
       const response = await CommonService.postAPI('/session-data',data)
 
+
       if(response.data.success){
         getMockInterviewDetails();
         message.success(response.data.message);
@@ -128,6 +135,7 @@ const TutorTeachingSession = () => {
             agenda={agenda}
             handleEditAgenda={handleEditAgenda}
             handleEditLink= {handleEditLink}
+            freezeSessions={freezeSessions}
           /> ) : (
             <div className="mock-interview">
               <div className={"con-section-wrap"}>

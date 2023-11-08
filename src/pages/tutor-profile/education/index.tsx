@@ -1,5 +1,5 @@
 import { MinusCircleOutlined,PlusOutlined } from "@ant-design/icons";
-import { AutoComplete,Button,Form,Input,Select,Space } from "antd";
+import { AutoComplete,Button,Form,Input,Select,Space, Spin } from "antd";
 import React,{ FC,useRef,useState } from "react";
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
@@ -53,6 +53,12 @@ const Education: FC<Any> = ({ props }) => {
     updatedTutor(values);
     setEditing(false);
   };
+
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
 
   return (
     <div className={"education-section"}>

@@ -98,21 +98,21 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
           </div>
         </div>
       </div>
-    
-      {userRole == "student" && type == "upcoming" && (
+      
+      { type == "freeze" && (
         <>
         {
         session.is_freeze == 1 && (
           <div className= {"freeze-div"} ><span   className = "freeze-span" >Freezed</span>
           </div>) 
-        } 
-        
+        }
+        </>
+      )}
+      { (userRole == 'student' && type == "upcoming") && (
         <div style={{gap:15,display:'flex',flexWrap:'wrap'}}>
           <Button disabled={checkSessionOnToday(session.date) || session.is_freeze == 1 } className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
           <CancleSession title='Cancel Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession}/>
         </div>
-        
-        </>
       )}
       { userRole == "tutor" && type == "upcoming" && (
         <>
@@ -191,12 +191,17 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
   );
 };
 
-const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule,cancleUpSession,handleEditLink}) => {
+const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule,cancleUpSession,handleEditLink,freezeSessions}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
   const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
   const formatedpastSessions= groupSessionsByDate(pastSessions, "desc");
+  let formatedFreezeSessions = {};
+  if(freezeSessions) {
+    formatedFreezeSessions= groupSessionsByDate(freezeSessions, "asc");
+  }
+  
   
 
   const handleRateSession = (event, session) => {
@@ -256,6 +261,23 @@ const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSessi
                   </li>
                 )
               }
+            </div>
+          </TabPane>
+          <TabPane tab={"Freeze"} key={"Freeze"}>
+            <div className={"upcoming-sessions"}>
+              {Object.keys(formatedFreezeSessions).map((date, index) => (
+                  <SessionList
+                  date={date}
+                  sessions={formatedFreezeSessions[date]}
+                  type={"freeze"}
+                  handleReschedule={handleReschedule}
+                  key={`upcomingSessions${index}`}
+                  pagesession={moduleType}
+                  cancleUpSession ={cancleUpSession}
+                  handleEditLink= {handleEditLink}
+                  
+                />
+              ))}
             </div>
           </TabPane>
         </Tabs>

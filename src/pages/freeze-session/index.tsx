@@ -106,7 +106,7 @@ const FreezeSession = ({title,moduleType}) => {
         width={"max-content"}
         footer={[
             <>
-            <Button className={"secondary-button"} onClick={handleSubmit}>Cancle</Button>
+            <Button className={"secondary-button"} onClick={handleSubmit}>Cancel</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Freeze Sessions</Button>
           </>
            
@@ -121,7 +121,7 @@ const FreezeSession = ({title,moduleType}) => {
                 rules={[{ required: true , message: 'Please choose session type'}]}
               >
               <Checkbox.Group >
-                  <Checkbox value="Recurring Session" >All Recurrtion Session</Checkbox>
+                  <Checkbox value="Recurring Session" >All Recurring Session</Checkbox>
                   <Checkbox value="Individual Session">All Other Session</Checkbox>
               </Checkbox.Group>
               </Form.Item>
