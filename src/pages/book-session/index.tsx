@@ -13,7 +13,6 @@ import {
   Input,
   Spin
 } from "antd";
-import { render } from "react-dom";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../api/services/Common";
 import UCATSessionService from "../../api/services/UCATSession";
