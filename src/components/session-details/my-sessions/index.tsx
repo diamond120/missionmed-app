@@ -98,21 +98,21 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
           </div>
         </div>
       </div>
-    
+      
       { type == "freeze" && (
         <>
         {
         session.is_freeze == 1 && (
           <div className= {"freeze-div"} ><span   className = "freeze-span" >Freezed</span>
           </div>) 
-        } 
-        
+        }
+        </>
+      )}
+      { (userRole == 'student' && type == "upcoming") && (
         <div style={{gap:15,display:'flex',flexWrap:'wrap'}}>
           <Button disabled={checkSessionOnToday(session.date) || session.is_freeze == 1 } className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
           <CancleSession title='Cancel Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession}/>
         </div>
-        
-        </>
       )}
       { userRole == "tutor" && type == "upcoming" && (
         <>
