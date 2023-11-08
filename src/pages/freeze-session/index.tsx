@@ -126,7 +126,8 @@ const FreezeSession = ({title,moduleType}) => {
               </Checkbox.Group>
               </Form.Item>
               <h5 style={{color:'#000000d9',fontSize:16,fontWeight:600,padding:10,marginTop:10}}>Choose types of sessions that you want to freeze</h5>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              
+              <div style={{ display: 'flex', alignItems: 'start' }} className={'freeze_dates'}>
                   <Form.Item 
                       style={{width: '100%'}}
                       name={"sessionStartDay"}
