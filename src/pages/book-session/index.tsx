@@ -562,7 +562,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
             </Button>
           ),
           <span className={"steps"}>Step {activeStep} of {totalSteps}</span>,
-          ((activeStep < totalSteps  && activeStep != 3 ) || (student.card_digit == '' &&  activeStep != 4 ) )   && (
+          ((activeStep < totalSteps  && activeStep != 3 ) || ((!card) &&  activeStep != 4 ) )   && (
             <Button
               className={"secondary-button"}
               onClick={next}
@@ -573,7 +573,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
           loading == true ? (
             <Spin />
           ) : (
-         ( (activeStep === totalSteps ||  activeStep == 3 && student.card_digit != '' ) ||  (student.card_digit == '' &&  activeStep == 4) )  && (
+         ( (activeStep === totalSteps ||  activeStep == 3 && card ) ||  (card == '' &&  activeStep == 4) )  && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
                 Book Session {} 
               </Button>

@@ -69,7 +69,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
       callback();
     }
   };
-
+  form.setFieldsValue({sessionLink :  session.sessionLink});
   return (
     <li className="item" style={{position :"relative"}}>
       <div style={{ display: "flex" }}>
@@ -139,11 +139,13 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
         >
         <Form form={form} layout="vertical">
             <Form.Item 
+            key={'test'+session.id}
             label="Edit Session Link" 
             name="sessionLink" 
             rules={[{required:true},
               { validator: validateURL }]}
             initialValue={session?.sessionLink}
+            
             >
             <TextArea
               style={{ height: 50 }}
@@ -201,8 +203,6 @@ const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSessi
   if(freezeSessions) {
     formatedFreezeSessions= groupSessionsByDate(freezeSessions, "asc");
   }
-  
-  
 
   const handleRateSession = (event, session) => {
     setRateSession({ id: session.id, tutorId: session.tutor_id });

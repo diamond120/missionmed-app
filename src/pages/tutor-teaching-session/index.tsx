@@ -22,19 +22,19 @@ const TutorTeachingSession = () => {
       }
       const response = await CommonService.postAPI('/tutor/session-details',data);
             if (response.data.success) {
-        setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
-        setUpcomingSessions(
+        await setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
+        await setUpcomingSessions(
           response.data?.data?.upcomingsessions
             ? response.data?.data?.upcomingsessions
             : []
         );
-        setPastSessions(
+        await setPastSessions(
           response.data?.data?.pastsessions
             ? response.data?.data?.pastsessions
             : []
         );
-        setAgenda(response.data?.data?.agenda ?? null);
-        setFreezeSessions(
+        await setAgenda(response.data?.data?.agenda ?? null);
+        await setFreezeSessions(
           response.data?.data?.freezesessions
             ? response.data?.data?.freezesessions
             : []
@@ -79,6 +79,7 @@ const TutorTeachingSession = () => {
   }
 
   const handleEditLink = async(link) => {
+    debugger;
     try{
 
       const data = {
@@ -86,12 +87,14 @@ const TutorTeachingSession = () => {
         "sessionLink":link,
         'bookingFor' : 'Interview 1-to-1 Tutoring'
       }
+      
+      
       const response = await CommonService.postAPI('/session-data',data)
 
 
       if(response.data.success){
-        getMockInterviewDetails();
         message.success(response.data.message);
+          getMockInterviewDetails();
         // setAgenda(link);
       }else{
         throw new Error(response.data.message)
@@ -114,7 +117,6 @@ const TutorTeachingSession = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>Interview Teaching Session</Breadcrumb.Item>
         </Breadcrumb>
-
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
           <div className={"grid-col-2"}>
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>

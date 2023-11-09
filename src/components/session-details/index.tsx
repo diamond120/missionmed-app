@@ -5,7 +5,7 @@ import UpcomingSession from "./upcoming-session";
 // import RescheduleInterview from "./reschedule-interview";
 
 const SessionDetails = ({test,moduleType,upcomingInterview, upcomingSessions, pastSessions, agenda, handleEditAgenda, updatePastSession, handleReschedule,cancleUpSession, handleEditLink, freezeSessions}) => {
-    
+
     return (
         <>
             <div style={{display:"flex",columnGap:"24px"}}>
