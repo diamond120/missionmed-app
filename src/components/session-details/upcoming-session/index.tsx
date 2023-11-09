@@ -39,6 +39,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
     }
   };
 
+  form.setFieldsValue({sessionLink :  upcomingInterview.sessionLink});
   return (
     <>
       <div className={"upcoming-session con-box"}>

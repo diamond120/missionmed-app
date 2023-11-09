@@ -38,7 +38,6 @@ function TutorReducer(tutor, action) {
           return{...tutor, loading:action.loading}
         }
         case 'add': {
-          console.log(tutor)
           return {
             id:action.id,
             userId:action.userId,
