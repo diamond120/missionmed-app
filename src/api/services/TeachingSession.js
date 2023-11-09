@@ -1,25 +1,25 @@
 import http from "../http-common";
 import {getToken} from "../../common/common.js";
 
-const getStudentTeachingSession = (customConfig={}) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.get(`/student/teaching-session-details`, {...headerConfig,...customConfig });
-};
+// const getStudentTeachingSession = (customConfig={}) => {
+//   const token = `Bearer ${getToken()}`;
+//   const headerConfig = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.get(`/student/teaching-session-details`, {...headerConfig,...customConfig });
+// };
 
-const updateTeachingSessionData = (data,customConfig={}) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/teachingsession-data`,data, {...headerConfig,...customConfig });
-};
+// const updateTeachingSessionData = (data,customConfig={}) => {
+//   const token = `Bearer ${getToken()}`;
+//   const headerConfig = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/teachingsession-data`,data, {...headerConfig,...customConfig });
+// };
 
 // const getSessionummary = (teachingSessionId) => {
 //   const token = `Bearer ${getToken()}`;
@@ -85,26 +85,26 @@ const updateTeachingSessionData = (data,customConfig={}) => {
 //   return http.post(`/student/freeze-student-teaching-sessions`, data, config);
 // };
 
-const cancleSession = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/student/cancel-session`, data, config);
-};
+// const cancleSession = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     }
+//   }
+//   return http.post(`/student/cancel-session`, data, config);
+// };
 
 const Service = {
-  getStudentTeachingSession,
-  updateTeachingSessionData,
+  // getStudentTeachingSession,
+  // updateTeachingSessionData,
   // getSessionummary,
   // bookSession,
   // rescheduleSession,
   // getTutorTeachingSession,
   // sessionRate,
   // freezeSession,
-  cancleSession
+  // cancleSession
 };
 
 export default Service;

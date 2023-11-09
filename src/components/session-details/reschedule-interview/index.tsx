@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Input,
+  Tooltip,
 } from "antd";
 import CommonService from "../../../api/services/Common";
 import UCATSessionService from "../../../api/services/UCATSession";
@@ -245,7 +246,9 @@ const RescheduleInterview = ({
         >   
          <Radio.Group onChange={handleRadioChange}>
             <Radio value="Individual Session">This One Session</Radio>
-            <Radio value="Recurring Session" disabled={interviewSummary?.session_type =='Individual Session'}>All Recurring Sessions</Radio>
+            <Tooltip title={(interviewSummary?.session_type =='Individual Session') ? 'This Session is individual session.' : ''}>
+              <Radio value="Recurring Session" disabled={interviewSummary?.session_type =='Individual Session'}>All Recurring Sessions</Radio>
+            </Tooltip>
          </Radio.Group>
         </Form.Item>
         {selectUniversity && (

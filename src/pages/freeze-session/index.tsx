@@ -8,7 +8,8 @@ import {
     Collapse,
     Input,
     Checkbox,
-    DatePicker
+    DatePicker,
+    Spin
 } from "antd";
 import React, { useState } from "react";
 import UCATSessionService from "../../api/services/UCATSession";
@@ -24,7 +25,7 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 
 
-const FreezeSession = ({title,moduleType}) => {
+const FreezeSession = ({title,moduleType,addFreezeSession}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   
@@ -34,7 +35,10 @@ const FreezeSession = ({title,moduleType}) => {
   const [startDate, setStartDate] =  useState(new Date());
   const [endDate, setEndDate] =  useState(new Date());
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async () => {
+    setLoading(true);
     await form.validateFields();
     const formData = form.getFieldsValue(true);
     try{
@@ -42,14 +46,10 @@ const FreezeSession = ({title,moduleType}) => {
       updatedObject.sessionStartDay = moment(formData.sessionStartDay).format('YYYY-MM-DD');
       updatedObject.sessionEndDay = moment(formData.sessionEndDay).format('YYYY-MM-DD');
       updatedObject.sessionType = formData.sessionType.join(', ');
-      // let response;
-      // if(moduleType == 'teaching') {
-      //   response = await TeachingSessionService.freezeSession(updatedObject);
-      // } else {
-      //   response = await UCATSessionService.bookFreezeSession(updatedObject);
-      // }
       const response = await CommonService.postAPI('/student/freeze-sessions',updatedObject);
       if(response.data.success){
+        setLoading(false);
+        addFreezeSession("added freeze session successfully.");
         if(moduleType == 'teaching') {
           navigate("/student/teaching-session")
         } else {
@@ -57,9 +57,11 @@ const FreezeSession = ({title,moduleType}) => {
         }
         message.success('You’ve successfully freezed session');
       }else{
+        setLoading(false);
         throw new Error(response.data.message)
       }
     }catch(e){
+      setLoading(false);
       message.error(e.message);
     }
     handleCancel();
@@ -106,8 +108,15 @@ const FreezeSession = ({title,moduleType}) => {
         width={"max-content"}
         footer={[
             <>
+           
+            {loading == true ? (
+              <Spin />
+            ) : (
+            <>
             <Button className={"secondary-button"} onClick={handleSubmit}>Cancel</Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Freeze Sessions</Button>
+            </>
+            )}
           </>
            
         ]}

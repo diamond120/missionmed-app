@@ -33,7 +33,6 @@ const StudentUCATSession = () => {
       }
       const response = await CommonService.postAPI("/student/session-details",data);
       if (response.data.success) {
-        debugger;
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -66,8 +65,7 @@ const StudentUCATSession = () => {
         "agenda":agendaDetails,
         'bookingFor' : 'UCAT 1-to-1 Tutoring'
       }
-
-
+      
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         setAgenda(agendaDetails);
@@ -109,6 +107,7 @@ const StudentUCATSession = () => {
   const handleReschedule = (sessionId) => {
     setIsOpenReschedule(true);
     setRescheduleSessionId(sessionId);
+    getUCATSessionDetails();
   }
 
   const handleOpen = (state) => {
@@ -136,17 +135,23 @@ const StudentUCATSession = () => {
         session_end_time:data.session_end_time,
       }}))
     }
+    getUCATSessionDetails();
   }
 
   const cancleUpSession = (data) => {
     getUCATSessionDetails();
   };
 
+  const addFreezeSession = (data : any) => {
+    console.log(data);
+    getUCATSessionDetails();
+  }
+
   const items = [
     {
       key: '1',
       label: (
-        <FreezeSession title='Freeze Session' addUpcomingSession={addUpcomingSession} />
+        <FreezeSession title='Freeze Session' addUpcomingSession={addUpcomingSession}  addFreezeSession={addFreezeSession}/>
       ),
     },
     {

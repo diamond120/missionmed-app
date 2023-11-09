@@ -7,6 +7,7 @@ import { useUser } from "../../../api/providers/UserProvider";
 import {groupSessionsByDate, formatTime, checkSessionOnToday} from "../../../common/common";
 import "./index.less";
 import RescheduleInterview from "../reschedule-interview";
+import CancleSession from "../../../pages/cancle-session";
 
 const SessionList = ({
   date,
@@ -14,7 +15,8 @@ const SessionList = ({
   type,
   handleRateSession = () => {},
   handleReschedule,
-  handleEditLink
+  handleEditLink,
+  cancleUpSession
 }) => (
   <div className="sessions">
     <h4 className="sessions-date">{formatDateV1(date)}</h4>
@@ -27,13 +29,14 @@ const SessionList = ({
           handleReschedule={handleReschedule}
           key={session.id}
           handleEditLink={handleEditLink}
+          cancleUpSession={cancleUpSession}
         />
       ))}
     </ul>
   </div>
 );
 
-const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule,handleEditLink}) => {
+const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule,handleEditLink, cancleUpSession}) => {
   const user = useUser();
   const userRole = user.role;
 
@@ -84,7 +87,10 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
         </div>
       </div>
       {userRole == "student" && type == "upcoming" && (
+        <div style={{gap:15,display:'flex',flexWrap:'wrap'}}>
         <Button disabled={checkSessionOnToday(session.date)} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+        <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession}/>
+        </div>
       )}
       { userRole == "tutor" && type == "upcoming" && (
         <>
@@ -159,7 +165,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
   );
 };
 
-const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleReschedule,handleEditLink}) => {
+const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleReschedule,handleEditLink, cancleUpSession}) => {
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
@@ -194,6 +200,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   handleReschedule={handleReschedule}
                   key={`upcomingSessions${index}`}
                   handleEditLink={handleEditLink}
+                  cancleUpSession={cancleUpSession}
                 />
               ))}
             </div>

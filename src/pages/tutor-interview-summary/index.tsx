@@ -62,23 +62,6 @@ const TutorInterviewSummary = () => {
  
    const addPostSessionTasks = async (task) => {
     try{
-      // let response 
-      // if(type == 'ucat') {
-      //   response = await UCATSessionService.updateUCATSessionData({
-      //     "ucatBookingId":interviewSummary.id,
-      //     "postSessionTasks":task,
-      //   });
-      // } else if (type == 'teaching'){
-      //   response = await TeachingSessionService.updateTeachingSessionData({
-      //     "teachingSessionId":interviewSummary.id,
-      //     "postSessionTasks":task,
-      //   });
-      // }else  {
-      //   response = await MockInterviewsService.updateMockInterviewData({
-      //     "mockInterviewId":interviewSummary.id,
-      //     "postSessionTasks":task,
-      //   });
-      // }
 
       const data = {
         "sessionId":interviewSummary?.id,
@@ -100,25 +83,6 @@ const TutorInterviewSummary = () => {
 
   const uploadReport = async(fileUrl) => {
     try{
-
-      // let response 
-      // if(type == 'ucat') {
-      //   response = await UCATSessionService.updateUCATSessionData({
-      //     "ucatBookingId":interviewSummary.id,
-      //     "report":fileUrl,
-      //   });
-      // }  else if (type == 'teaching'){ 
-      //   response = await TeachingSessionService.updateTeachingSessionData({
-      //     "teachingSessionId":interviewSummary.id,
-      //     "report":fileUrl,
-      //   });
-      // }else {
-      //   response = await MockInterviewsService.updateMockInterviewData({
-      //     "mockInterviewId":interviewSummary.id,
-      //     "report":fileUrl,
-      //   });
-      // }
-
       const data = {
         "sessionId":interviewSummary?.id,
         "report":fileUrl,
