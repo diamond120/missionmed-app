@@ -98,10 +98,7 @@ const TutorUCATSession = () => {
         'bookingFor' : 'UCAT 1-to-1 Tutoring'
       }
       const response = await CommonService.postAPI('/session-data',data)
-
-      // const response = await TeachingSessionService.updateTeachingSessionData({
-        
-      // });
+      
       if(response.data.success){
         message.success(response.data.message);
         // setAgenda(link);

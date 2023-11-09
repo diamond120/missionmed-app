@@ -49,10 +49,6 @@ const TutorTeachingSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      // const response = await TeachingSessionService.updateTeachingSessionData({
-      //   "teachingSessionId":upcomingInterview?.id,
-      //   "agenda":agendaDetails,
-      // });
 
       const data = {
         "sessionId":upcomingInterview?.id,

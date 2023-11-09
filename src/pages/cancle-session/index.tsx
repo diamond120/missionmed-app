@@ -1,8 +1,7 @@
 import "./index.less";
 import { Button, Modal, message } from "antd";
-import React, { useEffect, useState } from "react";
-import UCATSessionService from "../../api/services/UCATSession";
-import TeachingSessionService from "../../api/services/TeachingSession";
+import { useState } from "react";
+import CommonService from "../../api/services/Common";
 import { useNavigate } from "react-router-dom";
 
 const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSession}) => {
@@ -12,23 +11,23 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
   const [modalTitle, setModalTitle] = useState("");
   const handleSubmit = async () => {
     try{
-      let response;
-     
+
       let data = {
         sessionId : addUpcomingSession.id
       }
-      if(moduleType == 'teaching') {
-        response = await TeachingSessionService.cancleSession(data);
+      let response 
+      if (moduleType == 'mock') { 
+        response = await CommonService.postAPI('/student/mock-cancel-session',data)
       } else {
-        response = await UCATSessionService.cancleSession(data);
+        response = await CommonService.postAPI('/student/cancel-session',data)
       }
       if(response.data.success){
         cancleUpcomingSession(addUpcomingSession);
         if(moduleType == 'teaching') {
-
           navigate("/student/teaching-session") 
-        }
-        else {
+        }  else if (moduleType == 'mock') { 
+          navigate("/student/mock-interview");
+        } else {
           navigate("/student/ucat-session")
         }
         message.success('You’ve successfully cancel session');

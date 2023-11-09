@@ -31,7 +31,8 @@ const formatHours= (hours, format = 'HH:mm') => {
 }
 
 export const tutorWorkingHours = (workingHours, format) => {
-    const formattedWorkingHours = workingHours.reduce((obj, workingHour) => {
+    if(workingHours != null) {
+      const formattedWorkingHours = workingHours.reduce((obj, workingHour) => {
         if(workingHour.day == "Monday"){
             return {...obj , isMondayOff: workingHour.dayOff, Monday:workingHour.dayOff ? [{start:"", end: ""}] : formatHours(workingHour.hours, format)}
         }else if(workingHour.day == "Tuesday"){
@@ -50,9 +51,11 @@ export const tutorWorkingHours = (workingHours, format) => {
             return obj
         }
 
-    }, {})
-    
-    return formattedWorkingHours;
+      }, {})
+      return formattedWorkingHours;
+    } else {
+      return {};
+    }
 } 
 
 export const formatDate = (dateTime) => {

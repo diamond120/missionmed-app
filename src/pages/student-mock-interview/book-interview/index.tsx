@@ -37,6 +37,7 @@ const BookInterview = ({addUpcomingSession}) => {
   const [tutors, setTutors] = useState([]);
   const totalSteps = 4;
   const [loading, setLoading] = useState(false);
+  const [mockInterview, setMockInterview] = useState([]);
   
   const getUniversityList = async () => {
     try {
@@ -65,8 +66,21 @@ const BookInterview = ({addUpcomingSession}) => {
       };
       const response = await CommonService.getUniversityTutorList(data);
       if (response.data.success) {
-        const tutorList = response.data.data ?? [];
+       
+        const tutorList = response.data.data.tutors ?? [];
+       
+        
+        const interviewList =   response.data.data.mockinterview.mockinterview ? response.data.data.mockinterview.mockinterview.split(',') : [];
+        const mockInterviewList = interviewList.map((value, index) => ({
+          id: index + 1,
+          value,
+        }));
+        setMockInterview(mockInterviewList);
+       
         setTutors(tutorList);
+        if(!response.data.data.mockinterview.mockinterview || response.data.data.mockinterview.mockinterview == null) {
+          throw new Error("Please select other univesity. This university don't have any interview.")
+        } 
       } else {
         message.error(response.data.message);
       }
@@ -146,20 +160,10 @@ const BookInterview = ({addUpcomingSession}) => {
     setIsModalOpen(false);
   };
 
-  const mockInterviewList = [
-    { id: 1, value: "Mock Interview#1" },
-    { id: 2, value: "Mock Interview#2" },
-    { id: 3, value: "Mock Interview#3" },
-  ];
-
-  const getMockInterviewList = () => {
-    return mockInterviewList;
-  };
-
   const selectUniversity = Form.useWatch("university", form);
   
 
-  const Step1Form = ({ universityList, getMockInterviewList }) => {
+  const Step1Form = ({ universityList }) => {
     return (
       <>
         <Form.Item
@@ -185,11 +189,13 @@ const BookInterview = ({addUpcomingSession}) => {
             rules={[{ required: true, message:"Please select mock interview" }]}
           >
             <Radio.Group>
-              {getMockInterviewList(selectUniversity).map((interview) => (
+              
+              {mockInterview.map((interview) => (
                 <Radio key={interview.id} value={interview.value}>
                   {interview.value}
                 </Radio>
               ))}
+
             </Radio.Group>
           </Form.Item>
         )}
@@ -381,16 +387,9 @@ const BookInterview = ({addUpcomingSession}) => {
           activeStep === totalSteps && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
                 Book Interview
-                {/* {loading == false ? ("false") : ("true")} */}
               </Button>
             )
           ),
-          // activeStep === totalSteps (
-            
-          //   <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-          //     Book Interviewss
-          //   </Button>
-          // ),
         ]}
       >
         <Form form={form} layout="vertical">
@@ -398,7 +397,6 @@ const BookInterview = ({addUpcomingSession}) => {
             <div style={{ width: "555px" }}>
               <Step1Form
                 universityList={universityList}
-                getMockInterviewList={getMockInterviewList}
               />
             </div>
           )}

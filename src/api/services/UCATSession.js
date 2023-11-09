@@ -85,15 +85,15 @@ const getTutorUcatSession = (customConfig={}) => {
 //   return http.post(`/student/freeze-sessions`, data, config);
 // }
 
-const cancleSession = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-  }
-  return http.post(`/student/cancel-session`, data, config);
-}
+// const cancleSession = (data) => {
+//   const token = `Bearer ${getToken()}`;
+//   const config = {
+//     headers:{
+//       'Authorization': token
+//     },
+//   }
+//   return http.post(`/student/cancel-session`, data, config);
+// }
 
 
 const Service = {
@@ -105,7 +105,7 @@ const Service = {
   getTutorUcatSession,
   // sessionRate,
   // bookFreezeSession,
-  cancleSession
+  // cancleSession
 };
 
 export default Service;

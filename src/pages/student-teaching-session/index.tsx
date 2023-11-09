@@ -27,14 +27,12 @@ const StudentTeachingSession = () => {
   
     const getMockInterviewDetails = async () => {
       try {
-        // const response = await TeachingSessionService.getStudentTeachingSession({});
         const data = {
           bookingFor : 'Interview 1-to-1 Tutoring'
         }
         const response = await CommonService.postAPI("/student/session-details",data);
         if (response.data.success) {
           setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
-          //setUpcomingInterview({});
           setUpcomingSessions(
             response.data?.data?.upcomingsessions
               ?  response.data?.data?.upcomingsessions
@@ -61,10 +59,14 @@ const StudentTeachingSession = () => {
   
     const handleEditAgenda = async(agendaDetails) => {
       try{
-        const response = await TeachingSessionService.updateTeachingSessionData({
-          "teachingSessionId":upcomingInterview?.id,
+
+        const data = {
+          "sessionId":upcomingInterview?.id,
           "agenda":agendaDetails,
-        });
+          'bookingFor' : 'Interview 1-to-1 Tutoring'
+        }
+
+        const response = await CommonService.postAPI('/session-data',data)
         if(response.data.success){
           setAgenda(agendaDetails);
         }else{
@@ -107,6 +109,7 @@ const StudentTeachingSession = () => {
       
       setIsOpenReschedule(true);
       setRescheduleSessionId(sessionId);
+      getMockInterviewDetails();
     }
   
     const handleOpen = (state) => {
@@ -140,12 +143,16 @@ const StudentTeachingSession = () => {
       getMockInterviewDetails();
     }
 
+    const addFreezeSession = (data :any) => {
+      console.log(data);
+      getMockInterviewDetails();
+    }
 
     const items = [
       {
         key: '1',
         label: (
-          <FreezeSession title='Freeze Session' moduleType="teaching" addUpcomingSession={addUpcomingSession} />
+          <FreezeSession title='Freeze Session' moduleType="teaching" addFreezeSession={addFreezeSession} />
         ),
       },
       {

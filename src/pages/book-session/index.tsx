@@ -11,7 +11,8 @@ import {
   Row,
   Col,
   Input,
-  Spin
+  Spin,
+  Tooltip
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../api/services/Common";
@@ -90,7 +91,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
         }
       setModalTitle(stepsTitles[nextStep-1]);
     }catch(e){
-      if (activeStep == 3) {
+      if (activeStep == 2) {
         message.error("Please select slot.");
       }
     }
@@ -349,7 +350,9 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
         > 
          <Radio.Group onChange={handleRadioChange} >
             <Radio value="Individual Session">Individual Session</Radio>
-            <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session</Radio>
+            <Tooltip title={recurringAvailable ? 'Already recurring session is booked by another sutdernt.' : ''}>
+              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session</Radio>
+            </Tooltip>
          </Radio.Group>
         </Form.Item>
         {showDropdown && (
@@ -550,7 +553,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        className={"mock-interview-modal "}
+        className={"mock-interview-modal"}
         width={"max-content"}
         footer={[
           activeStep > 1 && (

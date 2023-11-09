@@ -278,6 +278,20 @@ const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSessi
                   
                 />
               ))}
+              {
+                (Object.keys(formatedFreezeSessions).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No Freeze sessions found.</strong></h1>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                )
+              }
             </div>
           </TabPane>
         </Tabs>

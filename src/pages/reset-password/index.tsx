@@ -23,7 +23,6 @@ const ResetPassword = () => {
             await form.validateFields();
             const formData = form.getFieldsValue(true);
             formData.token = token;
-            debugger;
             let response = await CommonService.postAPI('/reset-password',formData);
             if(response.data.success == true ){ 
                 // throw new Error(response.data.message) 

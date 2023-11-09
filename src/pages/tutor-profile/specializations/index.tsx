@@ -92,7 +92,7 @@ const Specializations: FC<Any> = ({props}) => {
             </Tooltip>
           </div>
         </Form.Item>
-        {editing ? (
+        {/* {editing ? (
 
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
@@ -107,7 +107,7 @@ const Specializations: FC<Any> = ({props}) => {
             <Button className={"form-button"} onClick={handleEditClick}>Edit</Button>
           </div>
 
-          )}
+          )} */}
       </Form>
     </div>
   );
