@@ -89,18 +89,18 @@ const TutorUCATSession = () => {
     getMockInterviewDetails();
   }, []);
 
-  const handleEditLink = async(link) => {
+  const handleEditLink = async(detail) => {
     try{
-
       const data = {
-        "sessionId":upcomingInterview?.id,
-        "sessionLink":link,
+        "sessionId":detail?.sessionId,
+        "sessionLink":detail.link,
         'bookingFor' : 'UCAT 1-to-1 Tutoring'
       }
       const response = await CommonService.postAPI('/session-data',data)
       
       if(response.data.success){
         message.success(response.data.message);
+        getMockInterviewDetails();
         // setAgenda(link);
       }else{
         throw new Error(response.data.message)

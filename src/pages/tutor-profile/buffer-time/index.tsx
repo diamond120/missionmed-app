@@ -28,6 +28,7 @@ const BufferTime: FC<Any> = ({props}) => {
 
     const updatedTutor = async() => {
       await TutorService.updateProfile({
+        addBufferTime : true,
         bufferTime: selectedTime !== '' ? selectedTime : tutor?.bufferTime,
       });
       dispatch({

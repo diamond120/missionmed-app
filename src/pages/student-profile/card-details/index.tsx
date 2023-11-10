@@ -20,6 +20,7 @@ const CardDatails: FC<any> = ({props}) => {
   const [ focused ,setFocused] = useState("");
   const [issuer , setIssuer] = useState();
   const [isCard , setIsCard] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleAddCard= () => {
     setIsCard(!isCard);
@@ -62,6 +63,7 @@ const CardDatails: FC<any> = ({props}) => {
   }
 
   const handleSaveClick = async () => {
+    setLoading(true);
     await form.validateFields();
     try{
     let formData = form.getFieldsValue(true);
@@ -69,6 +71,7 @@ const CardDatails: FC<any> = ({props}) => {
         const response = await CommonService.postAPI('/student/add-card',formData);
 
         if(response.data.success){
+         
             let card_digit = response.data.data.card_digit
             await StudentService.updateAppInfo({
                 card_digit: card_digit !== '' ? card_digit : student?.card_digit,
@@ -81,16 +84,20 @@ const CardDatails: FC<any> = ({props}) => {
               }
             })
             handleAddCard();
+            setLoading(false);
             message.success('You’ve successfully added card');
         }else{
+           setLoading(false);
             throw new Error(response.data.message)
         }
       }catch(e){
+        setLoading(false);
         message.error(e.message);
       }
       handleAddCard()
     }catch(e){
       console.log(e);
+      setLoading(false);
       return false;
     }
   };
@@ -194,11 +201,16 @@ const CardDatails: FC<any> = ({props}) => {
                 <Input type="hidden" name={'issuer'} value={issuer} />
               </Form.Item>
           
-
-            <div className={"form-basic-button-wrap"}>
-              <Button className={"form-button"} onClick={handleSaveClick}>Save</Button> &nbsp;
-              <Button className={"form-button"} onClick={handleAddCard}>Cancel</Button>
-            </div>
+            {loading == true ? (
+              <div className={"form-basic-button-wrap"}>
+                <Spin />
+              </div>
+            ) : (
+              <div className={"form-basic-button-wrap"}>
+                <Button className={"form-button"} onClick={handleSaveClick}>Save</Button> &nbsp;
+                <Button className={"form-button"} onClick={handleAddCard}>Cancel</Button>
+              </div>
+            )}
 
         </Form>
         )}

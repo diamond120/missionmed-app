@@ -23,7 +23,11 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
 
   const handleSubmit = async () => {
       const values = await form.validateFields();
-      handleEditLink(values.sessionLink);
+      const data = {
+        link : values.sessionLink,
+        sessionId : values.sessionId
+      }
+      handleEditLink(data);
       setIsModalOpen(false);
   };
 
@@ -40,6 +44,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
   };
 
   form.setFieldsValue({sessionLink :  upcomingInterview.sessionLink});
+
   return (
     <>
       <div className={"upcoming-session con-box"}>
@@ -117,18 +122,25 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
         ]}
       >
         <Form form={form} layout="vertical">
-            <Form.Item 
-            label="Edit Session Link" 
-            name="sessionLink" 
-            rules={[{required:true},
-              { validator: validateURL }]}
-            initialValue={upcomingInterview?.sessionLink}
-            >
-            <TextArea
-              style={{ height: 50 }}
-              placeholder=""
-            />
-        </Form.Item>
+          <Form.Item 
+              label="Edit Session Link" 
+              name="sessionLink" 
+              rules={[{required:true},
+                { validator: validateURL }]}
+              initialValue={upcomingInterview?.sessionLink}
+              >
+              <TextArea
+                style={{ height: 50 }}
+                placeholder=""
+              />
+          </Form.Item>
+          <Form.Item 
+              
+              name="sessionId" 
+              initialValue={upcomingInterview?.id}
+              >
+              <Input type="hidden" />
+          </Form.Item>
         </Form>
       </Modal>
     </>

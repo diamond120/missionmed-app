@@ -48,7 +48,7 @@ const getTeamData = async () => {
           <Avatar
             size={40}
             icon={<UserOutlined />}
-            style={{ marginBottom: "16px" }}
+            style={{ marginBottom: "16px", minWidth:"40px"}}
           />
           <div className={"my-team-item-text-wrap"}>
             <h2 className={"my-team-item-name"}>{item.full_name}</h2>

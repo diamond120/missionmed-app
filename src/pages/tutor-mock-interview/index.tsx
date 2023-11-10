@@ -67,17 +67,16 @@ const TutorMockInterview = () => {
     getMockInterviewDetails();
   }, []);
 
-  const handleEditLink = async(link) => {
+  const handleEditLink = async(detail) => {
     try{
-
+      console.log(detail);
       const data = {
-        "sessionId":upcomingInterview?.id,
-        "sessionLink":link,
+        "sessionId":detail?.sessionId,
+        "sessionLink":detail.link,
         'bookingFor' : 'Mock interviews'
       }
-      const response = await CommonService.postAPI('/session-data',data)
-
-     
+      const response = await CommonService.postAPI('/session-data',data);
+      
       if(response.data.success){
         getMockInterviewDetails();
         message.success(response.data.message);
