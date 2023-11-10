@@ -31,6 +31,7 @@ import 'react-credit-cards/es/styles-compiled.css'
 import {useStudent} from "../../api/providers/StudentProvider";
 const { Panel } = Collapse;
 const { TextArea } = Input;
+import { QuestionCircleFilled } from "@ant-design/icons";
 
 
 const BookSession = ({addUpcomingSession,title,moduleType}) => {
@@ -351,7 +352,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
          <Radio.Group onChange={handleRadioChange} >
             <Radio value="Individual Session">Individual Session</Radio>
             <Tooltip title={recurringAvailable ? 'Already recurring session is booked by another sutdernt.' : ''}>
-              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session</Radio>
+              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session<QuestionCircleFilled  style={{marginLeft:"8px"}}/></Radio>
             </Tooltip>
          </Radio.Group>
         </Form.Item>
@@ -575,7 +576,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
           ) : (
          ( (activeStep === totalSteps ||  activeStep == 3 && card ) ||  (card == '' &&  activeStep == 4) )  && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-                Book Session {} 
+                Book Session  
               </Button>
             )
           )

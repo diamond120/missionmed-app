@@ -95,7 +95,7 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
       footer={[
         <div key="btnGrp" className={"button-group"}>
           <Button className={"secondary-button"} onClick={handleCancel}>Cancel</Button>
-          <Button className={"secondary-button rate-button"} onClick={handleOk}>
+          <Button className={"secondary-button "} onClick={handleOk}>
             Rate Session
           </Button>
         </div>,
