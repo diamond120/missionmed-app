@@ -60,6 +60,8 @@ const BookInterview = ({addUpcomingSession}) => {
 
   const getUniversityTutorList = async () => {
     try {
+
+      form.setFieldValue('mockInterview', '');
       const data = {
         lessionType:'Mock interviews', 
         university: form.getFieldValue("university"),
@@ -79,7 +81,7 @@ const BookInterview = ({addUpcomingSession}) => {
        
         setTutors(tutorList);
         if(!response.data.data.mockinterview.mockinterview || response.data.data.mockinterview.mockinterview == null) {
-          throw new Error("Please select other univesity. This university don't have any interview.")
+          message.error("Please select other univesity. This university don't have any interview.");
         } 
       } else {
         message.error(response.data.message);
@@ -98,6 +100,7 @@ const BookInterview = ({addUpcomingSession}) => {
       setActiveStep(nextStep);
       setModalTitle(stepsTitles[nextStep-1]);
     }catch(e){
+      console.log(e);
       if (activeStep == 3) {
         message.error("Please select slot.");
       }

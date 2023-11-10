@@ -22,6 +22,7 @@ import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
 import "./index.less";
+import { QuestionCircleFilled } from "@ant-design/icons";
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -247,7 +248,7 @@ const RescheduleInterview = ({
          <Radio.Group onChange={handleRadioChange}>
             <Radio value="Individual Session">This One Session</Radio>
             <Tooltip title={(interviewSummary?.session_type =='Individual Session') ? 'This Session is individual session.' : ''}>
-              <Radio value="Recurring Session" disabled={interviewSummary?.session_type =='Individual Session'}>All Recurring Sessions</Radio>
+              <Radio value="Recurring Session" disabled={interviewSummary?.session_type =='Individual Session'}>All Recurring Sessions<QuestionCircleFilled  style={{marginLeft:"8px"}}/></Radio>
             </Tooltip>
          </Radio.Group>
         </Form.Item>
@@ -375,7 +376,7 @@ const RescheduleInterview = ({
           label="Frequency"
           name="frequency"
         >
-            <Select value={dayOfWeek} placeholder="Select an option"  defaultValue={dayOfWeek}>
+            <Select value={dayOfWeek} placeholder="Select an option" disabled={true} defaultValue={dayOfWeek}>
                 <Select.Option value="Monday" >Weekly on Monday</Select.Option>
                 <Select.Option value="Tuesday">Weekly on Tuesday</Select.Option>
                 <Select.Option value="Wednesday">Weekly on Wednesday</Select.Option>
