@@ -22,7 +22,13 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
-      handleEditLink(values.sessionLink);
+      
+      const data = {
+        link : values.sessionLink,
+        sessionId : values.sessionId
+      }
+
+      handleEditLink(data);
       upcomingInterview['sessionLink'] = values.sessionLink;
       setIsModalOpen(false);
       
@@ -40,6 +46,8 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
         callback();
       }
   };
+
+  form.setFieldsValue({sessionLink :  upcomingInterview.sessionLink});
 
   return (
     <>
@@ -128,6 +136,12 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
               style={{ height: 50 }}
               placeholder=""
             />
+        </Form.Item>
+        <Form.Item
+            name="sessionId" 
+            initialValue={upcomingInterview?.id}
+            >
+            <Input type="hidden" />
         </Form.Item>
         </Form>
       </Modal>

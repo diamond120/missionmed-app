@@ -78,13 +78,12 @@ const TutorTeachingSession = () => {
     setPastSessions(updatedSessions);
   }
 
-  const handleEditLink = async(link) => {
-    debugger;
+  const handleEditLink = async(detail) => {
     try{
 
       const data = {
-        "sessionId":upcomingInterview?.id,
-        "sessionLink":link,
+        "sessionId":detail?.sessionId,
+        "sessionLink":detail.link,
         'bookingFor' : 'Interview 1-to-1 Tutoring'
       }
       

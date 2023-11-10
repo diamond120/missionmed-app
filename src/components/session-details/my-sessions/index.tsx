@@ -54,7 +54,11 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
 
   const handleSubmit = async () => {
       const values = await form.validateFields();
-      handleEditLink(values.sessionLink);
+      const data = {
+        link : values.sessionLink,
+        sessionId : values.sessionId
+      }
+      handleEditLink(data);
       setIsModalOpen(false);
   };
 
@@ -152,6 +156,12 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
               placeholder=""
             />
         </Form.Item>
+          <Form.Item
+              name="sessionId" 
+              initialValue={session?.id}
+              >
+              <Input type="hidden" />
+          </Form.Item>
         </Form>
       </Modal>
       </>  
@@ -232,6 +242,20 @@ const Mysessions = ({moduleType, upcomingSessions, pastSessions, updatePastSessi
                   
                 />
               ))}
+              {
+                (Object.keys(formatedUpcomingSessios).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No Upcoming sessions found.</strong></h1>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                )
+              }
             </div>
           </TabPane>
 
