@@ -7,7 +7,7 @@ const Personality = () => {
   <>
       <div className={"personality-section"} >
         
-        <h2 className={"personality-section-title"}>Personality<QuestionCircleFilled  style={{marginLeft:"8px"}}/></h2>
+        <h2 className={"personality-section-title"}>Personality<QuestionCircleFilled  style={{marginLeft:"8px"}} title="Coming Soon" /></h2>
         <div className={"personality-wrap"} style={{position:'relative'}}>
           <div className={"coming-soon"} style={{}} >
             <span   className = "freeze-span" >Coming Soon</span>

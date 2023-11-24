@@ -67,7 +67,7 @@ const ChangePassword = ({title,moduleType}) => {
                     label={"Old Password *"}
                     rules={[{ required: true , message: 'Please enter your current password'}]}
                 >
-                <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Old Password"} />
+                <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} className={"changePassword"} placeholder={"Old Password"} />
                 </Form.Item>
 
                 <Form.Item
@@ -75,7 +75,7 @@ const ChangePassword = ({title,moduleType}) => {
                     label={"New Password *"}
                     rules={[{ required: true , message: 'Please enter new password'}]}
                 >
-                    <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"New Password"} />
+                    <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} className={"changePassword"} placeholder={"New Password"} />
                 </Form.Item>
 
                   <Form.Item
@@ -93,7 +93,7 @@ const ChangePassword = ({title,moduleType}) => {
                     dependencies={['newPassword']}
                   >
                     
-                    <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} placeholder={"Confirm New Password"} />  
+                    <Input.Password style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} className={"changePassword"} placeholder={"Confirm New Password"} />  
                   </Form.Item>
             </div>
           </Form>

@@ -44,7 +44,7 @@ const getTeamData = async () => {
         )
         }
       {team && team.map((item) => (
-        <div className={"my-team-item"}>
+        <div className={"my-team-item"} key={item.full_name}>
           <Avatar
             size={40}
             icon={<UserOutlined />}

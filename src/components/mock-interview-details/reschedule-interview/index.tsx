@@ -29,6 +29,7 @@ const RescheduleInterview = ({
   isOpen,
   handleOpen,
   sessionId,
+  timezone
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -243,7 +244,7 @@ const RescheduleInterview = ({
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={interviewSummary?.tutor_id} form={form}/>
+      <Calender tutorId={interviewSummary?.tutor_id}  rescheduleDate={interviewSummary?.session_start_time}  form={form} next={next} timezone={timezone}/>
       </div>
     </>;
   };

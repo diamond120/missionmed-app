@@ -62,7 +62,11 @@ function TutorReducer(tutor, action) {
             applicationReviewPrice:action.applicationReviewPrice,
             profilePicture:action.profilePicture,
             educations:action.educations,
-            lessionTypeID:action.lessionTypeID
+            lessionTypeID:action.lessionTypeID,
+            applicationLessionTime : action.applicationLessionTime,
+            interviewLessionTime : action.interviewLessionTime,
+            mockLessionTime : action.mockLessionTime,
+            ucatLessionTime : action.ucatLessionTime
           };
         }
         case 'update': {

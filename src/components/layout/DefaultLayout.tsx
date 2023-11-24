@@ -149,7 +149,14 @@ export const DefaultLayout: FC = () => {
             applicationReviewPrice:result.data.data.application_review_price ?? null,
             profilePicture:result.data.data.profile_picture ?? null,
             educations:result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({school : edu.school?? "", degree:edu.degree ?? ""})) : [],
-            lessionTypeID:result.data.data.lession_type_id ?? null
+            lessionTypeID:result.data.data.lession_type_id ?? null,
+            applicationLessionTime : result.data.data.application_lession_time ?? null,
+            interviewLessionTime : result.data.data.interview_lession_time ?? null,
+            mockLessionTime : result.data.data.mock_lession_time ?? null,
+            ucatLessionTime : result.data.data.ucat_lession_time ?? null
+
+            
+            
           })
          await tutorDispatch({type:'loading', loading:false})
         }catch(error){

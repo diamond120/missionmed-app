@@ -9,7 +9,7 @@ const BiographyTutor: FC<ANY> = ({props}) => {
   const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false);
   const [biography,setBiography] = useState<string | undefined | null>("")
-
+  const [form] = Form.useForm();
   const updatedTutor = async() => {
     await TutorService.updateProfile({
       addBiography: true,
@@ -28,6 +28,7 @@ const BiographyTutor: FC<ANY> = ({props}) => {
   };
 
   const  cancle = () => {
+    form.resetFields();
     setEditing(false);
   }
 
@@ -45,9 +46,15 @@ const BiographyTutor: FC<ANY> = ({props}) => {
   return(
     <div className={"biography-tutor-section"}>
       <h2 className={"biography-section-title"}>Biography</h2>
+      <Form form={form} className="biographyForm">
       <div className={"biography-wrap"}>
         <p className={"biography-text"}>You can write about your degrees, years of experience, industry, or skills. People also talk about their achievements or previous job experiences.</p>
-        <Input.TextArea className={"biography-input"} placeholder={"Input your text here"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={tutor?.biography ?? ''}  onChange={e => setBiography(e.target.value)} />
+       
+        <Form.Item
+          name={"bio"}
+        >
+          <Input.TextArea className={"biography-input w-full"}   placeholder={"Input your text here"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={tutor?.biography ?? ''}  onChange={e => setBiography(e.target.value)} />
+        </Form.Item> 
         {editing ? (
           <>
            <Form.Item>
@@ -69,6 +76,7 @@ const BiographyTutor: FC<ANY> = ({props}) => {
           </Form.Item>
         )}
       </div>
+      </Form>
 
     </div>
   )

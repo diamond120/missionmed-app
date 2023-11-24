@@ -10,6 +10,8 @@ const BufferTime: FC<Any> = ({props}) => {
   const dispatch = useTutorDispatch();
   const [selectedTime, setSelectedTime] = useState(tutor?.bufferTime);
   const [editing, setEditing] = useState(false);
+  const [form] = Form.useForm();
+
     const handleTimeChange = (e: RadioChangeEvent) => {
       setSelectedTime(e.target.value);
     };
@@ -23,6 +25,8 @@ const BufferTime: FC<Any> = ({props}) => {
     };
 
     const  cancle = () => {
+      // form.resetFields();
+      setSelectedTime(tutor?.bufferTime);
       setEditing(false);
     }
 
@@ -48,8 +52,9 @@ const BufferTime: FC<Any> = ({props}) => {
     return (
       <div className={"buffer-time-section"}>
         <h2 className={"buffer-time-section-title"}>Buffer Time</h2>
-        <Form className={"buffer-time-form"}>
-          <Form.Item>
+        <Form className={"buffer-time-form"} form={form}>
+          <Form.Item
+          name={"bufferTime"}>
             <div className={"buffer-time-form-item"}>
               <p className={"label"}>Buffer Time</p>
               <Radio.Group className={"buffer-time-checkboxes"} onChange={handleTimeChange} value={selectedTime}>

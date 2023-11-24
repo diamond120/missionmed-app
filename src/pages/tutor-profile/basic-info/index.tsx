@@ -72,6 +72,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   };
 
   const  cancle = () => {
+    form.resetFields();
     setEditing(false);
   }
  

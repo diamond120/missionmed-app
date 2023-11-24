@@ -56,7 +56,12 @@ const ApplicationInfo: FC<any> = ({props}) => {
       console.log(e);
       return false;
     }
-  };  
+  }; 
+
+  const cancle = () => {
+    form.resetFields();
+    setEditing(false);
+  }
 
   if(student?.loading){
     return(
@@ -128,7 +133,11 @@ const ApplicationInfo: FC<any> = ({props}) => {
 
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+                Cancel
+              </Button>
             </div>
+            
 
           ) : (
 

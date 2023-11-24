@@ -48,6 +48,11 @@ const ExtraInfo: FC<any> = ({props}) => {
     })
   }
 
+  const cancle = () => {
+    setResidenceStatus(student?.statusOfResidence);
+    form.resetFields();
+    setEditing(false);
+  }
 
   const optionsSpecification: string[]= [
     "Citizen",
@@ -65,7 +70,7 @@ const ExtraInfo: FC<any> = ({props}) => {
   return (
     <div className={"extra-info-section"}>
       <h2 className={"extra-info-section-title"}>
-        Extra Information <QuestionCircleFilled style={{ color: "#6B7393" }} />
+        Extra Information <QuestionCircleFilled style={{ color: "#6B7393" }} title={"Extra Information"} />
       </h2>
       <Form className={"extra-info-form"} form={form}>
         <Form.Item label={"Status of Residence"} name={"status"} rules={[{ required: false }]}>
@@ -137,6 +142,9 @@ const ExtraInfo: FC<any> = ({props}) => {
             <Button className={"form-button"} onClick={handleSaveClick}>
               Save
             </Button>
+            <Button className={"form-button button-space"} onClick={cancle}>
+                Cancel
+              </Button>
           </div>
         ) : (
           <div className={"form-basic-button-wrap"}>
