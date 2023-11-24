@@ -23,6 +23,13 @@ const CardDatails: FC<any> = ({props}) => {
   const [loading, setLoading] = useState(false);
 
   const handleAddCard= () => {
+    form.resetFields();
+    setCVC("");
+    setExpiry("");
+    setNumber("");
+    setExpiry("");
+    setUserName("");
+    setFocused("");
     setIsCard(!isCard);
   };
 

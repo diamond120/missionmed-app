@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Form, Space, Spin, Switch, TimePicker } from "antd";
+import { Alert, Button, Form, Space, Spin, Switch, TimePicker, message } from "antd";
 import React, { FC, useMemo, useState } from "react";
 import "./index.less";
 import moment from "moment";
@@ -13,6 +13,7 @@ import { tutorWorkingHours } from "../../../common/common";
 const WorkingDaysHours: FC<Any> = ({ props }) => {
   const tutor = useTutor();
   const dispatch = useTutorDispatch();
+ 
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
   // const [timeMessage, setTimeMessage] = useState("");
@@ -87,11 +88,21 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   );
 
   const handleEditClick = (e) => {
-    setEditing(true);
-    e.preventDefault();
+
+    try {
+      if(!tutor?.timezone) {
+      throw new Error("Please select time zone first.");
+      } else  {
+        setEditing(true);
+        e.preventDefault();
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const  cancle = () => {
+    form.resetFields();
     setEditing(false);
   }
 
@@ -104,42 +115,55 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
     }
     return [];
   };
+
   const onFinish = async (values: any) => {
-    const Monday = values.isMondayOff ? [] : formatTimeArr(values.Monday ?? []);
-    const Tuesday = values.isTuesdayOff
-      ? []
-      : formatTimeArr(values.Tuesday ?? []);
-    const Wednesday = values.isWednesdayOff
-      ? []
-      : formatTimeArr(values.Wednesday ?? []);
-    const Thursday = values.isThursdayOff
-      ? []
-      : formatTimeArr(values.Thursday ?? []);
-    const Friday = values.isFridayOff ? [] : formatTimeArr(values.Friday) ?? [];
-    const Saturday = values.isSaturdayOff
-      ? []
-      : formatTimeArr(values.Saturday ?? []);
-    const Sunday = values.isSundayOff ? [] : formatTimeArr(values.Sunday ?? []);
-    const workingHours = [
-      { day: "Monday", hours: Monday, dayOff: values.isMondayOff },
-      { day: "Tuesday", hours: Tuesday, dayOff: values.isTuesdayOff },
-      { day: "Wednesday", hours: Wednesday, dayOff: values.isWednesdayOff },
-      { day: "Thursday", hours: Thursday, dayOff: values.isThursdayOff },
-      { day: "Friday", hours: Friday, dayOff: values.isFridayOff },
-      { day: "Saturday", hours: Saturday, dayOff: values.isSaturdayOff },
-      { day: "Sunday", hours: Sunday, dayOff: values.isSundayOff },
-    ];
 
-    await TutorService.updateProfile({
-      workingHours: workingHours,
-    });
+    try {
 
-    dispatch({
-      type: "updateWorkingHours",
-      workingHours: workingHours,
-    });
+      if(!tutor?.timezone) {
+        throw new Error("Please select time zone first.");
+      }
+      const Monday = values.isMondayOff ? [] : formatTimeArr(values.Monday ?? []);
+      const Tuesday = values.isTuesdayOff
+        ? []
+        : formatTimeArr(values.Tuesday ?? []);
+      const Wednesday = values.isWednesdayOff
+        ? []
+        : formatTimeArr(values.Wednesday ?? []);
+      const Thursday = values.isThursdayOff
+        ? []
+        : formatTimeArr(values.Thursday ?? []);
+      const Friday = values.isFridayOff ? [] : formatTimeArr(values.Friday) ?? [];
+      const Saturday = values.isSaturdayOff
+        ? []
+        : formatTimeArr(values.Saturday ?? []);
+      const Sunday = values.isSundayOff ? [] : formatTimeArr(values.Sunday ?? []);
+      const workingHours = [
+        { day: "Monday", hours: Monday, dayOff: values.isMondayOff },
+        { day: "Tuesday", hours: Tuesday, dayOff: values.isTuesdayOff },
+        { day: "Wednesday", hours: Wednesday, dayOff: values.isWednesdayOff },
+        { day: "Thursday", hours: Thursday, dayOff: values.isThursdayOff },
+        { day: "Friday", hours: Friday, dayOff: values.isFridayOff },
+        { day: "Saturday", hours: Saturday, dayOff: values.isSaturdayOff },
+        { day: "Sunday", hours: Sunday, dayOff: values.isSundayOff },
+      ];
+  
+      await TutorService.updateProfile({
+        workingHours: workingHours,
+      });
+  
+      dispatch({
+        type: "updateWorkingHours",
+        workingHours: workingHours,
+      });
+
+    } catch (e) {
+      message.error(e.message);
+    }
+
     setEditing(false);
     return false;
+  
   };
 
   const handleSwitchChange = (value, day) => {

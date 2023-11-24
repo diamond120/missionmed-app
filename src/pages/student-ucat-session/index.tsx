@@ -2,18 +2,15 @@ import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, CalendarOutlined,EllipsisOutlined } from "@ant-design/icons";
-import { Breadcrumb, message,Space,Dropdown,Menu } from "antd";
+import { Breadcrumb, message,Space,Dropdown } from "antd";
 import SessionDetails from "../../components/session-details";
-import UCATSessionService from "../../api/services/UCATSession";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
-import moment from "moment";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
 
 const StudentUCATSession = () => {
-
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
@@ -22,12 +19,11 @@ const StudentUCATSession = () => {
   const [agenda, setAgenda] = useState(null);
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
+  const [timezone, setTimeZone] = useState("");
   
-
   const getUCATSessionDetails = async () => {
     try {
       // const response = await UCATSessionService.getStudentUCATSession({});
-
       const data = {
         bookingFor : 'UCAT 1-to-1 Tutoring'
       }
@@ -50,6 +46,7 @@ const StudentUCATSession = () => {
             ? response.data?.data?.freezesessions
             : []
         );
+        setTimeZone(response.data?.data?.studentTimezone ?? null);
       } else {
         throw new Error(response.data.message);
       }
@@ -117,7 +114,6 @@ const StudentUCATSession = () => {
   useEffect(() => {
     getUCATSessionDetails();
   }, []);
-
 
   const updateUpcomingSession = (sessionId, data) => {
     const updatedSessions = upcomingSessions.map(session => {
@@ -190,7 +186,7 @@ const StudentUCATSession = () => {
               </Space>
             }
             
-            {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession}/>}
+            {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
           </div>
 
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
@@ -228,14 +224,14 @@ const StudentUCATSession = () => {
                     You can choose long-term tutor and book your first  <br />{" "}
                     UCAT session by pressing "Book Session" button below.
                     </div>
-                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession}/>
+                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession}  timezone={timezone}/>
                   </div>
                 </div>
               </div>
             </div>
           )}
         </div>
-        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession}/>
+        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone}/>
       </Section>
     </React.Fragment>
   );

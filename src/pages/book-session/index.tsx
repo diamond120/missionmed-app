@@ -34,7 +34,7 @@ const { TextArea } = Input;
 import { QuestionCircleFilled } from "@ant-design/icons";
 
 
-const BookSession = ({addUpcomingSession,title,moduleType}) => {
+const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
   const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -265,7 +265,7 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType}  />
+      <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType}  timezone={timezone} next={next}/>
       </div>
     </>;
   };
@@ -275,7 +275,8 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
       date : date,
       startTime : startTime,
       endTime : endTime,
-      day :getday
+      day :getday,
+      tutorId: form.getFieldValue('tutorId')
     };
     const response = await CommonService.checkSession(data);
 
@@ -546,9 +547,21 @@ const BookSession = ({addUpcomingSession,title,moduleType}) => {
 
   return (
     <>
+      { (!timezone) ?
+      <Tooltip
+        title={
+          "Please select your timezone first."
+        }
+        color={"#465078"}
+      >
+        <Button className={"primary-button"} >
+        {title}
+        </Button>
+      </Tooltip>  :
       <Button className={"primary-button"} onClick={showModal}>
         {title}
       </Button>
+      }
       <Modal
         title={modalTitle}
         open={isModalOpen}

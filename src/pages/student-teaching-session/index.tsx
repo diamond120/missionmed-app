@@ -24,6 +24,7 @@ const StudentTeachingSession = () => {
     const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
     const [moduleType, setModuleType] = useState("teaching");
     const [freezeSessions, setFreezeSessions] = useState([]);
+    const [timezone, setTimeZone] = useState("");
   
     const getMockInterviewDetails = async () => {
       try {
@@ -49,6 +50,7 @@ const StudentTeachingSession = () => {
               ? response.data?.data?.freezesessions
               : []
           );
+          setTimeZone(response.data?.data?.studentTimezone ?? null);
         } else {
           throw new Error(response.data.message);
         }
@@ -192,7 +194,7 @@ const StudentTeachingSession = () => {
               </Space>
               }
               {(upcomingSessions.length > 0 || pastSessions.length > 0) && 
-              <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching" />}
+              <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching"  timezone={timezone}/>}
             </div>
           </div>
 
@@ -231,7 +233,7 @@ const StudentTeachingSession = () => {
                     You can choose long-term tutor and book your first  <br />{" "}
                     Teaching session by pressing "Book Session" button below.
                     </div>
-                    <BookSession moduleType="teaching" title="Book Session" addUpcomingSession={addUpcomingSession}/>
+                    <BookSession moduleType="teaching" title="Book Session" addUpcomingSession={addUpcomingSession} timezone={timezone}/>
                   </div>
                 </div>
               </div>
@@ -239,7 +241,7 @@ const StudentTeachingSession = () => {
           )}
         </div>
       </Section>
-      <RescheduleInterview isOpen={isOpenReschedule} moduleType={moduleType} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession}/>
+      <RescheduleInterview isOpen={isOpenReschedule} moduleType={moduleType} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone}/>
     </React.Fragment>
   );
 };

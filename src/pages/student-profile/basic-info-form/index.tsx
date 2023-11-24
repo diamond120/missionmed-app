@@ -131,7 +131,12 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const disabledDate: RangePickerProps['disabledDate'] = current => {
       return current && current > moment().endOf('day');
     };
-
+  
+  const cancle = () => {
+    form.resetFields();
+    setEditing(false);
+  }
+  
   if(student?.loading){
     return(
       <Spin />
@@ -261,6 +266,9 @@ const BasicInfoForm: FC<any> = ({props}) => {
             {editing ? (
               <div className={"form-basic-button-wrap"}>
                 <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+                <Button className={"form-button button-space"} onClick={cancle}>
+                  Cancel
+                </Button>
               </div>
             ) : (
               <div className={"form-basic-button-wrap"}>

@@ -29,7 +29,7 @@ const Agenda = ({agenda, handleEditAgenda}) => {
   return (
     <>
       <div className={"upc-agenda con-box"}>
-          <h2 className={"secondary-title"}>Agenda<QuestionCircleFilled  style={{marginLeft:"8px"}}/></h2>
+          <h2 className={"secondary-title"}>Agenda<QuestionCircleFilled  style={{marginLeft:"8px"}} title={'Agenda'}/></h2>
           <div className={"con-box-wrap"}>
                 <div style={{display:'flex',flexDirection:'column',alignItems:'start', justifyContent:'space-between',height:'100%'}}>
                 {/* <ul className={'list-disc'}> */}

@@ -1,5 +1,5 @@
 import "./index.less"
-import { Button, Form, Checkbox, Tooltip, Spin } from "antd";
+import { Button, Form, Checkbox, Tooltip, Spin, Input } from "antd";
 import { FC, useState, useEffect } from "react";
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
@@ -11,7 +11,6 @@ const Specializations: FC<Any> = ({props}) => {
   const [lessionTypeID, setLessionTypeID] = useState(lession ?? []);
   const [editing, setEditing] = useState(false);
   const [checkboxlist, setCheckbox] = useState([]);
-
   const handleEditClick = () => {
     setEditing(true);
   };
@@ -66,7 +65,8 @@ const Specializations: FC<Any> = ({props}) => {
   }
   
   return (
-    <div className={"specializations-section"}>
+    <>
+      <div className={"specializations-section"}>
       <h2 className={"specializations-section-title"}>Specializations</h2>
       <Form className={"specializations-form"}>
         <Form.Item>
@@ -85,7 +85,7 @@ const Specializations: FC<Any> = ({props}) => {
                     disabled={ !editing }
                     onChange={ (e) => handleCheckbox(checkbox.id,e.target.checked)}
                   >
-                    <span style={{ color: !editing ? '#bfbfbf' : '' }}>{checkbox.title}</span>
+                    <span style={{ color: !editing ? '#bfbfbf' : '' }}>{checkbox.title} {checkbox.lession_time > 0 && ("("+checkbox.lession_time +" hour)")}</span>
                   </Checkbox>
                 ))}
               </div>
@@ -110,6 +110,7 @@ const Specializations: FC<Any> = ({props}) => {
           )} */}
       </Form>
     </div>
+    </>
   );
 };
 

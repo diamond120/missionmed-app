@@ -26,7 +26,8 @@ const Education: FC<Any> = ({ props }) => {
     "University of Wollongong",
   ]
   const optionsDegrees: string[] = ["MBBS", "MD", "DO", "BDS", "DVM", "DPharm", "BPT"]
-  
+  const [form] = Form.useForm();
+
   const handleEditClick = (e) => {
     setEditing(true);
     e.preventDefault();
@@ -46,7 +47,8 @@ const Education: FC<Any> = ({ props }) => {
     }
     
   }
-  const  cancle = () => {
+  const cancle = () => {
+    form.resetFields();
     setEditing(false);
   }
   const onFinish = (values: any) => {
@@ -63,7 +65,7 @@ const Education: FC<Any> = ({ props }) => {
   return (
     <div className={"education-section"}>
       <h2 className={"education-section-title"}>Education</h2>
-      <Form className={"education-form"} onFinish={onFinish}  initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0 ) ? tutor.educations : [{school:"" , degree:""}] }}>
+      <Form className={"education-form"}  form={form} onFinish={onFinish}  initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0 ) ? tutor.educations : [{school:"" , degree:""}] }}>
         <Form.List name={"educations"}>
           {(fields, { add, remove }) => (
             <React.Fragment>

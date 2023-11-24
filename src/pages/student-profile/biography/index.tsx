@@ -11,6 +11,8 @@ const Biography: FC<any> = ({props}) => {
   const [editing, setEditing] = useState(false);
   const [biography,setBiography] = useState<string | undefined | null>("")
   //const [ updateStudent ] = useUpdateStudentMutation()
+  const [form] = Form.useForm();
+
   const handleEditClick = () => {
     setEditing(true);
   };
@@ -32,6 +34,11 @@ const Biography: FC<any> = ({props}) => {
     })
   }
 
+  const  cancle = () => {
+    form.resetFields();
+    setEditing(false);
+  }
+
   if(student?.loading){
     return(
       <Spin />
@@ -41,13 +48,21 @@ const Biography: FC<any> = ({props}) => {
   return(
     <div className={"biography-section"}>
       <h2 className={"biography-section-title"}>Biography</h2>
+      <Form form={form}  className="biographyForm" >
       <div className={"biography-wrap"}>
         <p className={"biography-text"}>Here you can add notable experiences that you have had in the past.</p>
+        <Form.Item
+          name={"bio"}
+        >
         <Input.TextArea className={"biography-input"} placeholder={"Input your text here"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.biography ?? ''}  onChange={e => setBiography(e.target.value)} />
+        </Form.Item>
         {editing ? (
           <Form.Item>
             <div className={"form-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+                  Cancel
+              </Button>
             </div>
           </Form.Item>
         ) : (
@@ -58,6 +73,7 @@ const Biography: FC<any> = ({props}) => {
           </Form.Item>
         )}
       </div>
+      </Form>
     </div>
   )
 }

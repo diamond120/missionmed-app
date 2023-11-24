@@ -11,7 +11,8 @@ import {
   Row,
   Col,
   Input,
-  Spin
+  Spin,
+  Tooltip
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
@@ -26,7 +27,7 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 
 
-const BookInterview = ({addUpcomingSession}) => {
+const BookInterview = ({addUpcomingSession,timezone}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   
@@ -286,7 +287,7 @@ const BookInterview = ({addUpcomingSession}) => {
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutorId')} form={form}/>
+      <Calender tutorId={form.getFieldValue('tutorId')} form={form} timezone={timezone} next={next}/>
       </div>
     </>;
   };
@@ -359,9 +360,21 @@ const BookInterview = ({addUpcomingSession}) => {
 
   return (
     <>
-      <Button className={"primary-button"} onClick={showModal}>
+    { (!timezone) ?
+      <Tooltip
+        title={
+          "Please select your timezone first."
+        }
+        color={"#465078"}
+      >
+        <Button className={"primary-button"} >
         Book Interview
-      </Button>
+        </Button>
+      </Tooltip>  :
+        <Button className={"primary-button"} onClick={showModal}>
+          Book Interview
+        </Button>
+    }
       <Modal
         title={modalTitle}
         open={isModalOpen}

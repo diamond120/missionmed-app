@@ -18,6 +18,7 @@ const StudentMockInterview = () => {
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const [student, setStudentData] = useState("");
+  const [timezone, setTimeZone] = useState("");
 
   const handleReschedule = (sessionId) => {
     setIsOpenReschedule(true);
@@ -93,7 +94,7 @@ const StudentMockInterview = () => {
         );
         setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
         setStudentData(response.data?.data?.studentCredit ?? 0);
-        // setStudentData(0);
+        setTimeZone(response.data?.data?.studentTimezone ?? null);
       } else {
         throw new Error(response.data.message);
       }
@@ -149,7 +150,7 @@ const StudentMockInterview = () => {
             <h2 className={"tab-title"}>Mock Interview</h2>
             <div>Student credit: {student}</div>
             {(student == 0 ) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a> }
-            { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession}/>}
+            { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
             <MockInterviewDetails
@@ -191,7 +192,7 @@ const StudentMockInterview = () => {
                       </div>
                     }
                     { ( student > 0) ?
-                      <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession}/> : <></>
+                      <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession} timezone={timezone}/> : <></>
                     }
                   </div>
                 </div>
@@ -199,7 +200,7 @@ const StudentMockInterview = () => {
             </div>
           )}
         </div>
-        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession}/>
+        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone}/>
       </Section>
     </React.Fragment>
   );
