@@ -17,7 +17,7 @@ const StudentMockInterview = () => {
   const [agenda, setAgenda] = useState(null);
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
-  const [student, setStudentData] = useState("");
+  const [student, setStudentData] = useState("0");
   const [timezone, setTimeZone] = useState("");
 
   const handleReschedule = (sessionId) => {

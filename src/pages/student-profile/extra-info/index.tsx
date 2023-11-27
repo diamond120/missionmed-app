@@ -9,8 +9,7 @@ import StudentService from "../../../api/services/Student";
 const ExtraInfo: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
-    const [form] = Form.useForm();
-  const { Option } = Select;
+  const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
   const [residenceStatus, setResidenceStatus] = useState<string | null | undefined>(student.statusOfResidence);
   const [specification, setSpecification] = useState<string | null | undefined>(student.specification);
@@ -50,6 +49,11 @@ const ExtraInfo: FC<any> = ({props}) => {
 
   const cancle = () => {
     setResidenceStatus(student?.statusOfResidence);
+    setSpecification(student?.specification);
+    setAtsi(student?.atsi);
+    setRural(student?.rural);
+    setFinancialHardship(student?.financialHardship);
+    setGws(student?.gws);
     form.resetFields();
     setEditing(false);
   }
