@@ -6,14 +6,12 @@ import {
   message,
   Select,
   Collapse,
-  Avatar,
   Radio,
   Row,
   Col,
   Input,
 } from "antd";
 import CommonService from "../../../api/services/Common";
-import MockInterviewsService from "../../../api/services/MockInterviews";
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
 import moment from "moment";
@@ -21,7 +19,6 @@ import "./index.less";
 import { useNavigate } from "react-router-dom";
 import "./index.less";
 
-const { Panel } = Collapse;
 const { TextArea } = Input;
 
 const RescheduleInterview = ({
@@ -91,7 +88,6 @@ const RescheduleInterview = ({
     getUniversityList();
   },[])
 
-
   const stepsTitles = [
     "Reschedule Interview",
     "Book New Time for Interview",
@@ -150,7 +146,6 @@ const RescheduleInterview = ({
     form.resetFields();
   };
 
-
   const handleOk = () => {
     handleOpen(false);
   };
@@ -201,8 +196,7 @@ const RescheduleInterview = ({
               <div style={{ fontSize: 16 }}>{formatTime(interviewSummary?.session_end_time)}</div>
             </Col>
           </Row>
-        </div>
-        
+        </div>        
         <Form.Item
           name="university"
           label="Which university are you sitting a mock interview for?"
@@ -239,7 +233,6 @@ const RescheduleInterview = ({
       </>
     );
   };
-
 
   const Step2From = () => {
     return <>

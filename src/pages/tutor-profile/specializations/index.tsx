@@ -56,7 +56,6 @@ const Specializations: FC<Any> = ({props}) => {
     }
     console.log("lessionTypeID",lessionTypeID);
   }
-  
 
   if(tutor?.loading){
     return(

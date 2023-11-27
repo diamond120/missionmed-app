@@ -6,10 +6,7 @@ import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
 import {groupSessionsByDate, formatTime, checkSessionOnToday} from "../../../common/common";
 import "./index.less";
-import RescheduleInterview from "../reschedule-interview";
 import CancleSession from "../../../pages/cancle-session";
-import UCATSessionService from "../../../api/services/UCATSession";
-
 
 const SessionList = ({
   date,
@@ -39,7 +36,6 @@ const SessionList = ({
     </ul>
   </div>
 );
-
 
 const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule,pagesession,cancleUpSession,handleEditLink}) => {
   const user = useUser();
@@ -190,9 +186,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {} , handleResch
               <>
                 <Link to={`/tutor/interview-summary/${session.id}/${pagesession}`}>
                   <Button className={"secondary-button"}>Session Summary</Button>
-                </Link>
-              
-               
+                </Link>               
               </>
             )}
           </div>

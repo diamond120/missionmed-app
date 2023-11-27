@@ -1,7 +1,6 @@
 import "./index.less"
 import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
-//import { useUpdateStudentMutation } from "../../../graphql"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import {default as StudentService} from "../../../api/services/Student";
 

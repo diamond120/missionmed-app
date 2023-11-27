@@ -6,13 +6,9 @@ import {  useEffect, useState } from "react";
 
 import CommonService from "../../../api/services/Common";
 
-
-
-
-
 const MyTeam = () => {
 
-  const [team, setTeam] = useState();
+const [team, setTeam] = useState();
 
 const getTeamData = async () => {
   try{
@@ -29,13 +25,12 @@ const getTeamData = async () => {
   }
 }
 
-
   useEffect(() => {
     getTeamData();
     console.log(team);
   },[] );
 
-    return(
+  return(
     <div className={"my-team-section"}>
       <h2 className={"my-team-section-title"}>My MissionMed Team</h2>
       <div className={"my-team-wrap"}>

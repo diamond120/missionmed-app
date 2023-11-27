@@ -165,7 +165,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
         eventBorderColor='0'
       />
       <Modal
-          title="Select Slot"
+          title="Available Slot For Mock Interview"
           open={isModalOpen}
           onOk={handleSubmit}
           onCancel={handleCancel}
@@ -204,5 +204,3 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
 }
 
 export default Calender
-
-
