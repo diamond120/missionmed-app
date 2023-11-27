@@ -167,7 +167,7 @@ const Calender = ({tutorId,rescheduleDate, form,moduleType ,timezone,next}) => {
         />
 
         <Modal
-          title="Select Slot"
+          title={moduleType == 'ucatStudent' ? 'Available Slot For UCAT Teaching Session' : 'Available Slot For Student Teaching Session'}
           open={isModalOpen}
           onOk={handleSubmit}
           onCancel={handleCancel}

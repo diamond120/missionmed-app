@@ -21,18 +21,16 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
   }
 
   const handleSubmit = async () => {
-    const values = await form.validateFields();
-      
+
+      const values = await form.validateFields();
       const data = {
         link : values.sessionLink,
         sessionId : values.sessionId
       }
-
       handleEditLink(data);
       upcomingInterview['sessionLink'] = values.sessionLink;
       setIsModalOpen(false);
-      
-    
+
   };
 
   const handleCancel = () => {
