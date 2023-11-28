@@ -8,8 +8,7 @@ import StudentService from "../../../api/services/Student";
 const ApplicationInfo: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
-    const profileStaticData = useProfileStaticDataContext();
-
+  const profileStaticData = useProfileStaticDataContext();
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
   const [applCycle, setApplCycle] = useState<string | undefined | null>(student.applicantCycle)
@@ -137,7 +136,6 @@ const ApplicationInfo: FC<any> = ({props}) => {
                 Cancel
               </Button>
             </div>
-            
 
           ) : (
 
@@ -150,4 +148,5 @@ const ApplicationInfo: FC<any> = ({props}) => {
     </div>
   )
 }
+
 export default ApplicationInfo

@@ -15,6 +15,7 @@ const BufferTime: FC<Any> = ({props}) => {
     const handleTimeChange = (e: RadioChangeEvent) => {
       setSelectedTime(e.target.value);
     };
+
     const handleEditClick = () => {
       setEditing(true);
     };
@@ -66,21 +67,16 @@ const BufferTime: FC<Any> = ({props}) => {
             </div>
           </Form.Item>
           {editing ? (
-
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
               <Button className={"form-button button-space"} onClick={cancle}>
                 Cancel
               </Button>
             </div>
-            
-
           ) : (
-
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleEditClick}>Edit</Button>
             </div>
-
           )}
         </Form>
       </div>

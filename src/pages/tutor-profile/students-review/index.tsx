@@ -48,4 +48,5 @@ const StudentsReview = ({reviews}) => {
     // </div>
   )
 }
+
 export default StudentsReview

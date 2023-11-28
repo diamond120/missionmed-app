@@ -1,47 +1,42 @@
 import { useEffect, useState } from "react"
-import { Layout, Menu, Select, Avatar, Badge } from 'antd';
-import {  UserOutlined,DownOutlined,ReadOutlined, BellOutlined,LogoutOutlined, FileDoneOutlined,CommentOutlined,CaretRightOutlined,CaretDownOutlined, } from '@ant-design/icons';
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { Layout, Menu, Avatar, Badge } from 'antd';
+import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { useNavigate, useLocation } from "react-router-dom"
 import { SvgIcon } from "../icon";
-import {useUser} from "../../api/providers/UserProvider";
-import {useStudent} from "../../api/providers/StudentProvider";
-import {useTutor} from "../../api/providers/TutorProvider";
-import {useAuthContext} from "../../api/context/AuthContext.js";
+import { useUser } from "../../api/providers/UserProvider";
+import { useStudent } from "../../api/providers/StudentProvider";
+import { useTutor } from "../../api/providers/TutorProvider";
+import { useAuthContext } from "../../api/context/AuthContext.js";
 import NotificationsService from "../../api/services/Notifications"
-import {useNotificationContext}  from "../../api/context/NotificationContext"
+import { useNotificationContext }  from "../../api/context/NotificationContext"
 import "./index.less"
 
 const { Sider } = Layout;
-const { Option } = Select;
 const { SubMenu } = Menu;
 
 const SidebarMenu: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
   const [appReviewPage,setAppReviewPage]=useState("")
- 
   const [avatarProfile,setAvatarProfile]= useState<string | undefined | null>("")
   const {unreadNotificationCount, setUnreadNotificationCount} = useNotificationContext();
-
   const navigate = useNavigate()
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
     setSelectedMenu(collapsed ? "2" : "1");
   };
-
   const user = useUser();
   const student = useStudent();
   const tutor = useTutor();
-
   const {setAuthenticated} = useAuthContext();
   let isStudent = false;
   const location = useLocation();
+
   if(user.role == "student"){
     isStudent = true;
   }else{
     isStudent = false;
   }
-  
 
   const defaultUrl =  isStudent ? "/application_review" : "/tutor/application_review";
   const [current, setCurrent] = useState(
@@ -58,9 +53,11 @@ const SidebarMenu: React.FC = () => {
     console.log(isStudent);
     isStudent ?  navigate('application_review') : navigate('/tutor/application_review');
   }
+
   const removeTokenFromLocalStorage = () => {
     localStorage.removeItem("jwt");
   };
+
   const handleSignOut = () => {
     removeTokenFromLocalStorage();
     setAuthenticated(false);
@@ -85,13 +82,10 @@ const SidebarMenu: React.FC = () => {
     }catch(e){
       console.log(e);
     }
-    
   }
 
   useEffect(() => {
     if (performance.navigation.type === PerformanceNavigation.TYPE_RELOAD) {
-      // Redirect to the desired URL
-      
       if(location.pathname === '/' || location.pathname === '' ) {
         setCurrent(current);
       } else {
@@ -168,9 +162,6 @@ const SidebarMenu: React.FC = () => {
         </Menu.Item>
         )
         }
-            
-      
-      
 
         {/* {!isStudent && (
           <>

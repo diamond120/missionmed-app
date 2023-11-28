@@ -1,9 +1,7 @@
 import "./index.less"
 import { SvgIcon } from "../../../components/icon"
 import { Button } from "antd"
-import React from "react"
 import { useParams } from "react-router-dom"
-
 
 const FinalReviewCompleteStep = () => {
 
@@ -31,4 +29,5 @@ const FinalReviewCompleteStep = () => {
     </div>
   )
 }
+
 export default FinalReviewCompleteStep

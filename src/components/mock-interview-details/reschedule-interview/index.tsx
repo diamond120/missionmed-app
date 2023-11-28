@@ -1,16 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Form,
-  Modal,
-  message,
-  Select,
-  Collapse,
-  Radio,
-  Row,
-  Col,
-  Input,
-} from "antd";
+import { Button, Form, Modal, message, Select,  Radio, Row, Col, Input } from "antd";
 import CommonService from "../../../api/services/Common";
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
@@ -39,9 +28,6 @@ const RescheduleInterview = ({
 
   const getInterviewSummary = async (sessionId) => {
     try {
-      // const response = await MockInterviewsService.getInterviewSummary(
-      //   sessionId
-      // );
       const data = {
         sessionId : sessionId,
         bookingFor : 'Mock interviews'
@@ -117,7 +103,6 @@ const RescheduleInterview = ({
     const formData = form.getFieldsValue(true);
     formData.bookingFor = 'Mock interviews';
     try {
-      // const response = await MockInterviewsService.rescheduleInterview({...formData, mockinterviewId:interviewSummary?.id});
       formData.day = getDay(moment(formData.date));
       formData.startTime =  formatTime(formData.sessionStartTime);
       formData.endTime =  formatTime(formData.sessionEndTime);

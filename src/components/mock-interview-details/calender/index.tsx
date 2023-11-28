@@ -126,9 +126,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
     };
     
     const handleSubmit =  async () => {
-   
       const data = form.getFieldsValue(true);
-      
       if (subSlotList.length > 0  && data.subSlot >= 0) {
         console.log(data.subSlot );
         const slot = subSlotList[data.subSlot];

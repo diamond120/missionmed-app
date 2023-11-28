@@ -1,4 +1,3 @@
-
 import "./index.less"
 import { Rate } from 'antd';
 
@@ -14,4 +13,5 @@ const AverageRating = ({student, average}) => {
     </div>
   )
 }
+
 export default AverageRating

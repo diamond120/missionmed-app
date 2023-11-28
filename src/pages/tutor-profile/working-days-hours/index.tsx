@@ -1,29 +1,24 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Alert, Button, Form, Space, Spin, Switch, TimePicker, message } from "antd";
-import React, { FC, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import "./index.less";
 import moment from "moment";
-import {
-  useTutor,
-  useTutorDispatch,
-} from "../../../api/providers/TutorProvider";
+import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
 import TutorService from "../../../api/services/Tutor";
 import { tutorWorkingHours } from "../../../common/common";
 
 const WorkingDaysHours: FC<Any> = ({ props }) => {
   const tutor = useTutor();
   const dispatch = useTutorDispatch();
- 
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
-  // const [timeMessage, setTimeMessage] = useState("");
   const isMondayOff = Form.useWatch("isMondayOff", form);
   const isTuesdayOff = Form.useWatch("isTuesdayOff", form);
   const isWednesdayOff = Form.useWatch("isWednesdayOff", form);
   const isThursdayOff = Form.useWatch("isThursdayOff", form);
   const isSaturdayOff = Form.useWatch("isSaturdayOff", form);
   const isSundayOff = Form.useWatch("isSundayOff", form);
-  
+  const format = "h:mm a";  
 
   const range = (start: number, end: number) => {
     const result = [];
@@ -32,8 +27,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
     }
     return result;
   };
-
-  const format = "h:mm a";
 
   const checkTimeFrame = async (rule, value) => {
     const [day, index, type] = rule.field.split(".");
@@ -88,7 +81,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   );
 
   const handleEditClick = (e) => {
-
     try {
       if(!tutor?.timezone) {
       throw new Error("Please select time zone first.");
@@ -254,7 +246,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Monday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -263,6 +255,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           use12Hours
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -280,7 +273,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Monday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -288,6 +281,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isMondayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button
@@ -360,7 +354,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Tuesday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -368,6 +362,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isTuesdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -385,7 +380,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Tuesday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -393,6 +388,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isTuesdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button
@@ -464,7 +460,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Wednesday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -472,6 +468,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isWednesdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -489,7 +486,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Wednesday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -497,6 +494,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isWednesdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button
@@ -569,7 +567,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Thursday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -577,6 +575,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isThursdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -594,7 +593,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Thursday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -602,6 +601,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isThursdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button
@@ -674,7 +674,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Friday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -682,6 +682,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isFridayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -699,7 +700,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Friday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -707,6 +708,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isFridayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button
@@ -778,7 +780,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Saturday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -786,6 +788,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isSaturdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -803,7 +806,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Saturday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -811,6 +814,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isSaturdayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button
@@ -882,7 +886,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Sunday", name, "end"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -890,6 +894,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isSundayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Form.Item
@@ -907,7 +912,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         dependencies={[["Sunday", name, "start"]]}
                       >
                         <TimePicker
-                          minuteStep={15}
+                          minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
                           className={"input"}
@@ -915,6 +920,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             form.getFieldValue("isSundayOff") == true ||
                             !editing
                           }
+                          inputReadOnly
                         />
                       </Form.Item>
                       <Button

@@ -1,20 +1,6 @@
 import "./index.less";
-import {
-    Button,
-    Form,
-    Modal,
-    message,
-    Select,
-    Collapse,
-    Input,
-    Checkbox,
-    DatePicker,
-    Spin
-} from "antd";
-import React, { useState } from "react";
-import UCATSessionService from "../../api/services/UCATSession";
-import TeachingSessionService from "../../api/services/TeachingSession";
-import {formatDateV1, formatTime, formatDate,getDay} from "../../common/common";
+import { Button, Form, Modal, message, Select, Collapse, Input, Checkbox, DatePicker, Spin } from "antd";
+import { useState } from "react";
 import moment from "moment";
 import type { RangePickerProps } from 'antd/es/date-picker';
 import CommonService from "../../api/services/Common";
@@ -84,14 +70,14 @@ const FreezeSession = ({title,moduleType,addFreezeSession}) => {
   const disabledDate: RangePickerProps['disabledDate'] = current => {
     if(typeof startDate == "string") {
       const parts = startDate.split('/');
-    if( parts.length == 3 ) {
-      const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
-      const currentDate = new Date(current);
-      return current && current.isBefore(dateObject,'DD-MM-YYYY');
-    } else {
-      return false;
-    }
-    }
+      if( parts.length == 3 ) {
+        const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
+        const currentDate = new Date(current);
+        return current && current.isBefore(dateObject,'DD-MM-YYYY');
+      } else {
+        return false;
+      }
+      }
   };
 
   return (

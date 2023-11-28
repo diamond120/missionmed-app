@@ -4,9 +4,8 @@ import { Button, Form, Input, Modal, Tabs } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
-import {groupSessionsByDate, formatTime, checkSessionOnToday} from "../../../common/common";
+import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
 import "./index.less";
-import RescheduleInterview from "../reschedule-interview";
 import CancleSession from "../../../pages/cancle-session";
 
 const SessionList = ({
@@ -39,7 +38,6 @@ const SessionList = ({
 const SessionItem = ({ session, type, handleRateSession = () => {} , handleReschedule,handleEditLink, cancleUpSession}) => {
   const user = useUser();
   const userRole = user.role;
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const { TextArea } = Input;
@@ -183,12 +181,8 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
   const { TabPane } = Tabs;
   const navigation = useNavigate();
   const [rateSession, setRateSession] = useState(null);
- 
-
   const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
   const formatedpastSessions= groupSessionsByDate(pastSessions, "desc");
-  
-
   const handleRateSession = (event, session) => {
     setRateSession({ id: session.id, tutorId: session.tutor_id });
   };

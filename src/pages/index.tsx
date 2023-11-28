@@ -1,7 +1,4 @@
-
-
-
-import React, { FC, lazy, memo } from "react";
+import { FC, lazy, memo } from "react";
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { DefaultLayout } from "../components/layout";
 import { Loader } from "../components/layout/Loader";

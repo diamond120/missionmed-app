@@ -70,7 +70,7 @@ const FinalReviewStep: FC<UploadStepProps> = ({ getUrlFile, id, }) => {
     // }
   };
 
-  const sendNotification =()=>{
+  const sendNotification = () => {
     // try {
     //   createNotification({
     //     variables: {

@@ -1,19 +1,12 @@
-
-
-
 import "./index.less"
-
 import { Form, Input, Button,message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
-import CommonService from "../../api/services/Common";
+import CommonService from "../../api/services/Common"
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react";
-
 
 const ForgotPassword = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
-    const [errorMessage, setErrorMessage] = useState('');
    
     const handleSubmit = async () => {
         try{

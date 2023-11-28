@@ -1,5 +1,5 @@
 import { PaperClipOutlined } from "@ant-design/icons"
-import React, { FC, useEffect, useState } from "react"
+import { FC, useEffect, useState } from "react"
 
 interface InitialDraftPreviewProps {
   getUrlFile: (fileUrl: string) => void;

@@ -8,7 +8,7 @@ import { RcFile, UploadProps } from "antd/lib/upload/interface"
 import { getToken } from "../../../common/common";
 import { BASE_URL } from "../../../config/app-config";
 import TutorService from "../../../api/services/Tutor";
-import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import {  useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
 import confirm from "../../../components/confirm";
 import ChangePassword from "../../change-password";
 
@@ -16,9 +16,9 @@ const ProfilePicture: FC<Any> = ({ props }) => {
   const tutor = useTutor();
   const dispatch = useTutorDispatch();
   const [fileUrl, setFileUrl] = useState<string>(tutor?.profilePicture ?? '');
-  //const [idFile, setIdFile] = useState('')
   const [uploading, setUploading] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
+
   const uploadProps: UploadProps = {
     name: 'file',
     headers: {
@@ -82,14 +82,14 @@ const ProfilePicture: FC<Any> = ({ props }) => {
     };
     await confirm(handleConfirm, "Are you sure?", "You want to delete profile picture!");
   };
-    
 
-const handleSave = ()=>{
-  updatedTutor()
-  handleOnChange()
-}
+  const handleSave = ()=>{
+    updatedTutor()
+    handleOnChange()
+  }
+
   const updatedTutor =  async () => {
-   await TutorService.updateProfile({
+    await TutorService.updateProfile({
       profilePicture: fileUrl
     })
     dispatch({

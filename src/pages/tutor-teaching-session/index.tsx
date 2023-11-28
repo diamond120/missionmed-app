@@ -1,10 +1,9 @@
 import "./index.less";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, message } from "antd";
 import SessionDetails from "../../components/session-details";
-import TeachingSessionService from "../../api/services/TeachingSession";
 import CommonService from "../../api/services/Common";
 
 const TutorTeachingSession = () => {
@@ -49,14 +48,11 @@ const TutorTeachingSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-
       const data = {
         "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
         'bookingFor' : 'Interview 1-to-1 Tutoring'
       }
-
-
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         setAgenda(agendaDetails);
@@ -80,21 +76,15 @@ const TutorTeachingSession = () => {
 
   const handleEditLink = async(detail) => {
     try{
-
       const data = {
         "sessionId":detail?.sessionId,
         "sessionLink":detail.link,
         'bookingFor' : 'Interview 1-to-1 Tutoring'
       }
-      
-      
       const response = await CommonService.postAPI('/session-data',data)
-
-
       if(response.data.success){
         message.success(response.data.message);
           getMockInterviewDetails();
-        // setAgenda(link);
       }else{
         throw new Error(response.data.message)
       }
@@ -157,7 +147,6 @@ const TutorTeachingSession = () => {
             </div>
           )}
         </div>
-        
       </Section>
     </>
   );

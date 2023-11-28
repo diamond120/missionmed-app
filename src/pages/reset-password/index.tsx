@@ -1,9 +1,5 @@
-
-
-
 import "./index.less"
-
-import { Form, Input, Button, Checkbox,message } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import CommonService from "../../api/services/Common";
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -97,5 +93,3 @@ const ResetPassword = () => {
 }
 
 export default ResetPassword;
-
-

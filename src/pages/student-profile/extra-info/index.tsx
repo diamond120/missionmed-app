@@ -1,6 +1,6 @@
 
 import "./index.less";
-import { Form, Input, Select, Radio, Button, AutoComplete, Spin } from "antd"
+import { Form, Select, Radio, Button, Spin } from "antd"
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { FC, useState } from "react";
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
@@ -25,6 +25,7 @@ const ExtraInfo: FC<any> = ({props}) => {
     updatedStudent()
     setEditing(false);
   };
+
   const updatedStudent = async () => {
     await StudentService.updateAppInfo({
       statusOfResidence: residenceStatus !== '' ? residenceStatus: student?.statusOfResidence,

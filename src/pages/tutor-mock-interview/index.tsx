@@ -3,7 +3,6 @@ import { Breadcrumb, Button, message } from "antd";
 import { HomeOutlined, FileSearchOutlined,CalendarOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import MockInterviewDetails from "../../components/mock-interview-details";
-import MockInterviewsService from "../../api/services/MockInterviews";
 import "./index.less";
 import CommonService from "../../api/services/Common";
 
@@ -15,7 +14,6 @@ const TutorMockInterview = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-      // const response = await MockInterviewsService.getTutorMockInterviews({});
       const data = {
         bookingFor : 'Mock interviews'
       }
@@ -49,10 +47,6 @@ const TutorMockInterview = () => {
         'bookingFor' : 'Mock interviews'
       }
       const response = await CommonService.postAPI('/session-data',data)
-      // const response = await MockInterviewsService.updateMockInterviewData({
-      //   mockInterviewId: upcomingInterview?.id,
-      //   agenda: agendaDetails,
-      // });
       if (response.data.success) {
         setAgenda(agendaDetails);
       } else {
@@ -143,4 +137,5 @@ const TutorMockInterview = () => {
     </>
   );
 };
+
 export default TutorMockInterview;

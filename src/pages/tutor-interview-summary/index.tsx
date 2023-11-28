@@ -4,40 +4,21 @@ import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import SessionSummary from "./session-summary";
 import PostSessionTasks from "./post-session-tasks";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import MockInterviewsService from "../../api/services/MockInterviews"
 import SectionDetails from "../../components/mock-interview-summary/section-details";
 import SessionDetails from "../../components/mock-interview-summary/session-details";
 import Report from "../../components/mock-interview-summary/report";
-import UCATSessionService from "../../api/services/UCATSession";
-import TeachingSessionService from "../../api/services/TeachingSession";
 import CommonService from "../../api/services/Common";
 
 const TutorInterviewSummary = () => {
   let { mockInterviewId } = useParams();
   let { type } = useParams();
-  console.log(type);
   const [interviewSummary, setInterviewSummary] = useState({});
   // const pagesession = new URLSearchParams(window.location.search).get('type');
 
   const getInterviewSummary = async () => {
      try {
-      // let response
-      // if(type == 'ucat') {
-      //     response = await UCATSessionService.getSessionummary(
-      //     mockInterviewId
-      //     );
-      //   } else if(type == 'teaching') {
-      //     response = await TeachingSessionService.getSessionummary(
-      //     mockInterviewId
-      //     );
-      //   } else {
-      //     response = await MockInterviewsService.getInterviewSummary(
-      //     mockInterviewId
-      //     );
-      //   }
-
       const data = {
         sessionId : mockInterviewId,
         bookingFor : type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'

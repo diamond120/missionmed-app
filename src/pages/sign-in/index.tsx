@@ -1,20 +1,16 @@
-
-
-
 import "./index.less"
-
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import Authentication from "../../api/services/Authentication";
 import { Link, useNavigate } from "react-router-dom"
-import {useUserDispatch } from "../../api/providers/UserProvider.jsx";
-import {useAuthContext} from "../../api/context/AuthContext.js";
-
+import { useUserDispatch } from "../../api/providers/UserProvider.jsx";
+import { useAuthContext } from "../../api/context/AuthContext.js";
 
 const SignIn = () => {
-   const [form] = Form.useForm();
+  
+  const [form] = Form.useForm();
   // //const [loginMutation, { loading, error, data }] = useLoginMutation();
-   const navigate = useNavigate()
+  const navigate = useNavigate()
   // // const isTutor = useMeQuery().data?.me?.tutor?.data?.id
   // // const isStudent = useMeQuery().data?.me?.student?.data?.id
   const dispatch = useUserDispatch();
@@ -42,9 +38,7 @@ const SignIn = () => {
         throw new Error(result.data.message);
       }
     } catch (e) {
-      // console.log(e);
       message.error(e.message);
-      // alert('Error Your email or password is wrong!')
     }
   };
 
@@ -106,11 +100,8 @@ const SignIn = () => {
 
       </div>
       <div className={"sign-in-right"}></div>
-
     </div>
   )
 }
 
 export default SignIn;
-
-

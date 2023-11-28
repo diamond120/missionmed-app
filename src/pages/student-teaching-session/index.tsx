@@ -1,18 +1,14 @@
 import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
-import { HomeOutlined, CalendarOutlined,EllipsisOutlined,SearchOutlined } from "@ant-design/icons";
-import { Breadcrumb, message,Space,Dropdown,Menu,Button } from "antd";
+import { HomeOutlined, CalendarOutlined,EllipsisOutlined } from "@ant-design/icons";
+import { Breadcrumb, message,Space,Dropdown } from "antd";
 import SessionDetails from "../../components/session-details";
-import MockInterviewsService from "../../api/services/MockInterviews";
-import TeachingSessionService from "../../api/services/TeachingSession";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
-import moment from "moment";
 import CommonService from "../../api/services/Common";
-
 
 const StudentTeachingSession = () => {
 
@@ -185,8 +181,8 @@ const StudentTeachingSession = () => {
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
             <div style={{gap:15,display:'flex',flexWrap:'wrap',alignItems:'center'}}>
               { (upcomingSessions.length > 0)  &&
-              <Space direction="vertical" >
-                <Space wrap >
+              <Space direction="vertical" className="dropdownIcon">
+                <Space wrap  >
                   <Dropdown placement="bottomLeft" menu={{items}} overlayClassName="session-dropdown">
                     <EllipsisOutlined style={{padding:11,borderRadius:8,border: '1px solid #00000026',backgroundColor:'#fff',cursor:'pointer'}}/>
                   </Dropdown>

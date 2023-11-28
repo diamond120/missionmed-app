@@ -19,8 +19,6 @@ import { useEffect, useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useTutor } from "../../api/providers/TutorProvider"
 
-// import { useMeQuery, useTutorsQuery } from "../../graphql"
-
 const TutorProfile = () => {
   const [rating, setRating] = useState(null);
   const tutor = useTutor();

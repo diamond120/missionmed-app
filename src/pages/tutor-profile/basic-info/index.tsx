@@ -1,20 +1,19 @@
 import "./index.less"
-import { AutoComplete, Button, Form, Input, Select, Switch,Spin } from "antd"
-import { FC, useEffect, useState } from "react"
-// import { useUpdateTutorMutation } from "../../../graphql"
+import { AutoComplete, Button, Form, Input, Select, Switch, Spin } from "antd"
+import { FC, useState } from "react"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 import { AddressDetails } from "../../../types/AddressDetails"
-import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
 import TutorService from "../../../api/services/Tutor";
-import {GOOGLE_MAP_API_KEY} from "../../../config/app-config";
-import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
-import {AgeList} from "../../../common/common";
+import { GOOGLE_MAP_API_KEY } from "../../../config/app-config";
+import { useProfileStaticDataContext } from "../../../api/context/ProfileStaticDataContext";
+import { AgeList } from "../../../common/common";
 
 const BasicInfoForm: FC<Any> = ({props}) => {
+
   const [form] = Form.useForm();
   const { Option } = Select;
   const tutor = useTutor();
-
   const dispatch = useTutorDispatch();
   const profileStaticData = useProfileStaticDataContext();
   const [editing, setEditing] = useState(false);
@@ -29,9 +28,9 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const timezones = {
     ...allTimezones,
   }
-
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+
   const updatedTutor =  async () => {
     await TutorService.updateProfile({
       fullName: fullName !== '' ? fullName : tutor?.fullName,
@@ -53,7 +52,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       }
     })
   }
-  
+
   const optionsLocation: string[]= ( profileStaticData.location ? profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title })): [] )
 
   const handleEditClick = () => {
@@ -75,7 +74,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
     form.resetFields();
     setEditing(false);
   }
- 
+
   const success = (pos:{ coords: { latitude: number; longitude: number }}) => {
     const myLat = pos.coords.latitude
     const myLng = pos.coords.longitude
@@ -110,6 +109,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       </Select>
     )
   }
+
   const handleFilter = (inputValue: string, option: any) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
 
   if(tutor?.loading){
@@ -117,6 +117,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       <Spin />
     )
   }
+
   return (
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
@@ -243,6 +244,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       </Form>
     </div>
   );
+
 }
 
 export default BasicInfoForm

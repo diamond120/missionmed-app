@@ -6,7 +6,6 @@ const DocViewer = ({report}) => {
   return <iframe src={`https://docs.google.com/gview?url=${encodeURIComponent(report)}&embedded=true`} width="100%" height="100%"/>
 }
 
-
 const Report = ({ report, title }) => {
   return (
     <>

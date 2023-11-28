@@ -1,15 +1,14 @@
 import "./index.less"
 import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
-import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
-import {default as StudentService} from "../../../api/services/Student";
+import { useStudent, useStudentDispatch } from "../../../api/providers/StudentProvider";
+import { default as StudentService } from "../../../api/services/Student";
 
 const Biography: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
   const [editing, setEditing] = useState(false);
   const [biography,setBiography] = useState<string | undefined | null>("")
-  //const [ updateStudent ] = useUpdateStudentMutation()
   const [form] = Form.useForm();
 
   const handleEditClick = () => {
@@ -20,6 +19,7 @@ const Biography: FC<any> = ({props}) => {
     updatedStudent()
     setEditing(false);
   };
+
   const updatedStudent = async () => {
     await StudentService.updateProfile({
       addBiography: true,
@@ -76,4 +76,5 @@ const Biography: FC<any> = ({props}) => {
     </div>
   )
 }
+
 export default Biography

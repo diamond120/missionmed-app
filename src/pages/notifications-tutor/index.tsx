@@ -1,9 +1,9 @@
 
 
 import "./index.less";
-import React, { useState, FC, useEffect } from "react";
+import { useState, FC, useEffect } from "react";
 import { Breadcrumb, Button, Table, Input, Checkbox, AutoComplete } from "antd";
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import type { TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, Key } from 'antd/es/table/interface';
 import { HomeOutlined, DeleteOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
@@ -93,8 +93,6 @@ const NotificationsTutor: FC = () => {
       console.log(result);
     }
   };
-
-  
 
   const handleSearch = (value: string) => {
     setSearchText(value);

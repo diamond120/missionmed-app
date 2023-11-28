@@ -1,4 +1,3 @@
-
 import "./index.less"
 import { Form, Input, Select, Switch, Button, AutoComplete, InputNumber, DatePicker, Spin } from "antd"
 import { FC, useState } from "react"
@@ -15,6 +14,7 @@ import type { RangePickerProps } from 'antd/es/date-picker';
 const { Option } = Select;
 
 const BasicInfoForm: FC<any> = ({props}) => {
+
   const [form] = Form.useForm();
   const student = useStudent();
   const dispatch = useStudentDispatch();
@@ -129,8 +129,8 @@ const BasicInfoForm: FC<any> = ({props}) => {
 
 
   const disabledDate: RangePickerProps['disabledDate'] = current => {
-      return current && current > moment().endOf('day');
-    };
+    return current && current > moment().endOf('day');
+  };
   
   const cancle = () => {
     form.resetFields();
@@ -146,7 +146,6 @@ const BasicInfoForm: FC<any> = ({props}) => {
   return (
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
-
         <Form
           className={"basic-information-form"}
           form={form}

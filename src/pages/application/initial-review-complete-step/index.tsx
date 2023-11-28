@@ -1,22 +1,18 @@
 import './index.less'
 import { Button } from "antd"
-import React from "react"
 import { SvgIcon } from "../../../components/icon"
 import { useParams } from "react-router-dom"
-
 
 const InitialReviewCompleteStep = () =>{
   const {id} = useParams()
   //const [updateApplication] = useUpdateApplicationMutation();
-
   // const application = useApplicationsQuery({
   //   variables: { filter: { id: { eq: id } } }
   // })
-
   const application = [];
   const selectedApplication = application.data?.applications?.data?.[0]
-const fileName = selectedApplication?.attributes?.checked_draft?.data?.attributes?.name
-const downloadFile = selectedApplication?.attributes?.checked_draft?.data?.attributes?.url
+  const fileName = selectedApplication?.attributes?.checked_draft?.data?.attributes?.name
+  const downloadFile = selectedApplication?.attributes?.checked_draft?.data?.attributes?.url
   const handleSubmit = () => {
     // try { if(id){
     //   updateApplication({
@@ -29,8 +25,6 @@ const downloadFile = selectedApplication?.attributes?.checked_draft?.data?.attri
     //     },
     //   });
     // }
-
-
     // } catch (error) {
     //   console.error('Update application error:', error);
     // }
@@ -50,4 +44,5 @@ const downloadFile = selectedApplication?.attributes?.checked_draft?.data?.attri
     </div>
   )
 }
+
 export default InitialReviewCompleteStep;

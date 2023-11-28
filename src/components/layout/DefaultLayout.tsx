@@ -5,10 +5,10 @@ import { Outlet, useNavigate } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import SidebarMenu from "../sidebar-menu"
 import User from "../../api/services/User";
-import {useUserDispatch, useUser } from "../../api/providers/UserProvider.jsx";
+import { useUserDispatch, useUser } from "../../api/providers/UserProvider.jsx";
 import Student from  "../../api/services/Student.js";
-import {useStudentDispatch} from "../../api/providers/StudentProvider.jsx";
-import {useTutorDispatch} from "../../api/providers/TutorProvider.jsx";
+import { useStudentDispatch } from "../../api/providers/StudentProvider.jsx";
+import { useTutorDispatch } from "../../api/providers/TutorProvider.jsx";
 import Tutor from  "../../api/services/Tutor.js";
 import ProfileStaticDataContext from "../../api/context/ProfileStaticDataContext";
 import CommonService from "../../api/services/Common";
@@ -190,4 +190,5 @@ export const DefaultLayout: FC = () => {
     </ProfileStaticDataContext.Provider>
   )
 }
+
 export default DefaultLayout

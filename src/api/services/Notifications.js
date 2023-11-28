@@ -1,5 +1,5 @@
 import http from "../http-common";
-import {getToken} from "../../common/common.js";
+import { getToken } from "../../common/common.js";
 
 const get = (customConfig) => {
   const token = `Bearer ${getToken()}`;
@@ -10,7 +10,6 @@ const get = (customConfig) => {
   }
   return http.get(`/notification/list`, {...headerConfig,...customConfig });
 };
-
 
 const getUnreadNotificationCount = (customConfig, data={}) => {
   const token = `Bearer ${getToken()}`;
@@ -41,7 +40,6 @@ const update = (data) => {
   }
   return http.post(`/notification/update`, data, headerConfig);
 };
-
 
 const Service = {
   get,
