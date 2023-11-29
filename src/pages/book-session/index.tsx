@@ -546,7 +546,7 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        className={"mock-interview-modal"}
+        className={"mock-interview-modal teachingSessions-modal"}
         width={"max-content"}
         footer={[
           activeStep > 1 && (
