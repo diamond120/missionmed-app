@@ -114,21 +114,21 @@ const StudentUCATSession = () => {
   }, []);
 
   const updateUpcomingSession = (sessionId, data) => {
-    const updatedSessions = upcomingSessions.map(session => {
-      if(session.id == sessionId ){
-        return {...session, ...data}
-      }else{
-        return session;
-      }
-    })
-    setUpcomingSessions(updatedSessions);
-    if(sessionId == upcomingInterview.id){
-      setUpcomingInterview(prev => ({...prev, ...{
-        date:data.date,
-        session_start_time:data.session_start_time,
-        session_end_time:data.session_end_time,
-      }}))
-    }
+    // const updatedSessions = upcomingSessions.map(session => {
+    //   if(session.id == sessionId ){
+    //     return {...session, ...data}
+    //   }else{
+    //     return session;
+    //   }
+    // })
+    // setUpcomingSessions(updatedSessions);
+    // if(sessionId == upcomingInterview.id){
+    //   setUpcomingInterview(prev => ({...prev, ...{
+    //     date:data.date,
+    //     session_start_time:data.session_start_time,
+    //     session_end_time:data.session_end_time,
+    //   }}))
+    // }
     getUCATSessionDetails();
   }
 
