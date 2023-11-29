@@ -1,8 +1,8 @@
 import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
-import { HomeOutlined, CalendarOutlined,EllipsisOutlined } from "@ant-design/icons";
-import { Breadcrumb, message,Space,Dropdown } from "antd";
+import { HomeOutlined, CalendarOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { Breadcrumb, message, Space, Dropdown } from "antd";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
@@ -23,7 +23,6 @@ const StudentUCATSession = () => {
   
   const getUCATSessionDetails = async () => {
     try {
-      // const response = await UCATSessionService.getStudentUCATSession({});
       const data = {
         bookingFor : 'UCAT 1-to-1 Tutoring'
       }
@@ -100,7 +99,6 @@ const StudentUCATSession = () => {
     getUCATSessionDetails();
   }
 
-  
   const handleReschedule = (sessionId) => {
     setIsOpenReschedule(true);
     setRescheduleSessionId(sessionId);
@@ -139,7 +137,6 @@ const StudentUCATSession = () => {
   };
 
   const addFreezeSession = (data : any) => {
-    console.log(data);
     getUCATSessionDetails();
   }
 
@@ -176,17 +173,20 @@ const StudentUCATSession = () => {
             }}
           >
             <h2 className={"tab-title"}>UCAT Teaching Sessions</h2>
-            { (upcomingSessions.length > 0)  &&
-              <Space direction="vertical">
-                <Space wrap>
-                  <Dropdown placement="bottomLeft" menu={{items}} >
-                  <EllipsisOutlined />
-                  </Dropdown>
+            <div className="d-flex align-items-center">
+              { (upcomingSessions.length > 0)  &&
+                <Space direction="vertical" className="dropdownIcon">
+                  <Space wrap>
+                    <Dropdown placement="bottomLeft" menu={{items}} >
+                    <EllipsisOutlined />
+                    </Dropdown>
+                  </Space>
                 </Space>
-              </Space>
-            }
-            
-            {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
+              }
+              
+              {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
+
+            </div>
           </div>
 
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (

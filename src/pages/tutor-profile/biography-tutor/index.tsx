@@ -2,7 +2,7 @@ import "./index.less"
 import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
 import TutorService from "../../../api/services/Tutor";
-import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
 
 const BiographyTutor: FC<ANY> = ({props}) => {
   const tutor = useTutor();
@@ -81,4 +81,5 @@ const BiographyTutor: FC<ANY> = ({props}) => {
     </div>
   )
 }
+
 export default BiographyTutor

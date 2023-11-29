@@ -1,42 +1,22 @@
-import { memo, useState, useEffect,useRef, React } from "react";
-import {
-  Button,
-  Form,
-  Modal,
-  message,
-  Select,
-  Collapse,
-  Avatar,
-  Radio,
-  Row,
-  Col,
-  Input,
-  Spin,
-  Tooltip
-} from "antd";
+import { memo, useState, useEffect } from "react";
+import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col, Input, Spin, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../api/services/Common";
-import UCATSessionService from "../../api/services/UCATSession";
-import TeachingSessionService from "../../api/services/TeachingSession";
-import {formatDateV1, formatTime, getDay,formatCreditCardNumber,
-  formatCVC,
-  formatExpirationDate} from "../../common/common";
+import { formatDateV1, formatTime, getDay, formatCreditCardNumber, formatCVC, formatExpirationDate } from "../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
 import Calender from "../../components/session-details/calender";
 import Cards from 'react-credit-cards';
-import CreditCardInput from 'react-credit-card-input';
 import 'react-credit-cards/es/styles-compiled.css'
 import {useStudent} from "../../api/providers/StudentProvider";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 import { QuestionCircleFilled } from "@ant-design/icons";
 
-
 const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
@@ -302,7 +282,6 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
   const Step4From = ({form}) => {
    
     const formData = form.getFieldsValue(true);
-  
     const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
     setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
     const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
@@ -624,4 +603,3 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
 };
 
 export default BookSession;
-

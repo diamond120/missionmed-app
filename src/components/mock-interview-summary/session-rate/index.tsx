@@ -4,12 +4,13 @@ import "./index.less";
 import RateSession from "../../../components/rate-session";
 import { useState } from "react";
 
-const NoSessionRate = ({ session, handleUpdateSummary,pagesession }) => {
+const NoSessionRate = ({ session, handleUpdateSummary, pagesession }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleRateCancel = () => {
     setIsOpen(false);
   };
+
   return (
     <>
       <div style={{ textAlign: "center" }}>

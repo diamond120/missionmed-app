@@ -1,6 +1,6 @@
-import { MinusCircleOutlined,PlusOutlined } from "@ant-design/icons";
-import { AutoComplete,Button,Form,Input,Select,Space, Spin } from "antd";
-import React,{ FC,useRef,useState } from "react";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Form, Select, Spin } from "antd";
+import React, { FC, useState } from "react";
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
 import "./index.less";
@@ -47,10 +47,12 @@ const Education: FC<Any> = ({ props }) => {
     }
     
   }
+
   const cancle = () => {
     form.resetFields();
     setEditing(false);
   }
+
   const onFinish = (values: any) => {
     updatedTutor(values);
     setEditing(false);
@@ -139,4 +141,5 @@ const Education: FC<Any> = ({ props }) => {
     </div>
   )
 }
+
 export default Education

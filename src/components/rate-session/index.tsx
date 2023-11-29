@@ -1,12 +1,12 @@
 import { Button, Modal, Rate, Input, Form, message } from "antd";
 import { SmileOutlined } from "@ant-design/icons";
 import "./index.less";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CommonService from "../../api/services/Common";
 
 const { TextArea } = Input;
 
-const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, handleUpdateSummary,pagesession }) => {
+const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, handleUpdateSummary, pagesession }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(isOpen);
   const [form] = Form.useForm();
 
@@ -130,4 +130,5 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
     </Modal>
   );
 };
+
 export default RateSession;

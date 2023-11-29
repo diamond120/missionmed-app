@@ -1,9 +1,7 @@
 
 import './index.less'
 import { Button, Tooltip } from "antd"
-import React from "react"
 import { useParams } from "react-router-dom"
-
 
 const InProgressStepFinal = ()=>{
 
@@ -13,11 +11,8 @@ const InProgressStepFinal = ()=>{
   //   variables: { filter: { id: { eq: id } } }
   // })
   const application = []
-
   const selectedApplication = application.data?.applications?.data?.[0]
   const tutorFullname = selectedApplication?.attributes?.reviewer?.data?.attributes?.full_name
-
-
 
   const handleSubmit = () => {
     // try { if(id){

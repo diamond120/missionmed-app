@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { Button, Form, Input, Modal} from "antd"
-import MockInterviewsService from "../../../api/services/MockInterviews";
+import { Button, Form, Input, Modal } from "antd"
 
 const {TextArea} = Input;
 
@@ -11,8 +10,6 @@ const PostSessionTasks = ({tasks, addPostSessionTasks}) => {
   const handleClick = () => {
     setIsModalOpen(true)
   }
-
-
 
   const handleSubmit = async () => {
     try{

@@ -1,15 +1,15 @@
 
 import "./index.less";
-import React, { useState, FC, useEffect } from "react";
+import  { useState, FC, useEffect } from "react";
 import { Breadcrumb, Button, Table, Input, Checkbox, AutoComplete } from "antd";
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import type { TablePaginationConfig } from 'antd/es/table';
 import type { FilterValue, SorterResult, Key } from 'antd/es/table/interface';
 import { HomeOutlined, DeleteOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
-import {formatDate, stringToBoolean} from "../../common/common";
+import { formatDate, stringToBoolean } from "../../common/common";
 import { useNavigate } from "react-router-dom";
 import NotificationsService from "../../api/services/Notifications"
-import {useNotificationContext}  from "../../api/context/NotificationContext"
+import { useNotificationContext }  from "../../api/context/NotificationContext"
 interface DataType {
   date: string;
   notification: string;
@@ -33,11 +33,9 @@ const NotificationsStudent: FC = () => {
 
   const [notification, setNotification] = useState<any[]>([]);
   const [searchText, setSearchText] = useState<string>("");
-
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
   const [selectedRows, setSelectedRows] = useState<Key[]>([]);
   const {setUnreadNotificationCount} = useNotificationContext();
-
   const handleSelectRow = (record: any) => {
     const selectedKey = record.key;
     setSelectedRows((prevSelectedRows) => {
@@ -97,7 +95,6 @@ const NotificationsStudent: FC = () => {
   const handleSearch = (value: string) => {
     setSearchText(value);
   };
-
 
   const getNotifications = async () => {
     const config = { 

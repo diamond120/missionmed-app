@@ -1,21 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Form,
-  Modal,
-  message,
-  Select,
-  Collapse,
-  Avatar,
-  Radio,
-  Row,
-  Col,
-  Input,
-  Tooltip,
-} from "antd";
+import { Button,Form, Modal, message, Select, Radio, Row, Col, Input, Tooltip } from "antd";
 import CommonService from "../../../api/services/Common";
-import UCATSessionService from "../../../api/services/UCATSession";
-import TeachingSessionService from "../../../api/services/TeachingSession"
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
 import moment from "moment";
@@ -24,9 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "./index.less";
 import { QuestionCircleFilled } from "@ant-design/icons";
 
-const { Panel } = Collapse;
 const { TextArea } = Input;
-
 const RescheduleInterview = ({
   updateUpcomingSession,
   isOpen,
@@ -50,18 +33,6 @@ const RescheduleInterview = ({
 
   const getSessionummary = async (sessionId) => {
     try {
-      // let response;
-      // console.log(moduleType);
-      // if(moduleType == 'teaching') {
-      //   response = await TeachingSessionService.getSessionummary(
-      //     sessionId
-      //   );
-      // } else {
-      //   response = await UCATSessionService.getSessionummary(
-      //     sessionId
-      //   );        
-      // }
-      
       const data = {
         sessionId : sessionId,
         bookingFor : (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring'
@@ -110,7 +81,6 @@ const RescheduleInterview = ({
     getUniversityList();
   },[])
 
-
   const stepsTitles = [
     "Reschedule Session",
     "Book New Time for Session",
@@ -139,12 +109,6 @@ const RescheduleInterview = ({
   const handleSubmit = async () => {
     const formData = form.getFieldsValue(true);
     try {
-      // let response;
-      // if(moduleType == 'teaching') {
-      //   response = await TeachingSessionService.rescheduleSession({...formData, teachingSessionId:interviewSummary?.id});
-      // } else {
-      //   response = await UCATSessionService.rescheduleSession({...formData, ucatBookingId:interviewSummary?.id});
-      // }
       formData.bookingFor = (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring';
       formData.day = getDay(moment(formData.date));
       formData.startTime =  formatTime(formData.sessionStartTime);
@@ -182,7 +146,6 @@ const RescheduleInterview = ({
     form.resetFields();
   };
 
-
   const handleOk = () => {
     handleOpen(false);
   };
@@ -196,7 +159,6 @@ const RescheduleInterview = ({
   const getMockInterviewList = () => {
     return mockInterviewList;
   };
-
   
   const selectUniversity = Form.useWatch("university", form);
 
@@ -273,7 +235,6 @@ const RescheduleInterview = ({
     );
   };
 
-
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
@@ -294,10 +255,7 @@ const RescheduleInterview = ({
     // };
     // const response = await CommonService.checkSession(data);
     // try {
-      
     //   if (response.data.success) {
-        
-         
     //     setRecurringAvailable(response.data.data.recurring);
     //       if(response.data.data.recurring == true) {
     //         setShowDropdown(false);
@@ -306,13 +264,9 @@ const RescheduleInterview = ({
     //         setShowDropdown(true);
     //       }
     //   } else {
-       
     //       throw new Error(response.data.message); 
-          
     //   }
     // } catch (e) {
-
-     
     //   message.error(e.message);
     // }
   }
@@ -337,8 +291,6 @@ const RescheduleInterview = ({
             </h4>
             <div style={{ fontSize: 16 }}>{tutorName}</div>
           </div>
-
-        
           <Row>
             <Col span={10} sm={8}>
               <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
@@ -364,7 +316,6 @@ const RescheduleInterview = ({
           style={{ marginTop: "17px", marginBottom: "0px"}}
           label="Type"
           name="sessionType"
-         
         >   
          <Radio.Group onChange={handleRadioChange}  disabled={true}>
             <Radio value="Individual Session">Individual Session</Radio>

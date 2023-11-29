@@ -2,8 +2,6 @@ import "./index.less";
 import Agenda from "./agenda";
 import Mysessions from "./my-sessions";
 import UpcomingSession from "./upcoming-session";
-import RescheduleInterview from "./reschedule-interview";
-import { useEffect } from "react";
 
 const MockInterviewDetails = ({upcomingInterview, upcomingSessions, pastSessions, agenda, handleEditAgenda, updatePastSession, handleReschedule,handleEditLink,cancleUpSession}) => {
      

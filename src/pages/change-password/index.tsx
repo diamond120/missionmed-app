@@ -1,7 +1,7 @@
 import "./index.less";
-import { Button, Modal, message ,Form, Input} from "antd";
-import React, { useEffect, useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { Button, Modal, message ,Form, Input } from "antd";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CommonService from "../../api/services/Common";
 
 

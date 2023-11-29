@@ -5,7 +5,7 @@ import { ReactComponent as UploadDragIcon } from "../../../components/icon/asset
 import type { UploadProps } from "antd";
 import { RcFile } from "antd/lib/upload";
 import { useState } from "react";
-import { getToken, fileName, onDownload } from "../../../common/common";
+import { getToken, fileName } from "../../../common/common";
 import { BASE_URL } from "../../../config/app-config";
 
 const SessionSummary = ({ uploadReport, reportUrl }) => {

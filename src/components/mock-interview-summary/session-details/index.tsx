@@ -65,4 +65,5 @@ const SessionDetails = ({ interviewSummary ,pagesession}) => {
     </>
   );
 };
+
 export default SessionDetails;

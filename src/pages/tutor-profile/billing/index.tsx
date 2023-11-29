@@ -4,7 +4,6 @@ import { valueType } from "antd/lib/statistic/utils";
 import { FC, useState } from "react"
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
-import { json } from "react-router-dom";
 
 const Billing: FC<Any> = ({props}) => {
   const tutor = useTutor();
@@ -133,4 +132,5 @@ const Billing: FC<Any> = ({props}) => {
     </div>
   )
 }
+
 export default Billing

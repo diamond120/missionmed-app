@@ -1,11 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Breadcrumb, Button, message } from "antd";
+import { Breadcrumb, message } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
-import MockInterviewsService from "../../api/services/MockInterviews";
-import UCATSessionService from "../../api/services/UCATSession";
-import TeachingSessionService from "../../api/services/TeachingSession";
 import { useStudent } from "../../api/providers/StudentProvider";
 import SectionDetails from "../../components/mock-interview-summary/section-details";
 import { NoSessionRate, SessionRateDetails } from "../../components/mock-interview-summary/session-rate";
@@ -22,20 +19,6 @@ const StudentInterviewSummary = () => {
 
   const getInterviewSummary = async () => {
     try {
-      // let response;
-      // if(type == 'ucat') {
-      //   response = await UCATSessionService.getSessionummary(
-      //     mockInterviewId
-      //   );
-      // } else if(type == 'teaching'){
-      //   response = await TeachingSessionService.getSessionummary(
-      //     mockInterviewId
-      //   );
-      // } else {
-      //   response = await MockInterviewsService.getInterviewSummary(
-      //     mockInterviewId
-      //   );
-      // }
       const data = {
         sessionId : mockInterviewId,
         bookingFor : type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'
@@ -62,6 +45,7 @@ const StudentInterviewSummary = () => {
   const handleUpdateSummary = (rateDetails) => {
     setInterviewSummary({...interviewSummary, sessionrate:rateDetails})
   }
+
   return (
     <>
       <Section>

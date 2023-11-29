@@ -37,7 +37,6 @@ const CardDatails: FC<any> = ({props}) => {
     form.setFieldsValue({ issuer: issuer}); 
     if(isValid == true) {
       setIssuer(issuer);
-      
     } else {
       setIssuer(issuer);
       console.log(isValid);
@@ -224,4 +223,5 @@ const CardDatails: FC<any> = ({props}) => {
     </div>
   )
 }
+
 export default CardDatails

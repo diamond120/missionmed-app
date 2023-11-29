@@ -29,4 +29,5 @@ const PersonalityTutor = () => {
     </div>
   )
 }
+
 export default PersonalityTutor

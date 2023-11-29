@@ -1,10 +1,6 @@
 import './index.less'
 import { Button, Tooltip } from "antd"
-import React from "react"
 import { useParams } from "react-router-dom"
-
-
-
 
 const InProgressStepFirst = ()=>{
 
@@ -37,8 +33,6 @@ const InProgressStepFirst = ()=>{
   };
 
  const tooltipsMessage = "You can’t cancel review because tutor has already started checking your application"
-
-
 
   return(
     <div>

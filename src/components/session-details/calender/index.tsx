@@ -3,10 +3,10 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, Radio, Spin, message} from "antd";
+import { Button, Form, Modal, Radio, Spin, message } from "antd";
 import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
-import {formatTime} from "../../../common/common";
+import { formatTime } from "../../../common/common";
 
 function formatDate(inputDateStr) {
   const inputDate = new Date(inputDateStr);
@@ -82,7 +82,6 @@ const Calender = ({tutorId,rescheduleDate, form,moduleType ,timezone,next}) => {
         }
         clickedEvent.setProp('backgroundColor', '#2816EE');
         clickedEvent.setProp('textColor', '#ffffff');
-
         selectedEvent = clickedEvent;
         const startDate = formatDate(clickedEvent.start);
         const endDate = formatDate(clickedEvent.end);
@@ -199,9 +198,7 @@ const Calender = ({tutorId,rescheduleDate, form,moduleType ,timezone,next}) => {
             </Form.Item>
           </Form>
         </Modal>
-      </> 
-     
-      
+      </>
   )
 }
 

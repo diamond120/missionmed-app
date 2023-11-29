@@ -1,16 +1,17 @@
 import "./index.less"
-import { Button, Form, Checkbox, Tooltip, Spin, Input } from "antd";
+import { Form, Checkbox, Tooltip, Spin } from "antd";
 import { FC, useState, useEffect } from "react";
 import TutorService from "../../../api/services/Tutor";
-import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
 
 const Specializations: FC<Any> = ({props}) => {
   const tutor = useTutor();
   const dispatch = useTutorDispatch();
-  const  lession = (tutor.lessionTypeID) ? tutor.lessionTypeID.split(',') : [];
+  const lession = (tutor.lessionTypeID) ? tutor.lessionTypeID.split(',') : [];
   const [lessionTypeID, setLessionTypeID] = useState(lession ?? []);
   const [editing, setEditing] = useState(false);
   const [checkboxlist, setCheckbox] = useState([]);
+
   const handleEditClick = () => {
     setEditing(true);
   };
@@ -31,7 +32,6 @@ const Specializations: FC<Any> = ({props}) => {
   }, [tutor]);
 
   const updatedTutor = async() => {
-  
     const formData = {
       lessionTypeId : lessionTypeID.join()
     };
@@ -44,7 +44,7 @@ const Specializations: FC<Any> = ({props}) => {
     })
   }
 
-  const  cancle = () => {
+  const cancle = () => {
     setEditing(false);
   }
 

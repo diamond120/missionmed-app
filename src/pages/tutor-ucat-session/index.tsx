@@ -1,15 +1,12 @@
 import "./index.less";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, message } from "antd";
 import SessionDetails from "../../components/session-details";
-import UCATSessionService from "../../api/services/UCATSession";
 import CommonService from "../../api/services/Common";
 
-
 const TutorUCATSession = () => {
-
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
@@ -19,12 +16,10 @@ const TutorUCATSession = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-
       const data = {
         bookingFor : 'UCAT 1-to-1 Tutoring'
       }
       const response = await CommonService.postAPI("/tutor/session-details",data);
-      // const response = await UCATSessionService.getTutorUcatSession({});
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
@@ -53,17 +48,11 @@ const TutorUCATSession = () => {
 
   const handleEditAgenda = async(agendaDetails) => {
     try{
-      // const response = await UCATSessionService.updateUCATSessionData({
-      //   "ucatBookingId":upcomingInterview?.id,
-      //   "agenda":agendaDetails,
-      // });
-
       const data = {
         "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
         'bookingFor' : 'UCAT 1-to-1 Tutoring'
       }
-
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         setAgenda(agendaDetails);
@@ -97,11 +86,9 @@ const TutorUCATSession = () => {
         'bookingFor' : 'UCAT 1-to-1 Tutoring'
       }
       const response = await CommonService.postAPI('/session-data',data)
-      
       if(response.data.success){
         message.success(response.data.message);
         getMockInterviewDetails();
-        // setAgenda(link);
       }else{
         throw new Error(response.data.message)
       }
@@ -119,7 +106,6 @@ const TutorUCATSession = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item>UCAT Sessions</Breadcrumb.Item>
         </Breadcrumb>
-
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
           <div className={"grid-col-2"}>
             <h2 className={"tab-title"}>UCAT Sessions</h2>
@@ -162,7 +148,6 @@ const TutorUCATSession = () => {
           </div>  
           ) }
         </div>
-        
       </Section>
     </>
   );

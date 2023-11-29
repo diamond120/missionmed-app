@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Breadcrumb, Button, Form, Input, Modal, Rate, Tabs, message } from "antd";
+import { Button, Form, Input, Modal, Tabs } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
-import {groupSessionsByDate, formatTime, checkSessionOnToday} from "../../../common/common";
+import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
 import "./index.less";
 import CancleSession from "../../../pages/cancle-session";
 

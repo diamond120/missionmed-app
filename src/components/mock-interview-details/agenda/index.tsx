@@ -1,4 +1,4 @@
-import { Button, Form, Modal,Input, message } from 'antd';
+import { Button, Form, Modal, Input, message } from 'antd';
 import './index.less'
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { useState } from 'react';
@@ -40,7 +40,6 @@ const Agenda = ({agenda, handleEditAgenda}) => {
                 <div style={{display:'flex',gap:20}}>
                   <Button className={"secondary-button"} onClick={handleClick}>Edit Agenda</Button>
                 </div>
-
               </div>
           </div>
       </div>

@@ -1,5 +1,3 @@
-
-
 import React, { Suspense } from "react"
 import { FC } from "react"
 import { Layout } from "antd"

@@ -1,19 +1,5 @@
 import { memo, useState } from "react";
-import {
-  Button,
-  Form,
-  Modal,
-  message,
-  Select,
-  Collapse,
-  Avatar,
-  Radio,
-  Row,
-  Col,
-  Input,
-  Spin,
-  Tooltip
-} from "antd";
+import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col, Input, Spin, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
 import MockInterviewsService from "../../../api/services/MockInterviews";
@@ -26,11 +12,10 @@ import Calender from "../../../components/mock-interview-details/calender";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 
-
 const BookInterview = ({addUpcomingSession,timezone}) => {
-  const navigate = useNavigate();
-  const [form] = Form.useForm();
   
+  const navigate = useNavigate();
+  const [form] = Form.useForm();  
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
@@ -70,20 +55,20 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
       const response = await CommonService.getUniversityTutorList(data);
       if (response.data.success) {
        
-        const tutorList = response.data.data.tutors ?? [];
-       
-        
+        const tutorList = response.data.data.tutors ?? [];      
         const interviewList =   response.data.data.mockinterview.mockinterview ? response.data.data.mockinterview.mockinterview.split(',') : [];
         const mockInterviewList = interviewList.map((value, index) => ({
           id: index + 1,
           value,
         }));
+
         setMockInterview(mockInterviewList);
-       
         setTutors(tutorList);
+        
         if(!response.data.data.mockinterview.mockinterview || response.data.data.mockinterview.mockinterview == null) {
           message.error("Please select other univesity. This university don't have any interview.");
-        } 
+        }
+
       } else {
         message.error(response.data.message);
       }
@@ -119,33 +104,32 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
     const formData = form.getFieldsValue(true);
     try{
       formData.day = getDay(moment(formData.date));
-     const response = await MockInterviewsService.bookInterview(formData);
-     if(response.data.success && response.data.status_code == 200){
-      const result = response.data.data;
-      addUpcomingSession({
-        date:result.date,
-        hasSessionRate:false,
-        id:result.id,
-        mock_interview:result.mock_interview,
-        session_end_time:result.session_end_time,
-        session_start_time:result.session_start_time,
-        student_id:result.student_id,
-        tutor_id:result.tutor_id,
-        tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
-      });
-      setLoading(false);
-      navigate("/student/mock-interview")
-      message.success('You’ve successfully booked mock interview');
-     }else{
-      setLoading(false);
-      throw new Error(response.data.message)
-     }
+      const response = await MockInterviewsService.bookInterview(formData);
+      if(response.data.success && response.data.status_code == 200){
+        const result = response.data.data;
+        addUpcomingSession({
+          date:result.date,
+          hasSessionRate:false,
+          id:result.id,
+          mock_interview:result.mock_interview,
+          session_end_time:result.session_end_time,
+          session_start_time:result.session_start_time,
+          student_id:result.student_id,
+          tutor_id:result.tutor_id,
+          tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
+        });
+        setLoading(false);
+        navigate("/student/mock-interview")
+        message.success('You’ve successfully booked mock interview');
+      }else{
+        setLoading(false);
+        throw new Error(response.data.message)
+      }
     }catch(e){
       setLoading(false);
       message.error(e.message);
     }
     handleCancel()
-    
   }
 
   const handleCancel = () => {
@@ -165,7 +149,6 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   };
 
   const selectUniversity = Form.useWatch("university", form);
-  
 
   const Step1Form = ({ universityList }) => {
     return (
