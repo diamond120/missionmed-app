@@ -41,7 +41,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
   const dateFormat = 'DD/MM/YYYY';
-
+  console.log(profileStaticData);
   const updatedStudent = async () => {
     await StudentService.updateProfile({
       fullName: fullName !== '' ? fullName : student?.fullName,
@@ -149,6 +149,7 @@ const BasicInfoForm: FC<any> = ({props}) => {
         <Form
           className={"basic-information-form"}
           form={form}
+          colon={false}
         >
           <Form.Item
             name={"fullName"}
@@ -230,9 +231,26 @@ const BasicInfoForm: FC<any> = ({props}) => {
                 onChange={(value) => setLocation(value)}
               />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name={"state"}
             label={"State"}
+            rules={[{ required: true,  }]}
+            initialValue={student?.state}
+          >
+              <AutoComplete
+                options={optionsState}
+                style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
+                placeholder={"Enter a value"}
+                filterOption={handleFilter}
+                value={autoSelected ? autoSelectedState : state}
+                disabled={!editing}
+                onChange={(value) => setState(value)}
+              />
+          </Form.Item> */}
+
+          <Form.Item
+            name={"state"}
+            label={"Curriculum"}
             rules={[{ required: true,  }]}
             initialValue={student?.state}
           >

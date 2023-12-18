@@ -1,7 +1,7 @@
 import "./index.less";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Breadcrumb, Button, message } from "antd";
+import { Breadcrumb, Button, Spin, message } from "antd";
 import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
@@ -17,7 +17,7 @@ const StudentMockInterview = () => {
   const [agenda, setAgenda] = useState(null);
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
-  const [student, setStudentData] = useState("0");
+  const [student, setStudentData] = useState("");
   const [timezone, setTimeZone] = useState("");
 
   const handleReschedule = (sessionId) => {
@@ -148,7 +148,8 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            <div>Student credit: {student}</div>
+            <div>Student credit:   { student == '' ?  <Spin  style={{marginLeft :10}}/> : student }</div>
+          
             {(student == 0 ) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a> }
             { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
           </div>

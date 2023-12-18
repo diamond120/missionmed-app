@@ -66,7 +66,8 @@ function TutorReducer(tutor, action) {
             applicationLessionTime : action.applicationLessionTime,
             interviewLessionTime : action.interviewLessionTime,
             mockLessionTime : action.mockLessionTime,
-            ucatLessionTime : action.ucatLessionTime
+            ucatLessionTime : action.ucatLessionTime,
+            personalMeetingId : action.personalMeetingId
           };
         }
         case 'update': {

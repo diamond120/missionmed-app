@@ -122,7 +122,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
     <div className={"basic-information"}>
       <h2 className={"basic-information-title"}>Basic Information</h2>
 
-      <Form className={"basic-information-form"} form={form}>
+      <Form className={"basic-information-form"} form={form} colon={false}>
                <Form.Item
           name={"fullName"}
           label={"Full Name"}

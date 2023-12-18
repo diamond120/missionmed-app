@@ -153,9 +153,8 @@ export const DefaultLayout: FC = () => {
             applicationLessionTime : result.data.data.application_lession_time ?? null,
             interviewLessionTime : result.data.data.interview_lession_time ?? null,
             mockLessionTime : result.data.data.mock_lession_time ?? null,
-            ucatLessionTime : result.data.data.ucat_lession_time ?? null
-
-            
+            ucatLessionTime : result.data.data.ucat_lession_time ?? null,
+            personalMeetingId : result.data.data.personal_meeting_id ?? ''
             
           })
          await tutorDispatch({type:'loading', loading:false})

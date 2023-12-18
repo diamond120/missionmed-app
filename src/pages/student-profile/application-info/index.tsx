@@ -73,7 +73,7 @@ const ApplicationInfo: FC<any> = ({props}) => {
   return(
     <div className={"application-info-section"}>
       <h2 className={"application-info-section-title"}>Application Information</h2>
-        <Form className={"application-info-form"} form={form}>
+        <Form className={"application-info-form"} form={form} colon={false}>
 
           <Form.Item
             name={"Applicant Cycle"}
@@ -113,8 +113,8 @@ const ApplicationInfo: FC<any> = ({props}) => {
             rules={[
               { required: false, },
               {
-                pattern: /^[\d]{0,8}$/,
-                message: "Value should be less than 8 character"
+                pattern: /^[0-9]+(\.[0-9]+)?$/,
+                message: "Please enter a valid number"
               }
             ]}
             label={"Predicted ATAR / ATAR"}

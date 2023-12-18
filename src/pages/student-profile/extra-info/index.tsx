@@ -77,7 +77,7 @@ const ExtraInfo: FC<any> = ({props}) => {
       <h2 className={"extra-info-section-title"}>
         Extra Information <QuestionCircleFilled style={{ color: "#6B7393" }} title={"Extra Information"} />
       </h2>
-      <Form className={"extra-info-form"} form={form}>
+      <Form className={"extra-info-form"} form={form} colon={false}>
         <Form.Item label={"Status of Residence"} name={"status"} rules={[{ required: false }]}>
             <Radio.Group disabled={!editing} defaultValue={residenceStatus} onChange={(e) => setResidenceStatus(e.target.value)}>
               <Radio value={"I’m Domestic"}>I’m Domestic</Radio>

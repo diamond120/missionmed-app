@@ -11,6 +11,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
     () => checkSessionOnToday(upcomingInterview.date),
     [upcomingInterview.date]
   );
+  console.log(upcomingInterview.date);
   const title = sessionType == "interview" ? "Interview" : "";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { TextArea } = Input;
@@ -75,22 +76,21 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
             </a>
             {user.role == "student" ? (
               isSessionOnToday ? (
+               
                 <Tooltip
+                  className={'button_tooltip'}
                   title={
                     "You can’t reschedule session less than 24 hours before it starts"
-                  }
-                  color={"#465078"}
-                >
-                  <Button
-                    className={`secondary-button ${
-                      isSessionOnToday ? "disable-button" : ""
-                    }`}
+                  } color={"#465078"} >
+                <Button
+                    className={`secondary-button button-disabled`}
                     onClick={() => false}
+                    disabled={isSessionOnToday} 
                   >
-                    {" "}
-                    Reschedule{" "}
+                    Reschedule
                   </Button>
-                </Tooltip>
+                   </Tooltip>
+              
               ) : (
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
