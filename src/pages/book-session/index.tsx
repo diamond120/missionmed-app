@@ -360,10 +360,10 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
         )}
         <Form.Item
           style={{ marginTop: "17px", marginBottom: "0px"}}
-          label="Leave a quick note"
+          label="Notes for Tutor"
           name="note"
         >
-          <TextArea rows={3} placeholder="Textarea" style={{ fontSize: 16 }} />
+          <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
         </Form.Item>
         { (card != null && card != '') && (
           <div className="credit-card">

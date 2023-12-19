@@ -1,8 +1,16 @@
 import http from "../http-common";
 import {getToken} from "../../common/common";
 
-const getProfileStaticData = (data) => {
-  return http.get("/lists", data);
+const getProfileStaticData = (data = {}) => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    },
+    ...data
+  }
+
+  return http.get("/lists", config);
 };
 
 const getUniversityTutorList = (data) => {

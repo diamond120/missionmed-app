@@ -80,6 +80,7 @@ function StudentReducer(student, action) {
               financialHardship:stringToBoolean(action.financialHardship),
               gws:stringToBoolean(action.gws),
               card_digit:action.card_digit,
+              country: action.country
           };
         }
         case 'update': {

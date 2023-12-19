@@ -148,7 +148,7 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            <div>Student credit:   { student == '' ?  <Spin  style={{marginLeft :10}}/> : student }</div>
+            <div>Student credit: { student === '' ?  <Spin  style={{marginLeft :10}}/> : student }</div>
           
             {(student == 0 ) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a> }
             { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}

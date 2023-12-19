@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Layout, Menu, Avatar, Badge } from 'antd';
-import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined ,CommentOutlined} from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom"
 import { SvgIcon } from "../icon";
 import { useUser } from "../../api/providers/UserProvider";
@@ -10,6 +10,9 @@ import { useAuthContext } from "../../api/context/AuthContext.js";
 import NotificationsService from "../../api/services/Notifications"
 import { useNotificationContext }  from "../../api/context/NotificationContext"
 import "./index.less"
+import http from "../../api/http-common.js";
+import { getToken } from "../../common/common.js";
+
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -58,7 +61,18 @@ const SidebarMenu: React.FC = () => {
     localStorage.removeItem("jwt");
   };
 
-  const handleSignOut = () => {
+  const logoutApiCall = async () => {
+    const token = `Bearer ${getToken()}`;
+    const config = {
+      headers:{
+        'Authorization': token
+      }
+    }
+    await http.post('/logout', {}, config)
+  }
+
+  const handleSignOut = async () => {
+    await logoutApiCall();
     removeTokenFromLocalStorage();
     setAuthenticated(false);
     navigate("/sign_in");
@@ -180,7 +194,7 @@ const SidebarMenu: React.FC = () => {
             <SubMenu
               key="interview-submenu"
               title = {"Interview"}
-              icon={<FileDoneOutlined  style={{fontSize: "24px", color:"white"}}  key={"4"} 
+              icon={<CommentOutlined  style={{fontSize: "24px", color:"white"}}  key={"4"} 
               
             />}
             >

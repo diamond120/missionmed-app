@@ -1,6 +1,6 @@
 import "./index.less"
 import { AutoComplete, Button, Form, Input, Select, Switch, Spin } from "antd"
-import { FC, useState } from "react"
+import { FC, useMemo, useState } from "react"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 import { AddressDetails } from "../../../types/AddressDetails"
 import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
@@ -8,6 +8,7 @@ import TutorService from "../../../api/services/Tutor";
 import { GOOGLE_MAP_API_KEY } from "../../../config/app-config";
 import { useProfileStaticDataContext } from "../../../api/context/ProfileStaticDataContext";
 import { AgeList } from "../../../common/common";
+import countryList from 'react-select-country-list';
 
 const BasicInfoForm: FC<Any> = ({props}) => {
 
@@ -31,6 +32,9 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
+  const countries = useMemo(() => countryList().getData(), [])
+  const [country, setCountry] = useState('')
+
   const updatedTutor =  async () => {
     await TutorService.updateProfile({
       fullName: fullName !== '' ? fullName : tutor?.fullName,
@@ -38,7 +42,8 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       email: email !== '' ? email : tutor?.email,
       pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
       location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-      timezone: form.getFieldValue('timezone')
+      timezone: form.getFieldValue('timezone'),
+      country :  country !== '' ? country : tutor?.country,
     });
     dispatch({
       type:'update',
@@ -48,7 +53,8 @@ const BasicInfoForm: FC<Any> = ({props}) => {
         email: email !== '' ? email : tutor?.email,
         pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
         location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-        timezone: form.getFieldValue('timezone')
+        timezone: form.getFieldValue('timezone'),
+        country :  country !== '' ? country : tutor?.country
       }
     })
   }
@@ -188,10 +194,20 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           />
         </Form.Item>
         <Form.Item
+          name={"country"}
+          label={"Country"}
+          rules={[{ required: true, }]}
+          initialValue={tutor?.country}
+        >
+          <Select options={countries} value={country} style={{ width: 328, color: !editing ? "#bfbfbf" : "" }} disabled={!editing} onChange={(value) => setCountry(value)} />
+        </Form.Item>
+
+        <Form.Item
           name={"location"}
           label={"Location"}
           initialValue={tutor?.location}
           rules={[{ required: true, message: "Please enter your location" }]}
+        
         >
           <AutoComplete
             options={optionsLocation}
@@ -208,10 +224,11 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           label={"Timezone"}
           rules={[{ required: true }]}
           initialValue={tutor?.timezone}
+          style={{marginBottom:5}}
         >
           {customSelect()}
         </Form.Item>
-        <div className={"timezone-wrap"}>
+        <div className={"switch"} >
           <div>
             <div className={"switch-wrap"}>
               <Switch
