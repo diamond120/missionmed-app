@@ -82,7 +82,7 @@ const SidebarMenu: React.FC = () => {
       await setAuthenticated(false);
       setTimeout(() => {
         navigate("/sign_in");
-      }, 500);
+      }, 100);
     } catch (e) {
       console.log("logout", e);
     }
