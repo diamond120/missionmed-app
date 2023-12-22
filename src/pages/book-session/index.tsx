@@ -1,5 +1,5 @@
 import { memo, useState, useEffect } from "react";
-import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col, Input, Spin, Tooltip } from "antd";
+import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col, Input, Spin, Tooltip, Alert } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../api/services/Common";
 import { formatDateV1, formatTime, getDay, formatCreditCardNumber, formatCVC, formatExpirationDate } from "../../common/common";
@@ -373,6 +373,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
         </Form.Item>
         {(card != null && card != '' && (sessionType == 'Recurring Session' || ( sessionType == 'Individual Session'  &&  credit <= 0  )) ) && (
+          <>
           <div className="credit-card">
             <div className="credit-card-header">
               <div className="card-brand">Card Number</div>
@@ -380,6 +381,14 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             </div>
             <div className="credit-card-number">{'**** **** **** ' + card}</div>
           </div>
+          <Alert
+            message="Warning"
+            description={"For Session payment, if you have Credit in your account then it will deducted from that else your Credit Card will be charged."}
+            type="warning"
+            showIcon
+            style={{marginBottom :20,marginTop :20}}
+          />
+          </>
         )
         }
       </>
