@@ -23,6 +23,7 @@
     "react-responsive": "^9.0.2",
     "react-router-dom": "^6.15.0",
     "react-select": "^5.7.4",
+    "react-select-country-list": "^2.2.3",
     "react-timezone-select": "^2.1.2",
     "vite-plugin-svgr": "^3.2.0"
   },
