@@ -109,7 +109,8 @@ export const DefaultLayout: FC = () => {
               financialHardship:result.data.data.financial_hardship ?? null,
               gws:result.data.data.gws ?? null,
               credit:result.data.data.credit ?? 0,
-              card_digit : result.data.data.card_digit ?? ''
+              card_digit : result.data.data.card_digit ?? '',
+              country : result.data.data.country ?? ''
             })
             await studentDispatch({type:'loading', loading:false})
           } catch(error) {
@@ -153,10 +154,9 @@ export const DefaultLayout: FC = () => {
             applicationLessionTime : result.data.data.application_lession_time ?? null,
             interviewLessionTime : result.data.data.interview_lession_time ?? null,
             mockLessionTime : result.data.data.mock_lession_time ?? null,
-            ucatLessionTime : result.data.data.ucat_lession_time ?? null
-
-            
-            
+            ucatLessionTime : result.data.data.ucat_lession_time ?? null,
+            personalMeetingId : result.data.data.personal_meeting_id ?? '',
+            country : result.data.data.country ?? ''
           })
          await tutorDispatch({type:'loading', loading:false})
         }catch(error){

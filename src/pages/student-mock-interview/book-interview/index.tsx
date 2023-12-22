@@ -32,7 +32,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
         setUniversityList(
           response.data.data.map((university) => ({
             key: university.id,
-            label: university.title,
+            label: university.title+" - " + (university.mockinterview ?? '0'),
             value: university.title,
           }))
         );
@@ -332,10 +332,10 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
         </div>
         <Form.Item
           style={{ marginTop: "17px", marginBottom: "0px"}}
-          label="Leave a quick note"
+          label="Notes for Tutor"
           name="note"
         >
-          <TextArea rows={3} placeholder="Textarea" style={{ fontSize: 16 }} />
+          <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
         </Form.Item>
       </>
     );

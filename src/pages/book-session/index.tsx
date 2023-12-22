@@ -9,13 +9,12 @@ import { useNavigate } from "react-router-dom";
 import Calender from "../../components/session-details/calender";
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css'
-import {useStudent} from "../../api/providers/StudentProvider";
+import { useStudent } from "../../api/providers/StudentProvider";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 import { QuestionCircleFilled } from "@ant-design/icons";
 
-const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
-
+const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
@@ -29,20 +28,21 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
   const [loading, setLoading] = useState(false);
   const [card, setCard] = useState("");
   const student = useStudent();
-  
+  const [sessionType , setSessionType ] = useState('');
+
   const getUniversityTutorList = async () => {
     try {
       let type = 'Mock interviews';
-      if(moduleType == 'ucatStudent') {
+      if (moduleType == 'ucatStudent') {
         type = 'UCAT 1-to-1 Tutoring';
-      } else if(moduleType == 'teaching') {
+      } else if (moduleType == 'teaching') {
         type = 'Interview 1-to-1 Tutoring';
       }
       const data = {
-        lessionType : type
+        lessionType: type
       };
       // const response = await CommonService.getTutorList(data);
-      const response = await CommonService.postAPI('ucat-tutors-list',data);
+      const response = await CommonService.postAPI('ucat-tutors-list', data);
       if (response.data.success) {
         const tutorList = response.data.data ?? [];
         setTutors(tutorList);
@@ -55,95 +55,94 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
   };
 
   // const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Sessions','Check Last Details'];
-  const stepsTitles = ['Choose Tutor','Book Time for Sessions','Check Last Details'];
+  const stepsTitles = ['Choose Tutor', 'Book Time for Sessions', 'Check Last Details'];
 
   const next = async () => {
-    try{
+    try {
       const values = await form.validateFields();
-      
+
       const nextStep = activeStep + 1;
       setActiveStep(nextStep);
-        if(nextStep == 3) {
-          const formData = form.getFieldsValue(true);
-          const sessionStartTime =  formatTime(formData.sessionStartTime)
-          const sessionEndTime =  formatTime(formData.sessionEndTime)
-          const getday = getDay(moment(formData.date));
-          checkingDate(formData.date,sessionStartTime,sessionEndTime,getday);
-        }
-      setModalTitle(stepsTitles[nextStep-1]);
-    }catch(e){
+      if (nextStep == 3) {
+        const formData = form.getFieldsValue(true);
+        const sessionStartTime = formatTime(formData.sessionStartTime)
+        const sessionEndTime = formatTime(formData.sessionEndTime)
+        const getday = getDay(moment(formData.date));
+        checkingDate(formData.date, sessionStartTime, sessionEndTime, getday);
+      }
+      setModalTitle(stepsTitles[nextStep - 1]);
+    } catch (e) {
       if (activeStep == 2) {
         message.error("Please select slot.");
       }
     }
   };
 
-  const prev = ()  => {
+  const prev = () => {
     const prevStep = activeStep - 1;
     setActiveStep(prevStep);
-    setModalTitle(stepsTitles[prevStep-1]);
+    setModalTitle(stepsTitles[prevStep - 1]);
   }
 
   const handleSubmit = async () => {
-   
+
     await form.validateFields();
-  
+
     let formData = form.getFieldsValue(true);
-    if(formData.issuer== "unknown") 
-    {
+    if (formData.issuer == "unknown") {
       message.error('Your Card is invalid');
       return false;
     }
 
     setLoading(true);
-    if(!formData.frequency) {
+    if (!formData.frequency) {
       formData.frequency = dayOfWeek;
     }
-    formData.startTime =  formatTime(formData.sessionStartTime);
-    formData.endTime =  formatTime(formData.sessionEndTime);
+    formData.startTime = formatTime(formData.sessionStartTime);
+    formData.endTime = formatTime(formData.sessionEndTime);
     formData.day = getDay(moment(formData.date));
-    
+
     let type = 'Mock interviews';
-    if(moduleType == 'ucatStudent') {
+    if (moduleType == 'ucatStudent') {
       type = 'UCAT 1-to-1 Tutoring';
-    } else if(moduleType == 'teaching') {
+    } else if (moduleType == 'teaching') {
       type = 'Interview 1-to-1 Tutoring';
     }
     formData.bookingFor = type;
-    try{
-      const response = await CommonService.postAPI('/student/book-teaching-session',formData);
+    try {
+      const response = await CommonService.postAPI('/student/book-teaching-session', formData);
 
-      if(response.data.success){
-      const result = response.data.data;
-      addUpcomingSession({
-        date:result.date,
-        hasSessionRate:false,
-        id:result.id,
-        mock_interview:result.mock_interview,
-        session_end_time:result.session_end_time,
-        session_start_time:result.session_start_time,
-        student_id:result.student_id,
-        tutor_id:result.tutor_id,
-        tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
-      });
-      setLoading(false);
-      if(moduleType== 'ucatStudent'){
-        navigate("/student/ucat-session")
+      if (response.data.success) {
+        const result = response.data.data;
+        addUpcomingSession({
+          date: result.date,
+          hasSessionRate: false,
+          id: result.id,
+          mock_interview: result.mock_interview,
+          session_end_time: result.session_end_time,
+          session_start_time: result.session_start_time,
+          student_id: result.student_id,
+          tutor_id: result.tutor_id,
+          tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
+        });
+        setLoading(false);
+        if (moduleType == 'ucatStudent') {
+          navigate("/student/ucat-session")
+        } else {
+          navigate("/student/teaching-session")
+        }
+        cardDetails();
+        message.success('You’ve successfully booked session');
       } else {
-        navigate("/student/teaching-session")
+        setLoading(false);
+        throw new Error(response.data.message)
       }
-      cardDetails();
-      message.success('You’ve successfully booked session');
-     }else{
-      setLoading(false);
-      throw new Error(response.data.message)
-     }
-    }catch(e){
+    } catch (e) {
       setLoading(false);
       message.error(e.message);
     }
     handleCancel()
-    
+
   }
 
   const handleCancel = () => {
@@ -162,8 +161,9 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
     setIsModalOpen(false);
   };
 
-  
+
   const handleRadioChange = (e) => {
+    setSessionType(e.target.value);
     setShowDropdown(e.target.value === 'Recurring Session');
   }
 
@@ -190,10 +190,10 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
                 }}
               >
                 <span>
-                {tutor.university && tutor.university.map((item, index) => (
-                    <span key={index}>{item.school}({item.degree}) {tutor.university.length-1 != index && ','}</span>
-                ))}
-               </span> 
+                  {tutor.university && tutor.university.map((item, index) => (
+                    <span key={index}>{item.school}({item.degree}) {tutor.university.length - 1 != index && ','}</span>
+                  ))}
+                </span>
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
       <>
         <div className={"choose-tutor"}>
           <h3 className={"title"}>Recommended for you</h3>
-          <Form.Item name="tutorId" label="" rules={[{ required: true, message:"Please select tutor" }]}>
+          <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select tutor" }]}>
             <TutorCollapse tutors={tutors} />
           </Form.Item>
         </div>
@@ -245,17 +245,17 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType}  timezone={timezone} next={next}/>
+        <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType} timezone={timezone} next={next} />
       </div>
     </>;
   };
 
-  const checkingDate = async (date,startTime,endTime,getday) => {
+  const checkingDate = async (date, startTime, endTime, getday) => {
     const data = {
-      date : date,
-      startTime : startTime,
-      endTime : endTime,
-      day :getday,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+      day: getday,
       tutorId: form.getFieldValue('tutorId')
     };
     const response = await CommonService.checkSession(data);
@@ -263,15 +263,18 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
     try {
       if (response.data.success) {
         setRecurringAvailable(response.data.data.recurring);
-          if(response.data.data.recurring == true) {
-            form.setFieldsValue({ sessionType: 'Individual Session' });
-            setShowDropdown(false);
-          } else {
-            form.setFieldsValue({ sessionType: 'Recurring Session' });
-            setShowDropdown(true);
-          }
+        if (response.data.data.recurring == true) {
+          form.setFieldsValue({ sessionType: 'Individual Session' });
+          setSessionType( 'Individual Session' );
+          setShowDropdown(false);
+        }
+         else {
+          form.setFieldsValue({ sessionType: 'Recurring Session' });
+          setSessionType( 'Recurring Session' );
+          setShowDropdown(true);
+        }
       } else {
-          throw new Error(response.data.message); 
+        throw new Error(response.data.message);
       }
     } catch (e) {
       message.error(e.message);
@@ -279,14 +282,14 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
   }
 
 
-  const Step4From = ({form}) => {
-   
+  const Step4From = ({ form }) => {
+
     const formData = form.getFieldsValue(true);
-    const tutorName = tutors.find(tutor => tutor.id==formData.tutorId)?.full_name 
+    const tutorName = tutors.find(tutor => tutor.id == formData.tutorId)?.full_name
     setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
-    const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
-    const sessionStartTime =  formatTime(formData.sessionStartTime)
-    const sessionEndTime =  formatTime(formData.sessionEndTime)
+    const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
+    const sessionStartTime = formatTime(formData.sessionStartTime)
+    const sessionEndTime = formatTime(formData.sessionEndTime)
 
     return (
       <>
@@ -296,7 +299,7 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-            Tutor
+              Tutor
             </h4>
             <div style={{ fontSize: 16 }}>{tutorName}</div>
           </div>
@@ -324,27 +327,31 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
         </div>
 
         <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
+          style={{ marginTop: "17px", marginBottom: "0px" }}
           label="Type"
           name="sessionType"
-          rules={[{ required: true, message:"Please select session type" }]}
-        > 
-         <Radio.Group onChange={handleRadioChange} >
+          rules={[{ required: true, message: "Please select session type" }]}
+        >
+          <Radio.Group onChange={handleRadioChange} >
             <Radio value="Individual Session">Individual Session</Radio>
             <Tooltip title={recurringAvailable ? 'Already recurring session is booked by another sutdernt.' : ''}>
+
               <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session {recurringAvailable && (<><QuestionCircleFilled  style={{marginLeft:"8px"}}/></>)}</Radio>
+
             </Tooltip>
-         </Radio.Group>
+          </Radio.Group>
         </Form.Item>
-       {showDropdown && ( 
+
+
+        {showDropdown && (
           <>
-        <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
-          label="Frequency"
-          name="frequency"
-        >
-            <Select placeholder="Select an option" value={dayOfWeek}
-                 onChange={(value) => {
+            <Form.Item
+              style={{ marginTop: "17px", marginBottom: "0px" }}
+              label="Frequency"
+              name="frequency"
+            >
+              <Select placeholder="Select an option" value={dayOfWeek}
+                onChange={(value) => {
                   setDayOfWeek(value);
                   form.setFieldsValue({ frequency: value });
                 }} defaultValue={dayOfWeek} disabled={true} >
@@ -354,58 +361,58 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
                 <Select.Option value="Weekly on Thursday">Weekly on Thursday</Select.Option>
                 <Select.Option value="Weekly on Friday">Weekly on Friday</Select.Option>
                 <Select.Option value="Weekly on Saturday">Weekly on Saturday</Select.Option>
-            </Select>
-        </Form.Item>
-        </>        
+              </Select>
+            </Form.Item>
+          </>
         )}
         <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
-          label="Leave a quick note"
+          style={{ marginTop: "17px", marginBottom: "0px" }}
+          label="Notes for Tutor"
           name="note"
         >
-          <TextArea rows={3} placeholder="Textarea" style={{ fontSize: 16 }} />
+          <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
         </Form.Item>
-        { (card != null && card != '') && (
+        {(card != null && card != '' && (sessionType == 'Recurring Session' || ( sessionType == 'Individual Session'  &&  credit <= 0  )) ) && (
           <div className="credit-card">
-            <div className="credit-card-header"> 
+            <div className="credit-card-header">
               <div className="card-brand">Card Number</div>
-              <div className="chip"><button  onClick={next} >Edit</button></div>
+              <div className="chip"><button onClick={next} >Edit</button></div>
             </div>
-            <div className="credit-card-number">{'**** **** **** '+card}</div>
+            <div className="credit-card-number">{'**** **** **** ' + card}</div>
           </div>
-          )
+        )
         }
       </>
     );
   };
-  
-  const Step5From = ({form}) => {
+
+  const Step5From = ({ form }) => {
 
     const [userName, setUserName] = useState("");
     const [cvc, setCVC] = useState("");
     const [expiry, setExpiry] = useState("");
     const [number, setNumber] = useState("");
-    const [ focused ,setFocused] = useState("");
-    const [issuer , setIssuer] = useState();
+    const [focused, setFocused] = useState("");
+    const [issuer, setIssuer] = useState();
 
     const handleInputChange = async (event: any) => {
       if (event.target.name === 'number') {
         event.target.value = formatCreditCardNumber(event.target.value)
-        form.setFieldsValue({ number: event.target.value});
+        form.setFieldsValue({ number: event.target.value });
         setNumber(event.target.value);
       } else if (event.target.name === 'expiry') {
         event.target.value = formatExpirationDate(event.target.value)
-        form.setFieldsValue({ expiry: event.target.value});
+        form.setFieldsValue({ expiry: event.target.value });
         setExpiry(event.target.value);
       } else if (event.target.name === 'cvc') {
-        event.target.value = formatCVC( event.target.value)
-        form.setFieldsValue({ cvc: event.target.value});
+        event.target.value = formatCVC(event.target.value)
+        form.setFieldsValue({ cvc: event.target.value });
         setCVC(event.target.value);
-      } else 
-      if (event.target.name === 'userName') {
-        setUserName(event.target.value);
-        form.setFieldsValue({ userName: event.target.value});
-      }
+      } else
+        if (event.target.name === 'userName') {
+          setUserName(event.target.value);
+          form.setFieldsValue({ userName: event.target.value });
+        }
       await form.validateFields();
     }
 
@@ -413,11 +420,11 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
       setFocused(event.target.name);
     }
 
-    const handleCallback = ({ issuer },isValid) => { 
-      form.setFieldsValue({ issuer: issuer}); 
-      if(isValid == true) {
+    const handleCallback = ({ issuer }, isValid) => {
+      form.setFieldsValue({ issuer: issuer });
+      if (isValid == true) {
         setIssuer(issuer);
-        
+
       } else {
         setIssuer(issuer);
         console.log(isValid);
@@ -430,78 +437,78 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
           <h3 style={{ fontSize: 16, color: "#312D42", fontWeight: "600" }}>
             Credit Card Details
           </h3>
-            <Cards
-              cvc={cvc}
-              expiry={expiry}
-              name={userName}
-              number={number}
-              focused={focused}
-              callback={handleCallback}
-            />  
-              <Form.Item
-                style={{ marginTop: "17px", marginBottom: "0px"}}
-                label="Name"
-                name={"userName"}
-                rules={[{ required: true, message:"Please enter name" },
-                      ]}
-              > 
-                <Input  className="form-control" style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} id="messagsse"   name={"userName"}  onChange={handleInputChange}  onFocus={handleInputFocus}   placeholder={"Name"} />
-              </Form.Item>
+          <Cards
+            cvc={cvc}
+            expiry={expiry}
+            name={userName}
+            number={number}
+            focused={focused}
+            callback={handleCallback}
+          />
+          <Form.Item
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="Name"
+            name={"userName"}
+            rules={[{ required: true, message: "Please enter name" },
+            ]}
+          >
+            <Input className="form-control" style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} id="messagsse" name={"userName"} onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"Name"} />
+          </Form.Item>
 
-              <Form.Item
-                key= "number"
-                style={{ marginTop: "17px", marginBottom: "0px"}}
-                label="Card Number"
-                name={"number"}
-                rules={[{ required: true, message:"Please enter card number" },
-                        {
-                          pattern:  /^[\d| ]{19,22}$/,
-                          message: "Card number must be 16 to 22 digits long and may contain only numbers and spaces",
-                        },
-                ]}
-              > 
-                <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }}  name={"number"}  onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"Card Number"}  />
-              </Form.Item>
+          <Form.Item
+            key="number"
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="Card Number"
+            name={"number"}
+            rules={[{ required: true, message: "Please enter card number" },
+            {
+              pattern: /^[\d| ]{19,22}$/,
+              message: "Card number must be 16 to 22 digits long and may contain only numbers and spaces",
+            },
+            ]}
+          >
+            <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} name={"number"} onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"Card Number"} />
+          </Form.Item>
 
-              <Form.Item
-                key= "expiry"
-                style={{ marginTop: "17px", marginBottom: "0px"}}
-                label="Expiration Date:"
-                name={"expiry"}
-                rules={[{ required: true, message:"Please enter expiry date" },
-                      {
-                        pattern: /\d\d\/\d\d/, // Regular expression pattern for MM/YY format
-                        message: "Please enter a valid expiration date in MM/YY format",
-                      },
-                ]}
-              
-              > 
-                <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }}  name={"expiry"}   onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"Valid Thru"} />
-              </Form.Item>
-              
-              <Form.Item
-                key= "cvc"
-                style={{ marginTop: "17px", marginBottom: "0px"}}
-                label="CVC:"
-                name={"cvc"}
-                rules={[{ required: true, message:"Please enter cvc" },
-                        {
-                          pattern:  /\d{3}/,
-                        },
-                      ]}
-              
-              > 
-                <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} name={"cvc"}  onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"CVC"}  />
-              </Form.Item>
+          <Form.Item
+            key="expiry"
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="Expiration Date:"
+            name={"expiry"}
+            rules={[{ required: true, message: "Please enter expiry date" },
+            {
+              pattern: /\d\d\/\d\d/, // Regular expression pattern for MM/YY format
+              message: "Please enter a valid expiration date in MM/YY format",
+            },
+            ]}
 
-              <Form.Item
-              name={"issuer"}
-              initialValue={issuer} 
-              >
-                <Input type="hidden" name={'issuer'} value={issuer} />
-              </Form.Item>
-              
-          </div>
+          >
+            <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} name={"expiry"} onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"Valid Thru"} />
+          </Form.Item>
+
+          <Form.Item
+            key="cvc"
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="CVC:"
+            name={"cvc"}
+            rules={[{ required: true, message: "Please enter cvc" },
+            {
+              pattern: /\d{3}/,
+            },
+            ]}
+
+          >
+            <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: " 8px 12px 8px 12px", }} name={"cvc"} onChange={handleInputChange} onFocus={handleInputFocus} placeholder={"CVC"} />
+          </Form.Item>
+
+          <Form.Item
+            name={"issuer"}
+            initialValue={issuer}
+          >
+            <Input type="hidden" name={'issuer'} value={issuer} />
+          </Form.Item>
+
+        </div>
       </>
     );
   };
@@ -522,24 +529,26 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
 
   useEffect(() => {
     cardDetails();
-  }, [dayOfWeek,recurringAvailable,card]); 
+  }, [dayOfWeek, recurringAvailable, card]);
+
 
   return (
+   
     <>
-      { (!timezone) ?
-      <Tooltip
-        title={
-          "Please select your timezone first."
-        }
-        color={"#465078"}
-      >
-        <Button className={"primary-button"} >
-        {title}
+      {(!timezone) ?
+        <Tooltip
+          title={
+            "Please select your timezone first."
+          }
+          color={"#465078"}
+        >
+          <Button className={"primary-button"} >
+            {title}
+          </Button>
+        </Tooltip> :
+        <Button className={"primary-button"} onClick={showModal}>
+          {title}
         </Button>
-      </Tooltip>  :
-      <Button className={"primary-button"} onClick={showModal}>
-        {title}
-      </Button>
       }
       <Modal
         title={modalTitle}
@@ -555,27 +564,65 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
             </Button>
           ),
           <span className={"steps"}>Step {activeStep} of {totalSteps}</span>,
-          ((activeStep < totalSteps  && activeStep != 3 ) || ((!card) &&  activeStep != 4 ) )   && (
-            <Button
-              className={"secondary-button"}
-              onClick={next}
-            >
-              Next Step
-            </Button>
+          
+          
+          // ((activeStep < totalSteps  && activeStep != 3 ) || ((!card) &&  activeStep != 4 ) )  && (
+          //     <Button
+          //       className={"secondary-button"}
+          //       onClick={next}
+          //     >
+          //       Next Step  {sessionType}
+          //     </Button>
+              
+          // ),
+          // loading == true ? (
+          //   <Spin />
+          // ) : (
+          //   ( (activeStep === totalSteps ||  activeStep == 3 && card ) ||  (card == '' &&  activeStep == 4) ) && (
+          //     <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
+          //       Book Session  {sessionType}
+          //     </Button>
+          //   ) 
+           
+          // ) 
+            
+          ((activeStep < totalSteps && activeStep !== 3) || (!card && activeStep !== 4)) && (
+            <>
+            
+              {sessionType === 'Individual Session' && credit > 0 && (
+                 <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
+                 Book Session
+               </Button>
+              )}
+              {sessionType === 'Individual Session' && credit <= 0 && (
+           
+                <Button className={"secondary-button"} onClick={next}>
+                  Next Step 
+                </Button>
+              )}
+              {(!sessionType || sessionType == 'Recurring Session') && (
+                <Button className={"secondary-button"} onClick={next}>
+                  Next Step 
+                </Button>
+              )}
+            </>
           ),
-          loading == true ? (
+          loading === true ? (
             <Spin />
           ) : (
-         ( (activeStep === totalSteps ||  activeStep == 3 && card ) ||  (card == '' &&  activeStep == 4) )  && (
+            ((activeStep === totalSteps || (activeStep === 3 && card)) || (card === '' && activeStep === 4)) && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-                Book Session  
+                Book Session
               </Button>
             )
           )
+          
+
+          
         ]}
       >
         <Form form={form} layout="vertical"
-          >
+        >
           {activeStep == 1 && (
             <div style={{ width: "555px" }}>
               <Step2Form tutors={tutors} />
@@ -588,12 +635,12 @@ const BookSession = ({addUpcomingSession,title,moduleType, timezone}) => {
           )}
           {activeStep == 3 && (
             <div style={{ width: "600px" }}>
-              <Step4From form={form}/>
+              <Step4From form={form} />
             </div>
           )}
           {activeStep == 4 && (
             <div style={{ width: "600px" }}>
-              <Step5From form={form}/>
+              <Step5From form={form} />
             </div>
           )}
         </Form>

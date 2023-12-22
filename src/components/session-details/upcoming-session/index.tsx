@@ -75,31 +75,33 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             {user.role == "student" ? (
               isSessionOnToday ? (
                 <Tooltip
+                  className={'button_tooltip'}
                   title={
                     "You can’t reschedule session less than 24 hours before it starts"
                   }
                   color={"#465078"}
                 >
                   <Button
-                    className={`secondary-button ${
-                      isSessionOnToday ? "disable-button" : ""
-                    }`}
+                    className={`secondary-button button-disabled`}
                     onClick={() => false}
+                    disabled={isSessionOnToday} 
                   >
                     {" "}
                     Reschedule{" "}
+                    
                   </Button>
                 </Tooltip>
               ) : (
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-          </div>
-          {user.role == "tutor" && (
-          <div className="btn-group" style={{ marginTop: "10px" }}>
-            <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
-          </div>
+              {user.role == "tutor" && (
+            // <div className="btn-group" style={{ marginTop: "10px" }}>
+              <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+            // </div>
           )}
+          </div>
+        
         </div>
       </div>
 

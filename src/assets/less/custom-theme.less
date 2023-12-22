@@ -106,6 +106,9 @@ h1,h2,h3,h4,h5,h6, ul, li, ol{
 }
 .ant-form{
   .ant-form-item{
+    .ant-picker.input {
+      height: 40px;
+    }
     .ant-input{
       border: 1px solid #00000026;
       border-radius: 8px;
@@ -479,3 +482,85 @@ a{
 // .changePassword {
 //   border: 0px solid rgba(0, 0, 0, 0.15) !important;
 // }
+
+.secondary-button{
+  &.button_tooltip{
+    padding: 0;
+    border: 0;
+    .ant-btn{
+      padding: 8px 16px;
+      border-radius: 8px;
+      height: auto;
+    }
+    &:hover{
+      background-color: #ffffff;
+    }
+  }
+} 
+.ant-tooltip-inner {
+  border-radius: 5px;
+}
+.ant-form {
+  .ant-form-item {
+    .ant-row {
+      align-items: start !important;
+    }
+  }
+}
+.ant-menu-root {
+  .ant-menu-item, .ant-menu-submenu{
+    .ant-menu-item-icon{
+      min-width: 32px;
+      svg{
+        width: 27px;
+        height: 27px;
+      }
+    }  
+  }
+}
+.ant-form-item-control-input {
+  .ant-select-selector{
+    .ant-select-selection-item{
+      font-size: 16px;
+    }
+    .ant-select-selection-search{
+      font-size: 16px;
+      height: auto;
+      padding: 5px 0;
+    }
+  }
+}
+.ant-input-number-input{
+  height: 40px;
+}
+
+.personality-section,
+.biography-section,
+.extra-info-section,
+.basic-information,
+.applications-section,
+.application-info-section,
+.personality-tutor-section,
+.working-section, .buffer-time-section, .specializations-section, .personality-tutor-section,.biography-tutor-section{
+  margin-bottom: 40px;
+}
+.d_flex_center{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+ 
+.ant-form{
+  .ant-form-item{
+    .ant-select.time-date_select{
+      &.ant-select-in-form-item {
+        width: 140px !important;
+        height: 40px;
+        border: 0;
+      }
+    }
+
+  }
+
+}

@@ -24,7 +24,8 @@ export const stringToBoolean = (value) => {
 
 const formatHours= (hours, format = 'HH:mm') => {
     if(hours && hours.length > 0){
-        return hours.map(hours => ({start: moment(hours.start, format), end: moment(hours.end, format)}))
+        // return hours.map(hours => ({start: moment(hours.start, format), end: moment(hours.end, format)}))
+        return hours.map(hours => ({start: hours.start, end: hours.end}))
     }else{
         return hours;
     }

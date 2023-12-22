@@ -18,6 +18,7 @@ import Billing from "./billing";
 import { useEffect, useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useTutor } from "../../api/providers/TutorProvider"
+import MeetingLink from "./meeting-link";
 
 const TutorProfile = () => {
   const [rating, setRating] = useState(null);
@@ -88,6 +89,7 @@ const TutorProfile = () => {
                 <div>
                   <Specializations />
                   <BufferTime />
+                  <MeetingLink />
                 </div>
               </div>
             </TabPane>
