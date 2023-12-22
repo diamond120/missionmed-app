@@ -32,7 +32,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
         setUniversityList(
           response.data.data.map((university) => ({
             key: university.id,
-            label: university.title+" " + (university.mockinterview ?? '0'),
+            label: university.title+" - " + (university.mockinterview ?? '0'),
             value: university.title,
           }))
         );

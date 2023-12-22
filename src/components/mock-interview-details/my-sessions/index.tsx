@@ -182,14 +182,14 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       )}
 
       {details &&
-        <div style={{ display: "flex" }} className="w_full">
+        <div style={{ display: "flex" }} className="w_full roll-out">
           <div className="time" style={{ paddingRight: 100 }}>
             <div style={{ paddingBottom: "5px" }}>
-              <strong>Session Details</strong>
+              <strong>{userRole == "tutor" ? "Student Details" : " Tutor Details" }</strong>
             </div>
 
             <div className={"end-time"}>Location : {session.location ?? 'N/A'}</div>
-            <div className={"end-time"}>Currinculum : {session.state ?? 'N/A'}</div>
+            <div className={"end-time"}>Currinculum : {(!session.state ||  session.state == '') ? 'N/A' : session.state }</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
 

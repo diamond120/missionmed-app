@@ -93,7 +93,7 @@ const StudentMockInterview = () => {
             : []
         );
         setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
-        setStudentData(response.data?.data?.studentCredit ?? 0);
+        setStudentData(response.data?.data?.studentCredit ?? '');
         setTimeZone(response.data?.data?.studentTimezone ?? null);
       } else {
         throw new Error(response.data.message);
@@ -148,10 +148,14 @@ const StudentMockInterview = () => {
             }}
           >
             <h2 className={"tab-title"}>Mock Interview</h2>
-            <div>Student credit: { student === '' ?  <Spin  style={{marginLeft :10}}/> : student }</div>
-          
-            {(student == 0 ) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a> }
-            { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
+
+            <div className="d_flex_center">
+              <div><b>Credit: { student === '' ?  <Spin  style={{marginLeft :10}}/> : student }</b></div>
+              {(student == 0 ) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a> }
+              { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
+
+            </div>
+
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
             <MockInterviewDetails

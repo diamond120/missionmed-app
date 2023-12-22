@@ -82,7 +82,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                   color={"#465078"}
                 >
                   <Button
-                    className={`secondary-button `}
+                    className={`secondary-button button-disabled`}
                     onClick={() => false}
                     disabled={isSessionOnToday} 
                   >

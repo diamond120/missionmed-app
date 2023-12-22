@@ -26,7 +26,15 @@
                background-color: #FAF9F6;
                padding: 20px;
                border: 1px solid #ccc;
+               
               }
+               @keyframes rollout {
+                    0% { transform: translateY(-100px); }
+                    100% { transform: none; }
+               }
+               .roll-out {
+                    animation: rollout 0.4s;
+               }
               .time {
                    padding-right: 24px;
                    margin-right: 24px;

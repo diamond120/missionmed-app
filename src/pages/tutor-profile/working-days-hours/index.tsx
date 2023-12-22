@@ -1,5 +1,5 @@
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Alert, Button, Form, Space, Spin, Switch, TimePicker, message } from "antd";
+import { MinusCircleOutlined, PlusOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import { Alert, Button, Form, Select, Space, Spin, Switch, TimePicker, message } from "antd";
 import { FC, useMemo, useState } from "react";
 import "./index.less";
 import moment from "moment";
@@ -29,12 +29,13 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   };
 
   const checkTimeFrame = async (rule, value) => {
+    value = moment(value, format);
     const [day, index, type] = rule.field.split(".");
     const currentTimeSlots = form.getFieldValue(day);
     if (currentTimeSlots.length > 0 && value) {
       let slotStartTime = null;
       if (type == "end") {
-        slotStartTime = currentTimeSlots[index].start;
+        slotStartTime =moment(currentTimeSlots[index].start, format);
       }
       currentTimeSlots.forEach((slot, i) => {
         const beforeTime = moment(slot.start, format);
@@ -66,19 +67,20 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
           }
         } else {
           if (type == "start" && value.isSameOrAfter(afterTime)) {
-            throw new Error("Start time must be less than end time!");
+          throw new Error("Start time must be less than end time!");
           } else if (type == "end" && value.isSameOrBefore(beforeTime)) {
-            throw new Error("End time must be greater than start time!");
+          throw new Error("End time must be greater than start time!");
           }
         }
       });
     }
   };
-
+  
   const formattedWorkingHours = useMemo(
     () => tutorWorkingHours(tutor.workingHours, format),
     [tutor.workingHours]
   );
+  
 
   const handleEditClick = (e) => {
     try {
@@ -101,8 +103,10 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   const formatTimeArr = (timeArr) => {
     if (timeArr.length > 0) {
       return timeArr.map((time) => ({
-        start: time.start.format(format),
-        end: time.end.format(format),
+        // start: time.start.format(format),
+        // end: time.end.format(format),
+        start: time.start,
+        end: time.end,
       }));
     }
     return [];
@@ -111,7 +115,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   const onFinish = async (values: any) => {
 
     try {
-
+      
       if(!tutor?.timezone) {
         throw new Error("Please select time zone first.");
       }
@@ -169,7 +173,59 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
       <Spin />
     )
   }
-  
+   
+ 
+  const timeIntervals = [
+    { value: '12:00 am', label: '12:00 am' },
+    { value: '12:30 am', label: '12:30 am' },
+    { value: '1:00 am', label: '1:00 am' },
+    { value: '1:30 am', label: '1:30 am' },
+    { value: '2:00 am', label: '2:00 am' },
+    { value: '2:30 am', label: '2:30 am' },
+    { value: '3:00 am', label: '3:00 am' },
+    { value: '3:30 am', label: '3:30 am' },
+    { value: '4:00 am', label: '4:00 am' },
+    { value: '4:30 am', label: '4:30 am' },
+    { value: '5:00 am', label: '5:00 am' },
+    { value: '5:30 am', label: '5:30 am' },
+    { value: '6:00 am', label: '6:00 am' },
+    { value: '6:30 am', label: '6:30 am' },
+    { value: '7:00 am', label: '7:00 am' },
+    { value: '7:30 am', label: '7:30 am' },
+    { value: '8:00 am', label: '8:00 am' },
+    { value: '8:30 am', label: '8:30 am' },
+    { value: '9:00 am', label: '9:00 am' },
+    { value: '9:30 am', label: '9:30 am' },
+    { value: '10:00 am', label: '10:00 am' },
+    { value: '10:30 am', label: '10:30 am' },
+    { value: '11:00 am', label: '11:00 am' },
+    { value: '11:30 am', label: '11:30 am' },
+    { value: '12:00 pm', label: '12:00 pm' },
+    { value: '12:30 pm', label: '12:30 pm' },
+    { value: '1:00 pm', label: '1:00 pm' },
+    { value: '1:30 pm', label: '1:30 pm' },
+    { value: '2:00 pm', label: '2:00 pm' },
+    { value: '2:30 pm', label: '2:30 pm' },
+    { value: '3:00 pm', label: '3:00 pm' },
+    { value: '3:30 pm', label: '3:30 pm' },
+    { value: '4:00 pm', label: '4:00 pm' },
+    { value: '4:30 pm', label: '4:30 pm' },
+    { value: '5:00 pm', label: '5:00 pm' },
+    { value: '5:30 pm', label: '5:30 pm' },
+    { value: '6:00 pm', label: '6:00 pm' },
+    { value: '6:30 pm', label: '6:30 pm' },
+    { value: '7:00 pm', label: '7:00 pm' },
+    { value: '7:30 pm', label: '7:30 pm' },
+    { value: '8:00 pm', label: '8:00 pm' },
+    { value: '8:30 pm', label: '8:30 pm' },
+    { value: '9:00 pm', label: '9:00 pm' },
+    { value: '9:30 pm', label: '9:30 pm' },
+    { value: '10:00 pm', label: '10:00 pm' },
+    { value: '10:30 pm', label: '10:30 pm' },
+    { value: '11:00 pm', label: '11:00 pm' },
+    { value: '11:30 pm', label: '11:30 pm' },
+  ];
+
   return (
     <div className={"working-section"}>
       <h2 className={"working-section-title"}>Working Days & Hours</h2>
@@ -180,31 +236,37 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
         initialValues={{
           isMondayOff: formattedWorkingHours.isMondayOff ?? false,
           Monday: formattedWorkingHours.Monday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
           isTuesdayOff: formattedWorkingHours.isTuesdayOff ?? false,
           Tuesday: formattedWorkingHours.Tuesday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
           isWednesdayOff: formattedWorkingHours.isWednesdayOff ?? false,
           Wednesday: formattedWorkingHours.Wednesday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
           isThursdayOff: formattedWorkingHours.isThursdayOff ?? false,
           Thursday: formattedWorkingHours.Thursday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
           isFridayOff: formattedWorkingHours.isFridayOff ?? false,
           Friday: formattedWorkingHours.Friday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
           isSaturdayOff: formattedWorkingHours.isSaturdayOff ?? false,
           Saturday: formattedWorkingHours.Saturday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
           isSundayOff: formattedWorkingHours.isSundayOff ?? false,
           Sunday: formattedWorkingHours.Sunday ?? [
-            { start: moment("9:00", format), end: moment("9:00", format) },
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
           ],
         }}
       >
@@ -243,9 +305,21 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           { validator: checkTimeFrame },
                         ]}
                         initialValue={moment("9:00", format)}
-                        dependencies={[["Monday", name, "end"]]}
+                                                dependencies={[["Monday", name, "end"]]}
                       >
-                        <TimePicker
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isMondayOff") == true ||
+                            !editing
+                          }
+                          
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -256,7 +330,8 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           }
                           use12Hours
                           inputReadOnly
-                        />
+                        /> */}
+                                                
                       </Form.Item>
                       <Form.Item
                         {...restField}
@@ -265,14 +340,25 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           {
                             required:
                               form.getFieldValue("isMondayOff") == false,
-                            message: "end time required",
+                              message: "end time required",
                           },
                           { validator: checkTimeFrame },
                         ]}
                         initialValue={moment("9:00", format)}
                         dependencies={[["Monday", name, "start"]]}
                       >
-                        <TimePicker
+                      <Select
+                        placeholder="Select time"
+                        style={{ width: "140px" }}
+                        className={"input time-date_select"}
+                        options={timeIntervals}
+                        disabled={
+                          form.getFieldValue("isMondayOff") == true ||
+                          !editing
+                        }
+                        suffixIcon={<ClockCircleOutlined />}
+                      />
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -282,7 +368,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
-                        />
+                                                /> */}
                       </Form.Item>
                       <Button
                         type="text"
@@ -353,7 +439,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Tuesday", name, "end"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -363,6 +449,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                        /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isTuesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Form.Item
@@ -379,7 +476,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Tuesday", name, "start"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -389,6 +486,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isTuesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Button
@@ -459,7 +567,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Wednesday", name, "end"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -469,6 +577,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isWednesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Form.Item
@@ -485,7 +604,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Wednesday", name, "start"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -495,6 +614,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isWednesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Button
@@ -566,7 +696,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Thursday", name, "end"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -576,6 +706,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isThursdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Form.Item
@@ -592,7 +733,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Thursday", name, "start"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -602,6 +743,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isThursdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Button
@@ -673,7 +825,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Friday", name, "end"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -683,6 +835,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isFridayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Form.Item
@@ -699,7 +862,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Friday", name, "start"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -709,6 +872,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isFridayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Button
@@ -779,7 +953,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Saturday", name, "end"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -789,6 +963,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSaturdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Form.Item
@@ -805,7 +990,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Saturday", name, "start"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -815,6 +1000,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                  /> */}
+                         <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSaturdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Button
@@ -885,7 +1081,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Sunday", name, "end"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -895,6 +1091,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                          /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSundayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Form.Item
@@ -911,7 +1118,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                         initialValue={moment("9:00", format)}
                         dependencies={[["Sunday", name, "start"]]}
                       >
-                        <TimePicker
+                        {/* <TimePicker
                           minuteStep={30}
                           format={format}
                           style={{ width: "140px" }}
@@ -921,6 +1128,17 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                             !editing
                           }
                           inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSundayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
                         />
                       </Form.Item>
                       <Button

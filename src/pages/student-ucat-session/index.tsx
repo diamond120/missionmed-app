@@ -2,7 +2,7 @@ import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, CalendarOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Breadcrumb, message, Space, Dropdown } from "antd";
+import { Breadcrumb, message, Space, Dropdown, Spin } from "antd";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
@@ -20,6 +20,7 @@ const StudentUCATSession = () => {
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const [timezone, setTimeZone] = useState("");
+  const [credit, setCredit] = useState("");
   
   const getUCATSessionDetails = async () => {
     try {
@@ -46,6 +47,7 @@ const StudentUCATSession = () => {
             : []
         );
         setTimeZone(response.data?.data?.studentTimezone ?? null);
+        setCredit(response.data?.data?.ucatTeachingSessionCredit ?? '')
       } else {
         throw new Error(response.data.message);
       }
@@ -173,7 +175,8 @@ const StudentUCATSession = () => {
             }}
           >
             <h2 className={"tab-title"}>UCAT Teaching Sessions</h2>
-            <div className="d-flex align-items-center">
+            <div className="d_flex_center">
+              <div ><b>Credit: { credit === '' ?  <Spin  style={{marginLeft :10}}/> : credit }</b></div>
               { (upcomingSessions.length > 0)  &&
                 <Space direction="vertical" className="dropdownIcon">
                   <Space wrap>
@@ -183,8 +186,7 @@ const StudentUCATSession = () => {
                   </Space>
                 </Space>
               }
-              
-              {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
+              {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit}/>}
 
             </div>
           </div>
@@ -224,7 +226,7 @@ const StudentUCATSession = () => {
                     You can choose long-term tutor and book your first  <br />{" "}
                     UCAT session by pressing "Book Session" button below.
                     </div>
-                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession}  timezone={timezone}/>
+                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession}  timezone={timezone}  credit={credit}/>
                   </div>
                 </div>
               </div>

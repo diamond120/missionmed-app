@@ -95,12 +95,10 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule,hand
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-          </div>
           {user.role == "tutor" && (
-          <div className="btn-group" style={{ marginTop: "10px" }}>
             <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
-          </div>
-          )}
+            )}
+            </div>
         </div>
       </div>
 

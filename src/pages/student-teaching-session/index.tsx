@@ -2,7 +2,7 @@ import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, CalendarOutlined,EllipsisOutlined } from "@ant-design/icons";
-import { Breadcrumb, message,Space,Dropdown } from "antd";
+import { Breadcrumb, message,Space,Dropdown, Spin } from "antd";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
@@ -21,6 +21,7 @@ const StudentTeachingSession = () => {
     const [moduleType, setModuleType] = useState("teaching");
     const [freezeSessions, setFreezeSessions] = useState([]);
     const [timezone, setTimeZone] = useState("");
+    const [credit, setCredit] = useState("");
   
     const getMockInterviewDetails = async () => {
       try {
@@ -47,6 +48,7 @@ const StudentTeachingSession = () => {
               : []
           );
           setTimeZone(response.data?.data?.studentTimezone ?? null);
+          setCredit(response.data?.data?.teachingSessionCredit ?? '')
         } else {
           throw new Error(response.data.message);
         }
@@ -180,7 +182,8 @@ const StudentTeachingSession = () => {
             }}
           >
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
-            <div style={{gap:15,display:'flex',flexWrap:'wrap',alignItems:'center'}}>
+            <div className={"d_flex_center"} style={{gap:15,display:'flex',flexWrap:'wrap',alignItems:'center'}}>
+              <div> <b>Credit: { credit === '' ?  <Spin  style={{marginLeft :10}}/> : credit }</b></div>
               { (upcomingSessions.length > 0)  &&
               <Space direction="vertical" className="dropdownIcon">
                 <Space wrap  >
@@ -191,7 +194,7 @@ const StudentTeachingSession = () => {
               </Space>
               }
               {(upcomingSessions.length > 0 || pastSessions.length > 0) && 
-              <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching"  timezone={timezone}/>}
+              <BookSession title="Book Extra Session"  addUpcomingSession={addUpcomingSession} moduleType="teaching"  credit={credit} timezone={timezone}/>}
             </div>
           </div>
 
@@ -230,7 +233,7 @@ const StudentTeachingSession = () => {
                     You can choose long-term tutor and book your first  <br />{" "}
                     Teaching session by pressing "Book Session" button below.
                     </div>
-                    <BookSession moduleType="teaching" title="Book Session" addUpcomingSession={addUpcomingSession} timezone={timezone}/>
+                    <BookSession moduleType="teaching" title="Book Session" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
                   </div>
                 </div>
               </div>
