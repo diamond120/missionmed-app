@@ -335,10 +335,13 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           <Radio.Group onChange={handleRadioChange} >
             <Radio value="Individual Session">Individual Session</Radio>
             <Tooltip title={recurringAvailable ? 'Already recurring session is booked by another sutdernt.' : ''}>
-              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session<QuestionCircleFilled style={{ marginLeft: "8px" }} /></Radio>
+
+              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session {recurringAvailable && (<><QuestionCircleFilled  style={{marginLeft:"8px"}}/></>)}</Radio>
+
             </Tooltip>
           </Radio.Group>
         </Form.Item>
+
 
         {showDropdown && (
           <>
