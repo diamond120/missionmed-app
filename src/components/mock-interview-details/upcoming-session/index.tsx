@@ -70,9 +70,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
           </ul>
 
           <div className="btn-group" style={{ marginTop: "32px" }}>
-            <a href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank">
-              <Button className={"primary-button"}>Join Session </Button>
-            </a>
+            <Button className={"primary-button"} type="link" href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank" >Join Session </Button>
             {user.role == "student" ? (
               upcomingInterview['isWithin24Hours'] ? (
 

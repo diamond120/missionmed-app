@@ -13,11 +13,11 @@ import ProgressCard from "../../components/shared-ui/ProgressCard";
 import Section from "../../components/shared-ui/Section";
 import { SvgIcon } from "../../components/icon";
 import postUrl from "../../components/img/post.jpg";
-import {useStudent} from "../../api/providers/StudentProvider";
+import { useStudent } from "../../api/providers/StudentProvider";
 
 const ApplicationReview = () => {
   const data = [];
- //const { data } = useApplicationsQuery();
+  //const { data } = useApplicationsQuery();
   const student = useStudent();
   const navigate = useNavigate();
 
@@ -26,15 +26,16 @@ const ApplicationReview = () => {
 
 
   useEffect(() => {
-        setIsModalOpen(
+    setIsModalOpen(
       !clickedCanceled &&
       (!student?.fullName ||
-      !student?.birthday ||
-      !student?.email ||
-      !student?.phoneNumber ||
-      !student?.location ||
-      !student?.state))}
-  , [student?.fullName, student?.birthday, student?.email, student?.phoneNumber])
+        !student?.birthday ||
+        !student?.email ||
+        !student?.phoneNumber ||
+        !student?.location ||
+        !student?.state))
+  }
+    , [student?.fullName, student?.birthday, student?.email, student?.phoneNumber])
 
   const handleCancel = () => {
     setIsModalOpen(false)
@@ -64,45 +65,48 @@ const ApplicationReview = () => {
           <Breadcrumb.Item>Application Review</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"application-review-section-title-wrap"} >
-          <h2 className={"application-review-section-title"}>Application Review  
-          
-            <span   className={"coming-soonapp"}  style={{position:'relative'}}>Coming Soon</span>
-          
+          <h2 className={"application-review-section-title"}>Application Review
+
+            <span className={"coming-soonapp"} style={{ position: 'relative' }}>Coming Soon</span>
+
           </h2>
-        
+
 
           {/* <Link  disabled={true} to={"https://missionmed.com.au/checkout_step/unsw-application-review-checkout/"} rel={"noreferrer"}className={"primary-button"}>
             <ShoppingCartOutlined style={{fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />
             Buy More Reviews
             
           </Link> */}
-          <span className={"primary-button"} >
-          <ShoppingCartOutlined style={{fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />
+          {/* <span className={"primary-button"} >
+            <ShoppingCartOutlined style={{ fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />
             Buy More Reviews
-          </span>
+          </span> */}
+          <Button size="large" type="primary" className={"primary-button"} icon={<ShoppingCartOutlined style={{ fontSize: 16, margin: "0 8px 0 0 ", lineHeight: 0 }} />} >Buy More Reviews</Button>
+
+
         </div>
         <div className={"application-review-progress-cards"}   >
           <h2 className={"application-review-progress-cards-title"}>Applications</h2>
-          
+
           <div className={"application-review-progress-cards-wrap"}>
             {data?.applications?.data?.map((application) => {
               let percent = 0;
-              let stageTitle=""
+              let stageTitle = ""
               if (application.attributes?.stage === 'Initial_Draft') {
                 percent = 16;
-                stageTitle= "Initial Draft"
+                stageTitle = "Initial Draft"
               }
               if (application.attributes?.stage === 'In_Progress') {
                 percent = 32;
-                stageTitle= "In Progress"
+                stageTitle = "In Progress"
               }
               if (application.attributes?.stage === 'Initial_Review_Complete') {
                 percent = 48;
-                stageTitle="Initial Review Complete"
+                stageTitle = "Initial Review Complete"
               }
               if (application.attributes?.stage === 'Final_Review') {
                 percent = 64;
-                stageTitle= "Final Review"
+                stageTitle = "Final Review"
               }
               if (application.attributes?.stage === 'In_Progress_Final') {
                 percent = 80;
@@ -173,7 +177,7 @@ const ApplicationReview = () => {
         {/*  </div>*/}
         {/*</Section>*/}
       </Section>
-    </React.Fragment>
+    </React.Fragment >
   );
 };
 
