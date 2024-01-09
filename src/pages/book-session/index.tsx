@@ -28,7 +28,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const [loading, setLoading] = useState(false);
   const [card, setCard] = useState("");
   const student = useStudent();
-  const [sessionType , setSessionType ] = useState('');
+  const [sessionType, setSessionType] = useState('');
 
   const getUniversityTutorList = async () => {
     try {
@@ -265,12 +265,12 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         setRecurringAvailable(response.data.data.recurring);
         if (response.data.data.recurring == true) {
           form.setFieldsValue({ sessionType: 'Individual Session' });
-          setSessionType( 'Individual Session' );
+          setSessionType('Individual Session');
           setShowDropdown(false);
         }
-         else {
+        else {
           form.setFieldsValue({ sessionType: 'Recurring Session' });
-          setSessionType( 'Recurring Session' );
+          setSessionType('Recurring Session');
           setShowDropdown(true);
         }
       } else {
@@ -336,7 +336,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             <Radio value="Individual Session">Individual Session</Radio>
             <Tooltip title={recurringAvailable ? 'Already recurring session is booked by another sutdernt.' : ''}>
 
-              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session {recurringAvailable && (<><QuestionCircleFilled  style={{marginLeft:"8px"}}/></>)}</Radio>
+              <Radio value="Recurring Session" disabled={recurringAvailable}>Recurring Session {recurringAvailable && (<><QuestionCircleFilled style={{ marginLeft: "8px" }} /></>)}</Radio>
 
             </Tooltip>
           </Radio.Group>
@@ -372,22 +372,22 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         >
           <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
         </Form.Item>
-        {(card != null && card != '' && (sessionType == 'Recurring Session' || ( sessionType == 'Individual Session'  &&  credit <= 0  )) ) && (
+        {(card != null && card != '' && (sessionType == 'Recurring Session' || (sessionType == 'Individual Session' && credit <= 0))) && (
           <>
-          <div className="credit-card">
-            <div className="credit-card-header">
-              <div className="card-brand">Card Number</div>
-              <div className="chip"><button onClick={next} >Edit</button></div>
+            <div className="credit-card">
+              <div className="credit-card-header">
+                <div className="card-brand">Card Number</div>
+                <div className="chip"><button onClick={next} >Edit</button></div>
+              </div>
+              <div className="credit-card-number">{'**** **** **** ' + card}</div>
             </div>
-            <div className="credit-card-number">{'**** **** **** ' + card}</div>
-          </div>
-          <Alert
-            message="Warning"
-            description={"For Session payment, if you have Credit in your account then it will deducted from that else your Credit Card will be charged."}
-            type="warning"
-            showIcon
-            style={{marginBottom :20,marginTop :20}}
-          />
+            <Alert
+              message="Warning"
+              description={"For Session payment, if you have Credit in your account then it will deducted from that else your Credit Card will be charged."}
+              type="warning"
+              showIcon
+              style={{ marginBottom: 20, marginTop: 20 }}
+            />
           </>
         )
         }
@@ -527,7 +527,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
       const response = await CommonService.getAPI("/student/card-data");
       if (response.data.success) {
         setCard(response.data.data.cardDigit);
-        console.log(card);
       } else {
         throw new Error(response.data.message);
       }
@@ -542,7 +541,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
 
   return (
-   
+
     <>
       {(!timezone) ?
         <Tooltip
@@ -573,8 +572,8 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             </Button>
           ),
           <span className={"steps"}>Step {activeStep} of {totalSteps}</span>,
-          
-          
+
+
           // ((activeStep < totalSteps  && activeStep != 3 ) || ((!card) &&  activeStep != 4 ) )  && (
           //     <Button
           //       className={"secondary-button"}
@@ -582,7 +581,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           //     >
           //       Next Step  {sessionType}
           //     </Button>
-              
+
           // ),
           // loading == true ? (
           //   <Spin />
@@ -592,26 +591,26 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           //       Book Session  {sessionType}
           //     </Button>
           //   ) 
-           
+
           // ) 
-            
+
           ((activeStep < totalSteps && activeStep !== 3) || (!card && activeStep !== 4)) && (
             <>
-            
+
               {sessionType === 'Individual Session' && credit > 0 && (
-                 <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
-                 Book Session
-               </Button>
+                <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
+                  Book Session
+                </Button>
               )}
               {sessionType === 'Individual Session' && credit <= 0 && (
-           
+
                 <Button className={"secondary-button"} onClick={next}>
-                  Next Step 
+                  Next Step
                 </Button>
               )}
               {(!sessionType || sessionType == 'Recurring Session') && (
                 <Button className={"secondary-button"} onClick={next}>
-                  Next Step 
+                  Next Step
                 </Button>
               )}
             </>
@@ -625,9 +624,9 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               </Button>
             )
           )
-          
 
-          
+
+
         ]}
       >
         <Form form={form} layout="vertical"

@@ -15,20 +15,20 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { TextArea } = Input;
   const [form] = Form.useForm();
-  
+
 
   const handleClick = () => {
     setIsModalOpen(true)
   }
 
   const handleSubmit = async () => {
-      const values = await form.validateFields();
-      const data = {
-        link : values.sessionLink,
-        sessionId : values.sessionId
-      }
-      handleEditLink(data);
-      setIsModalOpen(false);
+    const values = await form.validateFields();
+    const data = {
+      link: values.sessionLink,
+      sessionId: values.sessionId
+    }
+    handleEditLink(data);
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
@@ -43,7 +43,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
     }
   };
 
-  form.setFieldsValue({sessionLink :  upcomingInterview.sessionLink});
+  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink || upcomingInterview.defaultSessionLink });
 
   return (
     <>
@@ -66,14 +66,14 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
               <strong>Time: </strong> {`${formatTime(upcomingInterview['session_start_time'])} - ${formatTime(upcomingInterview['session_end_time'])}`}
             </li>
           </ul>
-          
+
           <div className="btn-group" style={{ marginTop: "32px" }}>
-            <a href={upcomingInterview['sessionLink']} target="_blank">
+            <a href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank">
               <Button className={"primary-button"}>Join Session </Button>
             </a>
-            
+
             {user.role == "student" ? (
-              isSessionOnToday ? (
+              upcomingInterview['isWithin24Hours'] ? (
                 <Tooltip
                   className={'button_tooltip'}
                   title={
@@ -84,24 +84,24 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                   <Button
                     className={`secondary-button button-disabled`}
                     onClick={() => false}
-                    disabled={isSessionOnToday} 
+                    disabled={upcomingInterview['isWithin24Hours']}
                   >
                     {" "}
                     Reschedule{" "}
-                    
+
                   </Button>
                 </Tooltip>
               ) : (
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-              {user.role == "tutor" && (
-            // <div className="btn-group" style={{ marginTop: "10px" }}>
+            {user.role == "tutor" && (
+              // <div className="btn-group" style={{ marginTop: "10px" }}>
               <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
-            // </div>
-          )}
+              // </div>
+            )}
           </div>
-        
+
         </div>
       </div>
 
@@ -115,7 +115,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
         footer={[
           <div key="buttonGroup" className='button-group'>
             <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-              Discard 
+              Discard
             </Button>
             <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
               Save Changes
@@ -124,24 +124,24 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
         ]}
       >
         <Form form={form} layout="vertical">
-          <Form.Item 
-              label="Edit Session Link" 
-              name="sessionLink" 
-              rules={[{required:true},
-                { validator: validateURL }]}
-              initialValue={upcomingInterview?.sessionLink}
-              >
-              <TextArea
-                style={{ height: 50 }}
-                placeholder=""
-              />
+          <Form.Item
+            label="Edit Session Link"
+            name="sessionLink"
+            rules={[{ required: true },
+            { validator: validateURL }]}
+            initialValue={upcomingInterview.sessionLink || upcomingInterview?.defaultSessionLink}
+          >
+            <TextArea
+              style={{ height: 50 }}
+              placeholder=""
+            />
           </Form.Item>
-          <Form.Item 
-              
-              name="sessionId" 
-              initialValue={upcomingInterview?.id}
-              >
-              <Input type="hidden" />
+          <Form.Item
+
+            name="sessionId"
+            initialValue={upcomingInterview?.id}
+          >
+            <Input type="hidden" />
           </Form.Item>
         </Form>
       </Modal>

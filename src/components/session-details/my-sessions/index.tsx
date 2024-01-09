@@ -72,7 +72,8 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       callback();
     }
   };
-  form.setFieldsValue({ sessionLink: session.sessionLink });
+  form.setFieldsValue({ sessionLink: session.sessionLink || session.defaultSessionLink });
+
   return (
     <li className="item" style={{ position: "relative" }}>
       <div style={{ display: "flex" }}>
@@ -111,9 +112,11 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
           }
         </>
       )}
+
       {(userRole == 'student' && type == "upcoming") && (
         <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap' }}>
-          <Button disabled={checkSessionOnToday(session.date) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+
+          <Button disabled={(session.isWithin24Hours) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
           <CancleSession title='Cancel Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
         </div>
@@ -204,10 +207,10 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         <div style={{ display: "flex" }} className="w_full roll-out">
           <div className="time" style={{ paddingRight: 100 }}>
             <div style={{ paddingBottom: "5px" }}>
-              <strong>{userRole == "tutor" ? "Student Details" : " Tutor Details" }</strong>
+              <strong>{userRole == "tutor" ? "Student Details" : " Tutor Details"}</strong>
             </div>
             <div className={"end-time"}>Location : {session.location ?? 'N/A'}</div>
-            <div className={"end-time"}>Currinculum : {(!session.state ||  session.state == '') ? 'N/A' : session.state }</div>
+            <div className={"end-time"}>Currinculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
           </div>

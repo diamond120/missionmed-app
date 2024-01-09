@@ -21,18 +21,18 @@ const StudentUCATSession = () => {
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const [timezone, setTimeZone] = useState("");
   const [credit, setCredit] = useState("");
-  
+
   const getUCATSessionDetails = async () => {
     try {
       const data = {
-        bookingFor : 'UCAT 1-to-1 Tutoring'
+        bookingFor: 'UCAT 1-to-1 Tutoring'
       }
-      const response = await CommonService.postAPI("/student/session-details",data);
+      const response = await CommonService.postAPI("/student/session-details", data);
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
-            ?  response.data?.data?.upcomingsessions
+            ? response.data?.data?.upcomingsessions
             : []
         );
         setPastSessions(
@@ -56,32 +56,33 @@ const StudentUCATSession = () => {
     }
   };
 
-  const handleEditAgenda = async(agendaDetails) => {
-    try{
+  const handleEditAgenda = async (agendaDetails) => {
+    try {
       const data = {
-        "sessionId":upcomingInterview?.id,
-        "agenda":agendaDetails,
-        'bookingFor' : 'UCAT 1-to-1 Tutoring'
+        "sessionId": upcomingInterview?.id,
+        "agenda": agendaDetails,
+        'bookingFor': 'UCAT 1-to-1 Tutoring'
       }
-      
-      const response = await CommonService.postAPI('/session-data',data)
-      if(response.data.success){
+
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
         setAgenda(agendaDetails);
-      }else{
+      } else {
         throw new Error(response.data.message)
       }
-    }catch(e){
+    } catch (e) {
       message.error(e.message);
     }
   };
 
-  const updatePastSession = (id, data={}) => {
+  const updatePastSession = (id, data = {}) => {
     const updatedSessions = pastSessions.map(session => {
-      if(session.id == id){
-        return {...session, ...data};
-      }else{
+      if (session.id == id) {
+        return { ...session, ...data };
+      } else {
         return session;
-      }})
+      }
+    })
     setPastSessions(updatedSessions);
   }
 
@@ -138,7 +139,7 @@ const StudentUCATSession = () => {
     getUCATSessionDetails();
   };
 
-  const addFreezeSession = (data : any) => {
+  const addFreezeSession = (data: any) => {
     getUCATSessionDetails();
   }
 
@@ -146,13 +147,13 @@ const StudentUCATSession = () => {
     {
       key: '1',
       label: (
-        <FreezeSession title='Freeze Session' addUpcomingSession={addUpcomingSession}  addFreezeSession={addFreezeSession}/>
+        <FreezeSession title='Freeze Session' addUpcomingSession={addUpcomingSession} addFreezeSession={addFreezeSession} />
       ),
     },
     {
       key: '2',
       label: (
-        <CancleSession title='Cancel Session' addUpcomingSession={upcomingInterview} moduleType={"ucat"}  cancleUpcomingSession={cancleUpSession} />
+        <CancleSession title='Cancel Session' addUpcomingSession={upcomingInterview} moduleType={"ucat"} cancleUpcomingSession={cancleUpSession} />
       ),
     },
   ];
@@ -176,22 +177,22 @@ const StudentUCATSession = () => {
           >
             <h2 className={"tab-title"}>UCAT Teaching Sessions</h2>
             <div className="d_flex_center">
-              <div ><b>Credit: { credit === '' ?  <Spin  style={{marginLeft :10}}/> : credit }</b></div>
-              { (upcomingSessions.length > 0)  &&
+              <div ><b>Credit: {credit === '' ? <Spin style={{ marginLeft: 10 }} /> : credit}</b></div>
+              {(upcomingSessions.length > 0) &&
                 <Space direction="vertical" className="dropdownIcon">
                   <Space wrap>
-                    <Dropdown placement="bottomLeft" menu={{items}} >
-                    <EllipsisOutlined />
+                    <Dropdown placement="bottomLeft" menu={{ items }} >
+                      <EllipsisOutlined />
                     </Dropdown>
                   </Space>
                 </Space>
               }
-              {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session"  moduleType="ucatStudent"  addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit}/>}
+              {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />}
 
             </div>
           </div>
 
-          { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
+          {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
             <SessionDetails
               key="mockInterviewDetails"
               moduleType="ucat"
@@ -203,8 +204,8 @@ const StudentUCATSession = () => {
               updatePastSession={updatePastSession}
               handleReschedule={handleReschedule}
               cancleUpSession={cancleUpSession}
-              freezeSessions={freezeSessions}/>
-            ) : (
+              freezeSessions={freezeSessions} />
+          ) : (
             <div className="mock-interview">
               <div className={"con-section-wrap"}>
                 <div className={"con-box"}>
@@ -223,17 +224,17 @@ const StudentUCATSession = () => {
                       You Don’t Have Any Booked Session
                     </h2>
                     <div style={{ marginBottom: "16px" }}>
-                    You can choose long-term tutor and book your first  <br />{" "}
-                    UCAT session by pressing "Book Session" button below.
+                      You can choose long-term tutor and book your first  <br />{" "}
+                      UCAT session by pressing "Book Session" button below.
                     </div>
-                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession}  timezone={timezone}  credit={credit}/>
+                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
                   </div>
                 </div>
               </div>
             </div>
           )}
         </div>
-        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone}/>
+        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone} />
       </Section>
     </React.Fragment>
   );
