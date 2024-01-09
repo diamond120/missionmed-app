@@ -1,5 +1,5 @@
 import "./index.less"
-import { AutoComplete, Button, Form, Input, Select, Switch, Spin } from "antd"
+import { AutoComplete, Button, Form, Input, Select, Switch, Spin, InputNumber } from "antd"
 import { FC, useMemo, useState } from "react"
 import { useTimezoneSelect, allTimezones } from "react-timezone-select"
 import { AddressDetails } from "../../../types/AddressDetails"
@@ -10,7 +10,7 @@ import { useProfileStaticDataContext } from "../../../api/context/ProfileStaticD
 import { AgeList } from "../../../common/common";
 import countryList from 'react-select-country-list';
 
-const BasicInfoForm: FC<Any> = ({props}) => {
+const BasicInfoForm: FC<Any> = ({ props }) => {
 
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -22,6 +22,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const [gender, setGender] = useState<string | undefined | null>('')
   const [pronouns, setPronouns] = useState<string | undefined | null>('')
   const [email, setEmail] = useState<string | undefined | null>('')
+  const [phone, setPhone] = useState<string | undefined | null>('')
   const [location, setLocation] = useState<string | undefined | null>('')
   const [autoSelected, setAutoSelectedTimezone] = useState<boolean>(false)
   const [autoSelectedLocation, setAutoSelectedLocation] = useState<string>('')
@@ -35,53 +36,55 @@ const BasicInfoForm: FC<Any> = ({props}) => {
   const countries = useMemo(() => countryList().getData(), [])
   const [country, setCountry] = useState('')
 
-  const updatedTutor =  async () => {
+  const updatedTutor = async () => {
     await TutorService.updateProfile({
       fullName: fullName !== '' ? fullName : tutor?.fullName,
       gender: gender !== '' ? gender : tutor?.gender,
       email: email !== '' ? email : tutor?.email,
+      phoneNumber: phone !== '' ? phone : tutor?.phoneNumber,
       pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
       location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
       timezone: form.getFieldValue('timezone'),
-      country :  country !== '' ? country : tutor?.country,
+      country: country !== '' ? country : tutor?.country,
     });
     dispatch({
-      type:'update',
-      tutor:{
+      type: 'update',
+      tutor: {
         fullName: fullName !== '' ? fullName : tutor?.fullName,
         gender: gender !== '' ? gender : tutor?.gender,
         email: email !== '' ? email : tutor?.email,
+        phoneNumber: phone !== '' ? phone : tutor?.phoneNumber,
         pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
         location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
         timezone: form.getFieldValue('timezone'),
-        country :  country !== '' ? country : tutor?.country
+        country: country !== '' ? country : tutor?.country
       }
     })
   }
 
-  const optionsLocation: string[]= ( profileStaticData.location ? profileStaticData.location.map(l => ({key:l.id, label:l.title, value :l.title })): [] )
+  const optionsLocation: string[] = (profileStaticData.location ? profileStaticData.location.map(l => ({ key: l.id, label: l.title, value: l.title })) : [])
 
   const handleEditClick = () => {
     setEditing(true);
   };
 
-  const handleSaveClick = async() => {
-    try{
+  const handleSaveClick = async () => {
+    try {
       await form.validateFields();
       updatedTutor()
       setEditing(false);
-    }catch(e){
+    } catch (e) {
       return false;
     }
     return false;
   };
 
-  const  cancle = () => {
+  const cancle = () => {
     form.resetFields();
     setEditing(false);
   }
 
-  const success = (pos:{ coords: { latitude: number; longitude: number }}) => {
+  const success = (pos: { coords: { latitude: number; longitude: number } }) => {
     const myLat = pos.coords.latitude
     const myLng = pos.coords.longitude
 
@@ -100,7 +103,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
 
   const handleSwitchCase = (val: boolean) => {
     setAutoSelectedTimezone(val);
-    if(val == true){
+    if (val == true) {
       form.setFieldValue('timezone', localTimezone.label);
       navigator.geolocation.getCurrentPosition(success, error)
     }
@@ -108,7 +111,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
 
   const customSelect = () => {
     return (
-      <Select style={{width: 328}} disabled={ !editing }>
+      <Select style={{ width: 328 }} disabled={!editing}>
         {options.map(option => (
           <Option key={option.label} value={option.label}>{option.label}</Option>
         ))}
@@ -118,8 +121,8 @@ const BasicInfoForm: FC<Any> = ({props}) => {
 
   const handleFilter = (inputValue: string, option: any) => option!.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
 
-  if(tutor?.loading){
-    return(
+  if (tutor?.loading) {
+    return (
       <Spin />
     )
   }
@@ -129,7 +132,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
       <h2 className={"basic-information-title"}>Basic Information</h2>
 
       <Form className={"basic-information-form"} form={form} colon={false}>
-               <Form.Item
+        <Form.Item
           name={"fullName"}
           label={"Full Name"}
           rules={[{ required: true }]}
@@ -145,7 +148,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
             onChange={(e) => setFullName(e.target.value)}
           />
         </Form.Item>
-                <Form.Item
+        <Form.Item
           name={"gender"}
           label={"Gender"}
           rules={[{ required: true }]}
@@ -194,6 +197,20 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           />
         </Form.Item>
         <Form.Item
+          name={"phone"}
+          initialValue={tutor?.phoneNumber}
+          label={"Phone Number"}
+          rules={[
+            { required: false, },
+            {
+              pattern: /^[\d]{0,10}$/,
+              message: "Phone number should have maximum 10 characters"
+            }
+          ]}
+        >
+          <InputNumber className={"input"} disabled={!editing} style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }} onChange={value => setPhone(value !== null ? value : tutor?.phoneNumber)} />
+        </Form.Item>
+        <Form.Item
           name={"country"}
           label={"Country"}
           rules={[{ required: true, }]}
@@ -207,7 +224,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           label={"Location"}
           initialValue={tutor?.location}
           rules={[{ required: true, message: "Please enter your location" }]}
-        
+
         >
           <AutoComplete
             options={optionsLocation}
@@ -224,7 +241,7 @@ const BasicInfoForm: FC<Any> = ({props}) => {
           label={"Timezone"}
           rules={[{ required: true }]}
           initialValue={tutor?.timezone}
-          style={{marginBottom:5}}
+          style={{ marginBottom: 5 }}
         >
           {customSelect()}
         </Form.Item>
@@ -241,16 +258,16 @@ const BasicInfoForm: FC<Any> = ({props}) => {
         </div>
         {editing ? (
           <>
-          <div className={"form-basic-button-wrap"}>
-            <Button className={"form-button"} onClick={handleSaveClick}>
-              Save
-            </Button>
-            <Button className={"form-button button-space"} onClick={cancle}>
-              Cancel
-            </Button>
-          </div>
+            <div className={"form-basic-button-wrap"}>
+              <Button className={"form-button"} onClick={handleSaveClick}>
+                Save
+              </Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+                Cancel
+              </Button>
+            </div>
           </>
-          
+
         ) : (
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} onClick={handleEditClick}>
