@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button,Form, Modal, message, Select, Radio, Row, Col, Input, Tooltip } from "antd";
+import { Button, Form, Modal, message, Select, Radio, Row, Col, Input, Tooltip } from "antd";
 import CommonService from "../../../api/services/Common";
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
@@ -34,11 +34,11 @@ const RescheduleInterview = ({
   const getSessionummary = async (sessionId) => {
     try {
       const data = {
-        sessionId : sessionId,
-        bookingFor : (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring'
+        sessionId: sessionId,
+        bookingFor: (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring'
       };
-      const response = await CommonService.postAPI('/session-summary',data);
-      
+      const response = await CommonService.postAPI('/session-summary', data);
+
       if (response.data.success) {
         setInterviewSummary(response.data.data);
       } else {
@@ -72,14 +72,14 @@ const RescheduleInterview = ({
     if (sessionId) {
       getSessionummary(sessionId);
     }
-    
+
     setModalTitle("Reschedule Session");
     setActiveStep(1);
-  }, [sessionId,isOpen]);
+  }, [sessionId, isOpen]);
 
   useEffect(() => {
     getUniversityList();
-  },[])
+  }, [])
 
   const stepsTitles = [
     "Reschedule Session",
@@ -111,12 +111,12 @@ const RescheduleInterview = ({
     try {
       formData.bookingFor = (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring';
       formData.day = getDay(moment(formData.date));
-      formData.startTime =  formatTime(formData.sessionStartTime);
-      formData.endTime =  formatTime(formData.sessionEndTime);
-      formData.frequency =  interviewSummary?.frequency;
-      formData.tutorId =  interviewSummary?.tutor_id;
-      formData.bookingFor =  interviewSummary?.booking_for;
-      const response = await CommonService.postAPI('/student/reschedule-session',{...formData, sessionId:interviewSummary?.id});
+      formData.startTime = formatTime(formData.sessionStartTime);
+      formData.endTime = formatTime(formData.sessionEndTime);
+      formData.frequency = interviewSummary?.frequency;
+      formData.tutorId = interviewSummary?.tutor_id;
+      formData.bookingFor = interviewSummary?.booking_for;
+      const response = await CommonService.postAPI('/student/reschedule-session', { ...formData, sessionId: interviewSummary?.id });
       if (response.data.success) {
         const result = response.data.data;
         updateUpcomingSession(result.id, {
@@ -125,9 +125,9 @@ const RescheduleInterview = ({
           session_end_time: result.session_end_time,
           session_start_time: result.session_start_time,
         });
-        if(moduleType == 'teaching') {
+        if (moduleType == 'teaching') {
           navigate("/student/teaching-session");
-        
+
         } else {
           navigate("/student/ucat-session");
         }
@@ -159,17 +159,17 @@ const RescheduleInterview = ({
   const getMockInterviewList = () => {
     return mockInterviewList;
   };
-  
+
   const selectUniversity = Form.useWatch("university", form);
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
-    if(interviewSummary?.session_type =='Individual Session') {
+    if (interviewSummary?.session_type == 'Individual Session') {
       setShowDropdown(false);
     }
     console.log(interviewSummary);
     return (
       <>
-          <div className={"session-details"} style={{ padding: "10px" }}>
+        <div className={"session-details"} style={{ padding: "10px" }}>
           <h3 style={{ fontSize: 16, color: "#312D42", fontWeight: "600" }}>
             Session Details
           </h3>
@@ -201,19 +201,19 @@ const RescheduleInterview = ({
             </Col>
           </Row>
         </div>
-        
+
         <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
+          style={{ marginTop: "17px", marginBottom: "0px" }}
           label="Reschedule UCAT Teaching Session?"
           name="sessionType"
           initialValue={interviewSummary?.session_type}
-        >   
-         <Radio.Group onChange={handleRadioChange}>
+        >
+          <Radio.Group onChange={handleRadioChange}>
             <Radio value="Individual Session">This One Session</Radio>
-            <Tooltip title={(interviewSummary?.session_type =='Individual Session') ? 'This Session is individual session.' : ''}>
-              <Radio value="Recurring Session" disabled={interviewSummary?.session_type =='Individual Session'}>All Recurring Sessions<QuestionCircleFilled  style={{marginLeft:"8px"}}/></Radio>
+            <Tooltip title={(interviewSummary?.session_type == 'Individual Session') ? 'This Session is individual session.' : ''}>
+              <Radio value="Recurring Session" disabled={interviewSummary?.session_type == 'Individual Session'}>All Recurring Sessions<QuestionCircleFilled style={{ marginLeft: "8px" }} /></Radio>
             </Tooltip>
-         </Radio.Group>
+          </Radio.Group>
         </Form.Item>
         {selectUniversity && (
           <Form.Item
@@ -238,7 +238,7 @@ const RescheduleInterview = ({
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={interviewSummary?.tutor_id} rescheduleDate={interviewSummary?.session_start_time} form={form} moduleType = {moduleType} next={next} timezone={timezone}/>
+        <Calender tutorId={interviewSummary?.tutor_id} rescheduleDate={interviewSummary?.session_start_time} form={form} moduleType={moduleType} next={next} timezone={timezone} />
       </div>
     </>;
   };
@@ -247,7 +247,7 @@ const RescheduleInterview = ({
     setShowDropdown(e.target.value === 'Recurring Session');
   }
 
-  const checkingDate = async (date,startTime,endTime) => {
+  const checkingDate = async (date, startTime, endTime) => {
     // const data = {
     //   date : date,
     //   startTime : startTime,
@@ -271,14 +271,14 @@ const RescheduleInterview = ({
     // }
   }
 
-  const Step3From = ({form}) => {
+  const Step3From = ({ form }) => {
     console.log(interviewSummary);
     const formData = form.getFieldsValue(true);
     const tutorName = interviewSummary?.tutorName
-    const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
+    const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     setDayOfWeek(getDay(moment(formData.date)));
-    const sessionStartTime =  formatTime(formData.sessionStartTime)
-    const sessionEndTime =  formatTime(formData.sessionEndTime)
+    const sessionStartTime = formatTime(formData.sessionStartTime)
+    const sessionEndTime = formatTime(formData.sessionEndTime)
     return (
       <>
         <div className={"session-details"} style={{ padding: "0 10px" }}>
@@ -287,7 +287,7 @@ const RescheduleInterview = ({
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-            Tutor
+              Tutor
             </h4>
             <div style={{ fontSize: 16 }}>{tutorName}</div>
           </div>
@@ -313,34 +313,34 @@ const RescheduleInterview = ({
           </Row>
         </div>
         <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
+          style={{ marginTop: "17px", marginBottom: "0px" }}
           label="Type"
           name="sessionType"
-        >   
-         <Radio.Group onChange={handleRadioChange}  disabled={true}>
+        >
+          <Radio.Group onChange={handleRadioChange} disabled={true}>
             <Radio value="Individual Session">Individual Session</Radio>
             <Radio value="Recurring Session">Recurring Session</Radio>
-         </Radio.Group>
+          </Radio.Group>
         </Form.Item>
         {showDropdown && (
-        <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
-          label="Frequency"
-          name="frequency"
-        >
+          <Form.Item
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="Frequency"
+            name="frequency"
+          >
             <Select value={dayOfWeek} placeholder="Select an option" disabled={true} defaultValue={dayOfWeek}>
-                <Select.Option value="Monday" >Weekly on Monday</Select.Option>
-                <Select.Option value="Tuesday">Weekly on Tuesday</Select.Option>
-                <Select.Option value="Wednesday">Weekly on Wednesday</Select.Option>
-                <Select.Option value="Thursday">Weekly on Thursday</Select.Option>
-                <Select.Option value="Friday">Weekly on Friday</Select.Option>
-                <Select.Option value="Saturday">Weekly on Saturday</Select.Option>
+              <Select.Option value="Monday" >Weekly on Monday</Select.Option>
+              <Select.Option value="Tuesday">Weekly on Tuesday</Select.Option>
+              <Select.Option value="Wednesday">Weekly on Wednesday</Select.Option>
+              <Select.Option value="Thursday">Weekly on Thursday</Select.Option>
+              <Select.Option value="Friday">Weekly on Friday</Select.Option>
+              <Select.Option value="Saturday">Weekly on Saturday</Select.Option>
             </Select>
-        </Form.Item>
+          </Form.Item>
         )}
 
         <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
+          style={{ marginTop: "17px", marginBottom: "0px" }}
           label="Leave a quick note"
           name="note"
         >

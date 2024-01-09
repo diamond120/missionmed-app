@@ -73,7 +73,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     }
   };
   form.setFieldsValue({ sessionLink: session.sessionLink || session.defaultSessionLink });
-
+  const navigate = useNavigate();
   return (
     <li className="item" style={{ position: "relative" }}>
       <div style={{ display: "flex" }}>
@@ -185,17 +185,17 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
                 >
                   Rate Session
                 </Button>}
-                <Link to={`/student/interview-summary/${session.id}/${pagesession}`}>
-                  <Button className={"secondary-button"}>View Summary</Button>
-                </Link>
+                {/* <Link to={`/student/interview-summary/${session.id}/${pagesession}`}> */}
+                <Button className={"secondary-button"} onClick={() => { navigate(`/student/interview-summary/${session.id}/${pagesession}`) }} >View Summary</Button>
+                {/* </Link> */}
                 {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
               </>
             )}
             {userRole == "tutor" && (
               <>
-                <Link to={`/tutor/interview-summary/${session.id}/${pagesession}`}>
-                  <Button className={"secondary-button"}>Session Summary</Button>
-                </Link>
+                {/* <Link to={`/tutor/interview-summary/${session.id}/${pagesession}`}> */}
+                <Button className={"secondary-button"} onClick={() => { navigate(`/tutor/interview-summary/${session.id}/${pagesession}`) }}>Session Summary</Button>
+                {/* </Link> */}
                 {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
               </>
             )}

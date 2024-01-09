@@ -1,6 +1,6 @@
 
 import "./index.less";
-import { Form, Select, Radio, Button, Spin } from "antd"
+import { Form, Select, Radio, Button, Spin, Input } from "antd"
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { FC, useState } from "react";
 import { useStudent, useStudentDispatch } from "../../../api/providers/StudentProvider";
@@ -93,7 +93,7 @@ const ExtraInfo: FC<any> = ({ props }) => {
               label={"Specification"}
               rules={[{ required: true, }]}
             >
-              <input type="hidden" value={specification} ></input>
+              <Input type="hidden" value={specification} />
               <Select
                 options={optionsSpecification.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}

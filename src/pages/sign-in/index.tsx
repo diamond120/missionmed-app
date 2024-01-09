@@ -7,29 +7,29 @@ import { useUserDispatch } from "../../api/providers/UserProvider.jsx";
 import { useAuthContext } from "../../api/context/AuthContext.js";
 
 const SignIn = () => {
-  
+
   const [form] = Form.useForm();
   // //const [loginMutation, { loading, error, data }] = useLoginMutation();
   const navigate = useNavigate()
   // // const isTutor = useMeQuery().data?.me?.tutor?.data?.id
   // // const isStudent = useMeQuery().data?.me?.student?.data?.id
   const dispatch = useUserDispatch();
-  const {setAuthenticated} = useAuthContext();
+  const { setAuthenticated } = useAuthContext();
 
   const onFinish = async (values: any) => {
     const { email, password } = values;
     try {
-      const result = await Authentication.login({email, password});
-      if(result.data.success) {
+      const result = await Authentication.login({ email, password });
+      if (result.data.success) {
         if (result.data.data && result.data.data.token) {
           setAuthenticated(true);
           localStorage.setItem("jwt", result.data.data.token)
           dispatch({
-            type:"set",
-            id:result.data.data.id,
-            name:result.data.data.name,
-            email:result.data.data.email,
-            role:result.data.data.role
+            type: "set",
+            id: result.data.data.id,
+            name: result.data.data.name,
+            email: result.data.data.email,
+            role: result.data.data.role
           })
           navigate("/")
         }
@@ -86,12 +86,12 @@ const SignIn = () => {
 
             <div className={"sign-in-left-remember"}>
               <Checkbox><span>Remember me</span></Checkbox>
-              <Link to={`/forgot-password`} className={"sign-in-left-remember-forgot"}>Forgot Password?</Link>
-              {/* <a className={"sign-in-left-remember-forgot"} href={"#"}>Forgot Password?</a> */}
+              <Button size="large" type="link" href={`/forgot-password`} className="link_btn">Forgot Password?</Button>
+              {/* <Link to={`/forgot-password`} className={"sign-in-left-remember-forgot"}>Forgot Password?</Link> */}
             </div>
 
             <Button type={"default"} htmlType={"submit"} disabled={false} className={"btn-text"}
-                    style={{ marginTop: "40px", width: "100%", borderRadius: "8px", }}>
+              style={{ marginTop: "40px", width: "100%", borderRadius: "8px", }}>
               Login
             </Button>
 
