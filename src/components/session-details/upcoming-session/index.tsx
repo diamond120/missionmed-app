@@ -5,7 +5,7 @@ import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/c
 import "./index.less";
 import { useMemo, useState } from "react";
 
-const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink }) => {
+const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink, credit }) => {
   const user = useUser();
   const isSessionOnToday = useMemo(
     () => checkSessionOnToday(upcomingInterview.date),
@@ -68,9 +68,15 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
           </ul>
 
           <div className="btn-group" style={{ marginTop: "32px" }}>
-            <a href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank">
+            {/* <a href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank" disabled={credit == 0}>
               <Button className={"primary-button"}>Join Session </Button>
-            </a>
+            </a> */}
+            <Button
+              onClick={() => window.open(upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink'], '_blank')}
+              className="primary-button disable-button"
+              disabled={credit == 0 || credit == '' || credit == undefined}
+            >Join Session
+            </Button>
 
             {user.role == "student" ? (
               upcomingInterview['isWithin24Hours'] ? (
@@ -97,7 +103,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             ) : null}
             {user.role == "tutor" && (
               // <div className="btn-group" style={{ marginTop: "10px" }}>
-              <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+              <Button className={"secondary-button"} onClick={handleClick} >Edit Session Link</Button>
               // </div>
             )}
           </div>
