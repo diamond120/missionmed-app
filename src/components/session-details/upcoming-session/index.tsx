@@ -74,7 +74,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             <Button
               onClick={() => window.open(upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink'], '_blank')}
               className="primary-button disable-button"
-              disabled={credit == 0 || credit == '' || credit == undefined}
+              disabled={(credit == 0 || credit == '' || credit == undefined) && user.role == "student"}
             >Join Session
             </Button>
 

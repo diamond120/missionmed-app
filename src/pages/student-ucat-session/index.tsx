@@ -206,7 +206,7 @@ const StudentUCATSession = () => {
 
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0' || credit == '') &&
+          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0') &&
             <Alert
               closable
               showIcon
@@ -250,7 +250,7 @@ const StudentUCATSession = () => {
                       }}
                     />
                     <h2 className={"con-box-title"}>
-                      {credit != '0' ?
+                      {credit != '0' && credit != null && credit != '' ?
                         <>
                           You Don’t Have Any Booked Session
                         </>
@@ -261,7 +261,7 @@ const StudentUCATSession = () => {
                       }
                     </h2>
                     <div style={{ marginBottom: "16px" }}>
-                      {credit != '0' ? (
+                      {credit != '0' && credit != null && credit != '' ? (
                         <>
                           You can choose long-term tutor and book your first < br />
                           Teaching session by pressing "Book Session" button below.
@@ -273,7 +273,7 @@ const StudentUCATSession = () => {
                         </>
                       )}
                     </div>
-                    {credit != '0' ?
+                    {credit != '0' && credit != null && credit != '' ?
                       <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
                       :
                       <Button className={"primary-button"} href="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank"> Purchase Hours</Button>}
