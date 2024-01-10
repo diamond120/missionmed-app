@@ -14,7 +14,8 @@
   width: 600px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: inline-block;
-  margin-top: 17px; margin-bottom: 0px;
+  margin-top: 17px;
+  margin-bottom: 0px;
   padding: "0 10px"
 }
 
@@ -38,16 +39,17 @@
   font-weight: bold;
   color: #333;
 }
-.mock-interview-modal{
-  .ant-modal-content{
-    .ant-modal-footer{
+
+.mock-interview-modal {
+  .ant-modal-content {
+    .ant-modal-footer {
       min-height: 81px;
       align-items: center;
     }
-  } 
+  }
 }
 
-.teachingSessions-modal{
+.teachingSessions-modal {
   .ant-modal-body {
     .choose-tutor {
       .title {
@@ -58,22 +60,26 @@
         color: #312D42;
       }
     }
-    .choose-tutor{
+
+    .choose-tutor {
       .ant-form-item {
         height: 55vh;
         overflow: auto;
         padding: 0 10px !important;
         padding-bottom: 15px !important;
+
         &::-webkit-scrollbar {
           width: 8px;
         }
+
         /* Track */
         &::-webkit-scrollbar-track {
           background: #f1f1f1;
         }
+
         /* Handle */
         &::-webkit-scrollbar-thumb {
-          background:   #B5B9C9;
+          background: #B5B9C9;
           border-radius: 15px;
         }
 
@@ -84,19 +90,23 @@
               margin-top: 12px;
               color: #465078;
             }
+
             .ant-collapse-header {
               padding: 0 !important;
-              .ant-radio-wrapper-in-form-item{
+
+              .ant-radio-wrapper-in-form-item {
                 display: flex;
                 align-items: center;
               }
             }
+
             .ant-collapse-header {
               .avatar {
                 display: flex;
                 align-items: center;
                 column-gap: 16px;
                 margin-left: 8px;
+
                 .tutor-name {
                   color: #312D42;
                   font-weight: 600;
@@ -110,4 +120,10 @@
     }
   }
 
+}
+
+.primary-button {
+  &.disable-button {
+    border: 1px solid var(--colorBorder, rgba(0, 0, 0, 0.15)) !important;
+  }
 }

@@ -20,7 +20,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
   const [tutors, setTutors] = useState([]);
-  const totalSteps = 4;
+  const totalSteps = 3;
   const [showDropdown, setShowDropdown] = useState(true);
   const [dayOfWeek, setDayOfWeek] = useState('Weekly on Monday');
   const [form] = Form.useForm();
@@ -372,7 +372,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         >
           <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
         </Form.Item>
-        {(card != null && card != '' && (sessionType == 'Recurring Session' || (sessionType == 'Individual Session' && credit <= 0))) && (
+        {/* {(card != null && card != '' && (sessionType == 'Recurring Session' || (sessionType == 'Individual Session' && credit <= 0))) && (
           <>
             <div className="credit-card">
               <div className="credit-card-header">
@@ -389,8 +389,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               style={{ marginBottom: 20, marginTop: 20 }}
             />
           </>
-        )
-        }
+        )} */}
       </>
     );
   };
@@ -554,7 +553,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             {title}
           </Button>
         </Tooltip> :
-        <Button className={"primary-button"} onClick={showModal}>
+        <Button className={"primary-button disable-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
           {title}
         </Button>
       }
@@ -594,10 +593,11 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
           // ) 
 
-          ((activeStep < totalSteps && activeStep !== 3) || (!card && activeStep !== 4)) && (
+          ((activeStep < totalSteps)) && (
+            // ((activeStep < totalSteps && activeStep !== 3) || (!card && activeStep !== 4)) && (
             <>
 
-              {sessionType === 'Individual Session' && credit > 0 && (
+              {/* {sessionType === 'Individual Session' && credit > 0 && (
                 <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
                   Book Session
                 </Button>
@@ -608,11 +608,11 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                   Next Step
                 </Button>
               )}
-              {(!sessionType || sessionType == 'Recurring Session') && (
-                <Button className={"secondary-button"} onClick={next}>
-                  Next Step
-                </Button>
-              )}
+              {(!sessionType || sessionType == 'Recurring Session') && ( */}
+              <Button className={"secondary-button"} onClick={next}>
+                Next Step
+              </Button>
+              {/* )} */}
             </>
           ),
           loading === true ? (
@@ -646,11 +646,11 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               <Step4From form={form} />
             </div>
           )}
-          {activeStep == 4 && (
+          {/* {activeStep == 4 && (
             <div style={{ width: "600px" }}>
               <Step5From form={form} />
             </div>
-          )}
+          )} */}
         </Form>
       </Modal>
     </>

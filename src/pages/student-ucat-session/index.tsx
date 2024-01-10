@@ -1,14 +1,15 @@
 import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
-import { HomeOutlined, CalendarOutlined, EllipsisOutlined } from "@ant-design/icons";
-import { Breadcrumb, message, Space, Dropdown, Spin } from "antd";
+import { HomeOutlined, CalendarOutlined, EllipsisOutlined, CreditCardOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { Breadcrumb, message, Space, Dropdown, Spin, Tag, Alert, Button } from "antd";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
+import { Link } from "react-router-dom";
 
 const StudentUCATSession = () => {
 
@@ -177,7 +178,21 @@ const StudentUCATSession = () => {
           >
             <h2 className={"tab-title"}>UCAT Teaching Sessions</h2>
             <div className="d_flex_center">
-              <div ><b>Credit: {credit === '' ? <Spin style={{ marginLeft: 10 }} /> : credit}</b></div>
+              {/* <div ><b>Credit: {credit === '' ? <Spin style={{ marginLeft: 10 }} /> : credit}</b></div> */}
+              {(credit == '0' || credit == '') ?
+                <div className={"tagLayout errorTagStyle"}>
+                  <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
+                    {upcomingSessions.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
+                  </Tag>
+                </div>
+                :
+                <div className={"tagLayout"} >
+                  <Tag icon={<CheckCircleOutlined />} className={"tagStyle"} color="success">
+                    {credit} Hours Remaining
+                  </Tag>
+                </div>
+              }
+
               {(upcomingSessions.length > 0) &&
                 <Space direction="vertical" className="dropdownIcon">
                   <Space wrap>
@@ -191,7 +206,20 @@ const StudentUCATSession = () => {
 
             </div>
           </div>
-
+          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0' || credit == '') &&
+            <Alert
+              closable
+              showIcon
+              message={
+                <>
+                  You will not be able to sit a session until you purchase more teaching session hours.{' '}
+                  <Link to="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank" >Purchase Here.</Link>
+                </>
+              }
+              type="error"
+              className="errorBanner"
+            />
+          }
           {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
             <SessionDetails
               key="mockInterviewDetails"
@@ -204,6 +232,7 @@ const StudentUCATSession = () => {
               updatePastSession={updatePastSession}
               handleReschedule={handleReschedule}
               cancleUpSession={cancleUpSession}
+              credit={credit}
               freezeSessions={freezeSessions} />
           ) : (
             <div className="mock-interview">
@@ -221,13 +250,33 @@ const StudentUCATSession = () => {
                       }}
                     />
                     <h2 className={"con-box-title"}>
-                      You Don’t Have Any Booked Session
+                      {credit != '0' ?
+                        <>
+                          You Don’t Have Any Booked Session
+                        </>
+                        :
+                        <>
+                          Parchase Hours to Book Tutors!
+                        </>
+                      }
                     </h2>
                     <div style={{ marginBottom: "16px" }}>
-                      You can choose long-term tutor and book your first  <br />{" "}
-                      UCAT session by pressing "Book Session" button below.
+                      {credit != '0' ? (
+                        <>
+                          You can choose long-term tutor and book your first < br />
+                          Teaching session by pressing "Book Session" button below.
+                        </>
+                      ) : (
+                        <>
+                          You are only a click away from the best Teaching tutors in  < br />
+                          Australia! Purchase teaching hour to book!
+                        </>
+                      )}
                     </div>
-                    <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
+                    {credit != '0' ?
+                      <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
+                      :
+                      <Button className={"primary-button"} href="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank"> Purchase Hours</Button>}
                   </div>
                 </div>
               </div>
