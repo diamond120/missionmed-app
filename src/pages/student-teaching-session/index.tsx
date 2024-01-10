@@ -212,7 +212,7 @@ const StudentTeachingSession = () => {
                 <BookSession title="Book Extra Session" addUpcomingSession={addUpcomingSession} moduleType="teaching" credit={credit} timezone={timezone} />}
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0' || credit == '') &&
+          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0') &&
             <Alert
               closable
               showIcon
@@ -256,7 +256,7 @@ const StudentTeachingSession = () => {
                       }}
                     />
                     <h2 className={"con-box-title"}>
-                      {credit != '0' ?
+                      {credit != '0' && credit != null && credit != '' ?
                         <>
                           You Don’t Have Any Booked Session
                         </>
@@ -267,7 +267,7 @@ const StudentTeachingSession = () => {
                       }
                     </h2>
                     <div style={{ marginBottom: "16px" }}>
-                      {credit != '0' ? (
+                      {credit != '0' && credit != null && credit != '' ? (
                         <>
                           You can choose long-term tutor and book your first < br />
                           Teaching session by pressing "Book Session" button below.
@@ -279,7 +279,7 @@ const StudentTeachingSession = () => {
                         </>
                       )}
                     </div>
-                    {credit != '0' ?
+                    {credit != '0' && credit != null && credit != '' ?
                       <BookSession moduleType="teaching" title="Book Session" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
                       :
                       <Button className={"primary-button disable-button"} href="#" disabled target="_blank" title="Coming Soon"> Purchase Hours</Button>

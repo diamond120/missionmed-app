@@ -2,11 +2,13 @@ import { Button, Form, Modal, Input, message } from 'antd';
 import './index.less'
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { useState } from 'react';
+import { useUser } from "../../../api/providers/UserProvider"
 const { TextArea } = Input;
 
 const Agenda = ({ agenda, handleEditAgenda, credit }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
+  const user = useUser();
 
   const handleClick = () => {
     setIsModalOpen(true)
@@ -38,7 +40,7 @@ const Agenda = ({ agenda, handleEditAgenda, credit }) => {
             {/* </ul> */}
             {agenda ? agenda : 'No agenda found'}
             <div style={{ display: 'flex', gap: 20 }}>
-              <Button className={"secondary-button"} onClick={handleClick} disabled={credit == 0 || credit == '' || credit == undefined}>Edit Agenda</Button>
+              <Button className={"secondary-button"} onClick={handleClick} disabled={(credit == 0 || credit == '' || credit == undefined) && user.role == "student"}>Edit Agenda</Button>
             </div>
 
           </div>
