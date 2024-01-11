@@ -206,14 +206,14 @@ const StudentUCATSession = () => {
 
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0') &&
+          {((upcomingSessions.length > 0 || pastSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
             <Alert
               closable
               showIcon
               message={
                 <>
                   You will not be able to sit a session until you purchase more teaching session hours.{' '}
-                  <Link to="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank" >Purchase Here.</Link>
+                  <Link to="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank" title="Purchase Here" >Purchase Here.</Link>
                 </>
               }
               type="error"
@@ -276,7 +276,7 @@ const StudentUCATSession = () => {
                     {credit != '0' && credit != null && credit != '' ?
                       <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
                       :
-                      <Button className={"primary-button"} href="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank"> Purchase Hours</Button>}
+                      <Button className={"primary-button"} href="https://missionmed.com.au/checkout_step/ucat-private-checkout/" title="Purchase Hours" target="_blank"> Purchase Hours</Button>}
                   </div>
                 </div>
               </div>
