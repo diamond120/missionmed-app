@@ -6,19 +6,19 @@ import { Avatar, Button, message, Spin, Upload } from "antd"
 import { UserOutlined, LoadingOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { RcFile, UploadProps } from "antd/lib/upload/interface"
-import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
+import { useStudent, useStudentDispatch } from "../../../api/providers/StudentProvider";
 import StudentService from "../../../api/services/Student";
 import { getToken } from "../../../common/common";
 import { BASE_URL } from "../../../config/app-config";
 import confirm from "../../../components/confirm";
 import ChangePassword from "../../change-password";
 
-const ProfilePicture: FC<any> = ({props}) => {
+const ProfilePicture: FC<any> = ({ props }) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
   const [fileUrl, setFileUrl] = useState<string>(student?.profilePicture ?? '');
- // const [idFile, setIdFile] = useState('')
- const [uploading, setUploading] = useState(false);
+  // const [idFile, setIdFile] = useState('')
+  const [uploading, setUploading] = useState(false);
   const [isChanged, setIsChanged] = useState(false);
   const fileProps: UploadProps = {
     name: 'file',
@@ -36,8 +36,8 @@ const ProfilePicture: FC<any> = ({props}) => {
         setIsChanged(false)
         message.error("You can only upload JPG, SVG, or PNG !");
         return false;
-      } 
-     return isImage;
+      }
+      return isImage;
     },
     onChange: (info) => {
       const { status, percent } = info.file;
@@ -49,10 +49,10 @@ const ProfilePicture: FC<any> = ({props}) => {
         message.error(`${info.file.name} file upload failed.`)
       }
       if (status === 'done' && percent === 100) {
-        if(info.file.response && info.file.response.success){
+        if (info.file.response && info.file.response.success) {
           setFileUrl(info.file.response.data);
           message.success(`${info.file.name} file upload success.`)
-        }else{
+        } else {
           message.error(`${info.file.name} file upload failed.`);
         }
       }
@@ -83,28 +83,28 @@ const ProfilePicture: FC<any> = ({props}) => {
     };
     await confirm(handleConfirm, "Are you sure?", "You want to delete profile picture!");
   };
-  const handleSave = ()=>{
+  const handleSave = () => {
     updatedStudent()
     handleOnChange()
   }
-  const updatedStudent =  async() => {
+  const updatedStudent = async () => {
     await StudentService.updateProfile({
       profilePicture: fileUrl
     })
     dispatch({
-      type:"update",
-      tutor:{
-        profilePicture:fileUrl
+      type: "update",
+      student: {
+        profilePicture: fileUrl
       }
     })
   }
 
-  if(student?.loading){
-    return(
+  if (student?.loading) {
+    return (
       <Spin />
     )
   }
-  
+
   return (
     <div className={"tutor-profile-picture-section"}>
       <h2 className={"profile-picture-title"}>Profile Picture</h2>
@@ -125,16 +125,16 @@ const ProfilePicture: FC<any> = ({props}) => {
 
               {...fileProps}
             >
-              { !isChanged && <Button onClick={handleOnChange} className={"profile-picture-block-btn-change"}>Change</Button>}
+              {!isChanged && <Button onClick={handleOnChange} className={"profile-picture-block-btn-change"}>Change</Button>}
 
             </Upload>
-            { isChanged &&  (uploading ? <Button className={"profile-picture-block-btn-change"} icon={<LoadingOutlined /> }>Loading...</Button>  : <Button  onClick={handleSave} className={"profile-picture-block-btn-change"}>Save</Button>)}
-            <Button onClick={handleRemove} disabled={fileUrl==""} className={"profile-picture-block-btn-remove"}>
+            {isChanged && (uploading ? <Button className={"profile-picture-block-btn-change"} icon={<LoadingOutlined />}>Loading...</Button> : <Button onClick={handleSave} className={"profile-picture-block-btn-change"}>Save</Button>)}
+            <Button onClick={handleRemove} disabled={fileUrl == ""} className={"profile-picture-block-btn-remove"}>
               Remove
             </Button>
           </div>
           <div style={{ marginBottom: "16px", display: "flex", justifyContent: "center" }}>
-            <ChangePassword title='Change Password' moduleType={"tutor"}/>
+            <ChangePassword title='Change Password' moduleType={"tutor"} />
           </div>
         </div>
       </div>
