@@ -49,7 +49,7 @@ const StudentTeachingSession = () => {
             : []
         );
         setTimeZone(response.data?.data?.studentTimezone ?? null);
-        setCredit(response.data?.data?.teachingSessionCredit ?? '')
+        setCredit((response.data?.data?.teachingSessionCredit != '' && response.data?.data?.teachingSessionCredit != null) ? response.data?.data?.teachingSessionCredit : 0)
       } else {
         throw new Error(response.data.message);
       }
@@ -186,7 +186,8 @@ const StudentTeachingSession = () => {
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
             <div className={"d_flex_center"} style={{ gap: 15, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
               {/* <div> <b>Credit: {credit === '' ? <Spin style={{ marginLeft: 10 }} /> : credit}</b></div> */}
-              {(credit == '0' || credit == '') ?
+
+              {/* {(credit == '0' || credit == '') ?
                 <div className={"tagLayout errorTagStyle"}>
                   <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
                     {upcomingSessions.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
@@ -198,6 +199,26 @@ const StudentTeachingSession = () => {
                     {credit} Hours Remaining
                   </Tag>
                 </div>
+              } */}
+
+              {
+                (credit === '') ?
+                  <div className={"tagLayout errorTagStyle"}>
+                    <Spin style={{ marginLeft: 10 }} />
+                  </div>
+                  :
+                  credit == '0' ?
+                    <div className={"tagLayout errorTagStyle"}>
+                      <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
+                        {upcomingSessions.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
+                      </Tag>
+                    </div>
+                    :
+                    <div className={"tagLayout"} >
+                      <Tag icon={<CheckCircleOutlined />} className={"tagStyle"} color="success">
+                        {credit} Hours Remaining
+                      </Tag>
+                    </div>
               }
               {(upcomingSessions.length > 0) &&
                 <Space direction="vertical" className="dropdownIcon">
@@ -262,7 +283,7 @@ const StudentTeachingSession = () => {
                         </>
                         :
                         <>
-                          Parchase Hours to Book Tutors!
+                          Purchase Hours to Book Tutors!
                         </>
                       }
                     </h2>
@@ -274,8 +295,8 @@ const StudentTeachingSession = () => {
                         </>
                       ) : (
                         <>
-                          You are only a click away from the best Teaching tutors in  < br />
-                          Australia! Purchase teaching hour to book!
+                          You are only a click away from the best Interview Teaching tutors in< br />
+                          Australia! Purchase teaching hour to book
                         </>
                       )}
                     </div>
