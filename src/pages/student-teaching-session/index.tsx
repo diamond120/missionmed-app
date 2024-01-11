@@ -212,14 +212,14 @@ const StudentTeachingSession = () => {
                 <BookSession title="Book Extra Session" addUpcomingSession={addUpcomingSession} moduleType="teaching" credit={credit} timezone={timezone} />}
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0) && credit == '0') &&
+          {((upcomingSessions.length > 0 || pastSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
             <Alert
               closable
               showIcon
               message={
                 <>
                   You will not be able to sit a session until you purchase more teaching session hours.{' '}
-                  <Link to="#" style={{ cursor: "not-allowed" }} title="Coming Soon">Purchase Here.</Link>
+                  <Link to="https://missionmed.com.au/checkout_step/interview-private-checkout/" title="Purchase Here" target="_blank">Purchase Here.</Link>
                 </>
               }
               type="error"
@@ -282,8 +282,7 @@ const StudentTeachingSession = () => {
                     {credit != '0' && credit != null && credit != '' ?
                       <BookSession moduleType="teaching" title="Book Session" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />
                       :
-                      <Button className={"primary-button disable-button"} href="#" disabled target="_blank" title="Coming Soon"> Purchase Hours</Button>
-
+                      <Button className={"primary-button"} href="https://missionmed.com.au/checkout_step/interview-private-checkout/" target="_blank" title="Purchase Hours"> Purchase Hours</Button>
                     }
                   </div>
                 </div>

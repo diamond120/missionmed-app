@@ -17,7 +17,8 @@ const StudentMockInterview = () => {
   const [agenda, setAgenda] = useState(null);
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
-  const [student, setStudentData] = useState("");
+  const [student, setStudentData] = useState('');
+
   const [timezone, setTimeZone] = useState("");
 
   const handleReschedule = (sessionId) => {
@@ -30,16 +31,16 @@ const StudentMockInterview = () => {
   }
 
   const addUpcomingSession = (session) => {
-    
+
     setUpcomingSessions([...upcomingSessions, session]);
-    
-    if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
+
+    if (Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date) > moment(session.date))) {
       setUpcomingInterview({
-        id:session.id,
-        date:session.date,
-        session_start_time:session.session_start_time,
-        session_end_time:session.session_end_time,
-        agenda:null
+        id: session.id,
+        date: session.date,
+        session_start_time: session.session_start_time,
+        session_end_time: session.session_end_time,
+        agenda: null
       })
       setAgenda(null);
     }
@@ -48,43 +49,46 @@ const StudentMockInterview = () => {
 
   const updateUpcomingSession = (sessionId, data) => {
     const updatedSessions = upcomingSessions.map(session => {
-      if(session.id == sessionId ){
-        return {...session, ...data}
-      }else{
+      if (session.id == sessionId) {
+        return { ...session, ...data }
+      } else {
         return session;
       }
     })
     setUpcomingSessions(updatedSessions);
-    if(sessionId == upcomingInterview.id){
-      setUpcomingInterview(prev => ({...prev, ...{
-        date:data.date,
-        session_start_time:data.session_start_time,
-        session_end_time:data.session_end_time,
-      }}))
+    if (sessionId == upcomingInterview.id) {
+      setUpcomingInterview(prev => ({
+        ...prev, ...{
+          date: data.date,
+          session_start_time: data.session_start_time,
+          session_end_time: data.session_end_time,
+        }
+      }))
     }
   }
 
-  const updatePastSession = (id, data={}) => {
+  const updatePastSession = (id, data = {}) => {
     const updatedSessions = pastSessions.map(session => {
-      if(session.id == id){
-        return {...session, ...data};
-      }else{
+      if (session.id == id) {
+        return { ...session, ...data };
+      } else {
         return session;
-      }})
+      }
+    })
     setPastSessions(updatedSessions);
   }
 
   const getMockInterviewDetails = async () => {
     try {
       const data = {
-        bookingFor : 'Mock interviews'
+        bookingFor: 'Mock interviews'
       }
-      const response = await CommonService.postAPI("/student/session-details",data);
+      const response = await CommonService.postAPI("/student/session-details", data);
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
-            ?  response.data?.data?.upcomingsessions
+            ? response.data?.data?.upcomingsessions
             : []
         );
         setPastSessions(
@@ -93,7 +97,8 @@ const StudentMockInterview = () => {
             : []
         );
         setAgenda(response.data?.data?.upcomingInterview?.agenda ?? null);
-        setStudentData(response.data?.data?.studentCredit ?? '');
+
+        setStudentData((response.data?.data?.studentCredit != '' && response.data?.data?.studentCredit != null) ? response.data?.data?.studentCredit : 0);
         setTimeZone(response.data?.data?.studentTimezone ?? null);
       } else {
         throw new Error(response.data.message);
@@ -103,26 +108,26 @@ const StudentMockInterview = () => {
     }
   };
 
-  const handleEditAgenda = async(agendaDetails) => {
-    try{
+  const handleEditAgenda = async (agendaDetails) => {
+    try {
 
       const data = {
-        "sessionId":upcomingInterview?.id,
-        "agenda":agendaDetails,
-        'bookingFor' : 'Mock interviews'
+        "sessionId": upcomingInterview?.id,
+        "agenda": agendaDetails,
+        'bookingFor': 'Mock interviews'
       }
-      const response = await CommonService.postAPI('/session-data',data)
-      if(response.data.success){
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
         setAgenda(agendaDetails);
-      }else{
+      } else {
         throw new Error(response.data.message)
       }
-    }catch(e){
+    } catch (e) {
       message.error(e.message);
     }
   };
 
-  const cancleUpSession =() => {
+  const cancleUpSession = () => {
     getMockInterviewDetails();
   }
 
@@ -150,14 +155,14 @@ const StudentMockInterview = () => {
             <h2 className={"tab-title"}>Mock Interview</h2>
 
             <div className="d_flex_center">
-              <div><b>Credit: { student === '' ?  <Spin  style={{marginLeft :10}}/> : student }</b></div>
-              {(student == 0 ) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a> }
-              { ( student > 0) && <BookInterview  addUpcomingSession={addUpcomingSession} timezone={timezone}/>}
+              <div><b>Credit: {student === '' ? <Spin style={{ marginLeft: 10 }} /> : student}</b></div>
+              {(student == 0) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a>}
+              {(student > 0) && <BookInterview addUpcomingSession={addUpcomingSession} timezone={timezone} />}
 
             </div>
 
           </div>
-          { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
+          {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
             <MockInterviewDetails
               key="mockInterviewDetails"
               upcomingInterview={upcomingInterview}
@@ -187,7 +192,7 @@ const StudentMockInterview = () => {
                     <h2 className={"con-box-title"}>
                       You Don’t Have Any Booked Interviews
                     </h2>
-                    { ( student > 0) ?
+                    {(student > 0) ?
                       <div style={{ marginBottom: "16px" }}>
                         You can choose tutor and book your first mock <br />{" "}
                         interview by pressing “Book Interview” button below.
@@ -196,8 +201,8 @@ const StudentMockInterview = () => {
                         Please add credit after that you can book interview.
                       </div>
                     }
-                    { ( student > 0) ?
-                      <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession} timezone={timezone}/> : <></>
+                    {(student > 0) ?
+                      <BookInterview key="bookInterview" addUpcomingSession={addUpcomingSession} timezone={timezone} /> : <></>
                     }
                   </div>
                 </div>
@@ -205,7 +210,7 @@ const StudentMockInterview = () => {
             </div>
           )}
         </div>
-        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone}/>
+        <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone} />
       </Section>
     </React.Fragment>
   );
