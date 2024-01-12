@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Breadcrumb, message } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
@@ -20,10 +20,10 @@ const StudentInterviewSummary = () => {
   const getInterviewSummary = async () => {
     try {
       const data = {
-        sessionId : mockInterviewId,
-        bookingFor : type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'
+        sessionId: mockInterviewId,
+        bookingFor: type === 'teaching' ? 'Interview 1-to-1 Tutoring' : type === 'ucat' ? 'UCAT 1-to-1 Tutoring' : 'Mock interviews'
       };
-      const response = await CommonService.postAPI('/session-summary',data);
+      const response = await CommonService.postAPI('/session-summary', data);
       if (response.data.success) {
         setInterviewSummary(response.data.data);
       } else {
@@ -43,7 +43,7 @@ const StudentInterviewSummary = () => {
   const backUrl = `/student/mock-interview`;
 
   const handleUpdateSummary = (rateDetails) => {
-    setInterviewSummary({...interviewSummary, sessionrate:rateDetails})
+    setInterviewSummary({ ...interviewSummary, sessionrate: rateDetails })
   }
 
   return (
@@ -53,20 +53,21 @@ const StudentInterviewSummary = () => {
           <Breadcrumb.Item href={"/"}>
             <HomeOutlined />
           </Breadcrumb.Item>
-          <Breadcrumb.Item key={backUrl}>
-            <Link to={backUrl}>{type === "ucat" ? 'UCAT Teaching Sessions' : (type === "teaching" ? 'Interview Teaching Sessions' : 'Mock Interview')}
-           </Link>
+          <Breadcrumb.Item key={backUrl} href={backUrl}>
+            {type === "ucat" ? 'UCAT Teaching Sessions' : (type === "teaching" ? 'Interview Teaching Sessions' : 'Mock Interview')}
+            {/* <Link to={backUrl}>{type === "ucat" ? 'UCAT Teaching Sessions' : (type === "teaching" ? 'Interview Teaching Sessions' : 'Mock Interview')}
+            </Link> */}
           </Breadcrumb.Item>
-          <Breadcrumb.Item>{(type == "ucat"  || type == 'teaching') ? 'Session Summary' : 'Interview Summary'}</Breadcrumb.Item>
+          <Breadcrumb.Item>{(type == "ucat" || type == 'teaching') ? 'Session Summary' : 'Interview Summary'}</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap session-summary-section-wrap"}>
-          <h2 className={"tab-title"}>{(type == "ucat"  || type == 'teaching')  ? 'Session Summary' : 'Interview Summary'}</h2>
+          <h2 className={"tab-title"}>{(type == "ucat" || type == 'teaching') ? 'Session Summary' : 'Interview Summary'}</h2>
 
           <div className={"grid-col-2"}>
             <div style={{ width: "504px" }}>
-            <SectionDetails className={`summary-section`} title="Session Details">
-              <SessionDetails interviewSummary={interviewSummary} pagesession={type}/>
-            </SectionDetails>
+              <SectionDetails className={`summary-section`} title="Session Details">
+                <SessionDetails interviewSummary={interviewSummary} pagesession={type} />
+              </SectionDetails>
               <SectionDetails className={`summary-section`} title="Agenda">
                 {interviewSummary?.agenda ? interviewSummary?.agenda : 'No agenda found'}
               </SectionDetails>
@@ -74,15 +75,15 @@ const StudentInterviewSummary = () => {
                 className={`summary-section`}
                 title="Post-Session Tasks"
               >
-                {interviewSummary?.post_session_tasks ? interviewSummary?.post_session_tasks: 'No tasks found' }
+                {interviewSummary?.post_session_tasks ? interviewSummary?.post_session_tasks : 'No tasks found'}
               </SectionDetails>
               <SectionDetails className={`session-rate`} title="Session Rate">
-                {!interviewSummary.sessionrate &&<NoSessionRate session={{id:interviewSummary?.id, tutorId:interviewSummary?.tutor_id}} pagesession={type} handleUpdateSummary={handleUpdateSummary}/>}
-                {interviewSummary.sessionrate &&<SessionRateDetails rateDetails={interviewSummary.sessionrate} />}
+                {!interviewSummary.sessionrate && <NoSessionRate session={{ id: interviewSummary?.id, tutorId: interviewSummary?.tutor_id }} pagesession={type} handleUpdateSummary={handleUpdateSummary} />}
+                {interviewSummary.sessionrate && <SessionRateDetails rateDetails={interviewSummary.sessionrate} />}
               </SectionDetails>
             </div>
             <div style={{ width: "504px" }}>
-              <Report report={interviewSummary?.report ?? null}  title={(type == "ucat" || type == 'teaching' ) ?"Tutor's Summary" : "Diagnostic Report"} />
+              <Report report={interviewSummary?.report ?? null} title={(type == "ucat" || type == 'teaching') ? "Tutor's Summary" : "Diagnostic Report"} />
             </div>
           </div>
         </div>

@@ -2,14 +2,13 @@ import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, CalendarOutlined, EllipsisOutlined, CreditCardOutlined, CheckCircleOutlined } from "@ant-design/icons";
-import { Breadcrumb, message, Space, Dropdown, Spin, Tag, Alert, Button } from "antd";
+import { Breadcrumb, message, Space, Dropdown, Spin, Tag, Alert, Button, Anchor } from "antd";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
-import { Link } from "react-router-dom";
 
 const StudentUCATSession = () => {
 
@@ -22,6 +21,7 @@ const StudentUCATSession = () => {
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const [timezone, setTimeZone] = useState("");
   const [credit, setCredit] = useState("");
+  const { Link } = Anchor;
 
   const getUCATSessionDetails = async () => {
     try {
@@ -235,7 +235,7 @@ const StudentUCATSession = () => {
               message={
                 <>
                   You will not be able to sit a session until you purchase more teaching session hours.{' '}
-                  <Link to="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank" title="Purchase Here" >Purchase Here.</Link>
+                  <Link href="https://missionmed.com.au/checkout_step/ucat-private-checkout/" target="_blank" title="Purchase Here." ></Link>
                 </>
               }
               type="error"
@@ -290,7 +290,7 @@ const StudentUCATSession = () => {
                         </>
                       ) : (
                         <>
-                          You are only a click away from the best UCAT tutors in Australia < br />! Purchase teaching hour to book!
+                          You are only a click away from the best UCAT tutors in < br /> Australia! Purchase teaching hour to book!
                         </>
                       )}
                     </div>

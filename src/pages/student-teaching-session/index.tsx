@@ -2,15 +2,13 @@ import "./index.less";
 import React, { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, CalendarOutlined, EllipsisOutlined, CreditCardOutlined, CheckCircleOutlined } from "@ant-design/icons";
-import { Breadcrumb, message, Space, Dropdown, Spin, Button, Tag, Alert, Tooltip } from "antd";
+import { Breadcrumb, message, Space, Dropdown, Spin, Button, Tag, Alert, Anchor } from "antd";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
-import { Link } from "react-router-dom";
-
 const StudentTeachingSession = () => {
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -23,6 +21,7 @@ const StudentTeachingSession = () => {
   const [freezeSessions, setFreezeSessions] = useState([]);
   const [timezone, setTimeZone] = useState("");
   const [credit, setCredit] = useState("");
+  const { Link } = Anchor;
 
   const getMockInterviewDetails = async () => {
     try {
@@ -240,7 +239,7 @@ const StudentTeachingSession = () => {
               message={
                 <>
                   You will not be able to sit a session until you purchase more teaching session hours.{' '}
-                  <Link to="https://missionmed.com.au/checkout_step/interview-private-checkout/" title="Purchase Here" target="_blank">Purchase Here.</Link>
+                  <Link href="https://missionmed.com.au/checkout_step/interview-private-checkout/" title="Purchase Here ." target="_blank"></Link>
                 </>
               }
               type="error"
