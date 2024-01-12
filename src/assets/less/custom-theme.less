@@ -679,4 +679,32 @@ a {
 
 .errorBanner {
   border-radius: 8px;
+
+  .ant-alert-message {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    .ant-anchor-link {
+      padding: 0;
+
+      a {
+        color: #1890ff
+      }
+    }
+  }
+}
+
+.ant-breadcrumb {
+  ol {
+    li {
+      display: flex;
+      flex-wrap: wrap;
+
+      .ant-anchor-link {
+        padding: 0;
+      }
+    }
+  }
 }

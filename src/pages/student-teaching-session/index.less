@@ -1,55 +1,59 @@
-.tutor-mock-section-wrap{
-    .grid-col-2{
-         display: flex;
-         justify-content: space-between;
-         align-items: center;
-         flex-wrap: wrap;
-    }
-    .display-f-24{
-         display: flex;
-         gap: 24px;
-    }
+.tutor-mock-section-wrap {
+     .grid-col-2 {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+     }
+
+     .display-f-24 {
+          display: flex;
+          gap: 24px;
+     }
 }
 
-@media (max-width:992px){
-    .tutor-mock-section-wrap{
-         .display-f-24{
-              flex-wrap: wrap;
-              margin-top: 24px;
-         }
-    }
+@media (max-width:992px) {
+     .tutor-mock-section-wrap {
+          .display-f-24 {
+               flex-wrap: wrap;
+               margin-top: 24px;
+          }
+     }
 }
 
-.session-dropdown{
-     .ant-dropdown-menu{
-          box-shadow: 0px 3px 6px -4px #0000001F, 0px 6px 16px 0px #00000014,0px 9px 28px 8px #0000000D;
+.session-dropdown {
+     .ant-dropdown-menu {
+          box-shadow: 0px 3px 6px -4px #0000001F, 0px 6px 16px 0px #00000014, 0px 9px 28px 8px #0000000D;
           background: #FFFFFF;
           border-radius: 8px;
      }
-     
+
 }
 
 .dropdownIcon {
      .ant-space-item {
-         .ant-dropdown-trigger {
-             background-color: #fff;
-             width: 40px;
-             height: 40px;
-             display: flex;
-             justify-content: center;
-             align-items: center;
-             border-radius: 8px;
-          //    margin-right: 10px;
-             cursor: pointer;
-             border: 1px solid  rgba(0, 0, 0, 0.15);
-             &.ant-dropdown-open, &:hover {
-                 border-color: #3788d8;
-             }
-         }
+          .ant-dropdown-trigger {
+               background-color: #fff;
+               width: 40px;
+               height: 40px;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               border-radius: 8px;
+               //    margin-right: 10px;
+               cursor: pointer;
+               border: 1px solid rgba(0, 0, 0, 0.15);
+
+               &.ant-dropdown-open,
+               &:hover {
+                    border-color: #3788d8;
+               }
+          }
      }
 }
-.d_flex_center{
+
+.d_flex_center {
      display: flex;
      align-items: center;
      gap: 10px;
- }
+}
