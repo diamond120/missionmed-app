@@ -22,7 +22,7 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next }) => {
+const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, prev }) => {
 
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -33,7 +33,6 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next })
   const [spin, setSpin] = useState<boolean>(true);
 
   const handleDateClick = (dateInfo) => {
-    console.log('handleDateClick');
     const dateObjectEnd = new Date(dateInfo.endStr);
     const dateObjectStart = new Date(dateInfo.startStr);
     const data = {
@@ -45,9 +44,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next })
   }
 
   const getSlotsist = async (tutorId) => {
-    console.log('getSlotsist');
     try {
-
       const data = {
         tutorId: tutorId,
         startDate: filterDate.startDate,
@@ -64,24 +61,25 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next })
         setSpin(false);
       } else {
         setSpin(false);
+        prev();
         throw new Error(response.data.message);
       }
     } catch (e) {
       setSpin(false);
+      prev();
       message.error(e.message);
     }
   };
 
   useEffect(() => {
-    // if (filterDateSet == true) {
-    getSlotsist(tutorId);
-    // }
+    if (filterDateSet == true) {
+      getSlotsist(tutorId);
+    }
   }, [tutorId, filterDate, filterDateSet, subSlotList]);
 
   let selectedEvent = null;
 
   const handleEventClick = async (info) => {
-    console.log('handleEventClick');
     const clickedEvent = info.event;
     if (clickedEvent.title == 'Available') {
       if (selectedEvent) {
@@ -157,64 +155,63 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next })
       <Form.Item name="date" hidden={true} rules={[{ required: true, message: "Please select date" }]}></Form.Item>
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
-      {(slotsList.length == 0 && spin) ?
-        <>
-          <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span>
-        </>
-        :
-        <>
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin]}
-            initialView="timeGridWeek"
-            dayHeaders={true}
-            headerToolbar={{
-              left: 'today',
-              center: "prev,title,next",
-              right: "timeGridWeek,dayGridMonth"
-            }}
+      <div style={{ display: spin ? 'block' : 'none' }}>
+        <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
+        <span> Finding available slot......</span>
+      </div>
+      <div style={{ display: !spin ? 'block' : 'none' }}>
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin]}
+          initialView="timeGridWeek"
+          dayHeaders={true}
+          headerToolbar={{
+            left: 'today',
+            center: "prev,title,next",
+            right: "timeGridWeek,dayGridMonth"
+          }}
 
-            events={slotsList}
-            selectable={true}
-            eventClick={handleEventClick}
-            eventBorderColor='0'
-            datesSet={handleDateClick}
-          />
+          events={slotsList}
+          selectable={true}
+          eventClick={handleEventClick}
+          eventBorderColor='0'
+          datesSet={handleDateClick}
+        />
+      </div>
 
-          <Modal
-            title={moduleType == 'ucatStudent' ? 'Available Slot For UCAT Teaching Session' : 'Available Slot For Student Teaching Session'}
-            open={isModalOpen}
-            onOk={handleSubmit}
-            onCancel={handleCancel}
-            className={"mock-interview-modal"}
-            width={"600px"}
-            footer={[
-              <div key="buttonGroup" className='button-group'>
-                <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
-                </Button>
-                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
-                  Save Changes
-                </Button>
-              </div>
-            ]}
+      <Modal
+        title={moduleType == 'ucatStudent' ? 'Available Slot For UCAT Teaching Session' : 'Available Slot For Student Teaching Session'}
+        open={isModalOpen}
+        onOk={handleSubmit}
+        onCancel={handleCancel}
+        className={"mock-interview-modal"}
+        width={"600px"}
+        footer={[
+          <div key="buttonGroup" className='button-group'>
+            <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+              Discard
+            </Button>
+            <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+              Save Changes
+            </Button>
+          </div>
+        ]}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            style={{ marginTop: "17px", marginBottom: "0px" }}
+            label="Slot Timing"
+            name="subSlot"
+            rules={[{ required: true, message: "Please select slot." }]}
           >
-            <Form form={form} layout="vertical">
-              <Form.Item
-                style={{ marginTop: "17px", marginBottom: "0px" }}
-                label="Slot Timing"
-                name="subSlot"
-                rules={[{ required: true, message: "Please select slot." }]}
-              >
-                <Radio.Group >
-                  {subSlotList.map((slot, index) => (
-                    <Radio key={index} value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
-                  ))}
-                </Radio.Group>
-              </Form.Item>
-            </Form>
-          </Modal>
-        </>
-      }
+            <Radio.Group >
+              {subSlotList.map((slot, index) => (
+                <Radio key={index} value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
+              ))}
+            </Radio.Group>
+          </Form.Item>
+        </Form>
+      </Modal>
+
 
     </>
   )
