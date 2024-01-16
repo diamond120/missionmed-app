@@ -245,7 +245,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-        <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType} timezone={timezone} next={next} />
+        <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType} timezone={timezone} next={next} prev={prev} />
       </div>
     </>;
   };
