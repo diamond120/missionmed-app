@@ -224,11 +224,11 @@ const StudentUCATSession = () => {
                   </Space>
                 </Space>
               }
-              {(upcomingSessions.length > 0 || pastSessions.length > 0) && <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />}
+              {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) && <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />}
 
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
+          {((upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
             <Alert
               closable
               showIcon
