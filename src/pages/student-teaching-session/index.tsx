@@ -246,7 +246,7 @@ const StudentTeachingSession = () => {
               className="errorBanner"
             />
           }
-          {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
+          {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) ? (
             <SessionDetails
               key="Student Teaching Session"
               moduleType="teaching"

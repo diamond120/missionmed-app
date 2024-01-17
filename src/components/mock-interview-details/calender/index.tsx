@@ -103,6 +103,8 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
           type :'mockinterview',
           timezone :timezone,
           rescheduleDate : rescheduleDate,
+          start: filterDate.startDate,
+          end: filterDate.endDate,
         };
       
         let response = await CommonService.postAPI("/student/multiple-slots",data);
