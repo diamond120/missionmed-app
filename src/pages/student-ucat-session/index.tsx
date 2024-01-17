@@ -242,7 +242,7 @@ const StudentUCATSession = () => {
               className="errorBanner"
             />
           }
-          {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
+          {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) ? (
             <SessionDetails
               key="mockInterviewDetails"
               moduleType="ucat"

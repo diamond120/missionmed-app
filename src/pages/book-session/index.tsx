@@ -256,7 +256,8 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
       startTime: startTime,
       endTime: endTime,
       day: getday,
-      tutorId: form.getFieldValue('tutorId')
+      tutorId: form.getFieldValue('tutorId'),
+      isFreeze: form.getFieldValue('isFreeze')
     };
     const response = await CommonService.checkSession(data);
 

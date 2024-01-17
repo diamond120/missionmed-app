@@ -142,6 +142,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       form.setFieldValue('sessionStartTime', slot.start);
       form.setFieldValue('sessionEndTime', slot.end);
       form.setFieldValue('date', slot.date);
+      form.setFieldValue('isFreeze', slot.isFreeze);
     }
     await form.validateFields();
     setIsModalOpen(false);
@@ -155,6 +156,8 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       <Form.Item name="date" hidden={true} rules={[{ required: true, message: "Please select date" }]}></Form.Item>
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
+      <Form.Item name="isFreeze" hidden={true}></Form.Item>
+
       <div style={{ display: spin ? 'block' : 'none' }}>
         <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
         <span> Finding available slot......</span>
