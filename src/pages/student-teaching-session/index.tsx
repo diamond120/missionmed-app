@@ -219,7 +219,7 @@ const StudentTeachingSession = () => {
                       </Tag>
                     </div>
               }
-              {(upcomingSessions.length > 0) &&
+              {(upcomingSessions.length > 0 ) &&
                 <Space direction="vertical" className="dropdownIcon">
                   <Space wrap  >
                     <Dropdown placement="bottomLeft" menu={{ items }} overlayClassName="session-dropdown">
@@ -228,11 +228,11 @@ const StudentTeachingSession = () => {
                   </Space>
                 </Space>
               }
-              {(upcomingSessions.length > 0 || pastSessions.length > 0) &&
+              {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) &&
                 <BookSession title="Book Extra Session" addUpcomingSession={addUpcomingSession} moduleType="teaching" credit={credit} timezone={timezone} />}
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
+          {((upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
             <Alert
               closable
               showIcon
