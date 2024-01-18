@@ -28,12 +28,13 @@ const MeetingLink: FC<Any> = () => {
 
     const updatedTutor = async () => {
         await TutorService.updateProfile({
-            personalMeetingId: personalMeetingId !== '' ? personalMeetingId : tutor?.personalMeetingId,
+            // personalMeetingId: personalMeetingId !== '' ? personalMeetingId : tutor?.personalMeetingId,
+            personalMeetingId: personalMeetingId,
         });
         dispatch({
             type: "update",
             tutor: {
-                personalMeetingId: personalMeetingId !== '' ? personalMeetingId : tutor?.personalMeetingId,
+                personalMeetingId: personalMeetingId,
             }
         })
     }

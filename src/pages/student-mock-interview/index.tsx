@@ -156,7 +156,7 @@ const StudentMockInterview = () => {
 
             <div className="d_flex_center">
               <div><b>Credit: {student === '' ? <Spin style={{ marginLeft: 10 }} /> : student}</b></div>
-              {(student == 0) && <a href="https://missionmed.com.au/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a>}
+              {(student == 0) && <a href="https://missionmed.com.au/interview-mastery-course-landing/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a>}
               {(student > 0) && <BookInterview addUpcomingSession={addUpcomingSession} timezone={timezone} />}
 
             </div>
