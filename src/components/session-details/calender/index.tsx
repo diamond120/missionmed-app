@@ -2,7 +2,7 @@ import "./index.less"
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from '@fullcalendar/timegrid'
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Form, Modal, Radio, Spin, message } from "antd";
 import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
@@ -43,8 +43,10 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     setFilterDateSet(true);
   }
 
-  const getSlotsist = async (tutorId) => {
+  const getSlotsist = async(tutorId) => {
     try {
+      
+      setSpin(true);
       const data = {
         tutorId: tutorId,
         startDate: filterDate.startDate,
@@ -53,7 +55,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
         type: 'teachingsession',
       };
 
-      let response = await CommonService.postAPI("/student/slots-list", data);
+      const response = await CommonService.postAPI("/student/slots-list", data);
 
       if (response.data.success) {
         const slotList = response.data.data ?? [];
@@ -71,11 +73,20 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   };
 
+  const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, filterDate, rescheduleDate]);
+
+  
   useEffect(() => {
-    if (filterDateSet == true) {
-      getSlotsist(tutorId);
+    if (filterDateSet) {
+      memoizedGetSlotsist(tutorId);
     }
-  }, [tutorId, filterDate, filterDateSet, subSlotList]);
+  }, [memoizedGetSlotsist, tutorId, filterDateSet]);
+
+  // useEffect(() => {
+  //   if (filterDateSet == true) {
+  //     getSlotsist(tutorId);
+  //   }
+  // }, [tutorId, filterDate, filterDateSet, subSlotList]);
 
   let selectedEvent = null;
 
@@ -101,8 +112,8 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
   };
 
   const setSlot = async (startDate, endDate, date) => {
-    setSpinning(true);
     try {
+      setSpinning(true);
       const data = {
         tutorId: tutorId,
         startDate: startDate,
