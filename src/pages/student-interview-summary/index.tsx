@@ -40,7 +40,10 @@ const StudentInterviewSummary = () => {
     }
   }, [mockInterviewId]);
 
-  const backUrl = `/student/mock-interview`;
+  // const backUrl = `/student/mock-interview`;
+
+  const backUrl = (type == 'ucat') ? `/student/ucat-session`: (type == 'teaching') ? `/student/teaching-session` : `/student/mock-interview`;
+
 
   const handleUpdateSummary = (rateDetails) => {
     setInterviewSummary({ ...interviewSummary, sessionrate: rateDetails })
