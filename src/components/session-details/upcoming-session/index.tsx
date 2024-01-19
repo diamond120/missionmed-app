@@ -43,7 +43,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
     }
   };
 
-  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink || upcomingInterview.defaultSessionLink });
+  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink});
 
   return (
     <>
@@ -72,7 +72,14 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
               <Button className={"primary-button"}>Join Session </Button>
             </a> */}
             <Button
-              onClick={() => window.open(upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink'], '_blank')}
+              onClick={(event) => {
+                const linkToOpen = upcomingInterview['sessionLink']  ? upcomingInterview['sessionLink']  : upcomingInterview['defaultSessionLink'];
+                if(linkToOpen) {
+                  window.open(linkToOpen , '_blank')
+                } else {
+                  event.preventDefault();
+                }
+              }}
               className="primary-button disable-button"
               disabled={(credit == 0 || credit == '' || credit == undefined) && user.role == "student"}
             >Join Session
@@ -135,7 +142,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             name="sessionLink"
             rules={[{ required: true },
             { validator: validateURL }]}
-            initialValue={upcomingInterview.sessionLink || upcomingInterview?.defaultSessionLink}
+            initialValue={upcomingInterview.sessionLink}
           >
             <TextArea
               style={{ height: 50 }}

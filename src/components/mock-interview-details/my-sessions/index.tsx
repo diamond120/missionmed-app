@@ -73,7 +73,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     setIsModalOpen(false);
   };
 
-  form.setFieldsValue({ sessionLink: session.sessionLink || session.defaultSessionLink });
+  form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
 
   return (

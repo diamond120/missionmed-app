@@ -45,7 +45,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
     }
   };
 
-  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink || upcomingInterview.defaultSessionLink });
+  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
 
   return (
     <>
@@ -70,7 +70,14 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
           </ul>
 
           <div className="btn-group" style={{ marginTop: "32px" }}>
-            <Button className={"primary-button"} type="link" href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank" >Join Session </Button>
+            <Button className={"primary-button"}  onClick={(event) => {
+                const linkToOpen = upcomingInterview['sessionLink']  ? upcomingInterview['sessionLink']  : upcomingInterview['defaultSessionLink'];
+                if(linkToOpen) {
+                  window.open(linkToOpen , '_blank')
+                } else {
+                  event.preventDefault();
+                }
+              }} >Join Session </Button>
             {user.role == "student" ? (
               upcomingInterview['isWithin24Hours'] ? (
 
