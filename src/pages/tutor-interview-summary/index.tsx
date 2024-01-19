@@ -81,7 +81,7 @@ const TutorInterviewSummary = () => {
     }
   }
 
-  const backUrl = `/tutor/mock-interview`;
+  const backUrl = (type == 'ucat') ? `/tutor/ucat-session`: (type == 'teaching') ? `/tutor/teaching-session` : `/tutor/mock-interview`;
 
   return (
     <>
@@ -92,7 +92,7 @@ const TutorInterviewSummary = () => {
           </Breadcrumb.Item>
           <Breadcrumb.Item key={backUrl} href={backUrl}>
             {/* <Link href={backUrl} title={type == "ucat" ? 'UCAT Sessions' : 'Mock Interview'}> </Link> */}
-            {type == "ucat" ? 'UCAT Sessions' : 'Mock Interview'}
+            {type == "ucat" ? 'UCAT Sessions' : (type == 'teaching') ? 'Teaching Session' : 'Mock Interview'}
           </Breadcrumb.Item>
           <Breadcrumb.Item> {type == "ucat" ? 'Session Summary' : 'Interview Summary'} </Breadcrumb.Item>
         </Breadcrumb>
