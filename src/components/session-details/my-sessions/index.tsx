@@ -72,7 +72,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       callback();
     }
   };
-  form.setFieldsValue({ sessionLink: session.sessionLink || session.defaultSessionLink });
+  form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
   return (
     <li className="item" style={{ position: "relative" }}>
