@@ -61,19 +61,14 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     }
   };
 
-  const getStudentList = async () => {
+  const getStudentList = async (keyword = '') => {
     try {
-      let type = 'Mock interviews';
-      if (moduleType == 'ucatStudent') {
-        type = 'UCAT 1-to-1 Tutoring';
-      } else if (moduleType == 'teaching') {
-        type = 'Interview 1-to-1 Tutoring';
-      }
        //student List API
-       const response = await CommonService.postAPI('students-data');
+       const data = {search : keyword }
+       const response = await CommonService.postAPI('students-data', data);
        if (response.data.success) {
-         const studentList = response.data.data ?? [];
-         setStudents(studentList);
+         const studentList = response.data.data.students ?? [];
+        setStudents(studentList);
        } else {
          message.error(response.data.message);
        }
@@ -157,9 +152,9 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         });
         setLoading(false);
         if (moduleType == 'ucatStudent') {
-          navigate("/student/ucat-session")
+          navigate(`/${userRole}/ucat-session`)
         } else {
-          navigate("/student/teaching-session")
+          navigate(`/${userRole}/teaching-session`)
         }
         cardDetails();
         message.success('You’ve successfully booked session');
@@ -203,11 +198,17 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     setShowDropdown(e.target.value === 'Recurring Session');
   }
 
+  const checkCredit = (student) => {
+    if(userRole  == 'tutor' && student?.ucat_teaching_session_credit == 0) {
+      return 'disabled'
+    } 
+  }
+
   const TutorPanelHeader = memo(function TutorPanelHeader({ tutor, student }) {
     return (
       <>
       {userRole === 'tutor' ? (
-        <Radio key={student.id} value={student.id} >
+        <Radio key={student.id} value={student.id} disabled={checkCredit(student)}  >
           <div className={"avatar"}>
             <Avatar
               src={student.profile_picture}
@@ -318,9 +319,10 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             >
           {students && students.map((student) => (
             <Panel
-              header={<TutorPanelHeader student={student} />}
+              header={<TutorPanelHeader student={student}  />}
               key={student.id}
               className="site-collapse-custom-panel"
+              title={checkCredit(student) == 'disabled' && 'Please select other student because student credit is 0'}
             >
             </Panel>
           ))} 
@@ -331,12 +333,20 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     );
   });
 
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    getStudentList(value)
+  };
 
-  const Step2Form = memo(function Step2Form({ students, tutors }) {
+
+  const Step2Form =memo(function Step2Form({ students, tutors }) {
     return (
       <>
         <div className={"choose-tutor"}>
-          <h3 className={"title"}>Recommended for you</h3>
+          <div className="btn-group" >
+           <h3 className={"title"}>Recommended for you</h3>
+           <h3><Input type='text' className="form-control" placeholder="Search Student" onBlur={handleSearchChange} /></h3>
+          </div>
           {userRole === 'tutor' ? (
             <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select student" }]}>
               <TutorCollapse students={students} />
