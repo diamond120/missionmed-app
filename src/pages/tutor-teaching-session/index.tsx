@@ -129,12 +129,15 @@ const TutorTeachingSession = () => {
           <Breadcrumb.Item>Interview Teaching Session</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
-          <div className={"grid-col-2"}>
+          <div className={"d_flex_beetwen"}>
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
-            <Button className={"primary-button"}>
-              <FileSearchOutlined /> Useful Resources
-            </Button>
-            <BookSession title="Book Extra Session" /*addUpcomingSession={addUpcomingSession}*/ moduleType="teaching" timezone={timezone} />
+            <div className="btn-group">
+              <BookSession title="Book Extra Session" /*addUpcomingSession={addUpcomingSession}*/ moduleType="teaching" timezone={timezone} />
+              <Button className={"primary-button"}>
+                <FileSearchOutlined /> Useful Resources
+              </Button>
+
+            </div>
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
           <SessionDetails

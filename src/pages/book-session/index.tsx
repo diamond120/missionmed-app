@@ -72,7 +72,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
        //student List API
        const response = await CommonService.postAPI('students-data');
        if (response.data.success) {
-         const studentList = response.data.data ?? [];
+         const studentList = response.data.data.students ?? [];
          setStudents(studentList);
        } else {
          message.error(response.data.message);
@@ -140,10 +140,8 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     formData.bookingFor = type;
     try {
       const response = await CommonService.postAPI('/student/book-teaching-session', formData);
-
       if (response.data.success) {
         const result = response.data.data;
-        console.log(result);
         addUpcomingSession({
           date: result.date,
           hasSessionRate: false,
@@ -218,17 +216,24 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               <h4 className={"tutor-name"}>{student.full_name}</h4>
               {student.phone_number && (
                 <span>
-                  PhoneNumber: {student.phone_number}
+                  {student.phone_number}
                 </span>
               )}  
-              
+              {' '}
               {student.country && (
                 <span>
-                  country: {student.country}
+                  {student.country}
                 </span>
               )}
-             
-              
+              {' '}
+              <span>
+              {student.teaching_session_credit ? (
+                `credit: ${student.teaching_session_credit}`
+              ) : (
+                'credit: 0'
+              )}
+              </span>
+
               <div
                 style={{
                   display: "flex",
@@ -346,7 +351,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               <TutorCollapse tutors={tutors} />
             </Form.Item>
           )}
-         
         </div>
       </>
     );
@@ -672,11 +676,11 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           </Button>
         </Tooltip> :
        userRole === 'tutor' ? (
-          <Button className={"primary-button disable-button"}  onClick={showModalTutor}>
+          <Button className={"secondary-button disable-button"}  onClick={showModalTutor}>
           {title}
         </Button>
         ) : (
-          <Button className={"primary-button disable-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
+          <Button className={"primary-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
           {title}
         </Button>)
       }

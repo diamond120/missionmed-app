@@ -4,11 +4,9 @@ import { HomeOutlined, FileSearchOutlined,CalendarOutlined } from "@ant-design/i
 import Section from "../../components/shared-ui/Section";
 import MockInterviewDetails from "../../components/mock-interview-details";
 import "./index.less";
-import BookSession from "../book-session";
 import CommonService from "../../api/services/Common";
 
 const TutorMockInterview = () => {
-  const [timezone, setTimeZone] = useState("");
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
@@ -21,7 +19,6 @@ const TutorMockInterview = () => {
       }
       const response = await CommonService.postAPI("/tutor/session-details",data);
       if (response.data.success) {
-        setTimeZone(response.data?.data?.tutorTimezone ?? null);
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -101,7 +98,6 @@ const TutorMockInterview = () => {
             <Button className={"primary-button"}>
               <FileSearchOutlined /> Useful Resources
             </Button>
-            <BookSession title="Book Extra Session" /*addUpcomingSession={addUpcomingSession}*/ moduleType="teaching" timezone={timezone} />
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
           <MockInterviewDetails
