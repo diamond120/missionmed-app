@@ -10,6 +10,8 @@ import Calender from "../../components/session-details/calender";
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css'
 import { useStudent } from "../../api/providers/StudentProvider";
+import { useTutor } from "../../api/providers/TutorProvider";
+import { useUser } from "../../api/providers/UserProvider";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 import { QuestionCircleFilled } from "@ant-design/icons";
@@ -20,6 +22,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
   const [tutors, setTutors] = useState([]);
+  const [students, setStudents] = useState([]);
   const totalSteps = 3;
   const [showDropdown, setShowDropdown] = useState(true);
   const [dayOfWeek, setDayOfWeek] = useState('Weekly on Monday');
@@ -29,6 +32,9 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const [card, setCard] = useState("");
   const student = useStudent();
   const [sessionType, setSessionType] = useState('');
+  const user = useUser();
+  const tutor = useTutor();
+  const userRole = user.role;
 
   const getUniversityTutorList = async () => {
     try {
@@ -49,6 +55,29 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
       } else {
         message.error(response.data.message);
       }
+
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+
+  const getStudentList = async () => {
+    try {
+      let type = 'Mock interviews';
+      if (moduleType == 'ucatStudent') {
+        type = 'UCAT 1-to-1 Tutoring';
+      } else if (moduleType == 'teaching') {
+        type = 'Interview 1-to-1 Tutoring';
+      }
+       //student List API
+       const response = await CommonService.postAPI('students-data');
+       if (response.data.success) {
+         const studentList = response.data.data ?? [];
+         setStudents(studentList);
+       } else {
+         message.error(response.data.message);
+       }
+
     } catch (e) {
       message.error(e.message);
     }
@@ -56,7 +85,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
   // const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Sessions','Check Last Details'];
   const stepsTitles = ['Choose Tutor', 'Book Time for Sessions', 'Check Last Details'];
-
+  
   const next = async () => {
     try {
       const values = await form.validateFields();
@@ -114,6 +143,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
       if (response.data.success) {
         const result = response.data.data;
+        console.log(result);
         addUpcomingSession({
           date: result.date,
           hasSessionRate: false,
@@ -142,7 +172,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
       message.error(e.message);
     }
     handleCancel()
-
   }
 
   const handleCancel = () => {
@@ -157,6 +186,13 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     setModalTitle("Choose Tutor");
   };
 
+  const showModalTutor = () => {
+    getStudentList();
+    setIsModalOpen(true);
+    setActiveStep(1);
+    setModalTitle("Choose Student");
+  };
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -167,10 +203,48 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     setShowDropdown(e.target.value === 'Recurring Session');
   }
 
-  const TutorPanelHeader = memo(function TutorPanelHeader({ tutor }) {
+  const TutorPanelHeader = memo(function TutorPanelHeader({ tutor, student }) {
     return (
       <>
-        <Radio key={tutor.id} value={tutor.id}>
+      {userRole === 'tutor' ? (
+        <Radio key={student.id} value={student.id} >
+          <div className={"avatar"}>
+            <Avatar
+              src={student.profile_picture}
+              size={40}
+              icon={<UserOutlined />}
+            />
+            <div className={"name-degree"}>
+              <h4 className={"tutor-name"}>{student.full_name}</h4>
+              {student.phone_number && (
+                <span>
+                  PhoneNumber: {student.phone_number}
+                </span>
+              )}  
+              
+              {student.country && (
+                <span>
+                  country: {student.country}
+                </span>
+              )}
+             
+              
+              <div
+                style={{
+                  display: "flex",
+                  columnGap: 10,
+                  rowGap: 5,
+                  flexWrap: "wrap",
+                  color: "#6B7393",
+                  fontSize: 12,
+                }}
+              >
+              </div>
+            </div>
+          </div>
+        </Radio>
+         ) : (
+          <Radio key={tutor.id} value={tutor.id}>
           <div className={"avatar"}>
             <Avatar
               src={tutor.profile_picture}
@@ -191,52 +265,88 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               >
                 <span>
                   {tutor.university && tutor.university.map((item, index) => (
-                    <span key={index}>{item.school}({item.degree}) {tutor.university.length - 1 != index && ','}</span>
+                    <span key={index}>{item.school}({item.degree})
+                     {tutor.university.length - 1 != index && ','}</span>
                   ))}
                 </span>
               </div>
             </div>
           </div>
         </Radio>
+        )}
       </>
     );
   });
+
 
   const TutorCollapse = memo(function TutorCollapse({
     value = null,
     onChange,
     tutors,
+    students
   }) {
     return (
-      <Radio.Group onChange={onChange} value={value}>
-        <Collapse
-          bordered={false}
-          defaultActiveKey={["1"]}
-          expandIconPosition={`end`}
-          className="site-collapse-custom-collapse"
-        >
-          {tutors && tutors.map((tutor) => (
-            <Panel
+      <>
+      {userRole !== 'tutor' ? 
+      (
+        <Radio.Group onChange={onChange} value={value}>
+          <Collapse
+            bordered={false}
+            defaultActiveKey={["1"]}
+            expandIconPosition={`end`}
+            className="site-collapse-custom-collapse"
+            >
+  
+            {tutors && tutors.map((tutor) => (
+              <Panel
               header={<TutorPanelHeader tutor={tutor} />}
               key={tutor.id}
               className="site-collapse-custom-panel"
+              >
+                {tutor.biography}
+              </Panel>
+            ))}
+          </Collapse>
+        </Radio.Group>
+      ) :(
+        <Radio.Group onChange={onChange} value={value}>
+          <Collapse
+            bordered={false}
+            defaultActiveKey={["1"]}
+            expandIconPosition={`end`}
+            className="site-collapse-custom-collapse"
             >
-              {tutor.biography}
+          {students && students.map((student) => (
+            <Panel
+              header={<TutorPanelHeader student={student} />}
+              key={student.id}
+              className="site-collapse-custom-panel"
+            >
             </Panel>
-          ))}
-        </Collapse>
-      </Radio.Group>
+          ))} 
+          </Collapse>
+        </Radio.Group>
+      )}
+      </>
     );
   });
 
-  const Step2Form = memo(function Step2Form({ tutors }) {
+
+  const Step2Form = memo(function Step2Form({ students, tutors }) {
     return (
       <>
         <div className={"choose-tutor"}>
           <h3 className={"title"}>Recommended for you</h3>
-          <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select tutor" }]}>
-            <TutorCollapse tutors={tutors} />
-          </Form.Item>
+          {userRole === 'tutor' ? (
+            <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select student" }]}>
+              <TutorCollapse students={students} />
+            </Form.Item>
+          ) : (
+            <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select tutor" }]}>
+              <TutorCollapse tutors={tutors} />
+            </Form.Item>
+          )}
+         
         </div>
       </>
     );
@@ -250,14 +360,23 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     </>;
   };
 
-  const checkingDate = async (date, startTime, endTime, getday) => {
+  const checkingDate = async (date, startTime, endTime, getday,studentId, tutorId) => {
+    if(user.role === 'tutor')
+    {
+      studentId = form.getFieldValue('newTutorId');
+      tutorId = tutor.id;
+    }else{
+      tutorId = form.getFieldValue('newTutorId');
+    }
     const data = {
       date: date,
       startTime: startTime,
       endTime: endTime,
       day: getday,
-      tutorId: form.getFieldValue('tutorId'),
-      isFreeze: form.getFieldValue('isFreeze')
+      studentId: studentId,
+      tutorId: tutorId,
+      isFreeze: form.getFieldValue('isFreeze'),
+      role: user.role
     };
     const response = await CommonService.checkSession(data);
 
@@ -284,7 +403,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
 
   const Step4From = ({ form }) => {
-
     const formData = form.getFieldsValue(true);
     const tutorName = tutors.find(tutor => tutor.id == formData.tutorId)?.full_name
     setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
@@ -541,7 +659,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
 
   return (
-
     <>
       {(!timezone) ?
         <Tooltip
@@ -554,9 +671,14 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             {title}
           </Button>
         </Tooltip> :
-        <Button className={"primary-button disable-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
+       userRole === 'tutor' ? (
+          <Button className={"primary-button disable-button"}  onClick={showModalTutor}>
           {title}
         </Button>
+        ) : (
+          <Button className={"primary-button disable-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
+          {title}
+        </Button>)
       }
       <Modal
         title={modalTitle}
@@ -633,9 +755,14 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         <Form form={form} layout="vertical"
         >
           {activeStep == 1 && (
+              userRole === 'tutor' ? (
             <div style={{ width: "555px" }}>
-              <Step2Form tutors={tutors} />
-            </div>
+              <Step2Form students={students}  />
+            </div> ) : (
+               <div style={{ width: "555px" }}>
+               <Step2Form tutors={tutors} />
+             </div>
+            )
           )}
           {activeStep == 2 && (
             <div style={{ width: "1155px" }}>

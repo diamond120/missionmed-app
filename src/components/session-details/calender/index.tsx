@@ -7,6 +7,8 @@ import { Button, Form, Modal, Radio, Spin, message } from "antd";
 import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
 import { formatTime } from "../../../common/common";
+import { useTutor } from "../../../api/providers/TutorProvider";
+import { useUser } from "../../../api/providers/UserProvider";
 
 function formatDate(inputDateStr) {
   const inputDate = new Date(inputDateStr);
@@ -31,7 +33,8 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subSlotList, setSubSlotList] = useState<any>([]);
   const [spin, setSpin] = useState<boolean>(true);
-
+  const tutor = useTutor();
+  const user = useUser();
   const handleDateClick = (dateInfo) => {
     const dateObjectEnd = new Date(dateInfo.endStr);
     const dateObjectStart = new Date(dateInfo.startStr);
@@ -41,14 +44,19 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     };
     setfilterDate(data);
     setFilterDateSet(true);
-  }
+  } 
 
-  const getSlotsist = async(tutorId) => {
+  const getSlotsist = async(tutorId, studentId, role) => {
     try {
-      
-      setSpin(true);
+      if(user.role === 'tutor')
+      {
+        studentId = tutorId;
+        tutorId = tutor.id;
+      }
       const data = {
+        studentId: studentId,
         tutorId: tutorId,
+        role: user.role,
         startDate: filterDate.startDate,
         endDate: filterDate.endDate,
         rescheduleDate: rescheduleDate,
@@ -111,12 +119,18 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   };
 
-  const setSlot = async (startDate, endDate, date) => {
+  const setSlot = async (startDate, endDate, date, studentId) => {
     try {
       setSpinning(true);
+      if(user.role === 'tutor')
+      {
+        studentId = tutorId;
+        tutorId = tutor.id;
+      }
       const data = {
         tutorId: tutorId,
         startDate: startDate,
+        role: user.role,
         endDate: endDate,
         date: date,
         type: 'teachingsession',
@@ -124,6 +138,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
         rescheduleDate: rescheduleDate,
         start: filterDate.startDate,
         end: filterDate.endDate,
+        studentId: studentId,
       };
 
       let response = await CommonService.postAPI("/student/multiple-slots", data);
@@ -146,15 +161,28 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     setIsModalOpen(false);
   };
 
+
   const handleSubmit = async () => {
     const data = form.getFieldsValue(true);
     if (subSlotList.length > 0 && data.subSlot >= 0) {
+      let studentId;
+    
       const slot = subSlotList[data.subSlot];
       form.setFieldValue('sessionStartTime', slot.start);
       form.setFieldValue('sessionEndTime', slot.end);
       form.setFieldValue('date', slot.date);
       form.setFieldValue('isFreeze', slot.isFreeze);
+      form.setFieldValue('role', user.role);
+      form.setFieldValue('newTutorId', data.tutorId);
+      if(user.role === 'tutor')
+      {
+        studentId = tutorId;
+        data.tutorId = tutor.id
+      }
+      form.setFieldValue('studentId', studentId);
+      form.setFieldValue('tutorId', data.tutorId);
     }
+    console.log(data)
     await form.validateFields();
     setIsModalOpen(false);
     next();
@@ -168,6 +196,9 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
       <Form.Item name="isFreeze" hidden={true}></Form.Item>
+      <Form.Item name="studentId" hidden={true}></Form.Item>
+      <Form.Item name="role" hidden={true}></Form.Item>
+      <Form.Item name="newTutorId" hidden={true}></Form.Item>
 
       <div style={{ display: spin ? 'block' : 'none' }}>
         <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
