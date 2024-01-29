@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/icons";
 import { Breadcrumb, Button, message } from "antd";
+import BookSession from "../book-session";
 import SessionDetails from "../../components/session-details";
 import CommonService from "../../api/services/Common";
 
 const TutorTeachingSession = () => {
-
+  const [timezone, setTimeZone] = useState("");
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
@@ -20,7 +21,8 @@ const TutorTeachingSession = () => {
         bookingFor : 'Interview 1-to-1 Tutoring'
       }
       const response = await CommonService.postAPI('/tutor/session-details',data);
-            if (response.data.success) {
+        if (response.data.success) {
+        setTimeZone(response.data?.data?.tutorTimezone ?? null);
         await setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         await setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -74,6 +76,26 @@ const TutorTeachingSession = () => {
     setPastSessions(updatedSessions);
   }
 
+  const addUpcomingSession = (sessionId, data) => {
+  
+    // const updatedSessions = upcomingSessions.map(session => {
+    //   if(session.id == sessionId ){
+    //     return {...session, ...data}
+    //   }else{
+    //     return session;
+    //   }addUpcomingSession
+    // })
+    // setUpcomingSessions(updatedSessions);
+    // if(sessionId == upcomingInterview.id){
+    //   setUpcomingInterview(prev => ({...prev, ...{
+    //     date:data.date,
+    //     session_start_time:data.session_start_time,
+    //     session_end_time:data.session_end_time,
+    //   }}))
+    // }
+    getMockInterviewDetails();
+  }
+
   const handleEditLink = async(detail) => {
     try{
       const data = {
@@ -107,11 +129,15 @@ const TutorTeachingSession = () => {
           <Breadcrumb.Item>Interview Teaching Session</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
-          <div className={"grid-col-2"}>
+          <div className={"d_flex_beetwen"}>
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
-            <Button className={"primary-button"}>
-              <FileSearchOutlined /> Useful Resources
-            </Button>
+            <div className="btn-group">
+              <BookSession title="Book Extra Session" addUpcomingSession={addUpcomingSession} moduleType="teaching" timezone={timezone} />
+              <Button className={"primary-button"}>
+                <FileSearchOutlined /> Useful Resources
+              </Button>
+
+            </div>
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
           <SessionDetails

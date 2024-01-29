@@ -272,7 +272,6 @@ const RescheduleInterview = ({
   }
 
   const Step3From = ({ form }) => {
-    console.log(interviewSummary);
     const formData = form.getFieldsValue(true);
     const tutorName = interviewSummary?.tutorName
     const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))

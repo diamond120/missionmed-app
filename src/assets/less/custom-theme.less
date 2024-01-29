@@ -533,26 +533,56 @@ a {
 
 .mock-interview-modal {
   .ant-modal-body {
-    .ant-form-item {
-      .ant-collapse {
-        .ant-collapse-item {
+    .ant-form-item {  
+        .ant-collapse-item{
           box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
           padding: 20px;
           border-radius: 8px;
           background-color: #fff;
           margin-bottom: 8px;
         }
-      }
+        .tutor_collapse{
+            .avatar{
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            }
+            .ant-radio-wrapper{
+              display: flex;
+              align-items: center;
+            }
+        } 
     }
   }
 }
 
 .mock-interview-modal {
   .ant-modal-body {
-    .ant-form-item {
-      .ant-collapse {
-        .ant-collapse-item.ant-collapse-item-active {
-          box-shadow: 0px 5px 12px 4px #00000017, 0px 3px 6px 0px #0000001F, 0px 1px 2px -2px #00000029;
+    .ant-collapse {
+      .ant-collapse-item.ant-collapse-item-active,{
+        box-shadow: 0px 5px 12px 4px #00000017, 0px 3px 6px 0px #0000001F, 0px 1px 2px -2px #00000029;
+      }
+    }
+    .choose-tutor {
+      .ant-form-item {
+        height: 55vh;
+        overflow: auto;
+        padding: 0 10px !important;
+        padding-bottom: 15px !important;
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+          background: #B5B9C9;
+          border-radius: 15px;
         }
       }
     }
@@ -645,6 +675,12 @@ a {
   align-items: center;
   gap: 10px;
 }
+.d_flex_beetwen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
 
 
 .ant-form {
@@ -705,6 +741,30 @@ a {
       .ant-anchor-link {
         padding: 0;
       }
+    }
+  }
+}
+
+.tutor_Search{
+  margin-left: auto;
+  width: 55%;
+  margin-bottom: 13px;
+  .ant-input-affix-wrapper {
+    border-radius: 7px 0 0 7px !important;
+    &:focus,&:not(.ant-input-affix-wrapper-disabled):hover{
+      border-color: #2816EE;
+    }
+    .ant-input{
+      padding: 4px 0;
+    }
+  }
+  .ant-btn.ant-input-search-button {
+    background: #2816EE;
+    height: 41px;
+    width: 41px;
+    border-radius: 0 7px 7px 0 !important;
+    svg{
+      fill: #fff;;
     }
   }
 }

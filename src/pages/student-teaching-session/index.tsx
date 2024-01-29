@@ -9,6 +9,7 @@ import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
+import { useUser } from "../../api/providers/UserProvider";
 const StudentTeachingSession = () => {
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -22,11 +23,12 @@ const StudentTeachingSession = () => {
   const [timezone, setTimeZone] = useState("");
   const [credit, setCredit] = useState("");
   const { Link } = Anchor;
+  const user = useUser();
 
   const getMockInterviewDetails = async () => {
     try {
       const data = {
-        bookingFor: 'Interview 1-to-1 Tutoring'
+        bookingFor: 'Interview 1-to-1 Tutoring',
       }
       const response = await CommonService.postAPI("/student/session-details", data);
       if (response.data.success) {

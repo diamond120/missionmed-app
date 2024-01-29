@@ -7,6 +7,8 @@ import {formatTime} from "../../../common/common";
 import { Button, Form, Modal, Radio, Spin, message } from "antd";
 import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
+import { useUser } from "../../../api/providers/UserProvider";
+import { useTutor } from "../../../api/providers/TutorProvider";
 
 function formatDate(inputDateStr) {
   const inputDate = new Date(inputDateStr);
@@ -22,7 +24,7 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
+const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
 
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -30,6 +32,8 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
   const [spinning, setSpinning] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subSlotList, setSubSlotList] = useState<any>([]);
+  const user = useUser();
+  const tutor = useTutor();
     
     const handleDateClick = (dateInfo) => {
       const dateObjectEnd = new Date(dateInfo.endStr);
@@ -45,21 +49,31 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
     const getSlotsist = async (tutorId) => {
       try {
         const data = {
-          tutorId: tutorId,
           startDate : filterDate.startDate,
           endDate : filterDate.endDate,
           rescheduleDate : rescheduleDate,
           type :'mockinterview',
+          role : user.role,
         };
+        if(user.role == 'student') { 
+          data.tutorId = tutorId 
+        } else {
+          data.studentId = tutorId 
+          data.tutorId = tutor.id 
+        } 
+
+
         const response = await CommonService.postAPI("/student/slots-list",data);
         if (response.data.success) {
             const slotList = response.data.data ?? [];
             setSlots(slotList); 
           } else {
-          throw new Error(response.data.message); 
+          throw new Error(response.data.message);
+          prev() 
         }
       } catch (e) {
         message.error(e.message);
+         prev()
       }
     };
 
@@ -96,7 +110,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
       setSpinning(true);
       try {
         const data = {
-          tutorId: tutorId,
           startDate : startDate,
           endDate : endDate,
           date: date,
@@ -105,7 +118,14 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
           rescheduleDate : rescheduleDate,
           start: filterDate.startDate,
           end: filterDate.endDate,
+          role : user.role,
         };
+        if(user.role == 'student') { 
+          data.tutorId = tutorId 
+        } else {
+          data.studentId = tutorId 
+          data.tutorId = tutor.id 
+        } 
       
         let response = await CommonService.postAPI("/student/multiple-slots",data);
         if (response.data.success && response.data.data.length > 0) {
@@ -135,6 +155,10 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
         form.setFieldValue('sessionStartTime', slot.start);
         form.setFieldValue('sessionEndTime', slot.end);
         form.setFieldValue('date', slot.date);
+        if(user.role == 'tutor') {
+          form.setFieldValue('studentId', data.tutorId);
+          form.setFieldValue('tutorId', tutor.id);
+        }
       }
       await form.validateFields();
       setIsModalOpen(false);
