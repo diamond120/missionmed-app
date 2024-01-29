@@ -24,7 +24,7 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
+const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
 
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -68,10 +68,12 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone}) => {
             const slotList = response.data.data ?? [];
             setSlots(slotList); 
           } else {
-          throw new Error(response.data.message); 
+          throw new Error(response.data.message);
+          prev() 
         }
       } catch (e) {
         message.error(e.message);
+         prev()
       }
     };
 

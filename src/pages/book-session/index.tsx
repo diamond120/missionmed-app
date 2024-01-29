@@ -15,7 +15,9 @@ import { useUser } from "../../api/providers/UserProvider";
 const { Panel } = Collapse;
 const { TextArea } = Input;
 import { QuestionCircleFilled } from "@ant-design/icons";
-import Search from "antd/lib/transfer/search";
+// import Search from "antd/lib/transfer/search";
+import type { SearchProps } from 'antd/es/input/Search';
+
 
 const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }) => {
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const user = useUser();
   const tutor = useTutor();
   const userRole = user.role;
+  const { Search } = Input;
 
   const getUniversityTutorList = async () => {
     try {
@@ -138,17 +141,19 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
       const response = await CommonService.postAPI('/student/book-teaching-session', formData);
       if (response.data.success) {
         const result = response.data.data;
-        addUpcomingSession({
-          date: result.date,
-          hasSessionRate: false,
-          id: result.id,
-          mock_interview: result.mock_interview,
-          session_end_time: result.session_end_time,
-          session_start_time: result.session_start_time,
-          student_id: result.student_id,
-          tutor_id: result.tutor_id,
-          tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
-        });
+        // if(userRole == 'student') {
+          addUpcomingSession({
+            date: result.date,
+            hasSessionRate: false,
+            id: result.id,
+            mock_interview: result.mock_interview,
+            session_end_time: result.session_end_time,
+            session_start_time: result.session_start_time,
+            student_id: result.student_id,
+            tutor_id: result.tutor_id,
+            tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
+          });
+        // }
         setLoading(false);
         if (moduleType == 'ucatStudent') {
           navigate(`/${userRole}/ucat-session`)
@@ -198,8 +203,12 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   }
 
   const checkCredit = (student) => {
-    if(userRole  == 'tutor' && student?.ucat_teaching_session_credit == 0) {
-      return 'disabled'
+    if(userRole  == 'tutor') {
+      if(moduleType == 'ucatStudent' && (student?.ucat_teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null)) {
+        return 'disabled'
+      } else if(moduleType == 'teaching' && student?.teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null) {
+        return 'disabled'
+      }
     } 
   }
 
@@ -218,21 +227,22 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               <h4 className={"tutor-name"}>{student.full_name}</h4>
               {student.phone_number && (
                 <span>
-                  {student.phone_number}
+                 PhoneNumber: {student.phone_number + ' '}
                 </span>
               )}  
               {' '}
               {student.country && (
                 <span>
-                  {student.country}
+                  Country: {student.country + ' '}
                 </span>
               )}
-              {' '}
               <span>
-              {student.teaching_session_credit ? (
+              {moduleType == 'ucatStudent' && student.ucat_teaching_session_credit ? (
+                `credit: ${student.ucat_teaching_session_credit}`
+              ) : moduleType == 'teaching' && student.teaching_session_credit ? (
                 `credit: ${student.teaching_session_credit}`
               ) : (
-                'credit: 0'
+                `credit : 0`
               )}
               </span>
 
@@ -339,10 +349,15 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     );
   });
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
+  // const handleSearchChange = (e) => {
+  //   const value = e.target.value;
+  //   getStudentList(value)
+  // };
+
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+    console.log(value);
     getStudentList(value)
-  };
+  } 
 
   const Step2Form =memo(function Step2Form({ students, tutors }) {
     return (
@@ -352,7 +367,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
            <h3 className={"title"}>Recommended for you</h3>
            {userRole === 'tutor' && (
            <div className="tutor_Search">
-            <Search placeholder="input search text" onBlur={handleSearchChange} />
+            <Search placeholder="input search text" onSearch={onSearch} allowClear />
            </div> )}
           </div>
           {userRole === 'tutor' ? (
@@ -373,6 +388,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     return <>
       <div className={"book-time-cal"}>
         <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType} timezone={timezone} next={next} prev={prev} />
+        {(userRole == 'tutor' && (timezone != students.find(student => student.id == form.getFieldValue('tutorId'))?.timezone ) ) &&  <Alert style={{top: 23}} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />} 
       </div>
     </>;
   };
@@ -421,7 +437,8 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
   const Step4From = ({ form }) => {
     const formData = form.getFieldsValue(true);
-    const tutorName = tutors.find(tutor => tutor.id == formData.tutorId)?.full_name
+    console.log(students, formData)
+    const tutorName = (user.role == 'student') ? tutors.find(tutor => tutor.id == formData.tutorId)?.full_name :  students.find(student => student.id == formData.studentId)?.full_name
     setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
     const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     const sessionStartTime = formatTime(formData.sessionStartTime)
@@ -435,7 +452,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-              Tutor
+             {user.role == 'tutor' ? 'Student' : 'Tutor' }
             </h4>
             <div style={{ fontSize: 16 }}>{tutorName}</div>
           </div>
@@ -503,7 +520,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         )}
         <Form.Item
           style={{ marginTop: "17px", marginBottom: "0px" }}
-          label="Notes for Tutor"
+          label={user.role == 'student' ? "Notes for Tutor" : "Notes for Student"}
           name="note"
         >
           <TextArea rows={3} placeholder="Note down questions, content, topics etc. that you’d like to focus on so your tutor know ahead of time..." style={{ fontSize: 16 }} />
@@ -797,7 +814,9 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             </div>
           )} */}
         </Form>
-      </Modal>
+
+       
+        </Modal>
     </>
   );
 };

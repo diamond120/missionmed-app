@@ -102,19 +102,21 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     const clickedEvent = info.event;
     if (clickedEvent.title == 'Available') {
       if (selectedEvent) {
-        selectedEvent.setProp('backgroundColor', '#ffffff');
-        selectedEvent.setProp('textColor', '#2816EE');
+        // selectedEvent.setProp('backgroundColor', '#ffffff');
+        // selectedEvent.setProp('textColor', '#2816EE');
         // Reset the color to default (empty string)
       }
-      clickedEvent.setProp('backgroundColor', '#2816EE');
-      clickedEvent.setProp('textColor', '#ffffff');
+      // clickedEvent.setProp('backgroundColor', '#2816EE');
+      // clickedEvent.setProp('textColor', '#ffffff');
       selectedEvent = clickedEvent;
+  
       const startDate = formatDate(clickedEvent.start);
       const endDate = formatDate(clickedEvent.end);
       const date = clickedEvent.extendedProps.day;
       // form.setFieldValue('sessionStartTime', startDate);
       // form.setFieldValue('sessionEndTime', endDate);
       // form.setFieldValue('date', date);
+    
       setSlot(startDate, endDate, date);
     }
   };
@@ -215,11 +217,11 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
             right: "timeGridWeek,dayGridMonth"
           }}
 
+          datesSet={handleDateClick}
           events={slotsList}
           selectable={true}
           eventClick={handleEventClick}
           eventBorderColor='0'
-          datesSet={handleDateClick}
         />
       </div>
 

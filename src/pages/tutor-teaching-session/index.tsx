@@ -132,7 +132,7 @@ const TutorTeachingSession = () => {
           <div className={"d_flex_beetwen"}>
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
             <div className="btn-group">
-              <BookSession title="Book Extra Session" /*addUpcomingSession={addUpcomingSession}*/ moduleType="teaching" timezone={timezone} />
+              <BookSession title="Book Extra Session" addUpcomingSession={addUpcomingSession} moduleType="teaching" timezone={timezone} />
               <Button className={"primary-button"}>
                 <FileSearchOutlined /> Useful Resources
               </Button>
