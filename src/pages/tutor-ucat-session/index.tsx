@@ -118,7 +118,7 @@ const TutorUCATSession = () => {
             <h2 className={"tab-title"}>UCAT Sessions</h2>
             <div className="btn-group">
             {/* {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) &&  */}
-            <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSessionTutor} timezone={timezone}/>
+            <BookSession title="Book Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSessionTutor} timezone={timezone}/>
             <Button className={"primary-button"}>
               <FileSearchOutlined /> Useful Resources
             </Button>

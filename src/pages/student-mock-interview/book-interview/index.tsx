@@ -231,15 +231,15 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
               {user.role == 'tutor' &&
               <>
                 <span>
-                  PhoneNumber: {tutor.phone_number+ ' '}
+                  Ph No: {tutor.phone_number+ ', '}
                 </span>
                 {tutor.country && 
                 <span>
-                  country: {tutor.country+' '}
+                  Country: {tutor.country+', '}
                 </span>
                 }
                 <span>
-                  credit: {tutor.credit || 0}
+                  Credit: {tutor.credit || 0}
                 </span>              
               </>
               }
