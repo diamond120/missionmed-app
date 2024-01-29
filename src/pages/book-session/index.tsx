@@ -227,22 +227,22 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
               <h4 className={"tutor-name"}>{student.full_name}</h4>
               {student.phone_number && (
                 <span>
-                 PhoneNumber: {student.phone_number + ' '}
+                 Ph No: {student.phone_number + ', '}
                 </span>
-              )}  
-              {' '}
+              )}
               {student.country && (
                 <span>
-                  Country: {student.country + ' '}
+                  Country: {student.country + ', '}
                 </span>
               )}
               <span>
+              Credit: 
               {moduleType == 'ucatStudent' && student.ucat_teaching_session_credit ? (
-                `credit: ${student.ucat_teaching_session_credit}`
+                ` ${student.ucat_teaching_session_credit}`
               ) : moduleType == 'teaching' && student.teaching_session_credit ? (
-                `credit: ${student.teaching_session_credit}`
+                ` ${student.teaching_session_credit}`
               ) : (
-                `credit : 0`
+                ` 0`
               )}
               </span>
 
