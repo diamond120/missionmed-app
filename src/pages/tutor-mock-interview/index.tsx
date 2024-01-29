@@ -5,13 +5,14 @@ import Section from "../../components/shared-ui/Section";
 import MockInterviewDetails from "../../components/mock-interview-details";
 import "./index.less";
 import CommonService from "../../api/services/Common";
+import BookInterview from "../student-mock-interview/book-interview";
 
 const TutorMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
-
+  const [timezone, setTimeZone] = useState("");
   const getMockInterviewDetails = async () => {
     try {
       const data = {
@@ -19,6 +20,7 @@ const TutorMockInterview = () => {
       }
       const response = await CommonService.postAPI("/tutor/session-details",data);
       if (response.data.success) {
+        setTimeZone(response.data?.data?.tutorTimezone ?? null);
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
           response.data?.data?.upcomingsessions
@@ -95,9 +97,12 @@ const TutorMockInterview = () => {
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
           <div className={"grid-col-2"}>
             <h2 className={"tab-title"}>Mock Interview</h2>
+            <div className="btn-group">
+            <BookInterview timezone={timezone}  addUpcomingSession={getMockInterviewDetails}/>
             <Button className={"primary-button"}>
               <FileSearchOutlined /> Useful Resources
             </Button>
+            </div>
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
           <MockInterviewDetails

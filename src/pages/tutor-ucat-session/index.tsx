@@ -5,6 +5,7 @@ import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/
 import { Breadcrumb, Button, message } from "antd";
 import SessionDetails from "../../components/session-details";
 import CommonService from "../../api/services/Common";
+import BookSession from "../book-session";
 
 const TutorUCATSession = () => {
 
@@ -13,6 +14,7 @@ const TutorUCATSession = () => {
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
   const [freezeSessions, setFreezeSessions] = useState([]);
+  const [timezone, setTimeZone] = useState("");
 
   const getMockInterviewDetails = async () => {
     try {
@@ -38,6 +40,7 @@ const TutorUCATSession = () => {
             ? response.data?.data?.freezesessions
             : []
         );
+        setTimeZone(response.data?.data?.tutorTimezone ?? null);
       } else {
         throw new Error(response.data.message);
       }
@@ -72,6 +75,10 @@ const TutorUCATSession = () => {
         return session;
       }})
     setPastSessions(updatedSessions);
+  }
+
+  const addUpcomingSessionTutor = () => {
+    getMockInterviewDetails();
   }
 
   useEffect(() => {
@@ -109,9 +116,14 @@ const TutorUCATSession = () => {
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
           <div className={"grid-col-2"}>
             <h2 className={"tab-title"}>UCAT Sessions</h2>
+            <div className="btn-group">
+            {/* {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) &&  */}
+            <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSessionTutor} timezone={timezone}/>
             <Button className={"primary-button"}>
               <FileSearchOutlined /> Useful Resources
             </Button>
+            {/* } */}
+            </div>
           </div>
           { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
           <SessionDetails

@@ -68,7 +68,8 @@ export const DefaultLayout: FC = () => {
           location: res.data.data.location,
           state: res.data.data.state,
           timezone: res.data.data.timezone,
-          applicantType: res.data.data.applicantType
+          applicantType: res.data.data.applicantType,
+          university: res.data.data.university
         })
       })();
       // navigate("/")

@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col, Input, Spin, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
@@ -8,6 +8,8 @@ import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
 import Calender from "../../../components/mock-interview-details/calender";
+import { useUser } from "../../../api/providers/UserProvider";
+import Search from "antd/lib/transfer/search";
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -24,6 +26,8 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   const totalSteps = 4;
   const [loading, setLoading] = useState(false);
   const [mockInterview, setMockInterview] = useState([]);
+  const [search, setSearch] = useState('');
+  const user = useUser();
   
   const getUniversityList = async () => {
     try {
@@ -46,16 +50,20 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
 
   const getUniversityTutorList = async () => {
     try {
-
       form.setFieldValue('mockInterview', '');
       const data = {
         lessionType:'Mock interviews', 
         university: form.getFieldValue("university"),
       };
-      const response = await CommonService.getUniversityTutorList(data);
+      let response;
+      {user.role == 'student' ? 
+        response = await CommonService.getUniversityTutorList(data) 
+        : 
+        data.search = search
+        response = await CommonService.postAPI("/students-data",data);
+      }
       if (response.data.success) {
-       
-        const tutorList = response.data.data.tutors ?? [];      
+        const tutorList = user.role == 'student' ? response.data.data.tutors : response.data.data.students;      
         const interviewList =   response.data.data.mockinterview.mockinterview ? response.data.data.mockinterview.mockinterview.split(',') : [];
         const mockInterviewList = interviewList.map((value, index) => ({
           id: index + 1,
@@ -76,6 +84,13 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
       message.error(e.message);
     }
   };
+
+  useEffect(() => {
+    if(search != '') {
+      getUniversityTutorList()
+    }
+  }, [search])
+  
 
   const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Interview','Check Last Details'];
 
@@ -104,6 +119,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
     const formData = form.getFieldsValue(true);
     try{
       formData.day = getDay(moment(formData.date));
+      formData.role = user.role
       const response = await MockInterviewsService.bookInterview(formData);
       if(response.data.success && response.data.status_code == 200){
         const result = response.data.data;
@@ -119,7 +135,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
           tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
         });
         setLoading(false);
-        navigate("/student/mock-interview")
+        navigate(`/${user.role}/mock-interview`)
         message.success('You’ve successfully booked mock interview');
       }else{
         setLoading(false);
@@ -202,6 +218,16 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
             />
             <div className={"name-degree"}>
               <h4 className={"tutor-name"}>{tutor.full_name}</h4>
+              {user.role == 'tutor' &&
+              <>
+                <span>
+                  PhoneNumber: {tutor.phone_number}
+                </span>              
+                <span>
+                  country: {tutor.country}
+                </span>
+              </>
+              }
               <div
                 style={{
                   display: "flex",
@@ -254,11 +280,22 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
     );
   });
 
+  const handleSearchChange = (e) => {
+    const value = e.target.value
+    setSearch(value)
+  };
+ 
   const Step2Form = memo(function Step2Form({ tutors }) {
     return (
       <>
-        <div className={"choose-tutor"}>
-          <h3 className={"title"}>Recommended for you</h3>
+       <div className={"choose-tutor"}>
+          <div className="btn-group" >
+           <h3 className={"title"}>Recommended for you</h3>
+           {user.role === 'tutor' && (
+           <div className="tutor_Search">
+            <Search placeholder="input search text" onBlur={handleSearchChange} />
+           </div> )}
+          </div>
           <Form.Item name="tutorId" label="" rules={[{ required: true, message:"Please select tutor" }]}>
             <TutorCollapse tutors={tutors} />
           </Form.Item>

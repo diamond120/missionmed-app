@@ -3,28 +3,33 @@ import { Button, Form, Select, Spin } from "antd";
 import React, { FC, useState } from "react";
 import TutorService from "../../../api/services/Tutor";
 import {useTutor, useTutorDispatch} from "../../../api/providers/TutorProvider";
+import { useProfileStaticDataContext } from "../../../api/context/ProfileStaticDataContext";
+
 import "./index.less";
 
 const Education: FC<Any> = ({ props }) => {
   const tutor = useTutor();
   const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false)
+  const profileStaticData = useProfileStaticDataContext();
+  console.log(profileStaticData)
   const { Option } = Select
-  const optionsSchools: string[] = [
-    "James Cook University",
-    "The University of Melbourne",
-    "Medicine Academy",
-    "The University of Sydney",
-    "The University of Queensland",
-    "Monash University",
-    "The University of New South Wales",
-    "Australian National University",
-    "University of Western Australia",
-    "University of Adelaide",
-    "University of Technology Sydney",
-    "University of Newcastle",
-    "University of Wollongong",
-  ]
+  // const optionsSchools: string[] = [
+  //   "James Cook University",
+  //   "The University of Melbourne",
+  //   "Medicine Academy",
+  //   "The University of Sydney",
+  //   "The University of Queensland",
+  //   "Monash University",
+  //   "The University of New South Wales",
+  //   "Australian National University",
+  //   "University of Western Australia",
+  //   "University of Adelaide",
+  //   "University of Technology Sydney",
+  //   "University of Newcastle",
+  //   "University of Wollongong",
+  // ]
+  const optionsSchools: string[] = (profileStaticData.university ? profileStaticData.university.map(l => ({ key: l.id, label: l.title, value: l.title })) : [])
   const optionsDegrees: string[] = ["MBBS", "MD", "DO", "BDS", "DVM", "DPharm", "BPT"]
   const [form] = Form.useForm();
 
@@ -83,7 +88,7 @@ const Education: FC<Any> = ({ props }) => {
                     label={"School"}
                   >
                     <Select
-                      options={optionsSchools.map(option => ({ value: option }))}
+                      options={optionsSchools}
                       style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                       placeholder={"Enter a value"}
                       disabled={!editing}
