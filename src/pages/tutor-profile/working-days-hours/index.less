@@ -9,6 +9,7 @@
   }
 }
 
+
 .working-form{
   width: 592px;
   padding: 32px ;
@@ -103,6 +104,70 @@
 .m0{
   margin: 0 !important;
 }
+.working_days_item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  justify-content: space-between;
+  
+  .label{
+    min-width: 35%;
+    width: 35%;
+  }
+  .time-input-group{
+    min-width: 65%;
+    display: flex;
+    justify-content: end;
+    flex-wrap: wrap;
+    width: 65%;
+    .ant-space{
+      gap: 15px !important;
+    }
+    .ant-form-item {
+      margin-bottom: 8px;
+    }
+  }
+  .ant-form-item.switch-btn {
+    order: 3;
+    min-width: 62%;
+    width: 62%;
+    justify-content: end;
+    display: flex;
+    .ant-row {
+      flex-direction: row-reverse;
+      gap: 10px;
+    }
+  }
+  .ant-form-item.add-period {
+    order: 4;
+    width: 32%;
+    min-width: 32%;
+    .ant-btn{
+      background: transparent;
+      border: 0;
+      text-align: left;
+      color: #444;
+      padding: 0;
+      box-shadow: none !important;
+      &:focus{
+        box-shadow: none !important;
+      }
+    }
+  }
+}
+.ant-picker-panel {
+  .ant-picker-time-panel {
+    .ant-picker-content {
+      .ant-picker-time-panel-column{
+        &:not(:first-child){
+          overflow: hidden;
+        }
+      }
+
+    }
+  }
+}
+
 @media (max-width: 767px){
   .working-form{
     width: 100%;
@@ -119,6 +184,27 @@
           gap:10px;
         }
       }
+    }
+  }
+  .working_days_item {
+    .label{
+      margin-bottom: 10px;
+    }
+    .label, .time-input-group{
+      min-width: 100%;
+      width: 100%;
+    }
+    .ant-form-item.switch-btn{
+      min-width: auto;
+      width: auto;
+      .ant-row{
+        justify-content: start;
+        flex-wrap: nowrap;
+        .ant-form-item-control{
+          flex: none;
+        }
+      }
+      
     }
   }
 }

@@ -1,6 +1,5 @@
 import http from "../http-common";
-import {getToken} from "../../common/common.js";
-//import ITutorialData from "../types/Tutorial";
+import { getToken } from "../../common/common.js";
 
 const getProfile = () => {
   const token = `Bearer ${getToken()}`;
@@ -50,9 +49,20 @@ const updateProfile = (data) => {
 //   return http.get<Array<ITutorialData>>(`/tutorials?title=${title}`);
 // };
 
+const lessionTypes = () => {
+  const token = `Bearer ${getToken()}`;
+  const config = {
+    headers:{
+      'Authorization': token
+    }
+  }
+  return http.get(`/lessiontypes`, config);
+};
+
 const Service = {
   getProfile,
   updateProfile,
+  lessionTypes
 };
 
 export default Service;

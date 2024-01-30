@@ -16,7 +16,7 @@
 
 .basic-information-form{
   width: 592px;
-  padding: 40px 32px 32px;
+  padding: 40px 32px 32px !important;
   background-color: #FFF;
   border-radius: 8px;
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
@@ -52,7 +52,8 @@
 
   .timezone-wrap{
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
+    width: 352px !important;
 
     .timezone-label{
       margin: 0;
@@ -66,7 +67,35 @@
 
     .switch-wrap{
       display: flex;
-      margin-top: 16px;
+
+      .switch-text{
+        margin-left: 8px;
+        color: #6B7393;
+        font-size: 14px;
+        font-style: normal;
+        line-height: 157%;
+
+      }
+    }
+  }
+
+  .switch {
+    display: flex;
+    justify-content: end;
+    width: 334px !important;
+
+    .timezone-label{
+      margin: 0;
+      color: #312D42;
+      font-weight: 600;
+      font-size: 16px;
+      font-style: normal;
+      line-height: 150%;
+
+    }
+
+    .switch-wrap{
+      display: flex;
 
       .switch-text{
         margin-left: 8px;

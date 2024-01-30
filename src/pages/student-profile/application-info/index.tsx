@@ -1,5 +1,5 @@
 import "./index.less"
-import { AutoComplete, Button, Form, InputNumber, Select } from "antd"
+import { AutoComplete, Button, Form, InputNumber, Select, Spin } from "antd"
 import { FC, useState } from "react"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
@@ -9,7 +9,6 @@ const ApplicationInfo: FC<any> = ({props}) => {
   const student = useStudent();
   const dispatch = useStudentDispatch();
   const profileStaticData = useProfileStaticDataContext();
-
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
   const [applCycle, setApplCycle] = useState<string | undefined | null>(student.applicantCycle)
@@ -56,14 +55,25 @@ const ApplicationInfo: FC<any> = ({props}) => {
       console.log(e);
       return false;
     }
-  };
+  }; 
+
+  const cancle = () => {
+    form.resetFields();
+    setEditing(false);
+  }
+
+  if(student?.loading){
+    return(
+      <Spin />
+    )
+  }
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
   return(
     <div className={"application-info-section"}>
       <h2 className={"application-info-section-title"}>Application Information</h2>
-        <Form className={"application-info-form"} form={form}>
+        <Form className={"application-info-form"} form={form} colon={false}>
 
           <Form.Item
             name={"Applicant Cycle"}
@@ -72,7 +82,7 @@ const ApplicationInfo: FC<any> = ({props}) => {
             initialValue={student.applicantCycle}
           > 
             <AutoComplete
-              options={optionsApplicantCycle.map((option) => ({ value: option}))}
+              options={optionsApplicantCycle && optionsApplicantCycle.map((option) => ({ value: option}))}
               style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
               placeholder={"Enter a value"}
               filterOption={handleFilter}
@@ -89,7 +99,7 @@ const ApplicationInfo: FC<any> = ({props}) => {
             initialValue={student.applicantTypeId}
           >
               <Select
-                options={optionsApplicantType.map((option) => ({ value: option.id , label:option.title}))}
+                options={optionsApplicantType && optionsApplicantType.map((option) => ({ value: option.id , label:option.title}))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
                 placeholder={"Enter a value"}
                 value={applType}
@@ -103,8 +113,8 @@ const ApplicationInfo: FC<any> = ({props}) => {
             rules={[
               { required: false, },
               {
-                pattern: /^[\d]{0,8}$/,
-                message: "Value should be less than 8 character"
+                pattern: /^[0-9]+(\.[0-9]+)?$/,
+                message: "Please enter a valid number"
               }
             ]}
             label={"Predicted ATAR / ATAR"}
@@ -122,6 +132,9 @@ const ApplicationInfo: FC<any> = ({props}) => {
 
             <div className={"form-basic-button-wrap"}>
               <Button className={"form-button"} onClick={handleSaveClick}>Save</Button>
+              <Button className={"form-button button-space"} onClick={cancle}>
+                Cancel
+              </Button>
             </div>
 
           ) : (
@@ -135,4 +148,5 @@ const ApplicationInfo: FC<any> = ({props}) => {
     </div>
   )
 }
+
 export default ApplicationInfo

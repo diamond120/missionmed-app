@@ -1,0 +1,184 @@
+.notification-modal {
+  .ant-modal-body {
+    padding-bottom: 0;
+  }
+
+  .ant-modal-content {
+    border-radius: 13px;
+  }
+
+  .link-to-profile {
+    padding: 8px 15px;
+
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+.application-review-section{
+  .application-review-section-title-wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between ;
+    margin-top: 24px;
+
+    @media screen and(max-width:700px){
+      flex-direction: column;
+      align-items: center;
+
+    }
+
+    .application-review-section-title{
+      margin: 0;
+      color: #312D42;
+      font-weight: 600;
+      font-size: 38px;
+      font-family: Metropolis, sans-serif;
+      font-style: normal;
+      line-height: 1.21;
+      @media screen and(max-width:700px){
+        margin-bottom: 24px;
+        font-size: 26px;
+      }
+    }
+  }
+
+  .application-review-progress-cards{
+    margin-top: 40px ;
+
+    .application-review-progress-cards-title{
+      color: #6B7393;
+      font-weight: 600;
+      font-size: 24px;
+      font-family: Metropolis, sans-serif;
+      font-style: normal;
+      line-height: 1.33;
+    }
+
+    .application-review-progress-cards-wrap{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      width: 100%;
+      margin-top: 24px;
+      @media screen and(min-width:781px)and(max-width:990px){
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+
+        .application-review-progress-card{
+          display: flex;
+          justify-content: center;
+        }
+      }
+      @media screen and(max-width:780px){
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+
+        .application-review-progress-card{
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .related-posts-section{
+    margin-top: 60px;
+
+    .related-posts-section-title-wrap{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .related-posts-section-title{
+        margin: 0;
+        color: #6B7393;
+        font-weight: 600;
+        font-size: 24px;
+        font-family: Metropolis,sans-serif;
+        font-style: normal;
+        line-height: 1.33;
+      }
+
+      .related-posts-section-link-more{
+        color: #2816EE;
+        font-weight: 400;
+        font-size: 16px;
+        font-family: Metropolis,sans-serif;
+        font-style: normal;
+      }
+
+    }
+
+    .related-posts-section-cards{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      @media screen and(min-width:781px)and(max-width:990px){
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+
+        .related-posts-section-card{
+          display: flex;
+          justify-content: center;
+        }
+      }
+      @media screen and(max-width:780px){
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+
+        .related-posts-section-card{
+          display: flex;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+}
+
+.buy-more-btn {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  color: #FFF;
+  text-decoration: none;
+  background: #2816EE;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
+  cursor: pointer;
+}
+
+.buy-more-btn:hover {
+  color: #3d6deb;
+  background-color: #1E1450;
+}
+
+.buy-more-text {
+  margin-left: 10px;
+}
+
+.coming-soonapp {
+  position: absolute;
+  background: #dae8f5;
+  opacity: 0.75;
+  padding: 10px;
+  backdrop-filter: blur(8px);
+  margin-left: 10px;
+  inset: 0;
+  z-index: 9;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  border-radius: 7px;
+  color: #181041;
+  font-weight: bolder;
+  cursor: not-allowed;
+}

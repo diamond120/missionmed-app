@@ -1,7 +1,5 @@
 import http from "../http-common";
-import {getToken} from "../../common/common.js";
-//import ITutorialData from "../types/Tutorial";
-
+import { getToken } from "../../common/common.js";
 
 const getProfile = () => {
   const token = `Bearer ${getToken()}`;

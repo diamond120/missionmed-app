@@ -76,31 +76,50 @@
   }
 
 }
+
 @media screen and(max-width:769px) {
-  .sign-in-right{
+  .sign-in-right {
     display: none;
 
   }
 }
-.sign-in-form{
+
+.sign-in-form {
   width: 100%;
+
   .ant-form-item {
-    .ant-form-item-control{
+    .ant-form-item-control {
       max-width: 100%;
     }
   }
-  .ant-btn{
+
+  .ant-btn {
     height: auto;
     line-height: 30px;
     border: 1px solid #D6D7E0;
-    background-color: rgba(0, 0,0, 0.04);
+    background-color: rgba(0, 0, 0, 0.04);
   }
 }
-@media (max-width:767px){
-  .sign-in{
+
+@media (max-width:767px) {
+  .sign-in {
     flex-wrap: wrap;
+
     .sign-in-left {
       width: 100%;
+    }
+  }
+}
+
+.ant-form {
+  .ant-btn.link_btn {
+    padding: 0 !important;
+    background-color: transparent !important;
+    color: #2816EE !important;
+    border: 0 !important;
+
+    span {
+      color: #2816EE !important;
     }
   }
 }

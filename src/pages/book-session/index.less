@@ -1,0 +1,129 @@
+[data-theme='compact'] .site-collapse-custom-collapse .site-collapse-custom-panel,
+.site-collapse-custom-collapse .site-collapse-custom-panel {
+  // margin-bottom: 24px;
+  overflow: hidden;
+  background: #f7f7f7;
+  border: 0px;
+  border-radius: 2px;
+}
+
+.credit-card {
+  background-color: #f2f2f2;
+  border-radius: 8px;
+  padding: 20px;
+  width: 600px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  margin-top: 17px;
+  margin-bottom: 0px;
+  padding: "0 10px"
+}
+
+.credit-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+
+
+.card-brand {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.credit-card-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.mock-interview-modal {
+  .ant-modal-content {
+    .ant-modal-footer {
+      min-height: 81px;
+      align-items: center;
+    }
+  }
+}
+
+.teachingSessions-modal {
+  .ant-modal-body {
+    .choose-tutor {
+      .title {
+        padding: 0 10px;
+        margin-bottom: 13px;
+        font-weight: 600;
+        font-size: 16px;
+        color: #312D42;
+      }
+    }
+
+    .choose-tutor {
+      .ant-form-item {
+        height: 55vh;
+        overflow: auto;
+        padding: 0 10px !important;
+        padding-bottom: 15px !important;
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        /* Track */
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1;
+        }
+
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+          background: #B5B9C9;
+          border-radius: 15px;
+        }
+
+        .ant-collapse {
+          .ant-collapse-item {
+            .ant-collapse-content-box {
+              padding: 0;
+              margin-top: 12px;
+              color: #465078;
+            }
+
+            .ant-collapse-header {
+              padding: 0 !important;
+
+              .ant-radio-wrapper-in-form-item {
+                display: flex;
+                align-items: center;
+              }
+            }
+
+            .ant-collapse-header {
+              .avatar {
+                display: flex;
+                align-items: center;
+                column-gap: 16px;
+                margin-left: 8px;
+
+                .tutor-name {
+                  color: #312D42;
+                  font-weight: 600;
+                  margin-bottom: 3px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.primary-button {
+  &.disable-button {
+    border: 1px solid var(--colorBorder, rgba(0, 0, 0, 0.15)) !important;
+  }
+}

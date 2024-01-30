@@ -2,31 +2,19 @@
 import { Typography } from "antd"
 import React, { FC, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import Tutor from  "../../api/services/Tutor.js";
-import Student from  "../../api/services/Student.js";
+import {useUser} from "../../api/providers/UserProvider";
 
 const Home: FC = () => {
   const navigate = useNavigate()
-  
-  const student = true;
-  const tutor = false;
-  // const student = dataMe.data?.me?.student?.data?.id
-  // const tutor = dataMe.data?.me?.tutor?.data?.id
+  const user = useUser();
 
-
- // const props = data?.home?.data?.attributes?.hero
-
-  // useEffect(() => {
-  //   if (student) {
-  //     navigate("/application_review")
-  //   }else if(tutor) {
-  //     navigate("/tutor/application_review")
-  //   }
-    
-  // }, [student, tutor])
-  // useEffect(() => {
-  //   navigate("/application_review");
-  // })
+  useEffect(() => {
+    if(user.role == "student"){
+      navigate("/application_review")
+    }else{
+      navigate("/tutor/application_review")
+    }
+  },[user.role])
 
   return (
     <React.Fragment>

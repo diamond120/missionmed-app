@@ -1,17 +1,34 @@
 import { createContext, useContext, useReducer } from 'react';
 import { stringToBoolean } from '../../common/common';
+import { useEffect, useState } from "react";
 
 const StudentContext = createContext(null);
 
 const StudentDispatchContext = createContext(null);
 
-const initialStudent = {};
+const initialStudent = {
+  loading:false
+};
 
 export function StudentProvider({ children }) {
   const [student, dispatch] = useReducer(
     StudentReducer,
     initialStudent
   );
+
+
+useEffect(() => {
+  const storedStudent = localStorage.getItem('student');
+  if (storedStudent) {
+    dispatch({ type: 'update', student: JSON.parse(storedStudent) });
+  }
+}, []);
+
+// Save student data to local storage whenever it changes
+useEffect(() => {
+  localStorage.setItem('student', JSON.stringify(student));
+}, [student]);
+
 
   return (
     <StudentContext.Provider value={student}>
@@ -21,6 +38,7 @@ export function StudentProvider({ children }) {
     </StudentContext.Provider>
   );
 }
+
 
 export function useStudent() {
   return useContext(StudentContext);
@@ -32,6 +50,9 @@ export function useStudentDispatch() {
 
 function StudentReducer(student, action) {
     switch (action.type) {
+        case 'loading':{
+          return{...student, loading:action.loading}
+        }
         case 'add': {
           return {
               id:action.id,
@@ -51,12 +72,15 @@ function StudentReducer(student, action) {
               applicantTypeId:action.applicantTypeId,
               atar:action.atar,
               gpa:action.gpa,
+              credit:action.credit,
               statusOfResidence:action.statusOfResidence,
               specification:action.specification,
               atsi:stringToBoolean(action.atsi),
               rural:stringToBoolean(action.rural),
               financialHardship:stringToBoolean(action.financialHardship),
               gws:stringToBoolean(action.gws),
+              card_digit:action.card_digit,
+              country: action.country
           };
         }
         case 'update': {

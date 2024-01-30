@@ -1,881 +1,1211 @@
-
-
-import { MinusCircleOutlined,PlusOutlined } from '@ant-design/icons';
-import { Button,Form,Space,Switch,TimePicker } from 'antd';
-import React,{ FC,useState } from "react";
+import { MinusCircleOutlined, PlusOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import { Alert, Button, Form, Select, Space, Spin, Switch, TimePicker, message } from "antd";
+import { FC, useMemo, useState } from "react";
 import "./index.less";
-import * as Utility from "../../../common/utility";
-import moment from 'moment';
-// import { useUpdateTutorMutation } from "../../../graphql";
+import moment from "moment";
+import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
+import TutorService from "../../../api/services/Tutor";
+import { tutorWorkingHours } from "../../../common/common";
 
-
-const WorkingDaysHours: FC<{tutor: Tutor, id: string}> = ({tutor,id}) => {
+const WorkingDaysHours: FC<Any> = ({ props }) => {
+  const tutor = useTutor();
+  const dispatch = useTutorDispatch();
   const [form] = Form.useForm();
   const [editing, setEditing] = useState(false);
-  const isMondayOff = Form.useWatch('isMondayOff', form);
-  const isTuesdayOff = Form.useWatch('isTuesdayOff', form);
-  const isWednesdayOff = Form.useWatch('isWednesdayOff', form);
-  const isThursdayOff = Form.useWatch('isThursdayOff', form);
-  const isFridayOff = Form.useWatch('isFridayOff', form);
-  const isSaturdayOff = Form.useWatch('isSaturdayOff', form);
-  const isSundayOff = Form.useWatch('isSundayOff', form);
-  console.log("isMondayOff", isMondayOff)
-  console.log("editing", editing)
-  const handleEditClick = (e) => {
-    setEditing(true);
-    e.preventDefault();
+  const isMondayOff = Form.useWatch("isMondayOff", form);
+  const isTuesdayOff = Form.useWatch("isTuesdayOff", form);
+  const isWednesdayOff = Form.useWatch("isWednesdayOff", form);
+  const isThursdayOff = Form.useWatch("isThursdayOff", form);
+  const isSaturdayOff = Form.useWatch("isSaturdayOff", form);
+  const isSundayOff = Form.useWatch("isSundayOff", form);
+  const format = "h:mm a";  
+
+  const range = (start: number, end: number) => {
+    const result = [];
+    for (let i = start; i < end; i++) {
+      result.push(i);
+    }
+    return result;
   };
 
-  const handleSaveClick =() => {
-    updatedTutor()
-    setEditing(false);
+  const checkTimeFrame = async (rule, value) => {
+    value = moment(value, format);
+    const [day, index, type] = rule.field.split(".");
+    const currentTimeSlots = form.getFieldValue(day);
+    if (currentTimeSlots.length > 0 && value) {
+      let slotStartTime = null;
+      if (type == "end") {
+        slotStartTime =moment(currentTimeSlots[index].start, format);
+      }
+      currentTimeSlots.forEach((slot, i) => {
+        const beforeTime = moment(slot.start, format);
+        const afterTime = moment(slot.end, format);
+        if (i != index) {
+          if (slotStartTime) {
+            if (
+              value.isBetween(beforeTime, afterTime, undefined, "()") ||
+              slotStartTime.isBetween(beforeTime, afterTime, undefined, "()")
+            ) {
+              throw new Error("Selected time is overlap with other slot time!");
+            }
+            if (value.isSame(afterTime)) {
+              throw new Error("Slot already exist!");
+            }
+          } else {
+            if (value.isBetween(beforeTime, afterTime, undefined, "()")) {
+              throw new Error("Selected time is overlap with other slot time!");
+            }
+            // const diff = value.diff(afterTime, 'minutes');
+            // if(parseInt(tutor.bufferTime, 10) > diff ) {
+            //   setTimeMessage('You set '+tutor.bufferTime + ' buffer time. If you will not add '+tutor.bufferTime + ' buffer between 2 slot then it will not consider buffer time setting.' );
+            // } else {
+            //   setTimeMessage("");
+            // }
+            if (value.isSame(beforeTime)) {
+              throw new Error("Slot already exist!");
+            }
+          }
+        } else {
+          if (type == "start" && value.isSameOrAfter(afterTime)) {
+          throw new Error("Start time must be less than end time!");
+          } else if (type == "end" && value.isSameOrBefore(beforeTime)) {
+          throw new Error("End time must be greater than start time!");
+          }
+        }
+      });
+    }
   };
-
-  // tp Strapi
-  const format = 'HH:mm';
-  const [mondayFromTime, setMondayFromTime] = useState<moment.Moment | null>(moment(new Date(), format));
   
-  const updatedTutor =  () => {
-    // updateTutor({
-    //   variables: {
-    //     id: id!,
-    //     input: {
-    //       monday_is_day_off: isMondayDayOff,
-    //       monday_working_from: mondayFromTime?.format('HH:mm') || null,
-    //       monday_working_to: mondayToTime?.format('HH:mm') || null,
-    //       tuesday_is_day_off: isTuesdayDayOff,
-    //       tuesday_working_from: tuesdayToTime?.format('HH:mm') || null,
-    //       tuesday_working_to: tuesdayFromTime?.format('HH:mm') || null,
-    //       wednesday_is_day_off: isWednesdayDayOff,
-    //       wednesday_working_from: wednesdayFromTime?.format('HH:mm') || null,
-    //       wednesday_working_to: wednesdayToTime?.format('HH:mm') || null,
-    //       thursday_is_day_off: isThursdayDayOff,
-    //       thursday_working_from: thursdayFromTime?.format('HH:mm') || null,
-    //       thursday_working_to: thursdayToTime?.format('HH:mm') || null,
-    //       friday_is_day_off: isFridayDayOff,
-    //       friday_working_from: fridayFromTime?.format('HH:mm') || null,
-    //       friday_working_to: fridayToTime?.format('HH:mm') || null,
-    //       saturday_is_day_off: isSaturdayDayOff,
-    //       saturday_working_from: saturdayFromTime?.format('HH:mm') || null,
-    //       saturday_working_to: saturdayToTime?.format('HH:mm') || null,
-    //       sunday_is_day_off: isSundayDayOff,
-    //       sunday_working_from: sundayFromTime?.format('HH:mm') || null,
-    //       sunday_working_to: sundayToTime?.format('HH:mm') || null,
+  const formattedWorkingHours = useMemo(
+    () => tutorWorkingHours(tutor.workingHours, format),
+    [tutor.workingHours]
+  );
+  
 
-    //     }
-    //   }
-    // })
+  const handleEditClick = (e) => {
+    try {
+      if(!tutor?.timezone || !tutor.personalMeetingId) {
+      throw new Error("Please select Time Zone and set Personal Meeting ID first.");
+      } else  {
+        setEditing(true);
+        e.preventDefault();
+      }
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+
+  const  cancle = () => {
+    form.resetFields();
+    setEditing(false);
   }
 
   const formatTimeArr = (timeArr) => {
-    if( timeArr.length > 0 ){
-      return timeArr.map(time => ({start: time.start.format(format), end:time.end.format(format)}));
+    if (timeArr.length > 0) {
+      return timeArr.map((time) => ({
+        // start: time.start.format(format),
+        // end: time.end.format(format),
+        start: time.start,
+        end: time.end,
+      }));
     }
     return [];
-    
-  }
+  };
+
   const onFinish = async (values: any) => {
-    console.log(values);
-    const Monday = formatTimeArr(values.Monday ?? []);
-    const Tuesday = formatTimeArr(values.Tuesday ?? []);
-    const Wednesday = formatTimeArr(values.Wednesday ?? []);
-    const Thursday = formatTimeArr(values.Thursday ?? []);
-    const Friday = formatTimeArr(values.Friday ?? []);
-    const Saturday = formatTimeArr(values.Saturday ?? []);
-    const Sunday = formatTimeArr(values.Sunday ?? []);
-    let WorkingDaysHours:[
-      {day:"Monday", "hours": Monday,"dayOff": values.isMondayOff},
-      {day:"Tuesday", "hours": Tuesday,"dayOff": values.isTuesDayOff},
-      {day:"Wednesday", "hours": Wednesday,"dayOff": values.isWednesdayOff},
-      {day:"Thursday", "hours": Thursday,"dayOff": values.isThursdayOff},
-      {day:"Friday", "hours": Friday,"dayOff": values.isFridayOff},
-      {day:"Saturday", "hours":Saturday,"dayOff": values.isSaturdayOff},
-      {day:"Sunday", "hours": Sunday,"dayOff": values.isSundayOff}
-    ]
-    console.log(WorkingDaysHours);
-    await TutorService.updateProfile(WorkingDaysHours);
-    // dispatch({
-    //   type:'update',
-    //   tutor:{
-    //     fullName: fullName !== '' ? fullName : tutor?.fullName,
-    //     gender: gender !== '' ? gender : tutor?.gender,
-    //     email: email !== '' ? email : tutor?.email,
-    //     pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
-    //     location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-    //     timezone: autoSelected ? localTimezone.label : selectedTimezone !== '' ? selectedTimezone : tutor?.timezone
-    //   }
-    // })
+
+    try {
+      
+      if(!tutor?.timezone || !tutor.personalMeetingId) {
+        throw new Error("Please select Time Zone and set Personal Meeting ID first.");
+      }
+     
+      const Monday = values.isMondayOff ? [] : formatTimeArr(values.Monday ?? []);
+      const Tuesday = values.isTuesdayOff
+        ? []
+        : formatTimeArr(values.Tuesday ?? []);
+      const Wednesday = values.isWednesdayOff
+        ? []
+        : formatTimeArr(values.Wednesday ?? []);
+      const Thursday = values.isThursdayOff
+        ? []
+        : formatTimeArr(values.Thursday ?? []);
+      const Friday = values.isFridayOff ? [] : formatTimeArr(values.Friday) ?? [];
+      const Saturday = values.isSaturdayOff
+        ? []
+        : formatTimeArr(values.Saturday ?? []);
+      const Sunday = values.isSundayOff ? [] : formatTimeArr(values.Sunday ?? []);
+      const workingHours = [
+        { day: "Monday", hours: Monday, dayOff: values.isMondayOff },
+        { day: "Tuesday", hours: Tuesday, dayOff: values.isTuesdayOff },
+        { day: "Wednesday", hours: Wednesday, dayOff: values.isWednesdayOff },
+        { day: "Thursday", hours: Thursday, dayOff: values.isThursdayOff },
+        { day: "Friday", hours: Friday, dayOff: values.isFridayOff },
+        { day: "Saturday", hours: Saturday, dayOff: values.isSaturdayOff },
+        { day: "Sunday", hours: Sunday, dayOff: values.isSundayOff },
+      ];
+  
+      await TutorService.updateProfile({
+        workingHours: workingHours,
+      });
+  
+      dispatch({
+        type: "updateWorkingHours",
+        workingHours: workingHours,
+      });
+
+    } catch (e) {
+      message.error(e.message);
+    }
 
     setEditing(false);
     return false;
-    //Utility.formatTime(values, format);
-    console.log(values.mondayWorkingHours[0].from.format(format));
-    // console.log(values.mondayWorkingHours[1].from.format(format));
-    
-    return false;
-   // updatedTutor(values);
-    
+  
   };
-  console.log(isMondayOff || !editing);
+
+  const handleSwitchChange = (value, day) => {
+    if (value == true) {
+      return form.setFieldsValue({ [day]: [{ start: "", end: "" }] });
+    }
+  };
+
+  if(tutor?.loading){
+    return(
+      <Spin />
+    )
+  }
+   
+ 
+  const timeIntervals = [
+    { value: '12:00 am', label: '12:00 am' },
+    { value: '12:30 am', label: '12:30 am' },
+    { value: '1:00 am', label: '1:00 am' },
+    { value: '1:30 am', label: '1:30 am' },
+    { value: '2:00 am', label: '2:00 am' },
+    { value: '2:30 am', label: '2:30 am' },
+    { value: '3:00 am', label: '3:00 am' },
+    { value: '3:30 am', label: '3:30 am' },
+    { value: '4:00 am', label: '4:00 am' },
+    { value: '4:30 am', label: '4:30 am' },
+    { value: '5:00 am', label: '5:00 am' },
+    { value: '5:30 am', label: '5:30 am' },
+    { value: '6:00 am', label: '6:00 am' },
+    { value: '6:30 am', label: '6:30 am' },
+    { value: '7:00 am', label: '7:00 am' },
+    { value: '7:30 am', label: '7:30 am' },
+    { value: '8:00 am', label: '8:00 am' },
+    { value: '8:30 am', label: '8:30 am' },
+    { value: '9:00 am', label: '9:00 am' },
+    { value: '9:30 am', label: '9:30 am' },
+    { value: '10:00 am', label: '10:00 am' },
+    { value: '10:30 am', label: '10:30 am' },
+    { value: '11:00 am', label: '11:00 am' },
+    { value: '11:30 am', label: '11:30 am' },
+    { value: '12:00 pm', label: '12:00 pm' },
+    { value: '12:30 pm', label: '12:30 pm' },
+    { value: '1:00 pm', label: '1:00 pm' },
+    { value: '1:30 pm', label: '1:30 pm' },
+    { value: '2:00 pm', label: '2:00 pm' },
+    { value: '2:30 pm', label: '2:30 pm' },
+    { value: '3:00 pm', label: '3:00 pm' },
+    { value: '3:30 pm', label: '3:30 pm' },
+    { value: '4:00 pm', label: '4:00 pm' },
+    { value: '4:30 pm', label: '4:30 pm' },
+    { value: '5:00 pm', label: '5:00 pm' },
+    { value: '5:30 pm', label: '5:30 pm' },
+    { value: '6:00 pm', label: '6:00 pm' },
+    { value: '6:30 pm', label: '6:30 pm' },
+    { value: '7:00 pm', label: '7:00 pm' },
+    { value: '7:30 pm', label: '7:30 pm' },
+    { value: '8:00 pm', label: '8:00 pm' },
+    { value: '8:30 pm', label: '8:30 pm' },
+    { value: '9:00 pm', label: '9:00 pm' },
+    { value: '9:30 pm', label: '9:30 pm' },
+    { value: '10:00 pm', label: '10:00 pm' },
+    { value: '10:30 pm', label: '10:30 pm' },
+    { value: '11:00 pm', label: '11:00 pm' },
+    { value: '11:30 pm', label: '11:30 pm' },
+  ];
 
   return (
     <div className={"working-section"}>
       <h2 className={"working-section-title"}>Working Days & Hours</h2>
-      <Form className={"working-form"} form={form} onFinish={onFinish}>
-      <p className={"label"}>Monday</p>
-      <Form.List name="Monday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isMondayOff || !editing)}
-                      />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isMondayOff || !editing}
-                      />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isMondayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
-        <Form.List name="Tuesday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isTuesdayOff || !editing)}
-                      />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isTuesdayOff || !editing}
-                      />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isTuesdayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
-        <Form.List name="Wednesday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isWednesdayOff || !editing)}
-                      />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isWednesdayOff || !editing}
-                      />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isWednesdayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
+      <Form
+        className={"working-form"}
+        form={form}
+        onFinish={onFinish}
+        initialValues={{
+          isMondayOff: formattedWorkingHours.isMondayOff ?? false,
+          Monday: formattedWorkingHours.Monday ?? [
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+          isTuesdayOff: formattedWorkingHours.isTuesdayOff ?? false,
+          Tuesday: formattedWorkingHours.Tuesday ?? [
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+          isWednesdayOff: formattedWorkingHours.isWednesdayOff ?? false,
+          Wednesday: formattedWorkingHours.Wednesday ?? [
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+          isThursdayOff: formattedWorkingHours.isThursdayOff ?? false,
+          Thursday: formattedWorkingHours.Thursday ?? [
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+          isFridayOff: formattedWorkingHours.isFridayOff ?? false,
+          Friday: formattedWorkingHours.Friday ?? [
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+          isSaturdayOff: formattedWorkingHours.isSaturdayOff ?? false,
+          Saturday: formattedWorkingHours.Saturday ?? [
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+          isSundayOff: formattedWorkingHours.isSundayOff ?? false,
+          Sunday: formattedWorkingHours.Sunday ?? [
+            // { start: moment("9:00", format), end: moment("9:00", format) },
+            { start: "9:00 am", end: "9:00 am" }
+          ],
+        }}
+      >
+        <div className="working_days_item">
+          { tutor.bufferTime && (
+            <Alert
+            message="Warning"
+            description={'You set '+tutor.bufferTime + ' buffer time. If you will not add '+tutor.bufferTime + ' buffer between 2 slot then it will not consider buffer time setting.'}
+            type="warning"
+            showIcon
+            style={{marginBottom :20}}
+          />
+          )}
+          
 
-        <Form.List name="Thursday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
+          <div className={"label"}>Monday</div>
+          <Form.List name="Monday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isMondayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                                                dependencies={[["Monday", name, "end"]]}
+                      >
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isMondayOff") == true ||
+                            !editing
+                          }
+                          
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isMondayOff") == true ||
+                            !editing
+                          }
+                          use12Hours
+                          inputReadOnly
+                        /> */}
+                                                
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isMondayOff") == false,
+                              message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Monday", name, "start"]]}
+                      >
+                      <Select
+                        placeholder="Select time"
                         style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isThursdayOff || !editing)}
+                        className={"input time-date_select"}
+                        options={timeIntervals}
+                        disabled={
+                          form.getFieldValue("isMondayOff") == true ||
+                          !editing
+                        }
+                        suffixIcon={<ClockCircleOutlined />}
                       />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isThursdayOff || !editing}
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isMondayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                /> */}
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isMondayOff") == true || !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
                       />
+                    </Space>
+                  ))}
+                </div>
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isMondayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isThursdayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
+              </>
+            )}
+          </Form.List>
 
+          <Form.Item
+            className="switch-btn"
+            name={"isMondayOff"}
+            label="Day off"
+            initialValue={formattedWorkingHours.isMondayOff}
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isMondayOff}
+              onChange={(value) => handleSwitchChange(value, "Monday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
 
-        <Form.List name="Friday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isFridayOff || !editing)}
+        <div className="working_days_item">
+          <div className={"label"}>Tuesday</div>
+          <Form.List name="Tuesday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isTuesdayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Tuesday", name, "end"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isTuesdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                        /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isTuesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isTuesdayOff") == false,
+                            message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Tuesday", name, "start"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isTuesdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isTuesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isTuesdayOff") == true || !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
                       />
+                    </Space>
+                  ))}
+                </div>
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isTuesdayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
                 </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isFridayOff || !editing}
-                      />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isFridayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
+              </>
+            )}
+          </Form.List>
 
-        <Form.List name="Saturday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isSaturdayOff || !editing)}
-                      />
-                </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isSaturdayOff || !editing}
-                      />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isSaturdayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
+          <Form.Item
+            className="switch-btn"
+            name={"isTuesdayOff"}
+            label="Day off"
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isTuesdayOff}
+              onChange={(value) => handleSwitchChange(value, "Tuesday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
 
-        <Form.List name="Sunday">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
-                <Form.Item
-                  {...restField}
-                  name={[name, 'start']}
-                  rules={[{ required: true, message: 'start time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={(isSundayOff || !editing)}
+        <div className="working_days_item">
+          <div className={"label"}>Wednesday</div>
+          <Form.List name="Wednesday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isWednesdayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Wednesday", name, "end"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isWednesdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isWednesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isWednesdayOff") == false,
+                            message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Wednesday", name, "start"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isWednesdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isWednesdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isWednesdayOff") == true ||
+                          !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
                       />
+                    </Space>
+                  ))}
+                </div>
+
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isWednesdayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
                 </Form.Item>
-                <Form.Item
-                  {...restField}
-                  name={[name, 'end']}
-                  rules={[{ required: true, message: 'end time required' }]}
-                  initialValue={moment("9:00", format)}
-                >
-                   <TimePicker
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isSundayOff || !editing}
+              </>
+            )}
+          </Form.List>
+          <Form.Item
+            className="switch-btn"
+            name={"isWednesdayOff"}
+            label="Day off"
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isWednesdayOff}
+              onChange={(value) => handleSwitchChange(value, "Wednesday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="working_days_item">
+          <div className={"label"}>Thursday</div>
+          <Form.List name="Thursday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isThursdayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Thursday", name, "end"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isThursdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isThursdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isThursdayOff") == false,
+                            message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Thursday", name, "start"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isThursdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isThursdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isThursdayOff") == true ||
+                          !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
                       />
+                    </Space>
+                  ))}
+                </div>
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isThursdayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
                 </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                Add Period
-              </Button>
-            </Form.Item>
-          </>
-        )}
-      </Form.List>
-        <Form.Item
-          name={"isSundayOff"}
-          label="Day off"
-          initialValue={"false"}
-        >
-        <Switch />
-        </Form.Item>
-        
-      {/* <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Monday</p>
-            <div>
-              {mondayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isMondayDayOff || !editing}
+              </>
+            )}
+          </Form.List>
+
+          <Form.Item
+            className="switch-btn"
+            name={"isThursdayOff"}
+            label="Day off"
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isThursdayOff}
+              onChange={(value) => handleSwitchChange(value, "Thursday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="working_days_item">
+          <div className={"label"}>Friday</div>
+          <Form.List name="Friday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isFridayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Friday", name, "end"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isFridayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isFridayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isFridayOff") == false,
+                            message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Friday", name, "start"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isFridayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isFridayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isFridayOff") == true || !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
                       />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isMondayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Monday")}
-                      />
-                    </div>
-                  </div>
+                    </Space>
+                  ))}
                 </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Monday")}
-                    disabled={!editing}
-                    checked={isMondayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isFridayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+
+          <Form.Item
+            className="switch-btn"
+            name={"isFridayOff"}
+            label="Day off"
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isFridayOff}
+              onChange={(value) => handleSwitchChange(value, "Friday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="working_days_item">
+          <div className={"label"}>Saturday</div>
+          <Form.List name="Saturday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isSaturdayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Saturday", name, "end"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isSaturdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSaturdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isSaturdayOff") == false,
+                            message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Saturday", name, "start"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isSaturdayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                  /> */}
+                         <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSaturdayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isSaturdayOff") == true ||
+                          !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
+                      />
+                    </Space>
+                  ))}
                 </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Monday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item> 
-      
-        <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Tuesday</p>
-            <div>
-              {tuesdayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isTuesdayDayOff || !editing}
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isSaturdayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+          <Form.Item
+            className="switch-btn"
+            name={"isSaturdayOff"}
+            label="Day off"
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isSaturdayOff}
+              onChange={(value) => handleSwitchChange(value, "Saturday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
+
+        <div className="working_days_item">
+          <div className={"label"}>Sunday</div>
+          <Form.List name="Sunday">
+            {(fields, { add, remove }) => (
+              <>
+                <div className="time-input-group">
+                  {fields.map(({ key, name, ...restField }) => (
+                    <Space
+                      key={key}
+                      style={{ display: "flex", marginBottom: 8 }}
+                      align="baseline"
+                    >
+                      <Form.Item
+                        {...restField}
+                        name={[name, "start"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isSundayOff") == false,
+                            message: "start time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Sunday", name, "end"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isSundayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                          /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSundayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "end"]}
+                        rules={[
+                          {
+                            required:
+                              form.getFieldValue("isSundayOff") == false,
+                            message: "end time required",
+                          },
+                          { validator: checkTimeFrame },
+                        ]}
+                        initialValue={moment("9:00", format)}
+                        dependencies={[["Sunday", name, "start"]]}
+                      >
+                        {/* <TimePicker
+                          minuteStep={30}
+                          format={format}
+                          style={{ width: "140px" }}
+                          className={"input"}
+                          disabled={
+                            form.getFieldValue("isSundayOff") == true ||
+                            !editing
+                          }
+                          inputReadOnly
+                                                  /> */}
+                        <Select
+                          placeholder="Select time"
+                          style={{ width: "140px" }}
+                          className={"input time-date_select"}
+                          options={timeIntervals}
+                          disabled={
+                            form.getFieldValue("isSundayOff") == true ||
+                            !editing
+                          }
+                          suffixIcon={<ClockCircleOutlined />}
+                        />
+                      </Form.Item>
+                      <Button
+                        type="text"
+                        disabled={
+                          form.getFieldValue("isSundayOff") == true || !editing
+                        }
+                        onClick={() => remove(name)}
+                        block
+                        icon={<MinusCircleOutlined />}
                       />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isThursdayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Tuesday")}
-                      />
-                    </div>
-                  </div>
+                    </Space>
+                  ))}
                 </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Tuesday")}
-                    disabled={!editing}
-                    checked={isTuesdayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
-                </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Tuesday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item>
-        <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Wednesday</p>
-            <div>
-              {wednesdayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isWednesdayDayOff || !editing}
-                      />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isWednesdayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Wednesday")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Wednesday")}
-                    disabled={!editing}
-                    checked={isWednesdayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
-                </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Wednesday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item>
-        <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Thursday</p>
-            <div>
-              {thursdayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isThursdayDayOff || !editing}
-                      />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isThursdayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Thursday")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Thursday")}
-                    disabled={!editing}
-                    checked={isThursdayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
-                </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Thursday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item>
-        <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Friday</p>
-            <div>
-              {fridayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isFridayDayOff || !editing}
-                      />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isFridayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Friday")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Friday")}
-                    disabled={!editing}
-                    checked={isFridayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
-                </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Friday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item>
-        <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Saturday</p>
-            <div>
-              {saturdayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isSaturdayDayOff || !editing}
-                      />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isSaturdayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Saturday")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Saturday")}
-                    disabled={!editing}
-                    checked={isSaturdayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
-                </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Saturday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item>
-        <Form.Item>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <p className={"label"}>Sunday</p>
-            <div>
-              {sundayPeriods.map(period => (
-                <div key={period.id} className={"working-form-item"}>
-                  <div className={"time-wrap"}>
-                    <div className={"time-input-group"}>
-                      <TimePicker
-                        defaultValue={moment("9:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isSundayDayOff || !editing}
-                      />
-                      <TimePicker
-                        defaultValue={moment("13:00", format)}
-                        minuteStep={15}
-                        format={format}
-                        style={{ width: "140px" }}
-                        className={"input"}
-                        disabled={isSundayDayOff || !editing}
-                      />
-                      <MinusCircleOutlined
-                        style={{ fontSize: "24px" }}
-                        onClick={() => handleRemovePeriod(period.id, "Sunday")}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className={"time-actions-group"}>
-                <div className={"time-actions-group-switch-wrap"}>
-                  <Switch
-                    onChange={checked => handleSwitchChange(checked, "Sunday")}
-                    disabled={!editing}
-                    checked={isSundayDayOff}
-                  />
-                  <p className={"switch-text"}>Day off</p>
-                </div>
-                <button
-                  style={{ color: !editing ? "grey" : "" }}
-                  disabled={!editing}
-                  className={"time-actions-btn"}
-                  onClick={() => handleAddPeriod("Sunday")}
-                >
-                  <PlusOutlined /> Add Period
-                </button>
-              </div>
-            </div>
-          </div>
-        </Form.Item>*/}
+                <Form.Item className="add-period">
+                  <Button
+                    type="dashed"
+                    disabled={
+                      form.getFieldValue("isSundayOff") == true || !editing
+                    }
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Period
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+          <Form.Item
+            className="switch-btn"
+            name={"isSundayOff"}
+            label="Day off"
+          >
+            <Switch
+              defaultChecked={formattedWorkingHours.isSundayOff}
+              onChange={(value) => handleSwitchChange(value, "Sunday")}
+              disabled={!editing}
+            />
+          </Form.Item>
+        </div>
+
         {editing ? (
           <div className={"form-basic-button-wrap"}>
             <Button className={"form-button"} htmlType={"submit"}>
               Save
             </Button>
+            <Button className={"form-button button-space"} onClick={cancle}>
+              Cancel
+            </Button>
           </div>
         ) : (
           <div className={"form-basic-button-wrap"}>
-            <Button className={"form-button"} htmlType={"button"} onClick={handleEditClick}>
+            <Button
+              className={"form-button"}
+              htmlType={"button"}
+              onClick={handleEditClick}
+            >
               Edit
             </Button>
           </div>
         )}
       </Form>
     </div>
-  )
+  );
 };
 
 export default WorkingDaysHours;
-
-

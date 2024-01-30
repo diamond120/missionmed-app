@@ -35,4 +35,5 @@ const Rating: FC<RatingProps> = ({title,one,two,three,four,five,rating}) => {
     </div>
   )
 }
+
 export default Rating
