@@ -201,7 +201,7 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
           initialValue={tutor?.phoneNumber}
           label={"Phone Number"}
           rules={[
-            { required: false, },
+            { required: true },
             {
               pattern: /^[\d]{0,10}$/,
               message: "Phone number should have maximum 10 characters"
