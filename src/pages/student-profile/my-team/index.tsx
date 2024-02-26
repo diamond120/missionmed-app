@@ -27,7 +27,7 @@ const MyTeam = () => {
 
   useEffect(() => {
     getTeamData();
-    console.log(team);
+    // console.log(team);
   }, []);
 
   return (
