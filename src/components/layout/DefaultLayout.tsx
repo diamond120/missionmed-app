@@ -30,6 +30,7 @@ export const DefaultLayout: FC = () => {
   const studentDispatch = useStudentDispatch();
   const tutorDispatch = useTutorDispatch();
   const [profileStaticData, setProfileStaticData] = useState({});
+  const [loading, setLaoding] = useState(true)
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
   const resetTutorContext = () => {
@@ -63,14 +64,16 @@ export const DefaultLayout: FC = () => {
         getUserDetails(localStorage.getItem("jwt"));
       }
       (async () => {
+        await setLaoding(true)
         const res = await CommonService.getProfileStaticData();
-        setProfileStaticData({
+        await setProfileStaticData({
           location: res.data.data.location,
           state: res.data.data.state,
           timezone: res.data.data.timezone,
           applicantType: res.data.data.applicantType,
           university: res.data.data.university
         })
+        await setLaoding(false)
       })();
       // navigate("/")
     }
@@ -177,6 +180,9 @@ export const DefaultLayout: FC = () => {
   }, [user]);
 
   const { isTablet } = useBreakpoints()
+  if (loading)
+    return null
+  
   return (
     <ProfileStaticDataContext.Provider value={profileStaticData}>
       <NotificationContext.Provider value={{ unreadNotificationCount, setUnreadNotificationCount }}>
