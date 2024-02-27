@@ -3,6 +3,8 @@ import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
 import TutorService from "../../../api/services/Tutor";
 import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
+import { Editor } from '@tinymce/tinymce-react';
+import { TINYMCE_API_KEY } from "../../../config/app-config"
 
 const BiographyTutor: FC<ANY> = ({ props }) => {
   const tutor = useTutor();
@@ -10,6 +12,7 @@ const BiographyTutor: FC<ANY> = ({ props }) => {
   const [editing, setEditing] = useState(false);
   const [biography, setBiography] = useState<string | undefined | null>("")
   const [form] = Form.useForm();
+
   const updatedTutor = async () => {
     await TutorService.updateProfile({
       addBiography: true,
@@ -53,7 +56,14 @@ const BiographyTutor: FC<ANY> = ({ props }) => {
           <Form.Item
             name={"bio"}
           >
-            <Input.TextArea className={"biography-input w-full"} placeholder={"Input your text here"} disabled={!editing} style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }} defaultValue={tutor?.biography ?? ''} onChange={e => setBiography(e.target.value)} />
+            <Editor
+              apiKey={TINYMCE_API_KEY}
+              disabled={!editing}
+              initialValue={tutor?.biography ?? ''}
+              onEditorChange={(content) => {
+                setBiography(content)
+              }}
+            />
           </Form.Item>
           {editing ? (
             <>
