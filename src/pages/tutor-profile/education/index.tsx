@@ -31,7 +31,7 @@ const Education: FC<Any> = ({ props }) => {
   //   "University of Wollongong",
   // ]
   const optionsSchools: string[] = (profileStaticData.university ? profileStaticData.university.map(l => ({ key: l.id, label: l.title, value: l.title })) : [])
-  const optionsDegrees: string[] = ["MBBS", "MD", "DO", "BDS", "DVM", "DPharm", "BPT"]
+  const optionsDegrees: string[] = (profileStaticData.degree ? profileStaticData.degree.map(l => ({ label: l.title, value: l.title })) : [])
   const [form] = Form.useForm();
 
   const handleEditClick = (e) => {
@@ -64,10 +64,21 @@ const Education: FC<Any> = ({ props }) => {
     setEditing(false);
   };
 
-  const CustomSelectInput = ({ onChange }) => {
+  const CustomSchoolSelectInput = ({ onChange }) => {
     return (
       <CreatableSelect
         options={optionsSchools}
+        placeholder={"Enter a value"}
+        isDisabled={!editing}
+        onChange={(e) => onChange(e.value)}
+      />
+    );
+  };
+
+  const CustomDegreeSelectInput = ({ onChange }) => {
+    return (
+      <CreatableSelect
+        options={optionsDegrees}
         placeholder={"Enter a value"}
         isDisabled={!editing}
         onChange={(e) => onChange(e.value)}
@@ -99,7 +110,7 @@ const Education: FC<Any> = ({ props }) => {
                     rules={[{ required: true, message: "Please enter your school" }]}
                     label={"School"}
                   >
-                    <CustomSelectInput />
+                    <CustomSchoolSelectInput />
                   </Form.Item>
 
                   <Form.Item
@@ -108,12 +119,7 @@ const Education: FC<Any> = ({ props }) => {
                     rules={[{ required: true, message: "Please enter your degree" }]}
                     label={"Degree"}
                   >
-                    <Select
-                      options={optionsDegrees.map(option => ({ value: option }))}
-                      style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
-                      placeholder={"Enter a value"}
-                      disabled={!editing}
-                    />
+                    <CustomDegreeSelectInput />
                   </Form.Item>
                   {fields.length > 1 ? (
                     <div style={{ justifyContent: "right", display: "flex", marginBottom: "10px" }}>
