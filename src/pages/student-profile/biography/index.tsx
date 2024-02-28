@@ -3,6 +3,8 @@ import { Button, Form, Input, Spin } from "antd"
 import { FC, useState } from "react"
 import { useStudent, useStudentDispatch } from "../../../api/providers/StudentProvider";
 import { default as StudentService } from "../../../api/services/Student";
+import { Editor } from '@tinymce/tinymce-react';
+import { TINYMCE_API_KEY } from "../../../config/app-config"
 
 const Biography: FC<any> = ({props}) => {
   const student = useStudent();
@@ -52,8 +54,15 @@ const Biography: FC<any> = ({props}) => {
         <p className={"biography-text"}>Here you can add notable experiences that you have had in the past.</p>
         <Form.Item
           name={"bio"}
-        >
-        <Input.TextArea className={"biography-input"} placeholder={"Input your text here"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} defaultValue={student?.biography ?? ''}  onChange={e => setBiography(e.target.value)} />
+          >
+             <Editor
+              apiKey={TINYMCE_API_KEY}
+              disabled={!editing}
+              initialValue={student?.biography ?? ''}
+              onEditorChange={(content) => {
+                setBiography(content)
+              }}
+            />
         </Form.Item>
         {editing ? (
           <Form.Item>

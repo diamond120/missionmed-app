@@ -67,15 +67,15 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
   const getStudentList = async (keyword = '') => {
     try {
-       //student List API
-       const data = {search : keyword }
-       const response = await CommonService.postAPI('students-data', data);
-       if (response.data.success) {
-         const studentList = response.data.data.students ?? [];
-         setStudents(studentList);
-       } else {
-         message.error(response.data.message);
-       }
+      //student List API
+      const data = { search: keyword }
+      const response = await CommonService.postAPI('students-data', data);
+      if (response.data.success) {
+        const studentList = response.data.data.students ?? [];
+        setStudents(studentList);
+      } else {
+        message.error(response.data.message);
+      }
 
     } catch (e) {
       message.error(e.message);
@@ -84,7 +84,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
   // const stepsTitles = ['Specify Your Priorites','Choose Tutor','Book Time for Sessions','Check Last Details'];
   const stepsTitles = ['Choose Tutor', 'Book Time for Sessions', 'Check Last Details'];
-  
+
   const next = async () => {
     try {
       const values = await form.validateFields();
@@ -142,17 +142,17 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
       if (response.data.success) {
         const result = response.data.data;
         // if(userRole == 'student') {
-          addUpcomingSession({
-            date: result.date,
-            hasSessionRate: false,
-            id: result.id,
-            mock_interview: result.mock_interview,
-            session_end_time: result.session_end_time,
-            session_start_time: result.session_start_time,
-            student_id: result.student_id,
-            tutor_id: result.tutor_id,
-            tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
-          });
+        addUpcomingSession({
+          date: result.date,
+          hasSessionRate: false,
+          id: result.id,
+          mock_interview: result.mock_interview,
+          session_end_time: result.session_end_time,
+          session_start_time: result.session_start_time,
+          student_id: result.student_id,
+          tutor_id: result.tutor_id,
+          tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
+        });
         // }
         setLoading(false);
         if (moduleType == 'ucatStudent') {
@@ -203,93 +203,93 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   }
 
   const checkCredit = (student) => {
-    if(userRole  == 'tutor') {
-      if(moduleType == 'ucatStudent' && (student?.ucat_teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null)) {
+    if (userRole == 'tutor') {
+      if (moduleType == 'ucatStudent' && (student?.ucat_teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null)) {
         return 'disabled'
-      } else if(moduleType == 'teaching' && student?.teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null) {
+      } else if (moduleType == 'teaching' && student?.teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null) {
         return 'disabled'
       }
-    } 
+    }
   }
 
   const TutorPanelHeader = memo(function TutorPanelHeader({ tutor, student }) {
     return (
       <>
-      {userRole === 'tutor' ? (
-        <Radio key={student.id} value={student.id} disabled={checkCredit(student)}  >
-          <div className={"avatar"}>
-            <Avatar
-              src={student.profile_picture}
-              size={40}
-              icon={<UserOutlined />}
-            />
-            <div className={"name-degree"}>
-              <h4 className={"tutor-name"}>{student.full_name}</h4>
-              {student.phone_number && (
+        {userRole === 'tutor' ? (
+          <Radio key={student.id} value={student.id} disabled={checkCredit(student)}  >
+            <div className={"avatar"}>
+              <Avatar
+                src={student.profile_picture}
+                size={40}
+                icon={<UserOutlined />}
+              />
+              <div className={"name-degree"}>
+                <h4 className={"tutor-name"}>{student.full_name}</h4>
+                {student.phone_number && (
+                  <span>
+                    Ph No: {student.phone_number + ', '}
+                  </span>
+                )}
+                {student.country && (
+                  <span>
+                    Country: {student.country + ', '}
+                  </span>
+                )}
                 <span>
-                 Ph No: {student.phone_number + ', '}
+                  Credit:
+                  {moduleType == 'ucatStudent' && student.ucat_teaching_session_credit ? (
+                    ` ${student.ucat_teaching_session_credit}`
+                  ) : moduleType == 'teaching' && student.teaching_session_credit ? (
+                    ` ${student.teaching_session_credit}`
+                  ) : (
+                    ` 0`
+                  )}
                 </span>
-              )}
-              {student.country && (
-                <span>
-                  Country: {student.country + ', '}
-                </span>
-              )}
-              <span>
-              Credit: 
-              {moduleType == 'ucatStudent' && student.ucat_teaching_session_credit ? (
-                ` ${student.ucat_teaching_session_credit}`
-              ) : moduleType == 'teaching' && student.teaching_session_credit ? (
-                ` ${student.teaching_session_credit}`
-              ) : (
-                ` 0`
-              )}
-              </span>
 
-              <div
-                style={{
-                  display: "flex",
-                  columnGap: 10,
-                  rowGap: 5,
-                  flexWrap: "wrap",
-                  color: "#6B7393",
-                  fontSize: 12,
-                }}
-              >
+                <div
+                  style={{
+                    display: "flex",
+                    columnGap: 10,
+                    rowGap: 5,
+                    flexWrap: "wrap",
+                    color: "#6B7393",
+                    fontSize: 12,
+                  }}
+                >
+                </div>
               </div>
             </div>
-          </div>
-        </Radio>
-         ) : (
+          </Radio>
+        ) : (
           <Radio key={tutor.id} value={tutor.id}>
-          <div className={"avatar"}>
-            <Avatar
-              src={tutor.profile_picture}
-              size={40}
-              icon={<UserOutlined />}
-            />
-            <div className={"name-degree"}>
-              <h4 className={"tutor-name"}>{tutor.full_name}</h4>
-              <div
-                style={{
-                  display: "flex",
-                  columnGap: 10,
-                  rowGap: 5,
-                  flexWrap: "wrap",
-                  color: "#6B7393",
-                  fontSize: 12,
-                }}
-              >
-                <span>
-                  {tutor.university && tutor.university.map((item, index) => (
-                    <span key={index}>{item.school}({item.degree})
-                     {tutor.university.length - 1 != index && ','}</span>
-                  ))}
-                </span>
+            <div className={"avatar"}>
+              <Avatar
+                src={tutor.profile_picture}
+                size={40}
+                icon={<UserOutlined />}
+              />
+              <div className={"name-degree"}>
+                <h4 className={"tutor-name"}>{tutor.full_name}</h4>
+                <div
+                  style={{
+                    display: "flex",
+                    columnGap: 10,
+                    rowGap: 5,
+                    flexWrap: "wrap",
+                    color: "#6B7393",
+                    fontSize: 12,
+                  }}
+                >
+                  <span>
+                    {tutor.university && tutor.university.map((item, index) => (
+                      <span key={index}>{item.school}({item.degree})
+                        {tutor.university.length - 1 != index && ','}</span>
+                    ))}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </Radio>
+          </Radio>
         )}
       </>
     );
@@ -304,47 +304,48 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   }) {
     return (
       <>
-      {userRole !== 'tutor' ? 
-      (
-        <Radio.Group onChange={onChange} value={value}>
-          <Collapse
-            bordered={false}
-            defaultActiveKey={["1"]}
-            expandIconPosition={`end`}
-            className="site-collapse-custom-collapse"
-            >
-  
-            {tutors && tutors.map((tutor) => (
-              <Panel
-              header={<TutorPanelHeader tutor={tutor} />}
-              key={tutor.id}
-              className="site-collapse-custom-panel"
+        {userRole !== 'tutor' ?
+          (
+            <Radio.Group onChange={onChange} value={value}>
+              <Collapse
+                bordered={false}
+                defaultActiveKey={["1"]}
+                expandIconPosition={`end`}
+                className="site-collapse-custom-collapse"
               >
-                {tutor.biography}
-              </Panel>
-            ))}
-          </Collapse>
-        </Radio.Group>
-      ) :(
-        <Radio.Group onChange={onChange} value={value}>
-          {/* <Collapse
+
+                {tutors && tutors.map((tutor) => (
+                  <Panel
+                    header={<TutorPanelHeader tutor={tutor} />}
+                    key={tutor.id}
+                    className="site-collapse-custom-panel"
+                  >
+                    <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
+
+                  </Panel>
+                ))}
+              </Collapse>
+            </Radio.Group>
+          ) : (
+            <Radio.Group onChange={onChange} value={value}>
+              {/* <Collapse
             bordered={false}
             defaultActiveKey={["1"]}
             expandIconPosition={`end`}
             className="site-collapse-custom-collapse"
             > */}
-          {students && students.map((student) => (
-            <Panel 
-              header={<TutorPanelHeader student={student}  />}
-              key={student.id}
-              className="site-collapse-custom-panel tutor_collapse"
-              title={checkCredit(student) == 'disabled' && 'Please select other student because student credit is 0'}
-            >
-            </Panel>
-          ))} 
-          {/* </Collapse> */}
-        </Radio.Group>
-      )}
+              {students && students.map((student) => (
+                <Panel
+                  header={<TutorPanelHeader student={student} />}
+                  key={student.id}
+                  className="site-collapse-custom-panel tutor_collapse"
+                  title={checkCredit(student) == 'disabled' && 'Please select other student because student credit is 0'}
+                >
+                </Panel>
+              ))}
+              {/* </Collapse> */}
+            </Radio.Group>
+          )}
       </>
     );
   });
@@ -357,18 +358,18 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
     console.log(value);
     getStudentList(value)
-  } 
+  }
 
-  const Step2Form =memo(function Step2Form({ students, tutors }) {
+  const Step2Form = memo(function Step2Form({ students, tutors }) {
     return (
       <>
         <div className={"choose-tutor"}>
           <div className="btn-group" >
-           <h3 className={"title"}>Recommended for you</h3>
-           {userRole === 'tutor' && (
-           <div className="tutor_Search">
-            <Search placeholder="input search text" onSearch={onSearch} allowClear />
-           </div> )}
+            <h3 className={"title"}>Recommended for you</h3>
+            {userRole === 'tutor' && (
+              <div className="tutor_Search">
+                <Search placeholder="input search text" onSearch={onSearch} allowClear />
+              </div>)}
           </div>
           {userRole === 'tutor' ? (
             <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select student" }]}>
@@ -388,17 +389,16 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     return <>
       <div className={"book-time-cal"}>
         <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType} timezone={timezone} next={next} prev={prev} />
-        {(userRole == 'tutor' && (timezone != students.find(student => student.id == form.getFieldValue('tutorId'))?.timezone ) ) &&  <Alert style={{top: 23}} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />} 
+        {(userRole == 'tutor' && (timezone != students.find(student => student.id == form.getFieldValue('tutorId'))?.timezone)) && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;
   };
 
-  const checkingDate = async (date, startTime, endTime, getday,studentId, tutorId) => {
-    if(user.role === 'tutor')
-    {
+  const checkingDate = async (date, startTime, endTime, getday, studentId, tutorId) => {
+    if (user.role === 'tutor') {
       studentId = form.getFieldValue('newTutorId');
       tutorId = tutor.id;
-    }else{
+    } else {
       tutorId = form.getFieldValue('newTutorId');
     }
     const data = {
@@ -438,7 +438,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const Step4From = ({ form }) => {
     const formData = form.getFieldsValue(true);
     console.log(students, formData)
-    const tutorName = (user.role == 'student') ? tutors.find(tutor => tutor.id == formData.tutorId)?.full_name :  students.find(student => student.id == formData.studentId)?.full_name
+    const tutorName = (user.role == 'student') ? tutors.find(tutor => tutor.id == formData.tutorId)?.full_name : students.find(student => student.id == formData.studentId)?.full_name
     setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
     const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     const sessionStartTime = formatTime(formData.sessionStartTime)
@@ -452,7 +452,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-             {user.role == 'tutor' ? 'Student' : 'Tutor' }
+              {user.role == 'tutor' ? 'Student' : 'Tutor'}
             </h4>
             <div style={{ fontSize: 16 }}>{tutorName}</div>
           </div>
@@ -705,14 +705,14 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             {title}
           </Button>
         </Tooltip> :
-       userRole === 'tutor' ? (
-          <Button className={"secondary-button disable-button"}  onClick={showModalTutor}>
-          {title}
-        </Button>
+        userRole === 'tutor' ? (
+          <Button className={"secondary-button disable-button"} onClick={showModalTutor}>
+            {title}
+          </Button>
         ) : (
           <Button className={"primary-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
-          {title}
-        </Button>)
+            {title}
+          </Button>)
       }
       <Modal
         title={modalTitle}
@@ -789,13 +789,13 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         <Form form={form} layout="vertical"
         >
           {activeStep == 1 && (
-              userRole === 'tutor' ? (
-            <div style={{ width: "555px" }}>
-              <Step2Form students={students}  />
-            </div> ) : (
-               <div style={{ width: "555px" }}>
-               <Step2Form tutors={tutors} />
-             </div>
+            userRole === 'tutor' ? (
+              <div style={{ width: "555px" }}>
+                <Step2Form students={students} />
+              </div>) : (
+              <div style={{ width: "555px" }}>
+                <Step2Form tutors={tutors} />
+              </div>
             )
           )}
           {activeStep == 2 && (
@@ -815,8 +815,8 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           )} */}
         </Form>
 
-       
-        </Modal>
+
+      </Modal>
     </>
   );
 };

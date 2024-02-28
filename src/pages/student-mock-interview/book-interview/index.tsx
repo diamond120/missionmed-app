@@ -3,7 +3,7 @@ import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../../api/services/Common";
 import MockInterviewsService from "../../../api/services/MockInterviews";
-import {formatDateV1, formatTime,getDay} from "../../../common/common";
+import { formatDateV1, formatTime, getDay } from "../../../common/common";
 import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
@@ -15,10 +15,10 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 const { Search } = Input;
 
-const BookInterview = ({addUpcomingSession,timezone}) => {
-  
+const BookInterview = ({ addUpcomingSession, timezone }) => {
+
   const navigate = useNavigate();
-  const [form] = Form.useForm();  
+  const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState(1);
   const [modalTitle, setModalTitle] = useState("");
@@ -29,7 +29,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   const [mockInterview, setMockInterview] = useState([]);
   const [search, setSearch] = useState('');
   const user = useUser();
-  
+
   const getUniversityList = async () => {
     try {
       const response = await CommonService.getAPI("/university-list");
@@ -37,7 +37,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
         setUniversityList(
           response.data.data.map((university) => ({
             key: university.id,
-            label: university.title+" - " + (university.mockinterview ?? '0'),
+            label: university.title + " - " + (university.mockinterview ?? '0'),
             value: university.title,
           }))
         );
@@ -53,20 +53,19 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
     try {
       form.setFieldValue('mockInterview', '');
       const data = {
-        lessionType:'Mock interviews', 
+        lessionType: 'Mock interviews',
         university: form.getFieldValue("university"),
       };
       let response;
-      if(user.role == 'student') 
-      {
-        response = await CommonService.getUniversityTutorList(data) 
+      if (user.role == 'student') {
+        response = await CommonService.getUniversityTutorList(data)
       } else {
         data.search = search
-        response = await CommonService.postAPI("/students-data",data);
+        response = await CommonService.postAPI("/students-data", data);
       }
       if (response.data.success) {
-        const tutorList = user.role == 'student' ? response.data.data.tutors : response.data.data.students;      
-        const interviewList =   response.data.data.mockinterview.mockinterview ? response.data.data.mockinterview.mockinterview.split(',') : [];
+        const tutorList = user.role == 'student' ? response.data.data.tutors : response.data.data.students;
+        const interviewList = response.data.data.mockinterview.mockinterview ? response.data.data.mockinterview.mockinterview.split(',') : [];
         const mockInterviewList = interviewList.map((value, index) => ({
           id: index + 1,
           value,
@@ -74,8 +73,8 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
 
         setMockInterview(mockInterviewList);
         setTutors(tutorList);
-        
-        if(!response.data.data.mockinterview.mockinterview || response.data.data.mockinterview.mockinterview == null) {
+
+        if (!response.data.data.mockinterview.mockinterview || response.data.data.mockinterview.mockinterview == null) {
           message.error("Please select other univesity. This university don't have any interview.");
         }
 
@@ -88,21 +87,21 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   };
 
   useEffect(() => {
-      if(form.getFieldValue("university")) {
-        getUniversityTutorList()
-      }
+    if (form.getFieldValue("university")) {
+      getUniversityTutorList()
+    }
   }, [search])
-  
 
-  const stepsTitles = ['Specify Your Priorites',`Choose ${user.role === 'tutor' ? 'Student' : 'Tutor'}`,'Book Time for Interview','Check Last Details'];
+
+  const stepsTitles = ['Specify Your Priorites', `Choose ${user.role === 'tutor' ? 'Student' : 'Tutor'}`, 'Book Time for Interview', 'Check Last Details'];
 
   const next = async () => {
-    try{
+    try {
       const values = await form.validateFields();
       const nextStep = activeStep + 1;
       setActiveStep(nextStep);
-      setModalTitle(stepsTitles[nextStep-1]);
-    }catch(e){
+      setModalTitle(stepsTitles[nextStep - 1]);
+    } catch (e) {
       console.log(e);
       if (activeStep == 3) {
         message.error("Please select slot.");
@@ -110,40 +109,40 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
     }
   };
 
-  const prev = ()  => {
+  const prev = () => {
     const prevStep = activeStep - 1;
     setActiveStep(prevStep);
-    setModalTitle(stepsTitles[prevStep-1]);
+    setModalTitle(stepsTitles[prevStep - 1]);
   }
 
   const handleSubmit = async () => {
     setLoading(true);
     const formData = form.getFieldsValue(true);
-    try{
+    try {
       formData.day = getDay(moment(formData.date));
       formData.role = user.role
       const response = await MockInterviewsService.bookInterview(formData);
-      if(response.data.success && response.data.status_code == 200){
+      if (response.data.success && response.data.status_code == 200) {
         const result = response.data.data;
         addUpcomingSession({
-          date:result.date,
-          hasSessionRate:false,
-          id:result.id,
-          mock_interview:result.mock_interview,
-          session_end_time:result.session_end_time,
-          session_start_time:result.session_start_time,
-          student_id:result.student_id,
-          tutor_id:result.tutor_id,
-          tutor_name:tutors.find(tutor => tutor.id==result.tutor_id)?.full_name
+          date: result.date,
+          hasSessionRate: false,
+          id: result.id,
+          mock_interview: result.mock_interview,
+          session_end_time: result.session_end_time,
+          session_start_time: result.session_start_time,
+          student_id: result.student_id,
+          tutor_id: result.tutor_id,
+          tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
         });
         setLoading(false);
         navigate(`/${user.role}/mock-interview`)
         message.success('You’ve successfully booked mock interview');
-      }else{
+      } else {
         setLoading(false);
         throw new Error(response.data.message)
       }
-    }catch(e){
+    } catch (e) {
       setLoading(false);
       message.error(e.message);
     }
@@ -174,7 +173,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
         <Form.Item
           name="university"
           label="Which university are you sitting a mock interview for?"
-          rules={[{ required: true , message:"Please select university"}]}
+          rules={[{ required: true, message: "Please select university" }]}
         >
           <Select
             showSearch
@@ -191,10 +190,10 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
           <Form.Item
             name="mockInterview"
             label="Which mock interview are you sitting?"
-            rules={[{ required: true, message:"Please select mock interview" }]}
+            rules={[{ required: true, message: "Please select mock interview" }]}
           >
             <Radio.Group>
-              
+
               {mockInterview.map((interview) => (
                 <Radio key={interview.id} value={interview.value}>
                   {interview.value}
@@ -209,11 +208,11 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   };
 
   const checkCredit = (tutor) => {
-    if(user.role  == 'tutor') {
-      if((tutor?.credit == 0 || tutor?.credit == null)) {
+    if (user.role == 'tutor') {
+      if ((tutor?.credit == 0 || tutor?.credit == null)) {
         return 'disabled'
-      } 
-    } 
+      }
+    }
   }
 
   const TutorPanelHeader = memo(function TutorPanelHeader({ tutor }) {
@@ -229,19 +228,19 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
             <div className={"name-degree"}>
               <h4 className={"tutor-name"}>{tutor.full_name}</h4>
               {user.role == 'tutor' &&
-              <>
-                <span>
-                  Ph No: {tutor.phone_number+ ', '}
-                </span>
-                {tutor.country && 
-                <span>
-                  Country: {tutor.country+', '}
-                </span>
-                }
-                <span>
-                  Credit: {tutor.credit || 0}
-                </span>              
-              </>
+                <>
+                  <span>
+                    Ph No: {tutor.phone_number + ', '}
+                  </span>
+                  {tutor.country &&
+                    <span>
+                      Country: {tutor.country + ', '}
+                    </span>
+                  }
+                  <span>
+                    Credit: {tutor.credit || 0}
+                  </span>
+                </>
               }
               <div
                 style={{
@@ -256,10 +255,10 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
                 {/* <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span> */}
 
                 <span>
-                {tutor.university && tutor.university.map((item, index) => (
-                    <span key={index}>{item.school}({item.degree}) {tutor.university.length-1 != index && ','}</span>
-                ))}
-               </span>
+                  {tutor.university && tutor.university.map((item, index) => (
+                    <span key={index}>{item.school}({item.degree}) {tutor.university.length - 1 != index && ','}</span>
+                  ))}
+                </span>
               </div>
             </div>
           </div>
@@ -275,37 +274,37 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   }) {
     return (
       <Radio.Group onChange={onChange} value={value}>
-         {user.role === 'student' ? 
+        {user.role === 'student' ?
           <Collapse
             bordered={false}
             defaultActiveKey={["1"]}
             expandIconPosition={`end`}
             className="site-collapse-custom-collapse"
-          > 
+          >
             {tutors.map((tutor) => (
               <Panel
                 header={<TutorPanelHeader tutor={tutor} />}
                 key={tutor.id}
                 className="site-collapse-custom-panel"
               >
-                {tutor.biography}
+                <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
               </Panel>
             ))}
-          
+
           </Collapse>
-        : 
-        <>
-          {tutors.map((tutor) => (
-            <Panel
-              header={<TutorPanelHeader tutor={tutor} />}
-              key={tutor.id}
-              className="site-collapse-custom-panel tutor_collapse"
-              title={checkCredit(tutor) == 'disabled' && 'Please select other student because student credit is 0'}
-            >
-              {tutor.biography}
-            </Panel>
-          ))}
-        </>
+          :
+          <>
+            {tutors.map((tutor) => (
+              <Panel
+                header={<TutorPanelHeader tutor={tutor} />}
+                key={tutor.id}
+                className="site-collapse-custom-panel tutor_collapse"
+                title={checkCredit(tutor) == 'disabled' && 'Please select other student because student credit is 0'}
+              >
+                <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
+              </Panel>
+            ))}
+          </>
         }
       </Radio.Group>
     );
@@ -319,20 +318,20 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
     console.log(value);
     setSearch(value);
-  } 
- 
+  }
+
   const Step2Form = memo(function Step2Form({ tutors }) {
     return (
       <>
-       <div className={"choose-tutor"}>
+        <div className={"choose-tutor"}>
           <div className="btn-group" >
-           <h3 className={"title"}>Recommended for you</h3>
-           {user.role === 'tutor' && (
-           <div className="tutor_Search">
-            <Search placeholder="input search text" onSearch={onSearch} allowClear />
-           </div> )}
+            <h3 className={"title"}>Recommended for you</h3>
+            {user.role === 'tutor' && (
+              <div className="tutor_Search">
+                <Search placeholder="input search text" onSearch={onSearch} allowClear />
+              </div>)}
           </div>
-          <Form.Item name="tutorId" label="" rules={[{ required: true, message:"Please select tutor" }]}>
+          <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select tutor" }]}>
             <TutorCollapse tutors={tutors} />
           </Form.Item>
         </div>
@@ -343,18 +342,18 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={form.getFieldValue('tutorId')} form={form} timezone={timezone} next={next} prev={prev}/>
-      {(user.role == 'tutor' && (timezone != tutors.find(tutor => tutor.id == form.getFieldValue('tutorId'))?.timezone ) ) &&  <Alert style={{top: 23}} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />} 
+        <Calender tutorId={form.getFieldValue('tutorId')} form={form} timezone={timezone} next={next} prev={prev} />
+        {(user.role == 'tutor' && (timezone != tutors.find(tutor => tutor.id == form.getFieldValue('tutorId'))?.timezone)) && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;
   };
 
-  const Step4From = ({form}) => {
+  const Step4From = ({ form }) => {
     const formData = form.getFieldsValue(true);
-    const tutorName = user.role == 'tutor' ?  tutors.find(tutor => tutor.id==formData.studentId)?.full_name : tutors.find(tutor => tutor.id==formData.tutorId)?.full_name  
-    const sessionDate =  formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
-    const sessionStartTime =  formatTime(formData.sessionStartTime)
-    const sessionEndTime =  formatTime(formData.sessionEndTime)
+    const tutorName = user.role == 'tutor' ? tutors.find(tutor => tutor.id == formData.studentId)?.full_name : tutors.find(tutor => tutor.id == formData.tutorId)?.full_name
+    const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
+    const sessionStartTime = formatTime(formData.sessionStartTime)
+    const sessionEndTime = formatTime(formData.sessionEndTime)
     return (
       <>
         <div className={"session-details"} style={{ padding: "0 10px" }}>
@@ -377,7 +376,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
             </Col>
             <Col span={14} sm={16}>
               <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-              {user.role == 'tutor' ? 'Student' : 'Tutor' }
+                {user.role == 'tutor' ? 'Student' : 'Tutor'}
               </h4>
               <div style={{ fontSize: 16 }}>{tutorName}</div>
             </Col>
@@ -405,7 +404,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
           </Row>
         </div>
         <Form.Item
-          style={{ marginTop: "17px", marginBottom: "0px"}}
+          style={{ marginTop: "17px", marginBottom: "0px" }}
           label={user.role == 'student' ? "Notes for Tutor" : "Notes for Student"}
           name="note"
         >
@@ -417,21 +416,21 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
 
   return (
     <>
-    { (!timezone) ?
-      <Tooltip
-        title={
-          "Please select your timezone first."
-        }
-        color={"#465078"}
-      >
-        <Button className={"primary-button"} >
-        Book Interview
-        </Button>
-      </Tooltip>  :
+      {(!timezone) ?
+        <Tooltip
+          title={
+            "Please select your timezone first."
+          }
+          color={"#465078"}
+        >
+          <Button className={"primary-button"} >
+            Book Interview
+          </Button>
+        </Tooltip> :
         <Button className={user.role == 'student' ? "primary-button" : "secondary-button disable-button"} onClick={showModal}>
           Book Interview
         </Button>
-    }
+      }
       <Modal
         title={modalTitle}
         open={isModalOpen}
@@ -457,7 +456,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
           loading == true ? (
             <Spin />
           ) : (
-          activeStep === totalSteps && (
+            activeStep === totalSteps && (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
                 Book Interview
               </Button>
@@ -485,7 +484,7 @@ const BookInterview = ({addUpcomingSession,timezone}) => {
           )}
           {activeStep == 4 && (
             <div style={{ width: "600px" }}>
-              <Step4From form={form}/>
+              <Step4From form={form} />
             </div>
           )}
         </Form>
