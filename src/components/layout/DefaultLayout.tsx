@@ -71,7 +71,8 @@ export const DefaultLayout: FC = () => {
           state: res.data.data.state,
           timezone: res.data.data.timezone,
           applicantType: res.data.data.applicantType,
-          university: res.data.data.university
+          university: res.data.data.university,
+          degree: res?.data?.data?.degree
         })
         await setLaoding(false)
       })();
@@ -182,7 +183,7 @@ export const DefaultLayout: FC = () => {
   const { isTablet } = useBreakpoints()
   if (loading)
     return null
-  
+
   return (
     <ProfileStaticDataContext.Provider value={profileStaticData}>
       <NotificationContext.Provider value={{ unreadNotificationCount, setUnreadNotificationCount }}>
