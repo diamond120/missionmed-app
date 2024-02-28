@@ -64,24 +64,26 @@ const Education: FC<Any> = ({ props }) => {
     setEditing(false);
   };
 
-  const CustomSchoolSelectInput = ({ onChange }) => {
+  const CustomSchoolSelectInput = ({ onChange, value }) => {
     return (
       <CreatableSelect
         options={optionsSchools}
         placeholder={"Enter a value"}
         isDisabled={!editing}
         onChange={(e) => onChange(e.value)}
+        defaultValue={{ value: value, label: value }}
       />
     );
   };
 
-  const CustomDegreeSelectInput = ({ onChange }) => {
+  const CustomDegreeSelectInput = ({ onChange, value }) => {
     return (
       <CreatableSelect
         options={optionsDegrees}
         placeholder={"Enter a value"}
         isDisabled={!editing}
         onChange={(e) => onChange(e.value)}
+        defaultValue={{ value: value, label: value }}
       />
     );
   };
