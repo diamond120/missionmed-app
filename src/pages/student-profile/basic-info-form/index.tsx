@@ -265,10 +265,10 @@ const BasicInfoForm: FC<any> = ({ props }) => {
         <Form.Item
           name={"state"}
           label={"Curriculum"}
-          rules={[{ required: true, }]}
+          rules={[{ required: true,message:'curriculum is required' }]}
           initialValue={student?.state}
         >
-          <AutoComplete
+          <Select
             options={optionsState}
             style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
             placeholder={"Enter a value"}
