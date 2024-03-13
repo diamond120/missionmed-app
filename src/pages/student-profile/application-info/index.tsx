@@ -4,6 +4,7 @@ import { FC, useState } from "react"
 import {useStudent, useStudentDispatch} from "../../../api/providers/StudentProvider";
 import {useProfileStaticDataContext} from "../../../api/context/ProfileStaticDataContext";
 import StudentService from "../../../api/services/Student";
+import moment from "moment";
 
 const ApplicationInfo: FC<any> = ({props}) => {
   const student = useStudent();
@@ -16,10 +17,11 @@ const ApplicationInfo: FC<any> = ({props}) => {
   const [atar, setAtar] = useState<string | undefined | null>("")
   const [gpa, setGpa] = useState<string | undefined | null>("")
 
-  const optionsApplicantCycle: string[]= [
-    "2022 / 2023",
-    "2021 / 2022",
-    "2020 / 2021",
+  const optionsApplicantCycle: string[] = [
+    `${moment().format('YYYY')} / ${moment().add(1, 'y').format('YYYY')}`,
+    `${moment().add(1, 'y').format('YYYY')} / ${moment().add(2, 'y').format('YYYY')}`,
+    `${moment().add(2, 'y').format('YYYY')} / ${moment().add(3, 'y').format('YYYY')}`,
+    `${moment().add(3, 'y').format('YYYY')} / ${moment().add(4, 'y').format('YYYY')}`,
   ]
   const optionsApplicantType: string[]= profileStaticData.applicantType;
 
