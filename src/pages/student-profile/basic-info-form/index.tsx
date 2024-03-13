@@ -218,8 +218,9 @@ const BasicInfoForm: FC<any> = ({ props }) => {
             { required: true, },
             { type: 'email', message: 'Please enter a valid email address' },
           ]}
+          tooltip={editing ? 'If you would like to change your email address, please contact support@missionmed.com.au.' : ''}
         >
-          <Input className={"input"} disabled={!editing} style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }} type={"email"} onChange={e => setEmail(e.target.value)} />
+          <Input className={"input"} disabled={true} style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }} type={"email"} onChange={e => setEmail(e.target.value)} />
         </Form.Item>
         <Form.Item
           name={"phone"}
@@ -265,7 +266,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
         <Form.Item
           name={"state"}
           label={"Curriculum"}
-          rules={[{ required: true,message:'curriculum is required' }]}
+          rules={[{ required: true, message: 'curriculum is required' }]}
           initialValue={student?.state}
         >
           <Select
@@ -283,7 +284,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
           label={"Timezone"}
           rules={[{ required: true, }]}
           initialValue={student?.timezone}
-          style={{marginBottom:5}}
+          style={{ marginBottom: 5 }}
         >
           {customSelect()}
         </Form.Item>
