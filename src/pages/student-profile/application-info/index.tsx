@@ -76,14 +76,13 @@ const ApplicationInfo: FC<any> = ({props}) => {
     <div className={"application-info-section"}>
       <h2 className={"application-info-section-title"}>Application Information</h2>
         <Form className={"application-info-form"} form={form} colon={false}>
-
           <Form.Item
             name={"Applicant Cycle"}
             rules={[{ required: true, }]}
             label={"Applicant Cycle"}
             initialValue={student.applicantCycle}
-          > 
-            <AutoComplete
+        > 
+          <Select
               options={optionsApplicantCycle && optionsApplicantCycle.map((option) => ({ value: option}))}
               style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
               placeholder={"Enter a value"}
@@ -91,7 +90,6 @@ const ApplicationInfo: FC<any> = ({props}) => {
               value={applCycle}
               disabled={!editing}
               onChange={(value) => {setApplCycle(value); form.setFieldValue('Applicant Cycle',value )}}
-
             />
           </Form.Item>
           <Form.Item
