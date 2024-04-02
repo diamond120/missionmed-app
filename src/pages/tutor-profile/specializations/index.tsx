@@ -54,7 +54,6 @@ const Specializations: FC<Any> = ({props}) => {
     } else {
       setLessionTypeID(lessionTypeID.filter((item) => item !== id.toString()));
     }
-    console.log("lessionTypeID",lessionTypeID);
   }
 
   if(tutor?.loading){

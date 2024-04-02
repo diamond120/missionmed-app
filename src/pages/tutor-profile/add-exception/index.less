@@ -1,0 +1,62 @@
+[data-theme='compact'] .site-collapse-custom-collapse .site-collapse-custom-panel,
+.site-collapse-custom-collapse .site-collapse-custom-panel {
+  margin-bottom: 24px;
+  overflow: hidden;
+  background: #f7f7f7;
+  border: 0px;
+  border-radius: 2px;
+}
+.freeze-sessions{
+  .ant-form-item{
+    .input{
+      width: 100%;
+    }
+  }
+}
+.exception-btn{
+  width: 100%;
+  margin-top: 10px;
+}
+
+.hours-title{
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+  padding-left: 10px;
+}
+.add-exception-form{
+    .ant-form-item{
+      .ant-form-item-control-input{
+        .ant-radio-group{
+          flex-direction: row !important;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  .time-input-group{
+    .ant-space{
+      &:first-child{
+        .ant-space-item{
+          min-width: 46%;  
+        }
+      }
+    }
+    .ant-space-item:not(:last-child ){
+      min-width: 46%;
+    }
+  }
+}
+
+
+@media (max-width:767px){
+  .freeze_dates{
+      flex-wrap: wrap;
+      .ant-form-item{
+        max-width: 100% !important;
+        .input{
+          max-width: 85%;
+        }
+      }
+  }
+
+}

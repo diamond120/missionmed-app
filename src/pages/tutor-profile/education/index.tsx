@@ -13,7 +13,6 @@ const Education: FC<Any> = ({ props }) => {
   const dispatch = useTutorDispatch();
   const [editing, setEditing] = useState(false)
   const profileStaticData = useProfileStaticDataContext();
-  // console.log(profileStaticData)
   const { Option } = Select
   // const optionsSchools: string[] = [
   //   "James Cook University",

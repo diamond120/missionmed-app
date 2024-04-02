@@ -117,7 +117,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap' }}>
 
           <Button disabled={(session.isWithin24Hours) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-          <CancleSession title='Cancel Session' moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+          <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
         </div>
       )}
