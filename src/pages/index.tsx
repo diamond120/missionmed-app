@@ -25,6 +25,7 @@ const StudentUCATSession = lazy(() => import("./student-ucat-session"))
 const TutorUCATSession = lazy(() => import("./tutor-ucat-session"))
 const StudentTeachingSession = lazy(() => import("./student-teaching-session"))
 const TutorTeachingSession = lazy(() => import("./tutor-teaching-session"))
+const StudentReadingTraining = lazy(() => import("./student-reading-training"))
 
 
 const routes: RouteObject[] = [
@@ -120,6 +121,11 @@ const routes: RouteObject[] = [
       {
         Component: TutorUCATSession,
         path: "/tutor/ucat-session",
+        index: true,
+      },
+      {
+        Component: StudentReadingTraining,
+        path: "/student/reading-trainer",
         index: true,
       },
       {
