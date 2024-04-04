@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useTutor } from "../../api/providers/TutorProvider"
 import MeetingLink from "./meeting-link";
+import SpecialDays from "./special-days";
 
 const TutorProfile = () => {
   const [rating, setRating] = useState(null);
@@ -85,7 +86,10 @@ const TutorProfile = () => {
 
             <TabPane tab={"Teaching"} key={"teaching"}>
               <div className={"working-time-wrap"}>
-                <WorkingDaysHours />
+                <div className="flex-col">
+                  <WorkingDaysHours />
+                  <SpecialDays/>
+                </div>
                 <div>
                   <Specializations />
                   <BufferTime />

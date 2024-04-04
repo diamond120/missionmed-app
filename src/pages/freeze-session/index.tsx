@@ -11,7 +11,7 @@ const { Panel } = Collapse;
 const { TextArea } = Input;
 
 
-const FreezeSession = ({title,moduleType,addFreezeSession}) => {
+const FreezeSession = ({title,moduleType,addFreezeSession, sessionType='', showCancelModal}) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   
@@ -50,20 +50,24 @@ const FreezeSession = ({title,moduleType,addFreezeSession}) => {
       setLoading(false);
       message.error(e.message);
     }
-    handleCancel();
+    setIsModalOpen(false);
+    form.resetFields();
   }
 
   const handleCancel = () => {
     setIsModalOpen(false);
     form.resetFields();
+    if(sessionType) showCancelModal()
   };
 
   const showModal = () => {
+    addFreezeSession();
     setIsModalOpen(true);
     setModalTitle(title);
   };
 
   const handleOk = () => {
+   
     setIsModalOpen(false);
   };
 
@@ -82,7 +86,7 @@ const FreezeSession = ({title,moduleType,addFreezeSession}) => {
 
   return (
     <>
-      <Button onClick={showModal} className={"secondary-button"}>
+      <Button onClick={showModal} className={sessionType ? "primary-button" :"secondary-button"}>
         {title}
       </Button>
       <Modal
@@ -99,7 +103,12 @@ const FreezeSession = ({title,moduleType,addFreezeSession}) => {
               <Spin />
             ) : (
             <>
-            <Button className={"secondary-button"} onClick={handleSubmit}>Cancel</Button>
+          <Button 
+            className={"secondary-button"} 
+            onClick={() => sessionType ? (setIsModalOpen(false), showCancelModal()) :handleSubmit() }
+          >
+            Cancel
+          </Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Freeze Sessions</Button>
             </>
             )}

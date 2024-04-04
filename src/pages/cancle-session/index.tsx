@@ -1,17 +1,21 @@
 import "./index.less";
-import { Button, Modal, message } from "antd";
+import { Button, Modal, Spin, message } from "antd";
 import { useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useNavigate } from "react-router-dom";
+import FreezeSession from "../freeze-session";
 
 const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSession}) => {
+  // console.log(addUpcomingSession.session_type);
   const navigate = useNavigate();
   
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async () => {
     try{
-
+      setLoading(true);
       let data = {
         sessionId : addUpcomingSession.id
       }
@@ -38,6 +42,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
       message.error(e.message);
     }
     handleCancel();
+    setLoading(false);
   }
 
   const handleCancel = () => {
@@ -46,7 +51,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
 
   const showModal = () => {
     setIsModalOpen(true);
-    setModalTitle(title);
+    setModalTitle(addUpcomingSession.session_type == 'Recurring Session' ? 'Cancel All Recurring Sessions' : title);
   };
 
   const handleOk = () => {
@@ -66,14 +71,22 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
-            <>
-            <Button className={"secondary-button"} onClick={handleCancel}>Cancel</Button>
-            <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Cancel Sessions</Button>
+          <>
+          {loading == true ? (
+            <Spin />
+          ) : (
+            <>  
+            <Button className={"secondary-button"} onClick={handleCancel}>Back</Button>
+            {addUpcomingSession.session_type == 'Recurring Session' &&
+            <FreezeSession title='Freeze Session' moduleType="teaching" addFreezeSession={() => {handleOk() , cancleUpcomingSession(addUpcomingSession) }} showCancelModal={showModal} sessionType={addUpcomingSession.session_type} /> }
+            <Button className={"primary-button"} style={{backgroundColor: 'red'}} htmlType="submit" onClick={handleSubmit}>Cancel Sessions</Button>
             </>
+          )}
+          </>
         ]}
         >
         <div>
-            <h2>Are you sure you want to cancel session? </h2>
+            <h2>{addUpcomingSession.session_type == 'Recurring Session' ? 'Are you sure you want to cancel your recurring sessions with your tutor? If you meant to pause, click Freeze Sessions instead.' :'Are you sure you want to cancel session?'} </h2>
         </div>
       </Modal>
     </>
