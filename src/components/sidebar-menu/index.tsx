@@ -219,11 +219,11 @@ const SidebarMenu: React.FC = () => {
             {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
             <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session </Menu.Item>
           </SubMenu>
-          {isStudent &&
+          {/* {isStudent &&
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<ReadOutlined  style={{fontSize: "24px", }}  />} >
               Speed Reading Trainer  
             </Menu.Item>
-          }
+          } */}
         </>
         {/* )} */}
 
