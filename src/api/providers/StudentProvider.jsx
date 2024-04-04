@@ -80,7 +80,8 @@ function StudentReducer(student, action) {
               financialHardship:stringToBoolean(action.financialHardship),
               gws:stringToBoolean(action.gws),
               card_digit:action.card_digit,
-              country: action.country
+              country: action.country,
+              timezone_id:action.timezone_id,
           };
         }
         case 'update': {
