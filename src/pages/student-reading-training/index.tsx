@@ -3,9 +3,7 @@ import React, {useEffect, useState} from "react";
 import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, DownOutlined,QuestionCircleFilled } from "@ant-design/icons";
 import { Breadcrumb, message, Space, Menu, Dropdown, Button, Empty, Typography, Card, Tag, Form, Row, Radio, Tabs } from "antd";
-import {getToken} from "../../common/common";
-
-import axios from 'axios';
+import CommonService from "../../api/services/Common";
 
 const StudentReadingTraining = () => {
 
@@ -39,22 +37,10 @@ const StudentReadingTraining = () => {
         getTrainingData();
     }, []);
 
-    const newhttp = axios.create({
-        baseURL: 'http://127.0.0.1:8000/api/',
-        headers: {
-          "Content-type": "application/json"
-        }
-      });
 
     const getTrainingData = async () => {
         try {
-            const token = `Bearer ${getToken()}`;
-            const config = {
-                headers:{
-                'Authorization': token
-                }
-            }
-            const response = await newhttp.get("/student/reading-trainer",config);
+            const response =  await CommonService.getAPI("/student/reading-trainer");
             if (response.data.success) {
                 const themes = response.data.data.theme.map(theme => ({
                     label: theme.name,
@@ -82,17 +68,11 @@ const StudentReadingTraining = () => {
 
     const getStory = async () => {
         try {
-            const token = `Bearer ${getToken()}`;
-            const config = {
-                headers:{
-                'Authorization': token
-                }
-            }
             const data = {
                 'theme' : theme?.key,
                 'textComplexitylevel' : textComplexity?.key
             }
-            const response = await newhttp.post("/student/student-story",data,config);
+            const response = await CommonService.postAPI("/student/student-story",data);
             if (response.data.success) {
                 if(!response.data.data) {
                     message.error('No story Found.');
@@ -115,9 +95,6 @@ const StudentReadingTraining = () => {
     const textOptions = (
         <Menu onClick={handleTextComplexityClick} items={textComplexityList}/>
     );
-
-   
-
     
     useEffect(() => {
         let timer;
@@ -133,7 +110,6 @@ const StudentReadingTraining = () => {
               calculatedWpm = wordsArray.length / calculatedWpm;
               calculatedWpm *= 60;
               if (calculatedWpm < 50000) {
-                // setWpm(calculatedWpm.toFixed(0));
                 console.log("te",isRead);
                 setWpm(prevWpm => {
                     const roundedWpm = calculatedWpm.toFixed(0);
@@ -154,26 +130,20 @@ const StudentReadingTraining = () => {
       }, [numWordsInText,story, isRead]);
 
     const handleReading = async () => {
-    try {
-        const token = `Bearer ${getToken()}`;
-        const config = {
-            headers:{
-            'Authorization': token
+        try {
+            const data = {
+                'story' : story?.id,
+                'wpm' : wpm
             }
-        }
-        const data = {
-            'story' : story?.id,
-            'wpm' : wpm
-        }
-        const response = await newhttp.post("/student/story-reading",data,config);
-        if (response.data.success) {
-            setTraining(response.data.data)
-            setIsRead(true)
-        } else {
-            throw new Error(response.data.message);
-        }
-        } catch (e) {
-        message.error(e.message);
+            const response =  await CommonService.postAPI("/student/story-reading",data);
+            if (response.data.success) {
+                setTraining(response.data.data)
+                setIsRead(true)
+            } else {
+                throw new Error(response.data.message);
+            }
+            } catch (e) {
+            message.error(e.message);
         }
     }
 
@@ -189,18 +159,12 @@ const StudentReadingTraining = () => {
             'is_correct': answer.is_correct
         }));
         try {
-            const token = `Bearer ${getToken()}`;
-            const config = {
-                headers:{
-                'Authorization': token
-                }
-            }
             const data = {
                 'training_id' : training?.id,
                 'answers' : payload,
                 'score' : total,
             }
-            const response = await newhttp.post("/student/save-answers",data,config);
+            const response = await CommonService.postAPI("/student/save-answers",data);
             if (response.data.success) {
                 setIsRead(true)
             } else {
@@ -228,44 +192,44 @@ const StudentReadingTraining = () => {
     }
 
     const QuestionForm = () => {
-         return <Form
-                            form={form}
-                            name="basic"
-                            labelCol={{ span: 8 }}
-                            wrapperCol={{ span: 16 }}
-                            style={{ maxWidth: 600 }}
-                            initialValues={{ remember: true }}
-                            onFinish={handleSubmitAnswer}
-                            layout="vertical"
-                            autoComplete="off"
+        return <Form
+                    form={form}
+                    name="basic"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    style={{ maxWidth: 600 }}
+                    initialValues={{ remember: true }}
+                    onFinish={handleSubmitAnswer}
+                    layout="vertical"
+                    autoComplete="off"
+                >
+                    {story?.questions.map((question, i) => (
+                    <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}>
+                        <Radio.Group 
+                        className="radio_buttons"
+                        style={{ width: "100%" }}
                         >
-                            {story?.questions.map((question, i) => (
-                            <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}>
-                                <Radio.Group 
-                                className="radio_buttons"
-                                style={{ width: "100%" }}
-                                >
-                                {question?.answers.map((answer, j) => (
-                                    <>
-                                    <Row>
-                                        <Radio value={answer} disabled={isSubmit} name={`question_${i}`}>{String.fromCharCode(65 + j)} {') '} {answer.answer}</Radio>
-                                    </Row>
-                                    {isSubmit &&
-                                        <>
-                                        {(answer?.is_correct || form.getFieldValue(`question_${i}`) == answer )  && 
-                                            <Tag color={answer.is_correct ? 'green' : 'red'} className="ml_1">
-                                                {answer.is_correct ? 'Correct: ' : 'Incorrect: '} {answer.reason}
-                                            </Tag>
-                                        }
-                                        </>
-                                    }
-                                    </>
-                                ))}
-                                </Radio.Group>
-                            </Form.Item>
-                            ))}
+                        {question?.answers.map((answer, j) => (
+                            <>
+                            <Row>
+                                <Radio value={answer} disabled={isSubmit} name={`question_${i}`}>{String.fromCharCode(65 + j)} {') '} {answer.answer}</Radio>
+                            </Row>
+                            {isSubmit &&
+                                <>
+                                {(answer?.is_correct || form.getFieldValue(`question_${i}`) == answer )  && 
+                                    <Tag color={answer.is_correct ? 'green' : 'red'} className="ml_1">
+                                        {answer.is_correct ? 'Correct: ' : 'Incorrect: '} {answer.reason}
+                                    </Tag>
+                                }
+                                </>
+                            }
+                            </>
+                        ))}
+                        </Radio.Group>
+                    </Form.Item>
+                    ))}
 
-                        </Form>
+                </Form>
     }
     
     return (
