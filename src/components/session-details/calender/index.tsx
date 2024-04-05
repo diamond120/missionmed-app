@@ -192,9 +192,12 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
 
   useEffect(() => {
     const addClassToParent = () => {
+      console.log('add to parent');
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
+        console.log('found parent');
         element.parentNode.classList.add('bookedslot');
+        console.log('class added');
       });
     };
     const timeoutId = setTimeout(addClassToParent, 5000);
