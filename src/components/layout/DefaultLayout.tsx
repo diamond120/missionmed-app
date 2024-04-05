@@ -70,6 +70,7 @@ export const DefaultLayout: FC = () => {
           location: res.data.data.location,
           state: res.data.data.state,
           timezone: res.data.data.timezone,
+          timezone_id: res.data.data.timezone_id,
           applicantType: res.data.data.applicantType,
           university: res.data.data.university,
           degree: res?.data?.data?.degree
@@ -115,7 +116,8 @@ export const DefaultLayout: FC = () => {
               gws: result.data.data.gws ?? null,
               credit: result.data.data.credit ?? 0,
               card_digit: result.data.data.card_digit ?? '',
-              country: result.data.data.country ?? ''
+              country: result.data.data.country ?? '',
+              timezone_id: result.data.data.timezone_id ?? ''
             })
             await studentDispatch({ type: 'loading', loading: false })
           } catch (error) {
@@ -162,7 +164,8 @@ export const DefaultLayout: FC = () => {
               mockLessionTime: result.data.data.mock_lession_time ?? null,
               ucatLessionTime: result.data.data.ucat_lession_time ?? null,
               personalMeetingId: result.data.data.personal_meeting_id ?? '',
-              country: result.data.data.country ?? ''
+              country: result.data.data.country ?? '',
+              timezone_id: result.data.data.timezone_id ?? ''
             })
             await tutorDispatch({ type: 'loading', loading: false })
           } catch (error) {
