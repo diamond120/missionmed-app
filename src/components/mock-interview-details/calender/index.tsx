@@ -90,7 +90,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
           element.parentNode.classList.add('bookedslot');
         });
       };
-      const timeoutId = setTimeout(addClassToParent, 2000);
+      const timeoutId = setTimeout(addClassToParent, 5000);
       return () => clearTimeout(timeoutId);
     }, []); 
 
