@@ -290,7 +290,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
           name={"timezone"}
           label={"Timezone"}
           rules={[{ required: true, }]}
-          initialValue={studentTimezone?.title}
+          initialValue={studentTimezone?.id}
           style={{ marginBottom: 5 }}
         >
           {customSelect()}
