@@ -175,7 +175,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       setIsModalOpen(false);
       next();
     }
-    console.log(slotsList)
 
     return (
       <>
