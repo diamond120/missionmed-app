@@ -31,6 +31,7 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
     ...allTimezones,
   }
   const { options, parseTimezone } = useTimezoneSelect({ timezones, labelStyle, displayValue: "UTC" })
+  const [ timezone, setTimeZone ] = useState(profileStaticData.timezone ?? [])
   const localTimezone = parseTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone)
 
   const countries = useMemo(() => countryList().getData(), [])
@@ -44,7 +45,8 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
       phoneNumber: phone !== '' ? phone : tutor?.phoneNumber,
       pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
       location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
-      timezone: form.getFieldValue('timezone'),
+      // timezone: form.getFieldValue('timezone'),
+      timezone_id: form.getFieldValue('timezone'),
       country: country !== '' ? country : tutor?.country,
     });
     dispatch({
@@ -57,6 +59,7 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
         pronouns: pronouns !== '' ? pronouns : tutor?.pronouns,
         location: autoSelected ? autoSelectedLocation : location !== '' ? location : tutor?.location,
         timezone: form.getFieldValue('timezone'),
+        timezone_id: form.getFieldValue('timezone'),
         country: country !== '' ? country : tutor?.country
       }
     })
@@ -104,7 +107,8 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
   const handleSwitchCase = (val: boolean) => {
     setAutoSelectedTimezone(val);
     if (val == true) {
-      form.setFieldValue('timezone', localTimezone.label);
+      const timezoneTitle = timezone.find(obj => obj.timezone == localTimezone.value);
+      form.setFieldValue('timezone', timezoneTitle.id);
       navigator.geolocation.getCurrentPosition(success, error)
     }
   }
@@ -112,8 +116,8 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
   const customSelect = () => {
     return (
       <Select style={{ width: 328 }} disabled={!editing}>
-        {options.map(option => (
-          <Option key={option.label} value={option.label}>{option.label}</Option>
+        {timezone && timezone.map(option => (
+          <Option key={option.title} value={option.id}>{option.title}</Option>
         ))}
       </Select>
     )
@@ -126,6 +130,8 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
       <Spin />
     )
   }
+
+  const studentTimezone = timezone.find(obj => obj.id == tutor?.timezone_id);
 
   return (
     <div className={"basic-information"}>
@@ -240,7 +246,7 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
           name={"timezone"}
           label={"Timezone"}
           rules={[{ required: true }]}
-          initialValue={tutor?.timezone}
+          initialValue={studentTimezone?.title}
           style={{ marginBottom: 5 }}
         >
           {customSelect()}

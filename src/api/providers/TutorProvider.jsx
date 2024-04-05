@@ -49,6 +49,7 @@ function TutorReducer(tutor, action) {
         phoneNumber: action.phoneNumber,
         location: action.location,
         timezone: action.timezone,
+        timezone_id: action.timezone_id,
         biography: action.biography,
         lessionType: action.lessionType,
         bufferTime: action.bufferTime,
