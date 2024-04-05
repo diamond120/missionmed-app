@@ -3,7 +3,7 @@ import { Button, Form, Modal, message, Select, Input, DatePicker, Spin, Radio, S
 import { useEffect, useState } from "react";
 import moment from "moment";
 import CommonService from "../../../api/services/Common";
-import {  PlusOutlined, ClockCircleOutlined,  MinusCircleOutlined, EditOutlined } from "@ant-design/icons";
+import {  PlusOutlined, ClockCircleOutlined,  MinusCircleOutlined, EditOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 const AddException = ({title, callAdded, editedData = null }) => {
   const [form] = Form.useForm();
@@ -13,6 +13,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
   const dateFormat = 'DD/MM/YYYY';
   const format = "h:mm a";  
   const { RangePicker } = DatePicker;
+  const [modal, contextHolder] = Modal.useModal();
 
 
   const [loading, setLoading] = useState(false);
@@ -43,9 +44,32 @@ const AddException = ({title, callAdded, editedData = null }) => {
         response = await CommonService.postAPI('/tutor/add-exception',updatedObject);
       }
       if(response.data.success){
-        callAdded()
-        setLoading(false);
-        message.success('You’ve successfully added special days');
+        
+        if(response.data.data.alreadyBook) {
+          const result = response.data.data.student.map(item => `${item.full_name} (${item.email})`).join(', ');
+          const contentElement = (
+            <table>
+              <tbody>
+                <tr>
+                  <th style={{width:'15%'}}>Students :</th>
+                  <td>{result}</td>
+                </tr>
+              </tbody>
+            </table>
+          );
+          modal.confirm({
+            className: 'custom-modal-class',
+            title: 'Below Students Booked some sessions for this time slots. Please let them know to cancel first.',
+            icon: <ExclamationCircleOutlined />,
+            content: contentElement,
+            okText: 'Okay'
+          });
+        } else {
+          callAdded()
+          setLoading(false);
+          message.success('You’ve successfully added special days');
+        }
+        
       }else{
         setLoading(false);
         throw new Error(response.data.message)
@@ -55,6 +79,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
       message.error(e.message);
     }
     handleCancel();
+    
   }
 
   const handleCancel = () => {
@@ -62,6 +87,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
     if (editedData) {
       setIntialValue(editedData)
     }
+    form.resetFields();
   };
 
   const showModal = () => {
@@ -296,7 +322,6 @@ const AddException = ({title, callAdded, editedData = null }) => {
                                     style={{ width: "140px" }}
                                     className={"input time-date_select"}
                                     options={timeIntervals}
-                                    
                                     suffixIcon={<ClockCircleOutlined />}
                                     />
                                 </Form.Item>
@@ -325,6 +350,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
             </div>
           </Form>
       </Modal>
+      {contextHolder}
     </>
   );
 };
