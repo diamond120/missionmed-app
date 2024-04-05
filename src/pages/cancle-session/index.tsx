@@ -86,7 +86,10 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         ]}
         >
         <div>
-            <h2>{addUpcomingSession.session_type == 'Recurring Session' ? 'Are you sure you want to cancel your recurring sessions with your tutor? If you meant to pause, click Freeze Sessions instead.' :'Are you sure you want to cancel session?'} </h2>
+          {addUpcomingSession.session_type == 'Recurring Session' ?
+           <p>Are you sure you want to cancel your recurring sessions with your tutor? <br />If you meant to pause, click <b>Freeze Sessions</b> instead. </p>:
+           <p>Are you sure you want to cancel session? </p>
+          }   
         </div>
       </Modal>
     </>

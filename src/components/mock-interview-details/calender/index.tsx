@@ -83,6 +83,17 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       }
     }, [tutorId,filterDate,filterDateSet,subSlotList]);
 
+    useEffect(() => {
+      const addClassToParent = () => {
+        const elementsWithABCClass = document.querySelectorAll('.otherslot');
+        elementsWithABCClass.forEach(element => {
+          element.parentNode.classList.add('bookedslot');
+        });
+      };
+      const timeoutId = setTimeout(addClassToParent, 2000);
+      return () => clearTimeout(timeoutId);
+    }, []); 
+
     let selectedEvent = null;
 
     const handleEventClick = async (info) => {
