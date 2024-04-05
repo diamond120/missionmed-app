@@ -58,6 +58,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
             </table>
           );
           modal.confirm({
+            className: 'custom-modal-class',
             title: 'Below Students Booked some sessions for this time slots. Please let them know to cancel first.',
             icon: <ExclamationCircleOutlined />,
             content: contentElement,
