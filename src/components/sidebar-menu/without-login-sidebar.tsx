@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { Layout, Menu, Badge } from 'antd';
-import { ReadOutlined, BellOutlined, LoginOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom"
 import { SvgIcon } from "../icon";
 
@@ -34,10 +34,6 @@ const WithoutLoginSidebar: React.FC = () => {
         {collapsed ? <SvgIcon className={"sidebar-menu-logo-small"} type={"logoSidebar"} /> : <SvgIcon className={"sidebar-menu-logo"} type={"fullLogo"} />}
       </div>
       <Menu onClick={handleSelectedMenu} expandIcon={collapsed ? <CaretRightOutlined style={{ color: "rgb(255,255,255,0.65", }} /> : <CaretDownOutlined style={{ color: "rgb(255,255,255,0.65)" }} />} mode={"inline"} selectedKeys={[current]} style={{ borderRight: 0, height: "0" }}>
-        <Menu.Item  key={'/application_review'} icon={<FileDoneOutlined style={{ fontSize: "24px", }} />} className={"custom-application-review-item"}>
-          Application Review <CrownOutlined className="yellow-svg"/>
-        </Menu.Item>
-        
        
         <>
           <SubMenu
@@ -47,8 +43,8 @@ const WithoutLoginSidebar: React.FC = () => {
 
             />}
           >
-            <Menu.Item onClick={() => { navigate('student/mock-interview' ) }} key={'/student/mock-interview' } >Mock Interview <CrownOutlined  className="yellow-svg"/> </Menu.Item>
-            <Menu.Item onClick={() => { navigate('student/teaching-session') }} key={'/student/teaching-session'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
+            <Menu.Item onClick={() => { navigate('/mock-premium' ) }} key={'/mock-premium' } >Mock Interview <CrownOutlined  className="yellow-svg"/> </Menu.Item>
+            <Menu.Item onClick={() => { navigate('/teaching-premium') }} key={'/teaching-premium'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
           </SubMenu>
 
           <SubMenu
@@ -56,16 +52,12 @@ const WithoutLoginSidebar: React.FC = () => {
             title={<>UCAT Sessions <CrownOutlined  className="yellow-svg"/>  </>}
             icon={<ReadOutlined style={{ fontSize: "24px", color: "white" }} key={"7"} />}
           >
-            <Menu.Item onClick={() => { navigate( 'tutor/ucat-session') }} key={'/tutor/ucat-session'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
+            <Menu.Item onClick={() => { navigate( '/ucat-premium') }} key={'/ucat-premium'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
           </SubMenu>
             <Menu.Item  key={"/"} onClick={() =>{navigate('/')}}  className={"custom-profile-item"} icon={<ReadOutlined  style={{fontSize: "24px", }}  />} >
               Speed Reading Trainer  
             </Menu.Item>
         </>
-
-        <Menu.Item key={ '/student_notifications'} onClick={() => { navigate('tutor_notifications') }} style={{ position: "fixed", bottom: "70px", width: "280px" }} icon={<Badge > <BellOutlined style={{ fontSize: "24px" }} /> </Badge>} className={"notification-item custom-notification-item"}>
-          Notifications <CrownOutlined  className="yellow-svg"/>
-        </Menu.Item>
 
         <Menu.Item style={{ position: "fixed", bottom: "24px", width: "280px" }} onClick={() => { navigate('sign_in') }} key={"14"} icon={<LoginOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
           Login
