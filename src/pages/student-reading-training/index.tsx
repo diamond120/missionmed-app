@@ -4,6 +4,7 @@ import Section from "../../components/shared-ui/Section";
 import { HomeOutlined, DownOutlined,QuestionCircleFilled } from "@ant-design/icons";
 import { Breadcrumb, message, Space, Menu, Dropdown, Button, Empty, Typography, Card, Tag, Form, Row, Radio, Tabs } from "antd";
 import CommonService from "../../api/services/Common";
+import UnderConstructionPage from '../under-construction-page'
 
 const StudentReadingTraining = () => {
 
@@ -21,6 +22,7 @@ const StudentReadingTraining = () => {
     const [training, setTraining] = useState();
     const [form] = Form.useForm();
     const { TabPane } = Tabs;
+    const constuction = true;
 
     const handleThemeClick = (e : any) => {
         const selectedOption = themeList.find(theme => theme.key === e.key);
@@ -244,6 +246,9 @@ const StudentReadingTraining = () => {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Speed Reading Trainer</Breadcrumb.Item>
             </Breadcrumb>
+            {constuction ? 
+                <UnderConstructionPage />
+            :
             <div className={"con-section-wrap tutor-mock-section-wrap"}>
             <div
                 style={{
@@ -350,6 +355,7 @@ const StudentReadingTraining = () => {
                 }
         </div>
             </div>
+            }
         </Section>
         </React.Fragment>
     );

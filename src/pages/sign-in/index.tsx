@@ -51,7 +51,7 @@ const SignIn = () => {
       <div className={"sign-in-left"}>
         <div className={"sign-in-left-wrap"}>
           <div className={"sign-in-left-title-wrap"}>
-            <SignInLogo />
+            <a href={`/`}><SignInLogo /></a>
             <h2 className={"sign-in-left-title"}>Welcome Back!</h2>
             <h2 className={"sign-in-left-subtitle"}>Log In to your account</h2>
           </div>
