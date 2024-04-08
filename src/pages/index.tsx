@@ -1,6 +1,7 @@
 import { FC, lazy, memo } from "react";
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { DefaultLayout } from "../components/layout";
+import { LayoutWithoutLogin } from "../components/layout/LayoutWithoutLogin";
 import { Loader } from "../components/layout/Loader";
 import SignInLayout from "../components/layout/SignInLayout"
 ;
@@ -29,6 +30,15 @@ const StudentReadingTraining = lazy(() => import("./student-reading-training"))
 
 
 const routes: RouteObject[] = [
+  {
+    Component: LayoutWithoutLogin,
+    children: [
+      {
+        Component: StudentReadingTraining,
+        path: "/",
+        index: true,
+      }]
+  },
   {
     Component: DefaultLayout,
     loader: () => <Loader spinning />,

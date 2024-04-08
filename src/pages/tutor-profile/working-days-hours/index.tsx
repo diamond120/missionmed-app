@@ -84,7 +84,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
 
   const handleEditClick = (e) => {
     try {
-      if(!tutor?.timezone || !tutor.personalMeetingId) {
+      if(!tutor?.timezone_id || !tutor.personalMeetingId) {
       throw new Error("Please select Time Zone and set Personal Meeting ID first.");
       } else  {
         setEditing(true);
@@ -116,7 +116,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
 
     try {
       
-      if(!tutor?.timezone || !tutor.personalMeetingId) {
+      if(!tutor?.timezone_id || !tutor.personalMeetingId) {
         throw new Error("Please select Time Zone and set Personal Meeting ID first.");
       }
      

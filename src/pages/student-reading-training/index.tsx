@@ -25,12 +25,14 @@ const StudentReadingTraining = () => {
     const handleThemeClick = (e : any) => {
         const selectedOption = themeList.find(theme => theme.key === e.key);
         setTheme(selectedOption)
+        setIsSubmit(false)
     };
 
 
     const handleTextComplexityClick = (e : any) => {
         const selectedOption = textComplexityList.find(textComplexity => textComplexity.key === e.key);
         setTextComplexity(selectedOption);
+        setIsSubmit(false)
     };
         
     useEffect(() => {
@@ -170,9 +172,10 @@ const StudentReadingTraining = () => {
             } else {
                 throw new Error(response.data.message);
             }
-            } catch (e) {
+        } catch (e) {
             message.error(e.message);
         }
+        
     };
 
     const handleCancel = () => {
@@ -323,7 +326,7 @@ const StudentReadingTraining = () => {
                 }
                 </>
                 :
-                <div className={"con-box-wrap"}>
+                <div className={"con-box-wrap trainer_options"}>
                     <h2 className={"con-box-title"}>Select a theme and complexity to begin...</h2>
                     <div className="mock-interview">
                         <div className={"con-section-wrap"}>
