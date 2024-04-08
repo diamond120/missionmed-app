@@ -45,7 +45,6 @@ export const LayoutWithoutLogin: FC = () => {
             navigate("/tutor/application_review")
           }
         } else {
-          console.log("layout", response.data.data.show_story_feature , response.data.data.allow_without_login);
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
             navigate("/")
           } else {
