@@ -190,6 +190,20 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     next();
   }
 
+  useEffect(() => {
+    const addClassToParent = () => {
+      console.log('add to parent');
+      const elementsWithABCClass = document.querySelectorAll('.otherslot');
+      elementsWithABCClass.forEach(element => {
+        console.log('found parent');
+        element.parentNode.classList.add('bookedslot');
+        console.log('class added');
+      });
+    };
+    const timeoutId = setTimeout(addClassToParent, 5000);
+    return () => clearTimeout(timeoutId);
+  }, []); 
+
   return (
     <>
       {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>

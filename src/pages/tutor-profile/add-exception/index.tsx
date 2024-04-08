@@ -84,10 +84,10 @@ const AddException = ({title, callAdded, editedData = null }) => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields();
     if (editedData) {
       setIntialValue(editedData)
     }
-    form.resetFields();
   };
 
   const showModal = () => {
