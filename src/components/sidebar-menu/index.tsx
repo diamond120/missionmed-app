@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Layout, Menu, Avatar, Badge } from 'antd';
-import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined } from '@ant-design/icons';
+import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined} from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom"
 import { SvgIcon } from "../icon";
 import { useUser } from "../../api/providers/UserProvider";
@@ -142,10 +142,10 @@ const SidebarMenu: React.FC = () => {
       </div>
       <Menu onClick={handleSelectedMenu} expandIcon={collapsed ? <CaretRightOutlined style={{ color: "rgb(255,255,255,0.65", }} /> : <CaretDownOutlined style={{ color: "rgb(255,255,255,0.65)" }} />} mode={"inline"} selectedKeys={[current]} style={{ borderRight: 0, height: "0" }}>
         <Menu.Item onClick={applicationReviewNavigate} key={isStudent ? '/application_review' : '/tutor/application_review'} icon={<FileDoneOutlined style={{ fontSize: "24px", }} />} className={"custom-application-review-item"}>
-          Application Review
+          Application Review <CrownOutlined   className="yellow-svg"/>
         </Menu.Item>
         <Menu.Item key={isStudent ? '/student_notifications' : '/tutor_notifications'} onClick={() => { navigate(isStudent ? 'student_notifications' : 'tutor_notifications') }} style={{ position: "fixed", bottom: "128px", width: "280px" }} icon={<Badge dot={unreadNotificationCount > 0}> <BellOutlined style={{ fontSize: "24px" }} /> </Badge>} className={"notification-item custom-notification-item"}>
-          Notifications
+          Notifications <CrownOutlined   className="yellow-svg"/>
         </Menu.Item>
 
         {(tutor.profilePicture == '' || student.profilePicture == '') ? (
@@ -202,22 +202,22 @@ const SidebarMenu: React.FC = () => {
         <>
           <SubMenu
             key="interview-submenu"
-            title={"Interview"}
+            title={<>Interview <CrownOutlined   className="yellow-svg"/></>}
             icon={<CommentOutlined style={{ fontSize: "24px", color: "white" }} key={"4"}
 
             />}
           >
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview') }} key={isStudent ? '/student/mock-interview' : '/tutor/mock-interview'} >Mock Interview </Menu.Item>
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/teaching-session' : 'tutor/teaching-session') }} key={isStudent ? '/student/teaching-session' : '/tutor/teaching-session'} > Teaching Session </Menu.Item>
+            <Menu.Item onClick={() => { navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview') }} key={isStudent ? '/student/mock-interview' : '/tutor/mock-interview'} >Mock Interview <CrownOutlined   className="yellow-svg"/> </Menu.Item>
+            <Menu.Item onClick={() => { navigate(isStudent ? 'student/teaching-session' : 'tutor/teaching-session') }} key={isStudent ? '/student/teaching-session' : '/tutor/teaching-session'} > Teaching Session <CrownOutlined   className="yellow-svg"/></Menu.Item>
           </SubMenu>
 
           <SubMenu
             key="ucat-submenu"
-            title={"UCAT Sessions"}
+            title={<>UCAT Sessions <CrownOutlined   className="yellow-svg"/></>}
             icon={<ReadOutlined style={{ fontSize: "24px", color: "white" }} key={"7"} />}
           >
             {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session </Menu.Item>
+            <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session <CrownOutlined   className="yellow-svg"/> </Menu.Item>
           </SubMenu>
           {isStudent &&
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<ReadOutlined  style={{fontSize: "24px", }}  />} >
