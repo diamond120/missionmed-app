@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import WithoutLoginSidebar from "../sidebar-menu/without-login-sidebar"
 import {useUser} from "../../api/providers/UserProvider";
+import CommonService from "../../api/services/Common";
 
 const { Sider, Content } = Layout
 
@@ -31,6 +32,31 @@ export const LayoutWithoutLogin: FC = () => {
       }
     } 
   }, [user])
+
+  useEffect(() => {
+    handleReading();
+  }, [])
+  const handleReading = async () => {
+    try {
+      const response =  await CommonService.getAPI("/setting-data");
+      if (response.data.success) {
+        if(localStorage.getItem("jwt") && user) {
+          if( response.data.show_story_feature == 1 ) {
+            navigate("/tutor/application_review")
+          }
+        } else {
+          console.log("layout", response.data.data.show_story_feature , response.data.data.allow_without_login);
+          if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
+            navigate("/")
+          } else {
+            navigate("/sign_in")
+          }
+        }
+      }
+    } catch (e) {
+      navigate("/sign_in")
+    }
+  }
 
   return (
         <Layout className={"default"} hasSider>
