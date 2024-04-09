@@ -71,7 +71,7 @@ const SpecialDays: FC<Any> = ({props}) => {
       title: 'Action',
       dataIndex: '',
       key: 'x',
-      render: (text, record) => <div className='d_flex_10'> <a > <AddException title='Add Exception' callAdded={() => {fetchData()}}  editedData={record} /> </a> <a onClick={()=> deleteException(record.id)}><DeleteOutlined style={{color: '#FF4D4F' }} /></a></div>,
+      render: (text, record) => <div className='d_flex_10'> <a > <AddException title='Add Exception' callAdded={() => {fetchData()}}  editedData={record} /> </a> <a onClick={()=> deleteException(record)}><DeleteOutlined style={{color: '#FF4D4F' }} /></a></div>,
     },
   ];
 
@@ -103,16 +103,16 @@ const SpecialDays: FC<Any> = ({props}) => {
     }
   };
 
-  const deleteException = async (id) => {
+  const deleteException = async (data : any) => {
       modal.confirm({
         title: 'Confirm',
         icon: <ExclamationCircleOutlined />,
-        content: 'Are you sure you want to perform delete?',
+        content: <>{data.type ==  'Extra Availability' ? 'Please confirm first that no students booked your Extra Slot before delete. Are you sure you want to perform delete?' : 'Are you sure you want to perform delete?'}</>,
         okText: 'Okay',
         cancelText: 'Cancel',
         onOk: async () => {
           try {
-            const response = await CommonService.getAPI(`/tutor/delete-exception/${id}`);
+            const response = await CommonService.getAPI(`/tutor/delete-exception/${data.id}`);
             if (response.data.success) {
               setState(response.data.data);
               message.success('Exception deleted successfully');
