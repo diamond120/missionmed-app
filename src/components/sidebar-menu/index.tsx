@@ -12,7 +12,7 @@ import { useNotificationContext } from "../../api/context/NotificationContext"
 import "./index.less"
 import http from "../../api/http-common.js";
 import { getToken } from "../../common/common.js";
-
+import CommonService from "../../api/services/Common";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -23,6 +23,8 @@ const SidebarMenu: React.FC = () => {
   const [appReviewPage, setAppReviewPage] = useState("")
   const [avatarProfile, setAvatarProfile] = useState<string | undefined | null>("")
   const { unreadNotificationCount, setUnreadNotificationCount } = useNotificationContext();
+  const [showStory, setShowStory] = useState(false)
+
   const navigate = useNavigate()
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -88,6 +90,27 @@ const SidebarMenu: React.FC = () => {
     }
   };
 
+  const handleReading = async () => {
+    try {
+      const response =  await CommonService.getAPI("/setting-data");
+      if (response.data.success) {
+        if(localStorage.getItem("jwt")) {
+          if( response.data.data.show_story_feature == 1 ) {
+            setShowStory(true);
+          }
+        } else {
+          if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
+            setShowStory(true);
+          } else {
+            setShowStory(false);
+          }
+        }
+      }
+    } catch (e) {
+      setShowStory(false);
+    }
+  }
+
   const getUnreadNotificationCount = async () => {
     const config = {
       params: {
@@ -106,6 +129,10 @@ const SidebarMenu: React.FC = () => {
       console.log(e);
     }
   }
+
+  useEffect (() => {
+    handleReading();
+  }, [])
 
   useEffect(() => {
     if (performance.navigation.type === PerformanceNavigation.TYPE_RELOAD) {
@@ -142,10 +169,10 @@ const SidebarMenu: React.FC = () => {
       </div>
       <Menu onClick={handleSelectedMenu} expandIcon={collapsed ? <CaretRightOutlined style={{ color: "rgb(255,255,255,0.65", }} /> : <CaretDownOutlined style={{ color: "rgb(255,255,255,0.65)" }} />} mode={"inline"} selectedKeys={[current]} style={{ borderRight: 0, height: "0" }}>
         <Menu.Item onClick={applicationReviewNavigate} key={isStudent ? '/application_review' : '/tutor/application_review'} icon={<FileDoneOutlined style={{ fontSize: "24px", }} />} className={"custom-application-review-item"}>
-          Application Review <CrownOutlined   className="yellow-svg"/>
+          Application Review 
         </Menu.Item>
         <Menu.Item key={isStudent ? '/student_notifications' : '/tutor_notifications'} onClick={() => { navigate(isStudent ? 'student_notifications' : 'tutor_notifications') }} style={{ position: "fixed", bottom: "128px", width: "280px" }} icon={<Badge dot={unreadNotificationCount > 0}> <BellOutlined style={{ fontSize: "24px" }} /> </Badge>} className={"notification-item custom-notification-item"}>
-          Notifications <CrownOutlined   className="yellow-svg"/>
+          Notifications 
         </Menu.Item>
 
         {(tutor.profilePicture == '' || student.profilePicture == '') ? (
@@ -202,24 +229,24 @@ const SidebarMenu: React.FC = () => {
         <>
           <SubMenu
             key="interview-submenu"
-            title={<>Interview <CrownOutlined   className="yellow-svg"/></>}
+            title={<>Interview </>}
             icon={<CommentOutlined style={{ fontSize: "24px", color: "white" }} key={"4"}
 
             />}
           >
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview') }} key={isStudent ? '/student/mock-interview' : '/tutor/mock-interview'} >Mock Interview <CrownOutlined   className="yellow-svg"/> </Menu.Item>
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/teaching-session' : 'tutor/teaching-session') }} key={isStudent ? '/student/teaching-session' : '/tutor/teaching-session'} > Teaching Session <CrownOutlined   className="yellow-svg"/></Menu.Item>
+            <Menu.Item onClick={() => { navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview') }} key={isStudent ? '/student/mock-interview' : '/tutor/mock-interview'} >Mock Interview  </Menu.Item>
+            <Menu.Item onClick={() => { navigate(isStudent ? 'student/teaching-session' : 'tutor/teaching-session') }} key={isStudent ? '/student/teaching-session' : '/tutor/teaching-session'} > Teaching Session </Menu.Item>
           </SubMenu>
 
           <SubMenu
             key="ucat-submenu"
-            title={<>UCAT Sessions <CrownOutlined   className="yellow-svg"/></>}
+            title={<>UCAT Sessions </>}
             icon={<ReadOutlined style={{ fontSize: "24px", color: "white" }} key={"7"} />}
           >
             {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session <CrownOutlined   className="yellow-svg"/> </Menu.Item>
+            <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
           </SubMenu>
-          {isStudent &&
+          { showStory && isStudent &&
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<ReadOutlined  style={{fontSize: "24px", }}  />} >
               Speed Reading Trainer  
             </Menu.Item>

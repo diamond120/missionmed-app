@@ -5,6 +5,7 @@ import { HomeOutlined, DownOutlined,QuestionCircleFilled } from "@ant-design/ico
 import { Breadcrumb, message, Space, Menu, Dropdown, Button, Empty, Typography, Card, Tag, Form, Row, Radio, Tabs } from "antd";
 import CommonService from "../../api/services/Common";
 import UnderConstructionPage from '../under-construction-page'
+import { useNavigate } from "react-router-dom"
 
 const StudentReadingTraining = () => {
 
@@ -22,7 +23,8 @@ const StudentReadingTraining = () => {
     const [training, setTraining] = useState();
     const [form] = Form.useForm();
     const { TabPane } = Tabs;
-    const constuction = true;
+    const [construction, setConstruction] = useState(true);
+    const navigate = useNavigate()
 
     const handleThemeClick = (e : any) => {
         const selectedOption = themeList.find(theme => theme.key === e.key);
@@ -55,12 +57,20 @@ const StudentReadingTraining = () => {
                     label: level.name,
                     key: level.id.toString()
                 }));
+                setConstruction(response.data.data.underConstruction)
                 setTextComplexityList(textComplexitylevel)
+                if(response.data.data.storyFeature != 1) {
+                    navigate('/application_review')
+                }
             } else {
+                if(response.status_code == 401) {
+                    navigate('/sign_in')
+                }
               throw new Error(response.data.message);
             }
           } catch (e) {
             message.error(e.message);
+            navigate('/sign_in')
           }
     }
 
@@ -246,7 +256,7 @@ const StudentReadingTraining = () => {
             </Breadcrumb.Item>
             <Breadcrumb.Item>Speed Reading Trainer</Breadcrumb.Item>
             </Breadcrumb>
-            {constuction ? 
+            {construction == true ? 
                 <UnderConstructionPage />
             :
             <div className={"con-section-wrap tutor-mock-section-wrap"}>

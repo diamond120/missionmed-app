@@ -27,7 +27,9 @@ const TutorUCATSession = lazy(() => import("./tutor-ucat-session"))
 const StudentTeachingSession = lazy(() => import("./student-teaching-session"))
 const TutorTeachingSession = lazy(() => import("./tutor-teaching-session"))
 const StudentReadingTraining = lazy(() => import("./student-reading-training"))
-
+const MockPremiumLink = lazy(() => import("./mock-premium-link"))
+const UCATPremiumLink = lazy(() => import("./ucat-premium-link"))
+const TeachingPremiumLink = lazy(() => import("./teaching-premium-link"))
 
 const routes: RouteObject[] = [
   {
@@ -37,8 +39,23 @@ const routes: RouteObject[] = [
         Component: StudentReadingTraining,
         path: "/",
         index: true,
-      }]
-  },
+      },
+      {
+        Component: MockPremiumLink,
+        path: "/mock-premium",
+        index: true,
+      },
+      {
+        Component: UCATPremiumLink,
+        path: "/ucat-premium",
+        index: true,
+      },
+      {
+        Component: TeachingPremiumLink,
+        path: "/teaching-premium",
+        index: true,
+      }
+  ]},
   {
     Component: DefaultLayout,
     loader: () => <Loader spinning />,
