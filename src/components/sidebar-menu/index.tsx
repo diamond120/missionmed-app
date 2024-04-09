@@ -250,9 +250,12 @@ const SidebarMenu: React.FC = () => {
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} style={{paddingLeft : 66}} >
               Speed Reading Trainer  
             </Menu.Item>
+
+
           }
         </>
         {/* )} */}
+
 
         <Menu.Item onClick={handleSignOut} style={{ position: "fixed", bottom: "24px", width: "280px" }} key={"14"} icon={<LogoutOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
           Sign out

@@ -54,9 +54,9 @@ const WithoutLoginSidebar: React.FC = () => {
           >
             <Menu.Item onClick={() => { navigate( '/ucat-premium') }} key={'/ucat-premium'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
           </SubMenu>
-            <Menu.Item  key={"/"} onClick={() =>{navigate('/')}}  className={"custom-profile-item"} style={{paddingLeft : 66}} >
-              Speed Reading Trainer  
-            </Menu.Item>
+          <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item"} style={{paddingLeft : 66}} >
+            Speed Reading Trainer  
+          </Menu.Item>
         </>
 
         <Menu.Item style={{ position: "fixed", bottom: "24px", width: "280px" }} onClick={() => { navigate('sign_in') }} key={"14"} icon={<LoginOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
