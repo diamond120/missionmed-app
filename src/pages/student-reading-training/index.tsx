@@ -24,7 +24,7 @@ const StudentReadingTraining = () => {
     const [training, setTraining] = useState();
     const [form] = Form.useForm();
     const { TabPane } = Tabs;
-    const [construction, setConstruction] = useState(null);
+      const [construction, setConstruction] = useState(null);
     const navigate = useNavigate()
 
     const handleThemeClick = (e : any) => {
@@ -67,10 +67,10 @@ const StudentReadingTraining = () => {
                 if(response.status_code == 401) {
                     navigate('/sign_in')
                 }
-            //   throw new Error(response.data.message);
+              //   throw new Error(response.data.message);
             }
           } catch (e) {
-            // message.error(e.message);
+              // message.error(e.message);
             navigate('/sign_in')
           }
     }
@@ -248,8 +248,8 @@ const StudentReadingTraining = () => {
                 </Form>
     }
     
-    if(construction == null) {
-        return <div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div>;
+    if(construction == null) {                       
+          return <div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div>;
     }
 
     return (
@@ -321,6 +321,11 @@ const StudentReadingTraining = () => {
                     <div className="d_flex">
                         <div className="ml_1 minute_accuracy">
                         <Text className="ml_1"><b  id="wpm1">{wpm}</b> Words / Minute</Text>
+
+
+
+
+
                         {isSubmit &&
                             <Text className="ml_1"><b  id="wpm1">{score}</b>% Comprehension Accuracy</Text>
                         }
