@@ -200,11 +200,15 @@ const StudentReadingTraining = () => {
         form.resetFields();
     }
 
+    // const handleRestart = () => {
+    //     setIsSubmit(false)
+    //     setIsRead(false)
+    //     setScore(0)
+    //     form.resetFields();
+    // }
+
     const handleRestart = () => {
-        setIsSubmit(false)
-        setIsRead(false)
-        setScore(0)
-        form.resetFields();
+        getStory()
     }
 
     const QuestionForm = () => {
@@ -218,6 +222,7 @@ const StudentReadingTraining = () => {
                     onFinish={handleSubmitAnswer}
                     layout="vertical"
                     autoComplete="off"
+                    className="reading_trainer"
                 >
                     {story?.questions.map((question, i) => (
                     <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}>
@@ -305,7 +310,8 @@ const StudentReadingTraining = () => {
                     <div className="d_flex">
                         <Text className="ml_1"><b  id="wpm1">{wpm}</b> Words / Minute</Text>
                         <div>
-                            <Button className={"secondary-button mr_1"} onClick={handleCancel}>Cancel</Button>
+                            <Button className={"secondary-button mr_1 cancel_btn"} onClick={handleCancel}>Cancel</Button>
+                            <Button className={"secondary-button mr_1 cancel_btn"}  onClick={handleRestart}>Restart</Button>
                             <Button className={"primary-button"} htmlType="submit" onClick={handleReading} disabled={isRead}>Done Reading</Button>
                         </div>
                     </div>
@@ -326,7 +332,7 @@ const StudentReadingTraining = () => {
                         }
                         </div>
                         <div>
-                            {isSubmit && <Button className={"secondary-button mr_1"}  onClick={handleRestart}>Restart</Button> }
+                            {/* {isSubmit && <Button className={"secondary-button mr_1"}  onClick={handleRestart}>Restart</Button> } */}
                             <Button className={"primary-button"} htmlType="submit" onClick={() => {form.submit()}} disabled={isSubmit}>Done Answering</Button>
                         </div>
                     </div>
@@ -337,7 +343,7 @@ const StudentReadingTraining = () => {
                         <TabPane tab="Comprehension Text" key="1">
                         {story?.content}
                         </TabPane>
-                        <TabPane tab="Questions" key="2">
+                        <TabPane tab="Questions" key="2" >
                             <QuestionForm />
                         </TabPane>
                     </Tabs> :

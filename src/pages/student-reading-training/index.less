@@ -12,29 +12,70 @@
 .option-dropdown-menu{
     border-radius: 6px;
 }
-.d_flex{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
+
 .mr_1{
     margin-right: 10px;
 }
 .cart_body{
+    .ant-tag{
+        border-radius: 4px;
+    }
     border-radius: 6px;
     overflow: hidden;
     padding-bottom: 0;
     .ant-card-head-title{font-weight: 600;}
-        .ant-card-body{
-            padding-top: 10px !important;
+    .ant-card-body{
+        padding-top: 10px !important;
+        padding: 16px 24px;
+        max-height: 516px;
+        overflow: auto;
+        .ant-typography{
+            p{
+                &:last-child{
+                    margin-bottom: 0;
+                }
+            }
+        }    
+    }
+    .d_flex{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 24px;
+    }
+    .cancel_btn{
+        border: 0;
+        color: #2816EE;
+        &:hover, &:focus{background-color: transparent;}
+    }
+}
+.reading_trainer{
+    .ant-form-item{
+        &:last-child{
+            margin-bottom: 0;
         }
+        .ant-form-item-label{
+            label{
+                font-weight: 400;
+                font-size: 14px;
+            }
+        }
+        .radio_buttons{
+            margin-left: 16px;
+            .ant-row{
+                label{
+                    font-size: 14px;
+                }
+            }
+        }
+    }
 }
 .ant-radio-group{
     &.radio_buttons{
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 16px;
+
     }
 }
 
