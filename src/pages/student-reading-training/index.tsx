@@ -6,6 +6,7 @@ import { Breadcrumb, message, Space, Menu, Dropdown, Button, Empty, Typography, 
 import CommonService from "../../api/services/Common";
 import UnderConstructionPage from '../under-construction-page'
 import { useNavigate } from "react-router-dom"
+import { Loader } from "../../components/layout/Loader";
 
 const StudentReadingTraining = () => {
 
@@ -23,7 +24,7 @@ const StudentReadingTraining = () => {
     const [training, setTraining] = useState();
     const [form] = Form.useForm();
     const { TabPane } = Tabs;
-    const [construction, setConstruction] = useState(true);
+      const [construction, setConstruction] = useState(null);
     const navigate = useNavigate()
 
     const handleThemeClick = (e : any) => {
@@ -66,10 +67,10 @@ const StudentReadingTraining = () => {
                 if(response.status_code == 401) {
                     navigate('/sign_in')
                 }
-            //   throw new Error(response.data.message);
+              //   throw new Error(response.data.message);
             }
           } catch (e) {
-            // message.error(e.message);
+              // message.error(e.message);
             navigate('/sign_in')
           }
     }
@@ -247,6 +248,10 @@ const StudentReadingTraining = () => {
                 </Form>
     }
     
+    if(construction == null) {                       
+          return <div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div>;
+    }
+
     return (
         <React.Fragment>
         <Section className={"application-review-section"}>
@@ -269,15 +274,17 @@ const StudentReadingTraining = () => {
             >
                 <h2 className={"tab-title"}>Speed Reading Trainer</h2>
                 <div className="d_flex_center">
-                <div className={"tagLayout errorTagStYouyle"}>
+                {/* <div className={"tagLayout errorTagStYouyle"}>
                     <Button size="large" type="primary" className="stats-btn">See My Stats</Button>
-                </div>
+                </div> */}
                 </div>
             </div>
             
             
             <div className={"upcoming-session con-box"}>
-            <h2 className={"secondary-title"}>Trainer Options <QuestionCircleFilled  style={{marginLeft:"8px"}} title="Speed Reading Trainer" /></h2>
+            <h2 className={"secondary-title"}>Trainer Options 
+            {/* <QuestionCircleFilled  style={{marginLeft:"8px"}} title="Speed Reading Trainer" /> */}
+            </h2>
                 <div className="div-style">
                     <Dropdown overlay={menu} className='dropdown-menu option-dropdown-menu' disabled={isRead}>
                         <Button><Space>{theme ? theme?.label : 'Select Theme'}<DownOutlined /></Space></Button>
@@ -314,6 +321,11 @@ const StudentReadingTraining = () => {
                     <div className="d_flex">
                         <div className="ml_1 minute_accuracy">
                         <Text className="ml_1"><b  id="wpm1">{wpm}</b> Words / Minute</Text>
+
+
+
+
+
                         {isSubmit &&
                             <Text className="ml_1"><b  id="wpm1">{score}</b>% Comprehension Accuracy</Text>
                         }

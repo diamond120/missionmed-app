@@ -247,12 +247,15 @@ const SidebarMenu: React.FC = () => {
             <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
           </SubMenu>
           { showStory && isStudent &&
-            <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<ReadOutlined  style={{fontSize: "24px", }}  />} >
+            <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} style={{paddingLeft : 66}} >
               Speed Reading Trainer  
             </Menu.Item>
+
+
           }
         </>
         {/* )} */}
+
 
         <Menu.Item onClick={handleSignOut} style={{ position: "fixed", bottom: "24px", width: "280px" }} key={"14"} icon={<LogoutOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
           Sign out
