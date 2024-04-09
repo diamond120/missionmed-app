@@ -247,7 +247,7 @@ const SidebarMenu: React.FC = () => {
             <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
           </SubMenu>
           { showStory && isStudent &&
-            <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} style={{paddingLeft : 66}} >
+            <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<ReadOutlined  style={{fontSize: "24px", }}  />} >
               Speed Reading Trainer  
             </Menu.Item>
           }
