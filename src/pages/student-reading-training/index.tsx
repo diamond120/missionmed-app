@@ -67,10 +67,10 @@ const StudentReadingTraining = () => {
                 if(response.status_code == 401) {
                     navigate('/sign_in')
                 }
-              throw new Error(response.data.message);
+            //   throw new Error(response.data.message);
             }
           } catch (e) {
-            message.error(e.message);
+            // message.error(e.message);
             navigate('/sign_in')
           }
     }
