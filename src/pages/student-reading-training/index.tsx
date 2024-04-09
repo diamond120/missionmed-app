@@ -311,7 +311,7 @@ const StudentReadingTraining = () => {
                     </div>
                   ]}
                  >
-                    <Text>{story?.content}</Text>
+                    <Text  ><div dangerouslySetInnerHTML={{ __html: story?.content }}></div></Text>
                 </Card>
                 :
                 <Card
@@ -321,11 +321,6 @@ const StudentReadingTraining = () => {
                     <div className="d_flex">
                         <div className="ml_1 minute_accuracy">
                         <Text className="ml_1"><b  id="wpm1">{wpm}</b> Words / Minute</Text>
-
-
-
-
-
                         {isSubmit &&
                             <Text className="ml_1"><b  id="wpm1">{score}</b>% Comprehension Accuracy</Text>
                         }
@@ -366,9 +361,7 @@ const StudentReadingTraining = () => {
                                     <h2 className={"con-box-title"}>
                                         <Text>Select a theme and complexity to start the trainer.</Text>
                                     </h2>
-                                    <div style={{ marginBottom: "16px" }}>
-                                        <Text>You will then be asked a series of questions. You must answer from memory.</Text>
-                                    </div>
+                                    <Text>You will then be asked a series of questions. You must answer from memory.</Text>
                                 </div>
                             </div>
                         </div>
