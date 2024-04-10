@@ -6,9 +6,8 @@
   .sign-in-left {
     width: 58%;
 
-    @media screen and(width:769px) {
-      width: 100%;
-
+    @media (max-width:992px) {
+      width: 100% !important;
     }
 
     .sign-in-left-wrap {
@@ -26,6 +25,12 @@
           font-style: normal;
           line-height: 121%;
           margin-top: 30px;
+          @media screen and (max-width: @screen-md-max) {
+            font-size: 35px;
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+          }
         }
 
         .sign-in-left-subtitle {

@@ -22,11 +22,10 @@
     align-items: center;
     justify-content: space-between ;
     margin-top: 24px;
-
-    @media screen and(max-width:700px){
+    @media screen and(max-width:992px){
       flex-direction: column;
-      align-items: center;
-
+      align-items: start;
+      gap: 20px;
     }
 
     .application-review-section-title{
@@ -37,9 +36,8 @@
       font-family: Metropolis, sans-serif;
       font-style: normal;
       line-height: 1.21;
-      @media screen and(max-width:700px){
-        margin-bottom: 24px;
-        font-size: 26px;
+      @media screen and(max-width:992px){
+        font-size: 25px;
       }
     }
   }
@@ -181,4 +179,14 @@
   color: #181041;
   font-weight: bolder;
   cursor: not-allowed;
+  @media (max-width:992px){
+    font-size: 10px;
+  }
+}
+.ant-modal{
+  .close-modal{
+    border-radius: 4px;
+    padding: 8px 15px;
+    height: auto;
+  }
 }

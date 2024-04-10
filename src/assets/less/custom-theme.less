@@ -159,6 +159,9 @@ ol {
     .ant-select.ant-select-in-form-item {
       width: 352px !important;
       height: 40px;
+      @media (max-width:992px){
+        width: 100% !important;
+      }
     }
 
     .ant-select-selector {
@@ -204,6 +207,10 @@ ol {
   font-family: @headings-font-family;
   font-style: normal;
   line-height: 1.21;
+  @media (max-width: 768px){
+    margin: 20px 0 10px 0;
+    font-size: 27px;
+  }
 }
 
 .secondary-title {
@@ -212,6 +219,9 @@ ol {
   font-size: 24px;
   margin-top: 5px;
   margin-bottom: 21px;
+  @media (max-width: 768px){
+    font-size: 20px;
+  }
 
   svg {
     width: 20px;
@@ -340,7 +350,7 @@ ol {
 .ant-modal-wrap {
   .ant-modal-content {
     border-radius: 8px;
-
+    overflow: hidden;
     .ant-modal-close {
       &:hover {
         svg {
@@ -365,7 +375,11 @@ ol {
       background-color: #F5F5F5;
       text-align: left;
       padding: 24px 22px;
-
+      p{
+        &:last-child{
+          margin-bottom: 0;
+        }
+      }
       @media (max-width:767px) {
         padding: 24px 10px;
       }
@@ -477,6 +491,9 @@ a {
 }
 
 .sidebar-menu {
+    @media screen and (max-width: @screen-md-max) {
+      
+    }
   .ant-menu-submenu {
     .ant-menu-title-content {
       color: rgba(255, 255, 255, 0.65);
@@ -710,6 +727,7 @@ a {
   .tagStyle {
     border: 1px solid var(--colorErrorBorder, #FFA39E);
     background: var(--colorErrorBg, #FFF1F0);
+    border-radius: 6px;
   }
 }
 
@@ -791,3 +809,4 @@ a {
     align-items:  center !important;
   }
 }
+
