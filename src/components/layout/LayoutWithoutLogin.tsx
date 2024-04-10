@@ -1,7 +1,7 @@
 import "./DefaultLayout.less"
 import { Layout } from "antd"
-import { CSSProperties, FC, Suspense, useEffect } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
+import { Outlet, useNavigate, useLocation } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import WithoutLoginSidebar from "../sidebar-menu/without-login-sidebar"
 import {useUser} from "../../api/providers/UserProvider";
@@ -22,6 +22,9 @@ export const LayoutWithoutLogin: FC = () => {
   const { isTablet } = useBreakpoints()
   const navigate = useNavigate()
   const user = useUser();
+  const [toggle,setToggle] = useState(false)
+  const location = useLocation();  
+
 
   useEffect(() => {
     if (localStorage.getItem("jwt") && user) {
@@ -32,6 +35,7 @@ export const LayoutWithoutLogin: FC = () => {
       }
     } 
   }, [user])
+
 
   useEffect(() => {
     handleReading();
@@ -48,7 +52,9 @@ export const LayoutWithoutLogin: FC = () => {
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
             navigate("/")
           } else {
-            navigate("/sign_in")
+            if(!['/forgot-password', '/resetpassword'].includes(location.pathname) ) {
+              navigate("/sign_in")
+            }  
           }
         }
       }
@@ -59,9 +65,15 @@ export const LayoutWithoutLogin: FC = () => {
 
   return (
         <Layout className={"default"} hasSider>
-          {!isTablet && <WithoutLoginSidebar />}
+          {/* {!isTablet && <WithoutLoginSidebar />} */}
+          <WithoutLoginSidebar className={`${toggle ? "active-sidebar":""}`}/>
           <Content>
             <Suspense>
+              <div className={`sideBar-menu-toggle ${toggle ? "active":""}`} onClick={()=>setToggle(!toggle)}>
+                <div className="bar1"></div>
+                <div className="bar2"></div>
+                <div className="bar3"></div>
+              </div>
               <Outlet />
             </Suspense>
           </Content>

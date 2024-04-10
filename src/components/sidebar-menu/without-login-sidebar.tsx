@@ -1,13 +1,13 @@
 import { useState } from "react"
 import { Layout, Menu } from 'antd';
-import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined } from '@ant-design/icons';
+import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
 import { useNavigate } from "react-router-dom"
 import { SvgIcon } from "../icon";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const WithoutLoginSidebar: React.FC = () => {
+const WithoutLoginSidebar: React.FC = ({className}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [current, setCurrent] = useState('/')
   const navigate = useNavigate()
@@ -27,7 +27,7 @@ const WithoutLoginSidebar: React.FC = () => {
       onCollapse={toggleCollapsed}
       width={280}
       style={{ height: 'auto', backgroundColor: '#1E1450' }}
-      className={"sidebar-menu"}
+      className={`sidebar-menu ${className}`}
       trigger={null}
     >
       <div className={"sidebar-menu-logo-wrap"} >
@@ -54,7 +54,7 @@ const WithoutLoginSidebar: React.FC = () => {
           >
             <Menu.Item onClick={() => { navigate( '/ucat-premium') }} key={'/ucat-premium'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
           </SubMenu>
-          <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item"} style={{paddingLeft : 66}} >
+          <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item reading-trainer-item"} icon={<DashboardOutlined />}>
             Speed Reading Trainer  
           </Menu.Item>
         </>

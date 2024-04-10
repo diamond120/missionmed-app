@@ -32,7 +32,7 @@ export const DefaultLayout: FC = () => {
   const [profileStaticData, setProfileStaticData] = useState({});
   const [loading, setLaoding] = useState(true)
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-
+  const [toggle,setToggle] = useState(false)
   const resetTutorContext = () => {
     tutorDispatch({
       type: "reset"
@@ -191,9 +191,15 @@ export const DefaultLayout: FC = () => {
     <ProfileStaticDataContext.Provider value={profileStaticData}>
       <NotificationContext.Provider value={{ unreadNotificationCount, setUnreadNotificationCount }}>
         <Layout className={"default"} hasSider>
-          {!isTablet && <SidebarMenu />}
+          {/* {!isTablet && <SidebarMenu />} */}
+          <SidebarMenu className={`${toggle ? "active-sidebar":""}`}/>
           <Content>
-            <Suspense>
+            <Suspense>  
+              <div className={`sideBar-menu-toggle ${toggle ? "active":""}`} onClick={()=>setToggle(!toggle)}>
+                <div className="bar1"></div>
+                <div className="bar2"></div>
+                <div className="bar3"></div>
+              </div>
               <Outlet />
             </Suspense>
           </Content>
