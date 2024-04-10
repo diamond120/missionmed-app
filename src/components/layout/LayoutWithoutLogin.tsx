@@ -1,7 +1,7 @@
 import "./DefaultLayout.less"
 import { Layout } from "antd"
 import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useNavigate, useLocation } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import WithoutLoginSidebar from "../sidebar-menu/without-login-sidebar"
 import {useUser} from "../../api/providers/UserProvider";
@@ -23,6 +23,9 @@ export const LayoutWithoutLogin: FC = () => {
   const navigate = useNavigate()
   const user = useUser();
   const [toggle,setToggle] = useState(false)
+  const location = useLocation();  
+
+
   useEffect(() => {
     if (localStorage.getItem("jwt") && user) {
       if(user.role == "student"){
@@ -32,6 +35,7 @@ export const LayoutWithoutLogin: FC = () => {
       }
     } 
   }, [user])
+
 
   useEffect(() => {
     handleReading();
@@ -48,7 +52,9 @@ export const LayoutWithoutLogin: FC = () => {
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
             navigate("/")
           } else {
-            navigate("/sign_in")
+            if(!['/forgot-password', '/resetpassword'].includes(location.pathname) ) {
+              navigate("/sign_in")
+            }  
           }
         }
       }

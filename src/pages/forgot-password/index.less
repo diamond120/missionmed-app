@@ -1,29 +1,31 @@
 .sign-in {
     display: flex;
-    height: 100vh;
+    height: 90vh;
     background-color: #F5F5F5;
+    justify-content: center;
+    align-items: center;
     @media screen and (max-width: @screen-md-max) {
       padding: 25px 20px;
       height: 95vh !important;
       text-align: center;
-      justify-content: center;
+      // justify-content: center;
       .sign-in-left-title-wrap{
         width: 100%;
       }
     }
+  
     .sign-in-left {
       width: 58%;
   
-      @media screen and(width:769px) {
+      @media (max-width:992px) {
         width: 100%;
-  
       }
   
       .sign-in-left-wrap {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-top: 67px;
+        justify-content: center;
   
         .sign-in-left-title-wrap {
           .sign-in-left-title {
@@ -37,7 +39,8 @@
             @media screen and (max-width: @screen-md-max) {
               font-size: 35px;
               margin-top: 20px;
-
+              width: 100%;
+              text-align: center;
             }
           }
   
