@@ -29,7 +29,7 @@ const ForgotPassword = () => {
             <div className={"sign-in-left"}>
                 <div className={"sign-in-left-wrap"}>
                     <div className={"sign-in-left-title-wrap"}>
-                        <SignInLogo />
+                        {/* <SignInLogo /> */}
                         <h2 className={"sign-in-left-subtitle"}>Forgot Password</h2>
                     </div>
                     <Form
@@ -61,7 +61,7 @@ const ForgotPassword = () => {
                     </Form>
                 </div>
             </div>
-            <div className={"sign-in-right"}></div>
+            {/* <div className={"sign-in-right"}></div> */}
         </div>
     )
 }

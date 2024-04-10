@@ -36,6 +36,21 @@ const routes: RouteObject[] = [
     Component: LayoutWithoutLogin,
     children: [
       {
+          Component:  SignIn,
+          path: "/sign_in",
+          index: true,
+      },
+      {
+          Component: ForgotPassword,
+          path: "/forgot-password",
+          index: true,
+      },
+      {
+        Component: ResetPassword,
+        path: "/resetpassword/:token",
+        index: true,
+      },
+      {
         Component: StudentReadingTraining,
         path: "/",
         index: true,
@@ -164,29 +179,27 @@ const routes: RouteObject[] = [
   },
 
 
-  {
-    Component: SignInLayout,
-    loader: () => <Loader spinning />,
-    children: [
-
-      {
-        Component:  SignIn,
-        path: "/sign_in",
-        index: true,
-      },
-      {
-        Component: ForgotPassword,
-        path: "/forgot-password",
-        index: true,
-      },
-      {
-        Component: ResetPassword,
-        path: "/resetpassword/:token",
-        index: true,
-      },
-
-    ],
-  },
+  // {
+  //   Component: SignInLayout,
+  //   loader: () => <Loader spinning />,
+  //   children: [
+  //     {
+  //       Component:  SignIn,
+  //       path: "/sign_in",
+  //       index: true,
+  //     },
+  //     {
+  //       Component: ForgotPassword,
+  //       path: "/forgot-password",
+  //       index: true,
+  //     },
+  //     {
+  //       Component: ResetPassword,
+  //       path: "/resetpassword/:token",
+  //       index: true,
+  //     },
+  //   ],
+  // },
 
 ];
 

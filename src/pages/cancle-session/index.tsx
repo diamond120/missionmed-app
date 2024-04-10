@@ -78,8 +78,8 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
             <>  
             <Button className={"secondary-button"} onClick={handleCancel}>Back</Button>
             {addUpcomingSession.session_type == 'Recurring Session' &&
-            <FreezeSession title='Freeze Session' moduleType="teaching" addFreezeSession={() => {handleOk() , cancleUpcomingSession(addUpcomingSession) }} showCancelModal={showModal} sessionType={addUpcomingSession.session_type} /> }
-            <Button className={"primary-button"} style={{backgroundColor: 'red'}} htmlType="submit" onClick={handleSubmit}>Cancel Sessions</Button>
+            <FreezeSession title='Freeze Sessions' moduleType="teaching" addFreezeSession={() => {handleOk() , cancleUpcomingSession(addUpcomingSession) }} showCancelModal={showModal} sessionType={addUpcomingSession.session_type} /> }
+            <Button className={"primary-button"} style={{backgroundColor: 'red'}} htmlType="submit" onClick={handleSubmit}>Cancel Session</Button>
             </>
           )}
           </>

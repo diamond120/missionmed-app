@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Layout, Menu } from 'antd';
-import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined } from '@ant-design/icons';
+import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
 import { useNavigate } from "react-router-dom"
 import { SvgIcon } from "../icon";
 
@@ -54,7 +54,7 @@ const WithoutLoginSidebar: React.FC = () => {
           >
             <Menu.Item onClick={() => { navigate( '/ucat-premium') }} key={'/ucat-premium'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
           </SubMenu>
-          <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item"} style={{paddingLeft : 66}} >
+          <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item"}  icon={<DashboardOutlined />} >
             Speed Reading Trainer  
           </Menu.Item>
         </>

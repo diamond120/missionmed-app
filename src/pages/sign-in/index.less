@@ -1,6 +1,6 @@
 .sign-in {
   display: flex;
-  height: 100vh;
+  height: 90vh;
   background-color: #F5F5F5;
 
   .sign-in-left {
@@ -15,7 +15,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 67px;
+      justify-content: center;
 
       .sign-in-left-title-wrap {
         .sign-in-left-title {
@@ -120,6 +120,22 @@
 
     span {
       color: #2816EE !important;
+    }
+  }
+}
+.sign-in-form{
+  .sign-in-left-remember {
+    .ant-btn.link_btn{
+      span{
+        color: #2816EE !important;
+      }
+    }  
+  }
+  .ant-form-item {
+    .ant-row{
+      .ant-form-item-control{
+        max-width: 100% !important;
+      }
     }
   }
 }

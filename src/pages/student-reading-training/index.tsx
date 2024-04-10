@@ -125,7 +125,6 @@ const StudentReadingTraining = () => {
               calculatedWpm = wordsArray.length / calculatedWpm;
               calculatedWpm *= 60;
               if (calculatedWpm < 50000) {
-                console.log("te",isRead);
                 setWpm(prevWpm => {
                     const roundedWpm = calculatedWpm.toFixed(0);
                     if (roundedWpm !== prevWpm) {
@@ -145,10 +144,28 @@ const StudentReadingTraining = () => {
       }, [numWordsInText,story, isRead]);
 
     const handleReading = async () => {
+
+        const  submitted_data = JSON.parse(JSON.stringify(story?.questions || []));
+        submitted_data.forEach(question => {
+            delete question.story_id;
+            delete question.id;
+            delete question.created_at;
+            delete question.updated_at;
+            question?.answers.forEach(answer =>  {
+                delete answer.question_id
+                delete answer.created_at 
+                delete answer.updated_at
+                delete answer.story_id;
+            });
+        });
+
         try {
             const data = {
                 'story' : story?.id,
-                'wpm' : wpm
+                'wpm' : wpm,
+                'submitted_data' : submitted_data,
+                'total_question' : story?.total_questions,
+                'story_content' : story?.content
             }
             const response =  await CommonService.postAPI("/student/story-reading",data);
             if (response.data.success) {
@@ -163,21 +180,39 @@ const StudentReadingTraining = () => {
     }
 
     const handleSubmitAnswer = async (data) => {
+        const modify_submitted = JSON.parse(training.submitted_data)
         setIsSubmit(true)
-        const correctAnswers = Object.values(data).filter(answer => answer.is_correct === 1);
-        const total = Math.round((correctAnswers.length / story?.total_questions) * 100) 
+        
+        const givenAnswers = Object.values(data).filter(value => typeof value === 'number').length;
+        
+        let correctAnswers = 0; 
+        modify_submitted.forEach((question, index) => {
+            const selectedAnswer = data[`question_${index}`];
+            if (selectedAnswer) {
+                question.answers.forEach(answer => {
+                    if (
+                        answer.id === selectedAnswer
+                    ) {
+                        if (answer.is_correct === 1) {
+                            correctAnswers++;
+                        }
+                        answer.is_selected = true;
+                    } else {
+                        answer.is_selected = false;
+                    }
+                });
+            }
+        });
+
+        const total = Math.round((correctAnswers / story?.total_questions) * 100) 
         setScore(total)
-        const payload = Object.values(data).map(answer => ({
-            'training_id': training?.id,
-            'question_id': answer.question_id,
-            'answer_id': answer.id,
-            'is_correct': answer.is_correct
-        }));
         try {
             const data = {
-                'training_id' : training?.id,
-                'answers' : payload,
+                'training_id': training?.id,
+                'submitted_data' : modify_submitted,
                 'score' : total,
+                'total_correct_question' : correctAnswers,
+                'total_submitted_question' : givenAnswers
             }
             const response = await CommonService.postAPI("/student/save-answers",data);
             if (response.data.success) {
@@ -224,23 +259,26 @@ const StudentReadingTraining = () => {
                     autoComplete="off"
                     className="reading_trainer"
                 >
-                    {story?.questions.map((question, i) => (
-                    <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}>
+                    {story?.questions.map((question, i) => {
+                      return  (
+                    <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}  >
                         <Radio.Group 
                         className="radio_buttons"
                         style={{ width: "100%" }}
+                        value={question.answers[0]}
                         >
                         {question?.answers.map((answer, j) => (
                             <>
                             <Row>
-                                <Radio value={answer} disabled={isSubmit} name={`question_${i}`}>{String.fromCharCode(65 + j)} {') '} {answer.answer}</Radio>
+                                <Radio value={answer.id} disabled={isSubmit}   name={`question_${i}`}>{String.fromCharCode(65 + j)} {') '} {answer.answer}</Radio>
                             </Row>
                             {isSubmit &&
                                 <>
-                                {(answer?.is_correct || form.getFieldValue(`question_${i}`) == answer )  && 
+                                {(answer?.is_correct || form.getFieldValue(`question_${i}`) == answer.id )  && 
                                     <Tag color={answer.is_correct ? 'green' : 'red'} className="ml_1">
                                         {answer.is_correct ? 'Correct: ' : 'Incorrect: '} {answer.reason}
                                     </Tag>
+                                    
                                 }
                                 </>
                             }
@@ -248,7 +286,7 @@ const StudentReadingTraining = () => {
                         ))}
                         </Radio.Group>
                     </Form.Item>
-                    ))}
+                    )})}
 
                 </Form>
     }
@@ -332,7 +370,7 @@ const StudentReadingTraining = () => {
                         }
                         </div>
                         <div>
-                            {/* {isSubmit && <Button className={"secondary-button mr_1"}  onClick={handleRestart}>Restart</Button> } */}
+                            {isSubmit && <Button className={"secondary-button mr_1"}  onClick={handleCancel}>Restart</Button> }
                             <Button className={"primary-button"} htmlType="submit" onClick={() => {form.submit()}} disabled={isSubmit}>Done Answering</Button>
                         </div>
                     </div>
@@ -341,7 +379,7 @@ const StudentReadingTraining = () => {
                 {isSubmit ?
                     <Tabs defaultActiveKey="2">
                         <TabPane tab="Comprehension Text" key="1">
-                        {story?.content}
+                        <div dangerouslySetInnerHTML={{ __html: story?.content }}></div>
                         </TabPane>
                         <TabPane tab="Questions" key="2" >
                             <QuestionForm />
