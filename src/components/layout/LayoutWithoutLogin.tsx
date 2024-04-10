@@ -1,6 +1,6 @@
 import "./DefaultLayout.less"
 import { Layout } from "antd"
-import { CSSProperties, FC, Suspense, useEffect } from "react"
+import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import WithoutLoginSidebar from "../sidebar-menu/without-login-sidebar"
@@ -22,7 +22,7 @@ export const LayoutWithoutLogin: FC = () => {
   const { isTablet } = useBreakpoints()
   const navigate = useNavigate()
   const user = useUser();
-
+  const [toggle,setToggle] = useState(false)
   useEffect(() => {
     if (localStorage.getItem("jwt") && user) {
       if(user.role == "student"){
@@ -59,9 +59,15 @@ export const LayoutWithoutLogin: FC = () => {
 
   return (
         <Layout className={"default"} hasSider>
-          {!isTablet && <WithoutLoginSidebar />}
+          {/* {!isTablet && <WithoutLoginSidebar />} */}
+          <WithoutLoginSidebar className={`${toggle ? "active-sidebar":""}`}/>
           <Content>
             <Suspense>
+              <div className={`sideBar-menu-toggle ${toggle ? "active":""}`} onClick={()=>setToggle(!toggle)}>
+                <div className="bar1"></div>
+                <div className="bar2"></div>
+                <div className="bar3"></div>
+              </div>
               <Outlet />
             </Suspense>
           </Content>

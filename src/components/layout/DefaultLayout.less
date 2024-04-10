@@ -1,5 +1,30 @@
 @import url("../../components/app/index");
 
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 1px;
+  
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: #e2e8f0;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #40a9ff;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(64, 169, 255,0.5);
+}
+
 #root {
   .ant-layout {
     height: 100%;
@@ -14,7 +39,7 @@
 
   .ant-layout-content {
     height: 100vh;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: #F5F5F5;
   }
 
@@ -23,9 +48,8 @@
     > .ant-layout-header,
     > .ant-layout-footer {
       padding: 24px 64px;
-
-      @media screen and (max-width: @screen-xs-max) {
-        padding: 48px 16px;
+      @media screen and (max-width: @screen-lg-max) {
+        padding: 20px 16px;
       }
     }
   }
@@ -78,5 +102,52 @@
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+}
+
+.sideBar-menu-toggle{
+  display: none;
+  @media (max-width:767px){
+    display: block;
+    background: #1e1450;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 39px;
+    padding: 2px;
+    margin-left: auto;
+    margin-bottom: -30px;
+    position: relative;
+    z-index: 2;
+    .bar1, .bar2, .bar3 {
+      width: 27px;
+      height: 3px;
+      background-color: #fff;
+      margin: 6px auto;
+      transition: 0.4s;
+      border-radius: 10px;
+    }
+    &.active {
+      .bar1 {transform: translate(0, 9px) rotate(-45deg);}
+      .bar2 {opacity: 0;}
+      .bar3 {transform: translate(0, -9px) rotate(45deg);}
+    }
+  }
+}
+
+.ant-layout-sider {
+  &.sidebar-menu{
+    @media (max-width:767px){
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 9;
+      transform: translateX(-101%);
+      &.active-sidebar{
+        transform: translateX(0%) !important;
+      }
+    }
   }
 }

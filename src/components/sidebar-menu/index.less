@@ -3,7 +3,15 @@
 .sidebar-menu {
   height: 100vh;
   background-color: #1E1450;
-
+  @media (max-width:767px){
+    .ant-menu{
+      .ant-menu-submenu{
+        .ant-menu-submenu-title{
+          padding-left: 15px !important;
+        }
+      }
+    }
+  }
   .sidebar-menu-logo-wrap {
     .sidebar-menu-logo {
       margin: 24px 0 32px;
@@ -85,4 +93,12 @@
 .ant-menu-inline{
   position: relative;
   height: 90%;
+}
+.reading-trainer-item{
+  .ant-menu-title-content{
+    margin-left: 40px;
+    @media (max-width:767px){
+      margin-left: 25px;
+    }
+  }
 }

@@ -2,7 +2,15 @@
     display: flex;
     height: 100vh;
     background-color: #F5F5F5;
-  
+    @media screen and (max-width: @screen-md-max) {
+      padding: 25px 20px;
+      height: 95vh !important;
+      text-align: center;
+      justify-content: center;
+      .sign-in-left-title-wrap{
+        width: 100%;
+      }
+    }
     .sign-in-left {
       width: 58%;
   
@@ -26,6 +34,11 @@
             font-style: normal;
             line-height: 121%;
             margin-top: 30px;
+            @media screen and (max-width: @screen-md-max) {
+              font-size: 35px;
+              margin-top: 20px;
+
+            }
           }
   
           .sign-in-left-subtitle {

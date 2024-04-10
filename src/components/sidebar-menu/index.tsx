@@ -17,7 +17,7 @@ import CommonService from "../../api/services/Common";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const SidebarMenu: React.FC = () => {
+const SidebarMenu: React.FC = ({className}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
   const [appReviewPage, setAppReviewPage] = useState("")
@@ -161,7 +161,7 @@ const SidebarMenu: React.FC = () => {
       onCollapse={toggleCollapsed}
       width={280}
       style={{ height: 'auto', backgroundColor: '#1E1450' }}
-      className={"sidebar-menu"}
+      className={`sidebar-menu ${className}`}
       trigger={null}
     >
       <div className={"sidebar-menu-logo-wrap"} >
@@ -198,7 +198,7 @@ const SidebarMenu: React.FC = () => {
               style={{ position: "fixed", bottom: "72px", width: "280px" }}
               key={isStudent ? '/student_profile' : '/tutor_profile'}
               onClick={navigateProfilePage}
-
+            
               icon={
                 <Avatar
                   src={isStudent ? student.profilePicture : tutor ? tutor.profilePicture : ""}
