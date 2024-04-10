@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Layout, Menu, Avatar, Badge } from 'antd';
-import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined} from '@ant-design/icons';
+import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom"
 import { SvgIcon } from "../icon";
 import { useUser } from "../../api/providers/UserProvider";
@@ -247,7 +247,7 @@ const SidebarMenu: React.FC = () => {
             <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
           </SubMenu>
           { showStory && isStudent &&
-            <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} style={{paddingLeft : 66}} >
+            <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<DashboardOutlined />}>
               Speed Reading Trainer  
             </Menu.Item>
 
