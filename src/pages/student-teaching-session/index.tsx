@@ -91,20 +91,6 @@ const StudentTeachingSession = () => {
   }
 
   const addUpcomingSession = (session) => {
-    // console.log(session)
-    // setUpcomingSessions([...upcomingSessions, session]);
-
-    // if(Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date)>moment(session.date))){
-    //   setUpcomingInterview({
-    //     id:session.id,
-    //     date:session.date,
-    //     session_start_time:session.session_start_time,
-    //     session_end_time:session.session_end_time,
-    //     agenda:null
-    //   })
-    //   setAgenda(null);
-    // }
-
     getMockInterviewDetails();
   }
 
@@ -148,7 +134,6 @@ const StudentTeachingSession = () => {
   }
 
   const addFreezeSession = (data: any) => {
-    console.log(data);
     getMockInterviewDetails();
   }
 

@@ -39,7 +39,6 @@ const CardDatails: FC<any> = ({props}) => {
       setIssuer(issuer);
     } else {
       setIssuer(issuer);
-      console.log(isValid);
     }
   };
 
@@ -102,7 +101,6 @@ const CardDatails: FC<any> = ({props}) => {
       }
       handleAddCard()
     }catch(e){
-      console.log(e);
       setLoading(false);
       return false;
     }
