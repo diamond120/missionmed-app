@@ -356,7 +356,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   // };
 
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-    console.log(value);
     getStudentList(value)
   }
 
@@ -437,7 +436,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
   const Step4From = ({ form }) => {
     const formData = form.getFieldsValue(true);
-    console.log(students, formData)
     const tutorName = (user.role == 'student') ? tutors.find(tutor => tutor.id == formData.tutorId)?.full_name : students.find(student => student.id == formData.studentId)?.full_name
     setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
     const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
@@ -588,7 +586,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
       } else {
         setIssuer(issuer);
-        console.log(isValid);
       }
     };
 

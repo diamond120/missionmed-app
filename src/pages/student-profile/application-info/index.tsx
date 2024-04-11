@@ -54,7 +54,6 @@ const ApplicationInfo: FC<any> = ({props}) => {
       updatedStudent()
       setEditing(false);
     }catch(e){
-      console.log(e);
       return false;
     }
   }; 

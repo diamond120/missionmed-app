@@ -166,7 +166,6 @@ const RescheduleInterview = ({
     if (interviewSummary?.session_type == 'Individual Session') {
       setShowDropdown(false);
     }
-    console.log(interviewSummary);
     return (
       <>
         <div className={"session-details"} style={{ padding: "10px" }}>

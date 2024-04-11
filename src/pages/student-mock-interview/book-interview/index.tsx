@@ -102,7 +102,6 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
       setActiveStep(nextStep);
       setModalTitle(stepsTitles[nextStep - 1]);
     } catch (e) {
-      console.log(e);
       if (activeStep == 3) {
         message.error("Please select slot.");
       }
@@ -316,7 +315,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
   // };
 
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
-    console.log(value);
+
     setSearch(value);
   }
 

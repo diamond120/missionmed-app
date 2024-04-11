@@ -66,7 +66,6 @@ const FinalReviewStep: FC<UploadStepProps> = ({ getUrlFile, id, }) => {
     //   });
     //   sendNotification()
     // } catch (error) {
-    //   console.error('Update application error:', error);
     // }
   };
 
