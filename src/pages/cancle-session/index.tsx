@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import FreezeSession from "../freeze-session";
 
 const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSession}) => {
-  // console.log(addUpcomingSession.session_type);
   const navigate = useNavigate();
   
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

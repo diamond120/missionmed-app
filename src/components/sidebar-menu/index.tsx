@@ -55,7 +55,6 @@ const SidebarMenu: React.FC = () => {
   }
 
   const applicationReviewNavigate = () => {
-    console.log(isStudent);
     isStudent ? navigate('application_review') : navigate('/tutor/application_review');
   }
 

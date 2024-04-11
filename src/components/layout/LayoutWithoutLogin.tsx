@@ -49,7 +49,9 @@ export const LayoutWithoutLogin: FC = () => {
           }
         } else {
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
-            navigate("/")
+            if(!['/forgot-password', '/resetpassword','/sign_in'].includes(location.pathname) ) {
+              navigate("/")
+            }
           } else {
             if(!['/forgot-password', '/resetpassword'].includes(location.pathname) ) {
               navigate("/sign_in")
@@ -58,7 +60,9 @@ export const LayoutWithoutLogin: FC = () => {
         }
       }
     } catch (e) {
-      navigate("/sign_in")
+      if(!['/forgot-password', '/resetpassword'].includes(location.pathname) ) {
+       navigate("/sign_in")
+      }
     }
   }
 

@@ -49,7 +49,6 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
      handleRateCancel();
      form.resetFields();
     }catch(e){
-     console.log(e.message);
      return false;
     }
     

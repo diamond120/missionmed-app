@@ -38,7 +38,6 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
       //   message.error('Image must smaller than 2MB!');
       // }
       // return isDocOrPdf && isLt2M;
-      // console.log(isDocOrPdf)
       return isDocOrPdf;
     },
     onRemove: (file) => {

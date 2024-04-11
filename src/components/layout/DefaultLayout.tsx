@@ -121,7 +121,6 @@ export const DefaultLayout: FC = () => {
             })
             await studentDispatch({ type: 'loading', loading: false })
           } catch (error) {
-            console.log("test catch", error)
             studentDispatch({ type: 'loading', loading: false })
           }
         }
@@ -169,7 +168,6 @@ export const DefaultLayout: FC = () => {
             })
             await tutorDispatch({ type: 'loading', loading: false })
           } catch (error) {
-            console.log(error)
             tutorDispatch({ type: 'loading', loading: false })
           }
         }
