@@ -65,7 +65,6 @@ const TutorMockInterview = () => {
 
   const handleEditLink = async(detail) => {
     try{
-      console.log(detail);
       const data = {
         "sessionId":detail?.sessionId,
         "sessionLink":detail.link,

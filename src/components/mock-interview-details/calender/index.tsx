@@ -85,12 +85,9 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
 
     useEffect(() => {
       const addClassToParent = () => {
-        console.log('add to parent');
         const elementsWithABCClass = document.querySelectorAll('.otherslot');
         elementsWithABCClass.forEach(element => {
-          console.log('found parent');
           element.parentNode.classList.add('bookedslot');
-          console.log('class added');
         });
       };
       const timeoutId = setTimeout(addClassToParent, 5000);
@@ -105,7 +102,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if (selectedEvent) {
           selectedEvent.setProp('backgroundColor', '#ffffff');
           selectedEvent.setProp('textColor', '#2816EE');
-           // Reset the color to default (empty string)
         }
         clickedEvent.setProp('backgroundColor', '#2816EE');
         clickedEvent.setProp('textColor', '#ffffff');
@@ -113,9 +109,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         const startDate = formatDate(clickedEvent.start);
         const endDate = formatDate(clickedEvent.end);
         const date = clickedEvent.extendedProps.day;
-        // form.setFieldValue('sessionStartTime', startDate);
-        // form.setFieldValue('sessionEndTime', endDate);
-        // form.setFieldValue('date', date);
         setSlot(startDate,endDate,date);
       }
     };
@@ -164,7 +157,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
     const handleSubmit =  async () => {
       const data = form.getFieldsValue(true);
       if (subSlotList.length > 0  && data.subSlot >= 0) {
-        console.log(data.subSlot );
         const slot = subSlotList[data.subSlot];
         form.setFieldValue('sessionStartTime', slot.start);
         form.setFieldValue('sessionEndTime', slot.end);

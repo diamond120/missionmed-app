@@ -184,7 +184,6 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       form.setFieldValue('studentId', studentId);
       form.setFieldValue('tutorId', data.tutorId);
     }
-    console.log(data)
     await form.validateFields();
     setIsModalOpen(false);
     next();
@@ -192,12 +191,9 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
 
   useEffect(() => {
     const addClassToParent = () => {
-      console.log('add to parent');
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
-        console.log('found parent');
         element.parentNode.classList.add('bookedslot');
-        console.log('class added');
       });
     };
     const timeoutId = setTimeout(addClassToParent, 5000);

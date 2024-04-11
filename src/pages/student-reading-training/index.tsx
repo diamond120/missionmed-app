@@ -67,10 +67,8 @@ const StudentReadingTraining = () => {
                 if(response.status_code == 401) {
                     navigate('/sign_in')
                 }
-              //   throw new Error(response.data.message);
             }
           } catch (e) {
-              // message.error(e.message);
             navigate('/sign_in')
           }
     }
@@ -235,13 +233,6 @@ const StudentReadingTraining = () => {
         form.resetFields();
     }
 
-    // const handleRestart = () => {
-    //     setIsSubmit(false)
-    //     setIsRead(false)
-    //     setScore(0)
-    //     form.resetFields();
-    // }
-
     const handleRestart = () => {
         getStory()
     }
@@ -370,7 +361,7 @@ const StudentReadingTraining = () => {
                         }
                         </div>
                         <div>
-                            {isSubmit && <Button className={"secondary-button mr_1"}  onClick={handleCancel}>Restart</Button> }
+                            {isSubmit && <Button className={"secondary-button mr_1 cancel_btn"}  onClick={handleCancel}>Restart</Button> }
                             <Button className={"primary-button"} htmlType="submit" onClick={() => {form.submit()}} disabled={isSubmit}>Done Answering</Button>
                         </div>
                     </div>
