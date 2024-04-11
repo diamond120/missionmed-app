@@ -145,13 +145,7 @@ const StudentMockInterview = () => {
           <Breadcrumb.Item>Mock Interview</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className="flex">
             <h2 className={"tab-title"}>Mock Interview</h2>
 
             <div className="d_flex_center">

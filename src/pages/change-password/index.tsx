@@ -61,7 +61,7 @@ const ChangePassword = ({title,moduleType}) => {
         ]}
         >
           <Form form={form} layout="vertical" >
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px" }} className="md-w-full">
                 <Form.Item
                     name={"oldPassword"}
                     label={"Old Password *"}

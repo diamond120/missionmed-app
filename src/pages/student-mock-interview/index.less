@@ -2,6 +2,9 @@
 .mock-interview{
     .con-box-wrap{
       padding: 45px;
+      @media (max-width:992px){
+        padding: 20px;
+      }
       .con-box-title{
         margin-bottom: 10px;
       }
@@ -102,6 +105,25 @@
           label{
             color: #312D42;
           }
+        }
+      }
+    }
+  }
+  .flex{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .tutor-mock-section-wrap{
+    .flex{
+      @media (max-width:767px){
+        margin-bottom: 20px;
+      }
+      .d_flex_center{
+        @media (max-width:767px){
+          justify-content: space-between;
+          min-width: 100%;
         }
       }
     }

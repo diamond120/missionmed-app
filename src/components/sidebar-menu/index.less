@@ -3,6 +3,23 @@
 .sidebar-menu {
   height: 100vh;
   background-color: #1E1450;
+  .ant-menu{
+    .ant-menu-sub{
+      .ant-menu-item{
+        padding-left: 66px !important;
+        @media (max-width:767px){
+          padding-left: 56px !important;
+        }
+      }
+    }
+    .ant-menu-item{
+      &.custom-profile-item, &.custom-notification-item{
+        @media (max-width:767px){
+          padding-left: 15px !important;
+        }
+      }
+    }
+  }
   @media (max-width:767px){
     .ant-menu{
       .ant-menu-submenu{
@@ -22,7 +39,11 @@
     }
   }
 }
-
+.custom-application-review-item{
+  @media (max-width:767px){
+    padding-left: 15px !important;
+  }
+}
 .custom-application-review-item,
 .custom-application-navigator-item,
 .custom-notification-item,

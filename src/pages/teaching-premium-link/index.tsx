@@ -16,13 +16,7 @@ const TeachingPremiumLink = () => {
           <Breadcrumb.Item>Interview Teaching Session</Breadcrumb.Item>
         </Breadcrumb>
         <div className={"con-section-wrap tutor-mock-section-wrap"}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className="flex">
             <h2 className={"tab-title"}>Interview Teaching Sessions</h2>
             
           </div>

@@ -50,6 +50,32 @@
 }
 
 .teachingSessions-modal {
+    padding: 0;
+    top: 4rem !important;
+  @media (max-width:767px){
+    width: 100% !important;
+    .ant-row{
+      flex-direction: column;
+      gap: 10px; 
+    }
+    .ant-modal-content {
+      .ant-modal-body {
+        .ant-form {
+          .ant-form-item{
+            margin-top: 15px !important;
+            margin-bottom: 0 !important;
+            padding-left: 0 !important;
+            padding-bottom: 0 !important;
+          }
+        }
+      }
+    }
+  }
+  .md-w-full{
+    @media (max-width:767px){
+      width: 100% !important;
+    }
+  }
   .ant-modal-body {
     .ant-collapse{
       .ant-collapse-item{
@@ -117,6 +143,9 @@
                 column-gap: 16px;
                 margin-left: 8px;
                 padding-right: 15px;
+                @media (max-width:767px){
+                  flex-wrap: wrap;
+                }
                 .tutor-name {
                   color: #312D42;
                   font-weight: 600;

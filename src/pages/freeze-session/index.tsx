@@ -117,7 +117,7 @@ const FreezeSession = ({title,moduleType,addFreezeSession, sessionType='', showC
         ]}
       >
         <Form form={form} className={'freeze-sessions'} layout="vertical" initialValues= {{sessionType: ['Recurring Session']}}>
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px" }} className="lg-w-full">
               <Form.Item
                 style={{ marginTop: "17px", marginBottom: "0px"}}
                 label="Choose types of sessions that you want to freeze"

@@ -7,7 +7,7 @@ const MockInterviewDetails = ({upcomingInterview, upcomingSessions, pastSessions
      
     return (
         <>
-            <div style={{display:"flex",columnGap:"24px"}}>
+            <div style={{display:"flex",columnGap:"24px"}} className="lg-d-col">
             {Object.keys(upcomingInterview).length >0 &&<UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} sessionType="interview" handleEditLink={handleEditLink}/>}
             {Object.keys(upcomingInterview).length >0 &&<Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} />}
             </div>

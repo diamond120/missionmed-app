@@ -7,7 +7,7 @@ const SessionDetails = ({ moduleType, upcomingInterview, upcomingSessions, pastS
 
     return (
         <>
-            <div style={{ display: "flex", columnGap: "24px" }}>
+            <div style={{ display: "flex", columnGap: "24px" }} className="lg-d-col">
                 {Object.keys(upcomingInterview).length > 0 && <UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} handleEditLink={handleEditLink} sessionType="session" credit={credit} />}
                 {Object.keys(upcomingInterview).length > 0 && <Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} credit={credit} />}
             </div>

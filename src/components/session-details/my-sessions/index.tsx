@@ -205,7 +205,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
 
       {details &&
         <div style={{ display: "flex" }} className="w_full roll-out">
-          <div className="time" style={{ paddingRight: 100 }}>
+          <div className="time pe-full">
             <div style={{ paddingBottom: "5px" }}>
               <strong>{userRole == "tutor" ? "Student Details" : " Tutor Details"}</strong>
             </div>

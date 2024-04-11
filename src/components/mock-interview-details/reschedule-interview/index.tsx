@@ -327,7 +327,7 @@ const RescheduleInterview = ({
       >
         <Form form={form} layout="vertical">
           {activeStep == 1 && (
-            <div style={{ width: "555px" }}>
+            <div style={{ width: "555px" }} className="md-w-full">
               <Step1Form
                 universityList={universityList}
                 getMockInterviewList={getMockInterviewList}
@@ -341,7 +341,7 @@ const RescheduleInterview = ({
             </div>
           )}
           {activeStep == 3 && (
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px" }} className="md-w-full">
               <Step3From form={form} />
             </div>
           )}

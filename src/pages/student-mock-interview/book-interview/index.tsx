@@ -465,14 +465,14 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
       >
         <Form form={form} layout="vertical">
           {activeStep == 1 && (
-            <div style={{ width: "555px" }}>
+            <div style={{ width: "555px" }} className="md-w-full">
               <Step1Form
                 universityList={universityList}
               />
             </div>
           )}
           {activeStep == 2 && (
-            <div style={{ width: "555px" }}>
+            <div style={{ width: "555px" }} className="md-w-full">
               <Step2Form tutors={tutors} />
             </div>
           )}
@@ -482,7 +482,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
             </div>
           )}
           {activeStep == 4 && (
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px" }} className="md-w-full">
               <Step4From form={form} />
             </div>
           )}
