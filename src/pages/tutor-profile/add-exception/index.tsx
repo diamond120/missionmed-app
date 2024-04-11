@@ -239,7 +239,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
         ]}
       >
         <Form form={form} className={'freeze-sessions add-exception-form'} layout="vertical" >
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px" }} className="md-w-full">
                 <Form.Item
                     label="Name"
                     name="name"

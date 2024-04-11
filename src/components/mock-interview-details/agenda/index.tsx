@@ -37,7 +37,7 @@ const Agenda = ({agenda, handleEditAgenda}) => {
                       <li>Ask tutor to explain how to work through syllogisms.</li> */}
                 {/* </ul> */}
                 {agenda ? agenda : 'No agenda found'}
-                <div style={{display:'flex',gap:20}}>
+                <div style={{display:'flex',gap:20,marginTop:10}}>
                   <Button className={"secondary-button"} onClick={handleClick}>Edit Agenda</Button>
                 </div>
               </div>

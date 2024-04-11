@@ -7,20 +7,35 @@
   border-radius: 2px;
 }
 .freeze-sessions{
+  .md-w-full{
+    @media (max-width:767px){
+      width: 100% !important;
+    }
+  }
   .ant-form-item{
     .input{
       width: 100%;
     }
   }
 }
+@media (max-width:992px){
+  .freeze_dates{
+      .ant-form-item{
+        .input{
+          width: 100%;
+        }
+      }
+  }
 
+}
 @media (max-width:767px){
   .freeze_dates{
       flex-wrap: wrap;
       .ant-form-item{
         max-width: 100% !important;
         .input{
-          max-width: 85%;
+          max-width: 100%;
+          
         }
       }
   }

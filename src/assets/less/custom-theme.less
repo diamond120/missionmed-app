@@ -209,7 +209,7 @@ ol {
   line-height: 1.21;
   @media (max-width: 768px){
     margin: 20px 0 10px 0;
-    font-size: 27px;
+    font-size: 23px;
   }
 }
 
@@ -235,13 +235,18 @@ ol {
 }
 
 .con-box {
+  @media (max-width:992px){
+    margin-top: 10px;
+  }
   .con-box-wrap {
     padding: 32px;
-    ;
     background-color: #FFF;
     border-radius: 8px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-
+    @media (max-width:992px){
+      padding: 20px;
+      width: 100% !important;
+    }
     .con-box-title {
       color: #312D42;
       font-size: 20px;
@@ -362,7 +367,13 @@ ol {
     .ant-modal-header {
       border-radius: 8px 8px 0 0;
       box-shadow: 0px 4px 20px 0px #383A480A;
-
+      @media (max-width:767px){
+        padding: 10px !important;
+        .ant-modal-title{
+          text-align: left !important;
+          font-size: 16px !important;
+        }
+      }
       .ant-modal-title {
         text-align: center;
         font-weight: 600;
@@ -381,13 +392,17 @@ ol {
         }
       }
       @media (max-width:767px) {
-        padding: 24px 10px;
+        padding: 20px 10px;
+        max-height: 70vh;
+        overflow: auto;
       }
 
       .ant-form {
         .ant-form-item {
           padding: 0 10px;
-
+          @media (max-width:767px){
+            margin-top: 0 !important;
+          }
           .ant-radio-group {
             display: flex;
             row-gap: 13px;
@@ -420,7 +435,9 @@ ol {
       box-shadow: 0px -4px 20px 0px #383A480A;
       color: #6B7393;
       position: relative;
-
+      @media (max-width:767px){
+        padding: 15px 10px;
+      }
       .steps {
         position: absolute;
         left: 50%;
@@ -481,6 +498,9 @@ ol {
 .previous-button {
   position: absolute;
   left: 20px;
+  @media (max-width: @screen-md-max){
+    left: 10px;
+  }
 }
 
 a {
@@ -550,6 +570,11 @@ a {
 
 .mock-interview-modal {
   .ant-modal-body {
+    .ant-form-vertical{
+      @media (max-width:992px){
+        overflow: auto;
+      }
+    }
     .ant-form-item {  
         .ant-collapse-item{
           box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
@@ -574,9 +599,12 @@ a {
 }
 
 .mock-interview-modal {
+    @media (max-width:767px){
+      width: 100% !important;
+    }
   .ant-modal-body {
     .ant-collapse {
-      .ant-collapse-item.ant-collapse-item-active,{
+      .ant-collapse-item.ant-collapse-item-active{
         box-shadow: 0px 5px 12px 4px #00000017, 0px 3px 6px 0px #0000001F, 0px 1px 2px -2px #00000029;
       }
     }
@@ -716,7 +744,7 @@ a {
 
 
 .tagStyle {
-  border-radius: 4px;
+  border-radius: 8px;
   border: 1px solid var(--colorSuccessBorder, #B7EB8F);
   background: var(--colorSuccessBg, #F6FFED);
   padding: 9px 8px;
@@ -727,7 +755,7 @@ a {
   .tagStyle {
     border: 1px solid var(--colorErrorBorder, #FFA39E);
     background: var(--colorErrorBg, #FFF1F0);
-    border-radius: 6px;
+    border-radius: 8px;
   }
 }
 
@@ -809,4 +837,35 @@ a {
     align-items:  center !important;
   }
 }
+.lg-w-full{
+  @media (max-width:992px){
+    width: 100% !important;
+  }
+}
+.md-w-full{
+  @media (max-width:767px){
+    width: 100% !important;
+  }
+}
+.ant-modal{
+  &.mock-interview-modal{
+    top: 4rem;
+  }
+}
+.mock-interview-modal {
+  .ant-modal-body{
+    .ant-row{
+     @media (max-width:767px){
+        flex-direction: column !important;
+        gap: 10px;
+     }
+    }
+  }
 
+}
+
+.ant-btn{
+  &.ant-btn-default{
+    border-radius: 4px;
+  }
+}
