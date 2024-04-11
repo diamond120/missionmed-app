@@ -244,7 +244,7 @@ const SidebarMenu: React.FC = ({className}) => {
             icon={<ReadOutlined style={{ fontSize: "24px", color: "white" }} key={"7"} />}
           >
             {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
-            <Menu.Item onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
+            <Menu.Item className="" onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
           </SubMenu>
           { showStory && isStudent &&
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<DashboardOutlined />}>

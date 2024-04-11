@@ -16,13 +16,7 @@ const UCATPremiumLink = () => {
         <Breadcrumb.Item>UCAT Teaching Sessions</Breadcrumb.Item>
       </Breadcrumb>
       <div className={"con-section-wrap tutor-mock-section-wrap"}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+        <div className="flex">
           <h2 className={"tab-title"}>UCAT Teaching Sessions</h2>
           
         </div>

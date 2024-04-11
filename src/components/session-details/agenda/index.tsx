@@ -39,7 +39,7 @@ const Agenda = ({ agenda, handleEditAgenda, credit }) => {
                       <li>Ask tutor to explain how to work through syllogisms.</li> */}
             {/* </ul> */}
             {agenda ? agenda : 'No agenda found'}
-            <div style={{ display: 'flex', gap: 20 }}>
+            <div style={{ display: 'flex', gap: 20,marginTop:10 }}>
               <Button className={"secondary-button"} onClick={handleClick} disabled={(credit == 0 || credit == '' || credit == undefined) && user.role == "student"}>Edit Agenda</Button>
             </div>
 

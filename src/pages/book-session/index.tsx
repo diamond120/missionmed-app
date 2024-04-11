@@ -719,7 +719,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        className={"mock-interview-modal teachingSessions-modal"}
+        className={"mock-interview-modal teachingSessions-modal "}
         width={"max-content"}
         footer={[
           activeStep > 1 && (
@@ -790,10 +790,10 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         >
           {activeStep == 1 && (
             userRole === 'tutor' ? (
-              <div style={{ width: "555px" }}>
+              <div style={{ width: "555px" }} className="md-w-full">
                 <Step2Form students={students} />
               </div>) : (
-              <div style={{ width: "555px" }}>
+              <div style={{ width: "555px" }} className="md-w-full">
                 <Step2Form tutors={tutors} />
               </div>
             )
@@ -804,7 +804,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             </div>
           )}
           {activeStep == 3 && (
-            <div style={{ width: "600px" }}>
+            <div style={{ width: "600px" }} className="md-w-full">
               <Step4From form={form} />
             </div>
           )}

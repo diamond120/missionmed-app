@@ -308,13 +308,7 @@ const StudentReadingTraining = () => {
                 <UnderConstructionPage />
             :
             <div className={"con-section-wrap tutor-mock-section-wrap"}>
-            <div
-                style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                }}
-            >
+            <div className="flex">
                 <h2 className={"tab-title"}>Speed Reading Trainer</h2>
                 <div className="d_flex_center">
                 {/* <div className={"tagLayout errorTagStYouyle"}>
@@ -348,7 +342,7 @@ const StudentReadingTraining = () => {
                     <div className="d_flex">
                         <Text className="ml_1"><b  id="wpm1">{wpm}</b> Words / Minute</Text>
                         <div>
-                            <Button className={"secondary-button mr_1 cancel_btn"} onClick={handleCancel}>Cancel</Button>
+                            <Button className={"secondary-button mr_1 cancel_btn md-b-1"} onClick={handleCancel}>Cancel</Button>
                             <Button className={"secondary-button mr_1 cancel_btn"}  onClick={handleRestart}>Restart</Button>
                             <Button className={"primary-button"} htmlType="submit" onClick={handleReading} disabled={isRead}>Done Reading</Button>
                         </div>
@@ -370,7 +364,7 @@ const StudentReadingTraining = () => {
                         }
                         </div>
                         <div>
-                            {isSubmit && <Button className={"secondary-button mr_1"}  onClick={handleCancel}>Restart</Button> }
+                            {isSubmit && <Button className={"secondary-button mr_1 md-b-1"}  onClick={handleCancel}>Restart</Button> }
                             <Button className={"primary-button"} htmlType="submit" onClick={() => {form.submit()}} disabled={isSubmit}>Done Answering</Button>
                         </div>
                     </div>
