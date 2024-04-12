@@ -185,12 +185,16 @@ export const DefaultLayout: FC = () => {
   if (loading)
     return null
 
+  const closeFunction = () => {
+    setToggle(false)
+  }
+
   return (
     <ProfileStaticDataContext.Provider value={profileStaticData}>
       <NotificationContext.Provider value={{ unreadNotificationCount, setUnreadNotificationCount }}>
         <Layout className={"default"} hasSider>
           {/* {!isTablet && <SidebarMenu />} */}
-          <SidebarMenu className={`${toggle ? "active-sidebar":""}`}/>
+          <SidebarMenu className={`${toggle ? "active-sidebar":""}`} callBack={closeFunction}/>
           <Content>
             <Suspense>  
               <div className={`sideBar-menu-toggle ${toggle ? "active":""}`} onClick={()=>setToggle(!toggle)}>
