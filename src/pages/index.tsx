@@ -172,7 +172,7 @@ const routes: RouteObject[] = [
         index: true,
       },
       {
-        Component: StudentReadingTraining,
+        Component: AIStory,
         path: "/student/reading-trainer",
         index: true,
       },
