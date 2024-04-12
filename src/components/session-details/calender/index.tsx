@@ -232,6 +232,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
           selectable={true}
           eventClick={handleEventClick}
           eventBorderColor='0'
+          allDaySlot={false}
         />
       </div>
 
