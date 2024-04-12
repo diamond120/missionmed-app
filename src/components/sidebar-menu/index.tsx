@@ -17,7 +17,7 @@ import CommonService from "../../api/services/Common";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const SidebarMenu: React.FC = ({className}) => {
+const SidebarMenu: React.FC = ({className , callBack}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState("1");
   const [appReviewPage, setAppReviewPage] = useState("")
@@ -150,6 +150,7 @@ const SidebarMenu: React.FC = ({className}) => {
   }, [user.role, current]);
 
   const handleSelectedMenu = async (e: any) => {
+    callBack();
     setCurrent(e.key);
   }
 

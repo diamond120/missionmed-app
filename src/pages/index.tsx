@@ -1,10 +1,9 @@
 import { FC, lazy, memo } from "react";
-import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from "react-router-dom";
+import { Outlet, RouteObject, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
 import { DefaultLayout } from "../components/layout";
 import { LayoutWithoutLogin } from "../components/layout/LayoutWithoutLogin";
 import { Loader } from "../components/layout/Loader";
-import SignInLayout from "../components/layout/SignInLayout"
-;
+import SignInLayout from "../components/layout/SignInLayout";
 import ForgotPassword from "./forgot-password";
 import ResetPassword from "./reset-password";
 
@@ -14,6 +13,7 @@ const Application = lazy(/*application-page-bundle*/ () => import("./application
 const ApplicationReviewTutor= lazy(/*application-page-bundle*/ () => import("./application-review-tutor"))
 const ApplicationReviewProcess= lazy(/*application-page-bundle*/ () => import("./application-reviewing-process"))
 const SignIn= lazy(/*application-page-bundle*/ () => import("./sign-in"))
+const AIStory =lazy(/*application-page-bundle*/ () => import("./ai-component"))
 const StudentProfile= lazy(/*application-page-bundle*/ () => import("./student-profile"))
 const TutorProfile= lazy(/*application-page-bundle*/ () => import("./tutor-profile"))
 const NotificationsTutor= lazy(/*application-page-bundle*/ () => import("./notifications-tutor"))
@@ -34,6 +34,7 @@ const TeachingPremiumLink = lazy(() => import("./teaching-premium-link"))
 const routes: RouteObject[] = [
   {
     Component: LayoutWithoutLogin,
+    loader: () => <Loader spinning />,
     children: [
       {
           Component:  SignIn,
@@ -50,8 +51,13 @@ const routes: RouteObject[] = [
         path: "/resetpassword/:token",
         index: true,
       },
+      // {
+      //   Component: StudentReadingTraining,
+      //   path: "/",
+      //   index: true,
+      // },
       {
-        Component: StudentReadingTraining,
+        Component: AIStory,
         path: "/",
         index: true,
       },
