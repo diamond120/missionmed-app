@@ -1,4 +1,7 @@
 .specializations-section{
+  .ant-table-content{
+    overflow: auto; 
+  }
   .specializations-section-title{
     color: #6B7393;
     font-weight: 600;
@@ -19,8 +22,11 @@
   .specializations-form-item{
     display: flex;
     justify-content: space-between;
-
-    .specializations-label{
+    @media (max-width:767px){
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .specializations-label{ 
       margin: 0;
       color: #312D42;
       font-weight: 600;

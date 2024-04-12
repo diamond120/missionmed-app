@@ -66,11 +66,16 @@ export const LayoutWithoutLogin: FC = () => {
       }
     }
   }
+  const closeFunction = () => {
+    {isTablet
+      setToggle(false)
+    }
+  }
 
   return (
         <Layout className={"default"} hasSider>
           {/* {!isTablet && <WithoutLoginSidebar />} */}
-          <WithoutLoginSidebar className={`${toggle ? "active-sidebar":""}`}/>
+          <WithoutLoginSidebar className={`${toggle ? "active-sidebar":""}`} callBack={closeFunction}/>
           <Content>
             <Suspense>
               <div className={`sideBar-menu-toggle ${toggle ? "active":""}`} onClick={()=>setToggle(!toggle)}>

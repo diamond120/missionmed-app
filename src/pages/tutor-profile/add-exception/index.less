@@ -23,6 +23,9 @@
   font-weight: 600;
   color: rgba(0, 0, 0, 0.85);
   padding-left: 10px;
+  @media (max-width:767px){
+    margin-top:15px;
+  }
 }
 .add-exception-form{
     .ant-form-item{
@@ -38,11 +41,17 @@
       &:first-child{
         .ant-space-item{
           min-width: 46%;  
+          @media (max-width:767px){
+            min-width: 45%;  
+          }
         }
       }
     }
     .ant-space-item:not(:last-child ){
       min-width: 46%;
+      @media (max-width:767px){
+        min-width: 45%;  
+      }
     }
   }
 }
