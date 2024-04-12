@@ -193,6 +193,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         selectable={true} 
         eventClick={handleEventClick}
         eventBorderColor='0'
+        allDaySlot={false}
       />
       <Modal
           title="Available Slot For Mock Interview"
