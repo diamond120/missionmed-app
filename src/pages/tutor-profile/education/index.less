@@ -15,6 +15,16 @@
   background-color: #FFF;
   border-radius: 8px;
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
+  @media (max-width:992px){
+    width: 100%;
+    padding: 20px !important;
+  }
+  .education-button-wrap{
+    .ant-form-item{
+      margin-bottom: 0;
+    }
+  }
+
   .ant-form {
     .ant-form-item {
       .ant-row {
@@ -60,12 +70,5 @@
     border: 1px solid #2816EE;
     border-radius: 6px;
     box-shadow: 0 2px 0 0 rgb(0 0 0 / 2%);
-  }
-}
-
-
-@media (max-width:767px){
-  .education-form{
-    width: 100%;
   }
 }

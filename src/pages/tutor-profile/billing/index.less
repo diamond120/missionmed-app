@@ -16,6 +16,9 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
   .ant-form-item{
+    @media (max-width:767px){
+      margin-bottom: 13px;
+    }
     .ant-col{
       max-width: inherit;
     }
@@ -43,31 +46,43 @@
       background-color: #FFF;
       border: 1px solid  rgb(0 0 0 / 15%);
       border-radius: 8px;
+      @media (max-width:767px){
+        width: 100% !important;
+      }
     }
 
     .price-wrap{
       display: flex;
       align-items: center;
-
+      @media (max-width:767px){
+        flex-wrap: wrap;
+      }
       .price{
         margin: 0;
         color:  rgb(0 0 0 / 88%);
         font-weight: 600;
         font-size: 16px;
         font-style: normal;
-
+        @media (max-width:767px){
+          width: 100%;
+        }
       }
 
       .rate{
         margin: 0 0 0 16px ;
+        @media (max-width:767px){
+          margin: 0;
+          min-width: 100%;
+        }
       }
     }
   }
 }
 
-@media (max-width:767px){
+@media (max-width:992px){
   .billing-form{
     width: 100%;
+    padding: 20px !important;
     .ant-form-item{
       .billing-form-item{
         .label{
