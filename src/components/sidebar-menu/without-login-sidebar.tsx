@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Layout, Menu } from 'antd';
 import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
 import { useNavigate } from "react-router-dom"
 import { SvgIcon } from "../icon";
+import CommonService from "../../api/services/Common";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -11,6 +12,8 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [current, setCurrent] = useState('/')
   const navigate = useNavigate()
+  const [showStory, setShowStory] = useState(false)
+
   
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -19,6 +22,33 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
   const handleSelectedMenu = async (e: any) => {
     setCurrent(e.key);
     callBack();
+  }
+
+  useEffect (() => {
+    handleReading();
+  }, [])
+
+  const handleReading = async () => {
+    try {
+      debugger;
+      const response =  await CommonService.getAPI("/setting-data");
+      if (response.data.success) {
+        if(localStorage.getItem("jwt")) {
+          if( response.data.data.show_story_feature == 1 ) {
+            setShowStory(true);
+          }
+        } else {
+          debugger;
+          if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
+            setShowStory(true);
+          } else {
+            setShowStory(false);
+          }
+        }
+      }
+    } catch (e) {
+      setShowStory(false);
+    }
   }
 
   return (
@@ -55,9 +85,11 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
           >
             <Menu.Item onClick={() => { navigate( '/ucat-premium') }} key={'/ucat-premium'} > Teaching Session <CrownOutlined  className="yellow-svg"/> </Menu.Item>
           </SubMenu>
-          <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item reading-trainer-item"} icon={<DashboardOutlined />}>
-            Speed Reading Trainer  
-          </Menu.Item>
+          {showStory && 
+            <Menu.Item key={"/"} onClick={() =>{navigate('/')}} className={"custom-profile-item reading-trainer-item"} icon={<DashboardOutlined />}>
+              Speed Reading Trainer  
+            </Menu.Item>
+          }
         </>
 
         <Menu.Item style={{ position: "fixed", bottom: "24px", width: "280px" }} onClick={() => { navigate('sign_in') }} key={"14"} icon={<LoginOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
