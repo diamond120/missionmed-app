@@ -30,7 +30,6 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
 
   const handleReading = async () => {
     try {
-      debugger;
       const response =  await CommonService.getAPI("/setting-data");
       if (response.data.success) {
         if(localStorage.getItem("jwt")) {
@@ -38,7 +37,6 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
             setShowStory(true);
           }
         } else {
-          debugger;
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
             setShowStory(true);
           } else {
