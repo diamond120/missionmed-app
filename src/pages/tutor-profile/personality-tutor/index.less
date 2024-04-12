@@ -36,7 +36,9 @@
     }
     .personality-info-text-block{
       margin-left: 32px;
-
+      @media (max-width:992px){
+        margin-left: 10px;
+      } 
       .personality-info-title{
         margin: 0;
         color: #2816EE;
@@ -44,6 +46,9 @@
         font-size: 24px;
         font-style: normal;
         line-height: 133%;
+        @media (max-width:767px){
+          font-size: 18px;
+        }
       }
 
       .personality-info-subtitle{
@@ -52,7 +57,7 @@
         font-weight: 400;
         font-size: 14px;
         font-style: normal;
-        line-height: 157% ;
+        line-height: 157%;
       }
 
       .personality-info-text{
@@ -62,6 +67,9 @@
         font-size: 16px;
         font-style: normal;
         line-height: 150%;
+        @media (max-width:767px){
+          font-size: 14px;
+        }
       }
     }
   }
@@ -99,16 +107,16 @@
   }
 }
 
-@media (max-width:767px){
+@media (max-width:992px){
   .personality-tutor-wrap{
     width: 100%;
     padding: 20px !important;
     .personality-info{
       .ant-avatar{
-          width: 85px !important;
-          height: 85px !important;
-          line-height: 85px !important;
-          font-size: 32px !important;
+          width: 45px !important;
+          height: 45px !important;
+          line-height: 37px !important;
+          font-size: 25px !important;
       }
 
     }
