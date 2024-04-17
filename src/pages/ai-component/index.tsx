@@ -7,9 +7,12 @@ import CommonService from "../../api/services/Common";
 import UnderConstructionPage from '../under-construction-page'
 import { useNavigate } from "react-router-dom"
 import { Loader } from "../../components/layout/Loader";
+import wtf from "wtf_wikipedia";
+import wtfPluginApi from "wtf-plugin-api";
 
 const AIStory = () => {
 
+    wtf.extend(wtfPluginApi);
     const { Text } = Typography;
     const [themeList, setThemeList] = useState([]);
     const [textComplexityList, setTextComplexityList] = useState([]);
@@ -27,6 +30,10 @@ const AIStory = () => {
       const [construction, setConstruction] = useState(null);
     const navigate = useNavigate()
     const [storyLoader, setStoryLoader] = useState(null)
+    const [questionLoader, setQuestionLoader] = useState(null)
+    const [retryCount, setRetryCount] = useState(0)
+
+
 
     const handleThemeClick = (e : any) => {
         const selectedOption = themeList.find(theme => theme.key == e.key);
@@ -40,20 +47,12 @@ const AIStory = () => {
         setTextComplexity(selectedOption);
         setIsSubmit(false)
     };
-        
-    useEffect(() => {
-        console.log("useEffecct");
-        getTrainingData();
-    }, []);
 
     const getTrainingData = async () => {
-        console.log(theme, textComplexity);
         try {
             const response =  await CommonService.getAPI("/student/reading-trainer");
             if (response.data.success) {
-                setThemeList(response.data.data.theme.options);
                 setConstruction(response.data.data.underConstruction)
-                setTextComplexityList(response.data.data.textComplexitylevel)
                 if(response.data.data.storyFeature != 1) {
                     navigate('/application_review')
                 }
@@ -67,39 +66,145 @@ const AIStory = () => {
           }
     }
 
-    useEffect(() => {
-        if(theme && textComplexity) {
-
-            getStory();
-        }
-    }, [theme, textComplexity]);
-
-    const getStory = async () => {
-        try {
-            setStoryLoader(true)
-            const data = {
-                'theme' : theme?.key,
-                'textComplexitylevel' : textComplexity?.key
-            }
-            const response = await CommonService.postAPI("/student/student-story",data);
-            if (response.data.success) {
-                if(!response.data.data) {
-                    message.error('No story Found.');
-                } 
-                setStory(response.data.data)
-                setWpm(0)
-                setNumWordsInText(0)
-                setStoryLoader(false)
+    function truncateText(text, minWordCount) {
+        const paragraphs = text.split("\n");
+        let truncatedText = "";
+        let wordCount = 0;
+      
+        for (const paragraph of paragraphs) {
+          if (paragraph.trim() !== "") {
+            const paragraphWords = paragraph.trim().split(/\s+/);
+            const paragraphWordCount = paragraphWords.length;
+      
+            if (wordCount + paragraphWordCount <= minWordCount) {
+              truncatedText += paragraph + "\n\n";
+              wordCount += paragraphWordCount;
             } else {
-                setStoryLoader(false)
-                throw new Error(response.data.message);
+              const sentences = paragraph.split(/(?<=[.!?])\s+/);
+      
+              let sentenceWordCount = 0;
+              let sentenceIndex = 0;
+      
+              while (sentenceIndex < sentences.length) {
+                const sentence = sentences[sentenceIndex];
+                const sentenceWords = sentence.trim().split(/\s+/);
+                const sentenceWordCount = sentenceWords.length;
+      
+                if (wordCount + sentenceWordCount <= minWordCount) {
+                  truncatedText += sentence + " ";
+                  wordCount += sentenceWordCount;
+                  sentenceIndex++;
+                } else {
+                  truncatedText += sentence + "\n\n";
+                  wordCount += sentenceWordCount;
+                  break;
+                }
+              }
+      
+              break;
             }
+          }
+        }
+      
+        return truncatedText.trim();
+      }
+    
+    async function fetchArticle(title) {
+    const doc = await wtf.fetch(title);
+    const sections = doc.sections().filter((section) => {
+        const sectionTitle = section.title().toLowerCase();
+        return sectionTitle !== "see also" && sectionTitle !== "external links";
+    });
+    const modifiedText = sections.map((section) => section.text()).join("\n\n");
+    return modifiedText;
+    }
+
+    async function fetchCategoryArticles(categoryName, minWordCount) {
+        const categoryPages = await wtf.getCategoryPages(categoryName);
+        const articleTexts = await Promise.all(
+          categoryPages.map(async (page) => {
+            if (page.ns === 0) {
+              const text = await fetchArticle(page.title);
+              const wordCount = text.trim().split(/\s+/).length;
+              if (wordCount > minWordCount) {
+                if (wordCount < 16385) {
+                    return truncateText(text, minWordCount);
+                } else {
+                   return null;
+                }
+              }
+            }
+            return null;
+          }),
+        );
+      
+        return articleTexts.filter((text) => text !== null);
+      }
+      
+      
+    const getContentWikipedia = async (category) => {
+        
+        try {
+            
+            setStoryLoader(true)
+            const categoryName = category;
+            const minWordCount = 600;
+            await fetchCategoryArticles(categoryName, minWordCount)
+            .then( async (articles) => {
+            
+            if(articles.length == 0 && retryCount  < 5) {
+                getCategory();  
+                setRetryCount(retryCount + 1);
+            }
+            if(articles.length == 0 && retryCount >= 5) {
+                setStoryLoader(false)
+                throw new Error('Something went wrong please try again later');
+            }
+
+            if(articles.length > 0) {
+                  const data = { 'content' : articles };
+                  setStory(data)
+                  setStoryLoader(false)
+                  setQuestionLoader(true)
+                    const payload = {
+                        'story' :  articles.toString()
+                    }
+                    const response = await CommonService.postAPI("/student/student-story",payload);
+                    
+                    if (response.data.success) {
+                        if(!response.data.data) {
+                            message.error('No story Found.');
+                        }
+                        const setQuestion = { 'content' : articles, 'question' : response.data.data.question };
+                        setStory(setQuestion) 
+                        setQuestionLoader(false);
+                    } else {
+                        setQuestionLoader(false);
+                        throw new Error(response.data.message);
+                    }
+                } 
+            })
+            
+           
           } catch (e) {
             message.error(e.message);
             setStoryLoader(false)
           }
     }
-    
+
+
+    useEffect(() => {
+        getTrainingData();
+        getCategory();
+    }, []);
+
+    async function getCategory() {
+        await wtf.getRandomCategory().then(cat=>{
+            getContentWikipedia(cat);
+        })
+    }
+
+
     const menu = (
         <Menu onClick={handleThemeClick} items={themeList}/>
     );
@@ -112,7 +217,7 @@ const AIStory = () => {
         let timer;
         if(story?.content && !isRead) {
             const text = story?.content
-            const wordsArray = text.split(" ");
+            const wordsArray = text.toString().split(" ");
             setNumWordsInText(wordsArray.length);
         
             const startTime = new Date().getTime();
@@ -141,7 +246,6 @@ const AIStory = () => {
       }, [numWordsInText,story, isRead]);
 
     const handleReading = async () => {
-        const jsonString = story?.question.replace(/^```json\s*|```$/g, '');
         setIsRead(true)
     }
 
@@ -185,7 +289,7 @@ const AIStory = () => {
 
     const handleRestart = () => {
         setStory(undefined)
-        getStory()
+        getCategory();
     }
 
     const QuestionForm = () => {
@@ -232,7 +336,7 @@ const AIStory = () => {
     }
     
     if(construction == null) {                       
-          return <div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div>;
+        return <div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div>;
     }
 
     return (
@@ -268,7 +372,7 @@ const AIStory = () => {
             <h2 className={"secondary-title"}>Trainer Options 
             {/* <QuestionCircleFilled  style={{marginLeft:"8px"}} title="Speed Reading Trainer" /> */}
             </h2>
-                <div className="div-style">
+                {/* <div className="div-style">
                     <Dropdown overlay={menu} className='dropdown-menu option-dropdown-menu' disabled={isRead}>
                         <Button><Space>{theme ? theme?.label : 'Select Theme'}<DownOutlined /></Space></Button>
                     </Dropdown>
@@ -276,7 +380,7 @@ const AIStory = () => {
                     <Dropdown overlay={textOptions} className="option-dropdown-menu" disabled={isRead}>
                         <Button><Space>{textComplexity ? textComplexity?.label : 'Text Complexity Level'}<DownOutlined /></Space></Button>
                     </Dropdown>
-                </div>
+                </div> */}
                 {story ?
                 <>
                 
@@ -295,7 +399,11 @@ const AIStory = () => {
                     </div>
                   ]}
                  >
-                    <Text  ><div dangerouslySetInnerHTML={{ __html: story?.content }}></div></Text>
+                   <Text>
+                        {story?.content.map((text) =>(
+                            <p className="mt_2">{text}</p>
+                        ))}
+                    </Text>
                 </Card>
                 :
                 <Card
@@ -319,13 +427,20 @@ const AIStory = () => {
                 {isSubmit ?
                     <Tabs defaultActiveKey="2">
                         <TabPane tab="Comprehension Text" key="1">
-                        <div dangerouslySetInnerHTML={{ __html: story?.content }}></div>
+                       {story?.content.map((text) =>(
+                            <p className="mt_2">{text}</p>
+                        ))}
                         </TabPane>
                         <TabPane tab="Questions" key="2" >
                             <QuestionForm />
                         </TabPane>
                     </Tabs> :
-                    <QuestionForm />
+                    
+                   <>
+                    {questionLoader == null || questionLoader == true &&
+                        <Text  ><div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div> </Text> }
+                    {questionLoader == false &&  <QuestionForm /> }
+                   </>
                 }
                     
                 </Card>

@@ -28,7 +28,9 @@
     "react-select": "^5.7.4",
     "react-select-country-list": "^2.2.3",
     "react-timezone-select": "^2.1.2",
-    "vite-plugin-svgr": "^3.2.0"
+    "vite-plugin-svgr": "^3.2.0",
+    "wtf_wikipedia": "^10.3.0",
+    "wtf-plugin-api": "^2.0.0"
   },
   "proxy": "http://192.168.1.125:8081",
   "devDependencies": {
