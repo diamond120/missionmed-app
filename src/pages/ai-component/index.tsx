@@ -32,6 +32,7 @@ const AIStory = () => {
     const [storyLoader, setStoryLoader] = useState(null)
     const [questionLoader, setQuestionLoader] = useState(null)
     const [retryCount, setRetryCount] = useState(0)
+    const [questionList, setQuestionList] = useState(null)
 
 
 
@@ -145,7 +146,7 @@ const AIStory = () => {
     const getContentWikipedia = async (category) => {
         
         try {
-            
+            setQuestionList(null);
             setStoryLoader(true)
             const categoryName = category;
             const minWordCount = 600;
@@ -165,23 +166,7 @@ const AIStory = () => {
                   const data = { 'content' : articles };
                   setStory(data)
                   setStoryLoader(false)
-                  setQuestionLoader(true)
-                    const payload = {
-                        'story' :  articles.toString()
-                    }
-                    const response = await CommonService.postAPI("/student/student-story",payload);
-                    
-                    if (response.data.success) {
-                        if(!response.data.data) {
-                            message.error('No story Found.');
-                        }
-                        const setQuestion = { 'content' : articles, 'question' : response.data.data.question };
-                        setStory(setQuestion) 
-                        setQuestionLoader(false);
-                    } else {
-                        setQuestionLoader(false);
-                        throw new Error(response.data.message);
-                    }
+                  getQuestion(articles)
                 } 
             })
             
@@ -193,9 +178,38 @@ const AIStory = () => {
     }
 
 
+    const getQuestion = async (articles : any) => {
+        // setQuestionLoader(true)
+        setQuestionList(null);
+        try {
+            const payload = {
+                'story' :  articles.toString()
+            }
+            const response = await CommonService.postAPI("/student/student-story",payload);
+            
+            if (response.data.success) {
+                if(!response.data.data) {
+                    message.error('No story Found.');
+                }
+                // const setQuestion = { 'content' : articles, 'question' : response.data.data.question };
+                // setStory(setQuestion) 
+                setQuestionList(response.data.data.question)
+                // setQuestionLoader(false);
+            } else {
+                // setQuestionLoader(false);
+                setQuestionList(null)
+                throw new Error(response.data.message);
+            }
+          } catch (e) {
+            setQuestionList(null)
+            throw new Error(response.data.message);
+          }
+    }
+
     useEffect(() => {
         getTrainingData();
         getCategory();
+        
     }, []);
 
     async function getCategory() {
@@ -251,9 +265,9 @@ const AIStory = () => {
 
     const handleSubmitAnswer = async (data) => {
         setIsSubmit(true)
+        const modify_submitted = JSON.parse(questionList.replace(/^```json\s*|```$/g, ''));
+        let correctAnswers = 0;
 
-        const modify_submitted = JSON.parse(story?.question.replace(/^```json\s*|```$/g, ''));
-        let correctAnswers = 0; 
         modify_submitted.questions.forEach((question, index) => {
                 const selectedAnswer = data[`question_${index}`];
                 if (selectedAnswer) {
@@ -283,12 +297,16 @@ const AIStory = () => {
         setIsRead(false)
         setStory(undefined)
         getCategory();
+        // setQuestionLoader(true)
+        setQuestionList(null);
         form.resetFields();
     }
 
     const handleRestart = () => {
         setStory(undefined)
         getCategory();
+        setQuestionList(null);
+        // setQuestionLoader(true)
     }
 
     const QuestionForm = () => {
@@ -304,7 +322,7 @@ const AIStory = () => {
                     autoComplete="off"
                     className="reading_trainer"
                 >
-                    {JSON.parse(story?.question.replace(/^```json\s*|```$/g, '')).questions.map((question, i) => {
+                    {JSON.parse(questionList.replace(/^```json\s*|```$/g, '')).questions.map((question, i) => {
                       return  (
                     <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}  >
                         <Radio.Group 
@@ -436,9 +454,9 @@ const AIStory = () => {
                     </Tabs> :
                     
                    <>
-                    {questionLoader == null || questionLoader == true &&
+                    {story == undefined || questionList == null &&
                         <Text  ><div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div> </Text> }
-                    {questionLoader == false &&  <QuestionForm /> }
+                    {story != undefined && questionList != null  && <><QuestionForm /></> }
                    </>
                 }
                     
