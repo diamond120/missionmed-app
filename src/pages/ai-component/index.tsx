@@ -282,8 +282,7 @@ const AIStory = () => {
         setIsSubmit(false)
         setIsRead(false)
         setStory(undefined)
-        setTheme(undefined)
-        setTextComplexity(undefined)
+        getCategory();
         form.resetFields();
     }
 
@@ -392,7 +391,7 @@ const AIStory = () => {
                     <div className="d_flex">
                         <Text className="ml_1"><b  id="wpm1">{wpm}</b> Words / Minute</Text>
                         <div>
-                            <Button className={"secondary-button mr_1 cancel_btn"} onClick={handleCancel}>Cancel</Button>
+                            {/* <Button className={"secondary-button mr_1 cancel_btn"} onClick={handleCancel}>Cancel</Button> */}
                             <Button className={"secondary-button mr_1 cancel_btn"}  onClick={handleRestart}>Restart</Button>
                             <Button className={"primary-button"} htmlType="submit" onClick={handleReading} disabled={isRead}>Done Reading</Button>
                         </div>
