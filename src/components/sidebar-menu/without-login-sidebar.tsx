@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { Layout, Menu } from 'antd';
 import { ReadOutlined, LoginOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
-import { useNavigate } from "react-router-dom"
+import { useNavigate,  useLocation } from "react-router-dom"
 import { SvgIcon } from "../icon";
 import CommonService from "../../api/services/Common";
 
@@ -10,10 +10,11 @@ const { SubMenu } = Menu;
 
 const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [current, setCurrent] = useState('/')
+  const [current, setCurrent] = useState()
   const navigate = useNavigate()
   const [showStory, setShowStory] = useState(false)
 
+  const location = useLocation(); 
   
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -25,6 +26,11 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
   }
 
   useEffect (() => {
+    if(location.pathname == '/' || location.pathname == ' ') {
+      setCurrent('/');
+    } else {
+      setCurrent(location.pathname);
+    }
     handleReading();
   }, [])
 
@@ -90,7 +96,7 @@ const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
           }
         </>
 
-        <Menu.Item style={{ position: "fixed", bottom: "24px", width: "280px" }} onClick={() => { navigate('sign_in') }} key={"14"} icon={<LoginOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
+        <Menu.Item style={{ position: "fixed", bottom: "24px", width: "280px" }} onClick={() => { navigate('sign_in') }} key={"/sign_in"} icon={<LoginOutlined style={{ fontSize: 32, }} />} className={"custom-profile-item"}>
           Login
         </Menu.Item>
       </Menu>
