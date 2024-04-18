@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom"
 import { Loader } from "../../components/layout/Loader";
 import wtf from "wtf_wikipedia";
 import wtfPluginApi from "wtf-plugin-api";
+import axios from "axios";
+import posthog from "posthog-js";
 
 const AIStory = () => {
 
@@ -33,7 +35,7 @@ const AIStory = () => {
     const [questionLoader, setQuestionLoader] = useState(null)
     const [retryCount, setRetryCount] = useState(0)
     const [questionList, setQuestionList] = useState(null)
-
+    const [source, setSource] = useState(null);
 
 
     const handleThemeClick = (e : any) => {
@@ -179,29 +181,34 @@ const AIStory = () => {
 
 
     const getQuestion = async (articles : any) => {
-        // setQuestionLoader(true)
+
+        if (source) {
+            source.cancel("Previous request canceled.");
+        }
+        const cancelToken = axios.CancelToken.source();
+        setSource(cancelToken);
         setQuestionList(null);
         try {
             const payload = {
                 'story' :  articles.toString()
             }
-            const response = await CommonService.postAPI("/student/student-story",payload);
+            const response = await CommonService.postAPI("/student/student-story",payload, cancelToken.token);
             
             if (response.data.success) {
                 if(!response.data.data) {
                     message.error('No story Found.');
-                }
-                // const setQuestion = { 'content' : articles, 'question' : response.data.data.question };
-                // setStory(setQuestion) 
+                } 
                 setQuestionList(response.data.data.question)
-                // setQuestionLoader(false);
             } else {
-                // setQuestionLoader(false);
                 setQuestionList(null)
                 throw new Error(response.data.message);
             }
           } catch (e) {
             setQuestionList(null)
+            if (!axios.isCancel(error)) {
+                // Handle non-cancelation errors
+                console.error('Error:', error.message);
+              }
             throw new Error(response.data.message);
           }
     }
@@ -209,7 +216,7 @@ const AIStory = () => {
     useEffect(() => {
         getTrainingData();
         getCategory();
-        
+        posthog.capture('Loading Story');
     }, []);
 
     async function getCategory() {
@@ -260,10 +267,12 @@ const AIStory = () => {
       }, [numWordsInText,story, isRead]);
 
     const handleReading = async () => {
+        posthog.capture('Done Reading');
         setIsRead(true)
     }
 
     const handleSubmitAnswer = async (data) => {
+        posthog.capture('Submit Answers Of Story');
         setIsSubmit(true)
         const modify_submitted = JSON.parse(questionList.replace(/^```json\s*|```$/g, ''));
         let correctAnswers = 0;
@@ -293,6 +302,11 @@ const AIStory = () => {
     };
 
     const handleCancel = () => {
+        
+
+        if (source) {
+            source.cancel("Previous request canceled."); // Cancel previous request if source exists
+        }      
         setIsSubmit(false)
         setIsRead(false)
         setStory(undefined)
@@ -303,6 +317,10 @@ const AIStory = () => {
     }
 
     const handleRestart = () => {
+        posthog.capture('Restart Story Reading');
+        if (source) {
+            source.cancel("Previous request canceled."); // Cancel previous request if source exists
+        }      
         setStory(undefined)
         getCategory();
         setQuestionList(null);

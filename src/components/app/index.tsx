@@ -4,6 +4,7 @@ import { UserProvider } from "../../api/providers/UserProvider.jsx";
 import { StudentProvider } from "../../api/providers/StudentProvider.jsx";
 import { TutorProvider } from "../../api/providers/TutorProvider.jsx";
 import AuthContext from "../../api/context/AuthContext.js";
+import posthog from 'posthog-js';
 
 // type AppProps = {
 //   app: { api: boolean },
@@ -26,6 +27,9 @@ import AuthContext from "../../api/context/AuthContext.js";
 //}
 
 const App: FC = memo(() => {
+
+  posthog.init('phc_voEYJ5wzsnyePflIFxKjRCaOF0ud0WBiYtGPIjIkglc');
+
   const [authenticated, setAuthenticated] = useState(false);
    return ( 
    <AuthContext.Provider value={{authenticated, setAuthenticated}}>

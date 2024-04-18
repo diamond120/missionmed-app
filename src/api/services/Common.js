@@ -43,12 +43,13 @@ const getAPI = (path) => {
   return http.get(path, config);
 };
 
-const postAPI = (path,data) => {
+const postAPI = (path,data, cancelToken ='') => {
   const token = `Bearer ${getToken()}`;
   const config = {
     headers:{
       'Authorization': token
-    }
+    },
+    cancelToken: cancelToken || undefined
   }
   return http.post(path, data, config);
 };
