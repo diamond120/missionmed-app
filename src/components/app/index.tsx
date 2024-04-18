@@ -4,15 +4,17 @@ import { UserProvider } from "../../api/providers/UserProvider.jsx";
 import { StudentProvider } from "../../api/providers/StudentProvider.jsx";
 import { TutorProvider } from "../../api/providers/TutorProvider.jsx";
 import AuthContext from "../../api/context/AuthContext.js";
+import posthog from 'posthog-js';
+import {POST_HOG_KEY} from "../../config/app-config";
 
 // type AppProps = {
-//   app: { api: boolean },
-//   user: { authenticated: boolean | null; role: string | null }
-//   setUser:() => {}
-// }
-// const [user, setUser] = useState();
-// const defaultValue: AppProps = {
-//   app: { api: false },
+  //   app: { api: boolean },
+  //   user: { authenticated: boolean | null; role: string | null }
+  //   setUser:() => {}
+  // }
+  // const [user, setUser] = useState();
+  // const defaultValue: AppProps = {
+    //   app: { api: false },
 //   user: { authenticated: null, role: null },
 //   setUser:() => {}
 // }
@@ -22,10 +24,13 @@ import AuthContext from "../../api/context/AuthContext.js";
 // type ContextProviderProps = PropsWithChildren<Partial<AppProps>>
 
 // const ContextProvider: FC<ContextProviderProps> = ({ children, ...props }) => {
-//   return <Context.Provider value={{ ...defaultValue, ...props }}>{children}</Context.Provider>
-//}
+  //   return <Context.Provider value={{ ...defaultValue, ...props }}>{children}</Context.Provider>
+  //}
+  
+  const App: FC = memo(() => {
 
-const App: FC = memo(() => {
+  posthog.init(POST_HOG_KEY);
+
   const [authenticated, setAuthenticated] = useState(false);
    return ( 
    <AuthContext.Provider value={{authenticated, setAuthenticated}}>

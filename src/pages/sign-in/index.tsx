@@ -5,6 +5,7 @@ import Authentication from "../../api/services/Authentication";
 import { useNavigate } from "react-router-dom"
 import { useUserDispatch } from "../../api/providers/UserProvider.jsx";
 import { useAuthContext } from "../../api/context/AuthContext.js";
+import posthog from "posthog-js";
 
 const SignIn = () => {
 
@@ -22,6 +23,7 @@ const SignIn = () => {
       const result = await Authentication.login({ email, password });
       if (result.data.success) {
         if (result.data.data && result.data.data.token) {
+          posthog.capture('Login', { user: result.data.data });
           setAuthenticated(true);
           localStorage.setItem("jwt", result.data.data.token)
           dispatch({
@@ -35,9 +37,11 @@ const SignIn = () => {
         }
       }
       else {
+        posthog.capture('Login error', { error: result.data.message });
         throw new Error(result.data.message);
       }
     } catch (e) {
+      posthog.capture('Login error', { error: e.message });
       message.error(e.message);
     }
   };
