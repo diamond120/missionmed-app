@@ -483,7 +483,7 @@ const AIStory = () => {
                 </>
                 :
                 <div className={"con-box-wrap trainer_options"}>
-                    <h2 className={"con-box-title"}>Select a theme and complexity to begin...</h2>
+                    {/* <h2 className={"con-box-title"}>Select a theme and complexity to begin...</h2> */}
                     <div className="mock-interview">
                         <div className={"con-section-wrap"}>
                             <div className={"con-box"}>
@@ -494,9 +494,9 @@ const AIStory = () => {
                                     {storyLoader &&
                                     <Text  ><div className="loader-wrap"> <Loader spinning size="large" className="loader-style"/></div> </Text> }
                                     <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={''}/>
-                                    <h2 className={"con-box-title"}>
+                                    {/* <h2 className={"con-box-title"}>
                                         <Text>Select a theme and complexity to start the trainer.</Text>
-                                    </h2>
+                                    </h2> */}
                                     <Text>You will then be asked a series of questions. You must answer from memory.</Text>
                                 </div>
                             </div>
