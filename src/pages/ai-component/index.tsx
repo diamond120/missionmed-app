@@ -36,7 +36,8 @@ const AIStory = () => {
     const [retryCount, setRetryCount] = useState(0)
     const [questionList, setQuestionList] = useState(null)
     const [source, setSource] = useState(null);
-
+    const [questionRetry, setQuestionRetry] = useState(0);
+   
 
     const handleThemeClick = (e : any) => {
         const selectedOption = themeList.find(theme => theme.key == e.key);
@@ -197,8 +198,21 @@ const AIStory = () => {
             if (response.data.success) {
                 if(!response.data.data) {
                     message.error('No story Found.');
-                } 
-                setQuestionList(response.data.data.question)
+                }
+                  try {
+                    if(JSON.parse(response.data.data.question.replace(/^```json\s*|```$/g, ''))) {
+                        setQuestionList(response.data.data.question)
+                    }
+                  } catch (error) {
+                    setQuestionRetry(questionRetry + 1);
+                    if(questionRetry  <= 5) {
+                        getQuestion(articles)
+                    } 
+                    if(questionRetry > 5 ) {
+                        throw new Error("Something went wrong. please try again letter.");
+                    }
+                  }
+                
             } else {
                 setQuestionList(null)
                 throw new Error(response.data.message);
@@ -274,6 +288,7 @@ const AIStory = () => {
     const handleSubmitAnswer = async (data) => {
         posthog.capture('Submit Answers Of Story');
         setIsSubmit(true)
+
         const modify_submitted = JSON.parse(questionList.replace(/^```json\s*|```$/g, ''));
         let correctAnswers = 0;
 
@@ -339,7 +354,7 @@ const AIStory = () => {
                     layout="vertical"
                     autoComplete="off"
                     className="reading_trainer"
-                >
+                > 
                     {JSON.parse(questionList.replace(/^```json\s*|```$/g, '')).questions.map((question, i) => {
                       return  (
                     <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}  >
