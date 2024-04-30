@@ -153,7 +153,7 @@ const AIStory = () => {
         try {
             setQuestionList(null);
             setStoryLoader(true)
-            const categoryName = "Category:Archaeological sites in Bahrain";//category;
+            const categoryName = category;
             const minWordCount = 800;
             await fetchCategoryArticles(categoryName, minWordCount)
             .then( async (articles) => {
