@@ -92,7 +92,7 @@ const AIStory = () => {
               while (sentenceIndex < sentences.length) {
                 const sentence = sentences[sentenceIndex];
                 const sentenceWords = sentence.trim().split(/\s+/);
-                const sentenceWordCount = sentenceWords.length;
+                 sentenceWordCount = sentenceWords.length;
       
                 if (wordCount + sentenceWordCount <= minWordCount) {
                   truncatedText += sentence + " ";
@@ -124,18 +124,20 @@ const AIStory = () => {
     }
 
     async function fetchCategoryArticles(categoryName, minWordCount) {
-        const categoryPages = await wtf.getCategoryPages(categoryName);
+        let categoryPages = await wtf.getCategoryPages(categoryName);
+        if(categoryPages.length > 0) {
+          const newCatPage = [];
+          newCatPage[0] = (categoryPages[0]);
+          categoryPages = newCatPage;
+        }
+        
         const articleTexts = await Promise.all(
           categoryPages.map(async (page) => {
             if (page.ns === 0) {
               const text = await fetchArticle(page.title);
               const wordCount = text.trim().split(/\s+/).length;
               if (wordCount > minWordCount) {
-                if (wordCount < 16385) {
-                    return truncateText(text, minWordCount);
-                } else {
-                   return null;
-                }
+                  return truncateText(text, minWordCount);
               }
             }
             return null;
@@ -152,7 +154,7 @@ const AIStory = () => {
             setQuestionList(null);
             setStoryLoader(true)
             const categoryName = category;
-            const minWordCount = 600;
+            const minWordCount = 800;
             await fetchCategoryArticles(categoryName, minWordCount)
             .then( async (articles) => {
             

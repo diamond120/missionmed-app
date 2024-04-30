@@ -6,6 +6,7 @@ import Section from "../../components/shared-ui/Section";
 import BasicInfo from "./basic-info"
 import ProfilePicture from "./profile-picture"
 import BiographyTutor from "./biography-tutor"
+import AchievementTutor from "./achievement-tutor"
 import PersonalityTutor from "./personality-tutor"
 import Education from "./education"
 import WorkingDaysHours from "./working-days-hours"
@@ -71,7 +72,6 @@ const TutorProfile = () => {
             <Spin size='large' />
           </div>
           :
-
           <Tabs defaultActiveKey={"profile"}>
 
             <TabPane tab={"Profile"} key={"profile"}>
@@ -81,6 +81,7 @@ const TutorProfile = () => {
               </div>
               <Education />
               <BiographyTutor />
+              <AchievementTutor />
               <PersonalityTutor />
             </TabPane>
 

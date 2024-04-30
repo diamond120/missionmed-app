@@ -144,6 +144,7 @@ export const DefaultLayout: FC = () => {
               location: result.data.data.location ?? null,
               timezone: result.data.data.timezone ?? null,
               biography: result.data.data.biography ?? null,
+              achievement: result.data.data.achievement ?? null,
               lessionType: result.data.data.lession_type ?? null,
               bufferTime: result.data.data.buffer_time ?? null,
               workingHours: result.data.data.working_hours ?? null,
