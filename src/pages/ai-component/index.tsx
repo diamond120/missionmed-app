@@ -237,6 +237,7 @@ const AIStory = () => {
 
     async function getCategory() {
         await wtf.getRandomCategory().then(cat=>{
+            cat = "Category:Archaeological sites in Bahrain";
             getContentWikipedia(cat);
         })
     }
