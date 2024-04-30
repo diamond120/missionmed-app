@@ -153,7 +153,7 @@ const AIStory = () => {
         try {
             setQuestionList(null);
             setStoryLoader(true)
-            const categoryName = category;
+            const categoryName = "Category:Archaeological sites in Bahrain";//category;
             const minWordCount = 800;
             await fetchCategoryArticles(categoryName, minWordCount)
             .then( async (articles) => {
@@ -236,8 +236,7 @@ const AIStory = () => {
     }, []);
 
     async function getCategory() {
-        await wtf.getRandomCategory().then(cat=>{
-            cat = "Category:Archaeological sites in Bahrain";
+        await wtf.getRandomCategory().then(cat=>{            
             getContentWikipedia(cat);
         })
     }
