@@ -51,6 +51,7 @@ function TutorReducer(tutor, action) {
         timezone: action.timezone,
         timezone_id: action.timezone_id,
         biography: action.biography,
+        achievement: action.achievement,
         lessionType: action.lessionType,
         bufferTime: action.bufferTime,
         workingHours: action.workingHours,
