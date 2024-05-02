@@ -56,12 +56,6 @@ const routes: RouteObject[] = [
       },
 
       // {
-      //         Component: TutorCalendar,
-      //         path: "/tutor-calendar/:ID",
-      //         index: true,
-      //       },
-     
-      // {
       //   Component: StudentReadingTraining,
       //   path: "/",
       //   index: true,

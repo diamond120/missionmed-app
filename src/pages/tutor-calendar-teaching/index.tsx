@@ -138,27 +138,6 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
     setIsModalOpen(false);
   };
 
-  const handleSubmit = async () => {
-    const data = form.getFieldsValue(true);
-    if (subSlotList.length > 0 && data.subSlot >= 0) {
-      let studentId;
-    
-      const slot = subSlotList[data.subSlot];
-      form.setFieldValue('sessionStartTime', slot.start);
-      form.setFieldValue('sessionEndTime', slot.end);
-      form.setFieldValue('date', slot.date);
-      form.setFieldValue('isFreeze', slot.isFreeze);
-      form.setFieldValue('role', 'tutor');
-      form.setFieldValue('newTutorId', data.tutorId);
-     
-      form.setFieldValue('studentId', studentId);
-      form.setFieldValue('tutorId', data.tutorId);
-    }
-    await form.validateFields();
-    setIsModalOpen(false);
-    next();
-  }
-
   useEffect(() => {
     const addClassToParent = () => {
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
@@ -200,7 +179,6 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
           { <Modal
             title={'Available Slot For Student Teaching Session'}
             open={isModalOpen}
-            onOk={handleSubmit}
             onCancel={handleCancel}
             className={"mock-interview-modal"}
             width={"600px"}
@@ -208,9 +186,6 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
                   Discard
-                </Button>
-                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
-                  Save Changes
                 </Button>
               </div>
             ]}

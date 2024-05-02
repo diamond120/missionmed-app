@@ -138,27 +138,6 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = async () => {
-    const data = form.getFieldsValue(true);
-    if (subSlotList.length > 0 && data.subSlot >= 0) {
-      let studentId;
-    
-      const slot = subSlotList[data.subSlot];
-      form.setFieldValue('sessionStartTime', slot.start);
-      form.setFieldValue('sessionEndTime', slot.end);
-      form.setFieldValue('date', slot.date);
-      form.setFieldValue('isFreeze', slot.isFreeze);
-      form.setFieldValue('role', 'tutor');
-      form.setFieldValue('newTutorId', data.tutorId);
-     
-      form.setFieldValue('studentId', studentId);
-      form.setFieldValue('tutorId', data.tutorId);
-    }
-    await form.validateFields();
-    setIsModalOpen(false);
-    next();
-  }
-
   useEffect(() => {
     const addClassToParent = () => {
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
@@ -200,7 +179,6 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
           { <Modal
             title={'Available Slot For Student Mock Interview'}
             open={isModalOpen}
-            onOk={handleSubmit}
             onCancel={handleCancel}
             className={"mock-interview-modal"}
             width={"600px"}
@@ -229,8 +207,6 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
           </Modal>
           
      }
-
-
         </>
       )
 }
