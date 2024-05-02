@@ -8,17 +8,17 @@ export const calendarLayout: FC = () => {
 return(
 <div className={"book-time-cal-wrap"}>
   <Tabs >
-    <TabPane tab={"UCAT"} key={"ucat"}>
+    <TabPane tab={"UCAT Teaching Session"} key={"ucat"}>
     <div className={"working-cal-wrap"}>
       <TutorCalendarTeaching />
       </div>
     </TabPane>
-    <TabPane tab={"Teaching"} key={"teaching"}>
+    <TabPane tab={"Interview Teaching Session"} key={"teaching"}>
     <div className={"working-cal-wrap"}>
       <TutorCalendarTeaching />
     </div>
     </TabPane>
-    <TabPane tab={"MockInterview"} key={"mock"}>
+    <TabPane tab={"Mock Interview"} key={"mock"}>
     <div className={"working-cal-wrap"}>
       <TutorCalendarMock />
     </div>
