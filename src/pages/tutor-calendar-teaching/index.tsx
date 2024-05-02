@@ -151,8 +151,7 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
 
     return (
         <>
-            {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>
-      }
+            {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>}
           <div style={{ display: spin ? 'block' : 'none' }}>
             <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
             <span> Finding available slot......</span>
@@ -204,12 +203,9 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
                 </Radio.Group>
               </Form.Item>
             </Form>
-          </Modal>
-          
-     }
-
+          </Modal>}
         </>
-      )
+    )
 }
 
 export default TutorCalendarTeaching;

@@ -151,13 +151,11 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
 
     return (
         <>
-            {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>
-      }
+            {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>}
           <div style={{ display: spin ? 'block' : 'none' }}>
             <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
             <span> Finding available slot......</span>
           </div>
-       
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="timeGridWeek"
@@ -204,11 +202,9 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
                 </Radio.Group>
               </Form.Item>
             </Form>
-          </Modal>
-          
-     }
+          </Modal>    }
         </>
-      )
+    )
 }
 
 export default TutorCalendarMock;
