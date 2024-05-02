@@ -8,6 +8,7 @@ import CommonService from "../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
 import { formatTime } from "../../common/common";
 import { useParams } from 'react-router-dom';
+import { timezoneMapping } from "../../components/layout/timezone";
 function formatDate(inputDateStr) {
     const inputDate = new Date(inputDateStr);
     const year = inputDate.getFullYear();
@@ -22,9 +23,11 @@ function formatDate(inputDateStr) {
     return formattedDate;
   }
 
-const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
+const TutorCalendarMock = (tutorId, next, form) => {
     const { ID } = useParams();
     const calTutorId = parseInt(ID); 
+    const { timezone } = useParams();
+    const longTimeZone = timezoneMapping[timezone];
     const [slotsList, setSlots] = useState([]);
     const [filterDate, setfilterDate] = useState({});
     const [filterDateSet, setFilterDateSet] = useState(false);
@@ -54,6 +57,7 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
             startDate: filterDate.startDate,
             endDate: filterDate.endDate,
             type: 'mockinterview',
+            timezone: longTimeZone
           };
     
           const response = await CommonService.postAPI("/tutors-calendar-list", data);
@@ -64,12 +68,10 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
             setSpin(false);
           } else {
             setSpin(false);
-            prev();
             throw new Error(response.data.message);
           }
         } catch (e) {
-          setSpin(false);
-          prev();
+          setSpin(false)
           message.error(e.message);
         }
       };
@@ -113,7 +115,7 @@ const TutorCalendarMock = (timezone,tutorId, next, prev, form) => {
         endDate: endDate,
         date: date,
         type: 'mockinterview',
-        timezone: timezone,
+        timezone: longTimeZone,
         start: filterDate.startDate,
         end: filterDate.endDate,
       };

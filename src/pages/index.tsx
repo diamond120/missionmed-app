@@ -195,7 +195,7 @@ const routes: RouteObject[] = [
     children: [
       {
         Component: TutorCalendar,
-        path: "/tutor-calendar/:ID",
+        path: "/tutor-calendar/:ID/:timezone?",
         index: true,
       }
     ],

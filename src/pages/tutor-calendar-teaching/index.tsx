@@ -8,6 +8,7 @@ import CommonService from "../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
 import { formatTime } from "../../common/common";
 import { useParams } from 'react-router-dom';
+import { timezoneMapping } from "../../components/layout/timezone";
 function formatDate(inputDateStr) {
     const inputDate = new Date(inputDateStr);
     const year = inputDate.getFullYear();
@@ -22,8 +23,10 @@ function formatDate(inputDateStr) {
     return formattedDate;
   }
 
-const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) => {
+const TutorCalendarTeaching = (tutorId, next, form) => {
     const { ID } = useParams();
+    const { timezone } = useParams();
+    const longTimeZone = timezoneMapping[timezone];
     const calTutorId = parseInt(ID); 
     const [slotsList, setSlots] = useState([]);
     const [filterDate, setfilterDate] = useState({});
@@ -32,8 +35,6 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [subSlotList, setSubSlotList] = useState<any>([]);
     const [spin, setSpin] = useState<boolean>(true);
-    // const tutor = useTutor();
-    // const user = useUser();
     const handleDateClick = (dateInfo) => {
       const dateObjectEnd = new Date(dateInfo.endStr);
       const dateObjectStart = new Date(dateInfo.startStr);
@@ -54,6 +55,7 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
             startDate: filterDate.startDate,
             endDate: filterDate.endDate,
             type: 'teachingsession',
+            timezone: longTimeZone
           };
     
           const response = await CommonService.postAPI("/tutors-calendar-list", data);
@@ -64,12 +66,12 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
             setSpin(false);
           } else {
             setSpin(false);
-            prev();
+          
             throw new Error(response.data.message);
           }
         } catch (e) {
           setSpin(false);
-          prev();
+         
           message.error(e.message);
         }
       };
@@ -113,7 +115,7 @@ const TutorCalendarTeaching = (timezone,tutorId, next, prev, form, moduleType) =
         endDate: endDate,
         date: date,
         type: 'teachingsession',
-        timezone: timezone,
+        timezone: longTimeZone,
         start: filterDate.startDate,
         end: filterDate.endDate,
       };
