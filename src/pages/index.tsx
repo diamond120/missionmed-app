@@ -2,10 +2,12 @@ import { FC, lazy, memo } from "react";
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter, useLocation } from "react-router-dom";
 import { DefaultLayout } from "../components/layout";
 import { LayoutWithoutLogin } from "../components/layout/LayoutWithoutLogin";
+import { calendarLayout } from "../components/layout/calendarLayout";
 import { Loader } from "../components/layout/Loader";
 import SignInLayout from "../components/layout/SignInLayout";
 import ForgotPassword from "./forgot-password";
 import ResetPassword from "./reset-password";
+import TutorCalendar from "./tutor-calendar-teaching";
 
 const Home = lazy<FC>(/*home-page-bundle*/ () => import("./home"));
 const ApplicationsReview = lazy(/*application-review-page-bundle*/ () => import("./application-review"));
@@ -33,6 +35,7 @@ const TeachingPremiumLink = lazy(() => import("./teaching-premium-link"))
 
 const routes: RouteObject[] = [
   {
+    
     Component: LayoutWithoutLogin,
     loader: () => <Loader spinning />,
     children: [
@@ -51,6 +54,13 @@ const routes: RouteObject[] = [
         path: "/resetpassword/:token",
         index: true,
       },
+
+      // {
+      //         Component: TutorCalendar,
+      //         path: "/tutor-calendar/:ID",
+      //         index: true,
+      //       },
+     
       // {
       //   Component: StudentReadingTraining,
       //   path: "/",
@@ -185,27 +195,17 @@ const routes: RouteObject[] = [
   },
 
 
-  // {
-  //   Component: SignInLayout,
-  //   loader: () => <Loader spinning />,
-  //   children: [
-  //     {
-  //       Component:  SignIn,
-  //       path: "/sign_in",
-  //       index: true,
-  //     },
-  //     {
-  //       Component: ForgotPassword,
-  //       path: "/forgot-password",
-  //       index: true,
-  //     },
-  //     {
-  //       Component: ResetPassword,
-  //       path: "/resetpassword/:token",
-  //       index: true,
-  //     },
-  //   ],
-  // },
+  {
+    Component: calendarLayout,
+    loader: () => <Loader spinning />,
+    children: [
+      {
+        Component: TutorCalendar,
+        path: "/tutor-calendar/:ID",
+        index: true,
+      }
+    ],
+  },
 
 ];
 
