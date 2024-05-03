@@ -191,7 +191,7 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
               </div>
             ]}
           >
-            <Form form={form} layout="vertical" style={{textAligh:center}}>
+            <Form form={form} layout="vertical">
               <Form.Item
                 style={{ marginBottom: "0px" }}
                 label="Slot Timing"
