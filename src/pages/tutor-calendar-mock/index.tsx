@@ -1,4 +1,3 @@
-import '../../assets/less/custom-theme.less';
 import "./index.less"
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from "@fullcalendar/daygrid"
