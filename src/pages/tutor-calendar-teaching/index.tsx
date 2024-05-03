@@ -182,7 +182,7 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
             open={isModalOpen}
             onCancel={handleCancel}
             className={"mock-interview-modal"}
-            width={"600px"}
+            width={"240px"}
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
