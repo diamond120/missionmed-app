@@ -191,9 +191,9 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
               </div>
             ]}
           >
-            <Form form={form} layout="vertical">
+            <Form form={form} layout="vertical" style={{textAligh:center}}>
               <Form.Item
-                style={{ marginTop: "17px", marginBottom: "0px" }}
+                style={{ marginBottom: "0px" }}
                 label="Slot Timing"
                 name="subSlot"
                 rules={[{ required: true, message: "Please select slot." }]}
