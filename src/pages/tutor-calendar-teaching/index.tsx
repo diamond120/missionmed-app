@@ -178,7 +178,7 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
             />
            
           { <Modal
-            title={'Available Slot For Student Teaching Session'}
+            title={'Available Slots'}
             open={isModalOpen}
             onCancel={handleCancel}
             className={"mock-interview-modal"}
@@ -186,7 +186,7 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
+                  Close
                 </Button>
               </div>
             ]}
@@ -200,7 +200,7 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
               >
                 <Radio.Group >
                   {subSlotList.map((slot, index) => (
-                    <Radio key={index} value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
+                    <Radio key={index} value={index} disabled={true}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
                   ))}
                 </Radio.Group>
               </Form.Item>
