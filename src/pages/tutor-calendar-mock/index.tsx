@@ -8,7 +8,6 @@ import CommonService from "../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
 import { formatTime } from "../../common/common";
 import { useParams } from 'react-router-dom';
-import { timezoneMapping } from "../../components/layout/timezone";
 function formatDate(inputDateStr) {
     const inputDate = new Date(inputDateStr);
     const year = inputDate.getFullYear();
@@ -24,10 +23,42 @@ function formatDate(inputDateStr) {
   }
 
 const TutorCalendarMock = (tutorId, next, form) => {
+  const [ipAddress, setIpAddress] = useState([]);
+  const [timezoneNew, setTimezone] = useState('');
+
+  useEffect(() => {
+    const fetchIpAddress = async () => {
+      try {
+        const response = await fetch('https://api64.ipify.org?format=json');
+        const data = await response.json();
+        setIpAddress(data.ip);
+      } catch (error) {
+        console.error('Error fetching IP address:', error);
+      }
+    };
+
+    fetchIpAddress();
+  }, []);
+
+  // Fetch timezone only when ipAddress is available
+  useEffect(() => {
+    if (ipAddress) {
+        const fetchTimezone = async () => {
+            try {
+                const timezoneResponse = await fetch(`https://ipapi.co/${ipAddress}/timezone/`);
+                const timezoneData = await timezoneResponse.text();
+                setTimezone(timezoneData);
+            } catch (error) {
+                console.error('Error fetching timezone:', error);
+            }
+        };
+        fetchTimezone();
+    }
+  }, [ipAddress]);
+
     const { ID } = useParams();
     const calTutorId = parseInt(ID); 
-    const { timezone } = useParams();
-    const longTimeZone = timezoneMapping[timezone];
+     const longTimeZone = timezoneNew;
     const [slotsList, setSlots] = useState([]);
     const [filterDate, setfilterDate] = useState({});
     const [filterDateSet, setFilterDateSet] = useState(false);
@@ -76,13 +107,13 @@ const TutorCalendarMock = (tutorId, next, form) => {
         }
       };
 
-      const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, filterDate]);
+      const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, filterDate, timezoneNew]);
 
       useEffect(() => {
-        if (filterDateSet) {
+        if (filterDateSet && timezoneNew) {
           memoizedGetSlotsist(tutorId);
         }
-      }, [memoizedGetSlotsist, tutorId, filterDateSet]);
+      }, [memoizedGetSlotsist, tutorId, filterDateSet, timezoneNew]);
 
 
       let selectedEvent = null;
@@ -158,6 +189,7 @@ const TutorCalendarMock = (tutorId, next, form) => {
             <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
             <span> Finding available slot......</span>
           </div>
+          <div style={{ width: "1155px",margin: '0 auto'}}>
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin]}
               initialView="timeGridWeek"
@@ -175,24 +207,24 @@ const TutorCalendarMock = (tutorId, next, form) => {
               eventBorderColor='0'
               allDaySlot={false}
             />
-           
+          </div>
           { <Modal
-            title={'Available Slot For Student Mock Interview'}
+            title={'Available Slots'}
             open={isModalOpen}
             onCancel={handleCancel}
-            className={"mock-interview-modal"}
-            width={"600px"}
+            className={"mock-interview-modal modal-without-login-slot"}
+            width={"240px"}
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
+                  Close
                 </Button>
               </div>
             ]}
           >
             <Form form={form} layout="vertical">
               <Form.Item
-                style={{ marginTop: "17px", marginBottom: "0px" }}
+                style={{ marginBottom: "0px" }}
                 label="Slot Timing"
                 name="subSlot"
                 rules={[{ required: true, message: "Please select slot." }]}
