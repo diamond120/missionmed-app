@@ -136,6 +136,11 @@
          }
     }
     .fc-header-toolbar{
+     @media (max-width:767px)
+          {
+               flex-direction: column;
+               gap: 10px;
+          }
          .fc-toolbar-chunk{
               .fc-today-button{
                    &.fc-button{
@@ -205,3 +210,10 @@
          cursor: not-allowed;
     }
 }
+
+// .ant-modal{
+//      &.mock-interview-modal{
+//           width: 100% !important;
+//           max-width: 630px !important ;
+//      }
+// }    
