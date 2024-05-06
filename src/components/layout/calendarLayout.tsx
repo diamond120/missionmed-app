@@ -15,17 +15,13 @@ export const calendarLayout: FC = () => {
     const fetchData = async () => {
       setSpin(true);
       try {
-   
         const data = {
           tutorId: calTutorId,
         };
-
         const response = await CommonService.postAPI("/tutors-session-check", data);
-        console.log(response)
         if (response.data.success) {
           const slotList = response.data.data ?? [];
           setSlots(slotList);
-          console.log('cheking',slotList)
         } else {
           throw new Error(response.data.message);
         }
@@ -39,7 +35,7 @@ export const calendarLayout: FC = () => {
     fetchData();
   }, [calTutorId]);
 return(
-<div className={"book-time-cal-wrap"}>
+<div className={"book-time-cal-wrap  without-calendar-login"}>
   <Tabs >
   {slots.ucat_tutoring === 'true' && (
     <TabPane tab={"UCAT Teaching Session"} key={"ucat"}>
