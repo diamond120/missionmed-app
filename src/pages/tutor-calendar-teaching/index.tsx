@@ -178,29 +178,29 @@ const TutorCalendarTeaching = (tutorId, next, form) => {
             />
            
           { <Modal
-            title={'Available Slot For Student Teaching Session'}
+            title={'Available Slots'}
             open={isModalOpen}
             onCancel={handleCancel}
             className={"mock-interview-modal"}
-            width={"600px"}
+            width={"240px"}
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
+                  Close
                 </Button>
               </div>
             ]}
           >
             <Form form={form} layout="vertical">
               <Form.Item
-                style={{ marginTop: "17px", marginBottom: "0px" }}
+                style={{ marginBottom: "0px" }}
                 label="Slot Timing"
                 name="subSlot"
                 rules={[{ required: true, message: "Please select slot." }]}
               >
                 <Radio.Group >
                   {subSlotList.map((slot, index) => (
-                    <Radio key={index} value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
+                    <Radio key={index} value={index} disabled={true}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
                   ))}
                 </Radio.Group>
               </Form.Item>
