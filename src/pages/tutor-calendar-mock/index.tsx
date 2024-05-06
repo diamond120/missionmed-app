@@ -231,7 +231,7 @@ const TutorCalendarMock = (tutorId, next, form) => {
               >
                 <Radio.Group >
                   {subSlotList.map((slot, index) => (
-                    <Radio key={index} value={index} disabled={true}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
+                    <Radio key={index} value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
                   ))}
                 </Radio.Group>
               </Form.Item>

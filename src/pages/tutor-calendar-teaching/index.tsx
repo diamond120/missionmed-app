@@ -207,15 +207,15 @@ function formatDate(inputDateStr) {
             />
           </div>
           { <Modal
-            title={'Available Slot For Student Teaching Session'}
+            title={'Available Slots'}
             open={isModalOpen}
             onCancel={handleCancel}
             className={"mock-interview-modal modal-without-login-slot"}
-            width={"600px"}
+            width={"240px"}
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
+                  Close
                 </Button>
               </div>
             ]}
