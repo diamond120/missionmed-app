@@ -1,4 +1,4 @@
-.book-time-cal-wrap{
+.without-calendar-login{
     position: relative;
     background-color: #fff;
     border-radius: 2px;
@@ -14,6 +14,7 @@
         background-color: #F5F5F5;
         text-align: left;
         padding: 24px 22px;
+          overflow: auto;
     }
     .fc-timegrid-slots {
          tbody{
@@ -136,6 +137,7 @@
          }
     }
     .fc-header-toolbar{
+
          .fc-toolbar-chunk{
               .fc-today-button{
                    &.fc-button{
@@ -204,4 +206,23 @@
     .unavailable {
          cursor: not-allowed;
     }
+}
+
+.ant-modal{
+     &.modal-without-login-slot{
+          .ant-form-item-label{
+               margin: 0 auto;
+          }
+          .ant-form-item{
+          margin-top: 0 !important;
+          }
+          .ant-radio-group{
+               align-items: center;
+               .ant-radio-wrapper{
+                    .ant-radio{
+                         display: none;
+                    }
+               }
+          }
+     }
 }
