@@ -157,7 +157,7 @@ export const DefaultLayout: FC = () => {
               applicationReview: result.data.data.application_review ?? null,
               applicationReviewPrice: result.data.data.application_review_price ?? null,
               profilePicture: result.data.data.profile_picture ?? null,
-              educations: result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({ school: edu.school ?? "", degree: edu.degree ?? "" })) : [],
+              educations: result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({ school: edu.school ?? "", degree: edu.degree ?? "", is_primary: edu.is_primary  })) : [],
               lessionTypeID: result.data.data.lession_type_id ?? null,
               applicationLessionTime: result.data.data.application_lession_time ?? null,
               interviewLessionTime: result.data.data.interview_lession_time ?? null,
@@ -165,7 +165,10 @@ export const DefaultLayout: FC = () => {
               ucatLessionTime: result.data.data.ucat_lession_time ?? null,
               personalMeetingId: result.data.data.personal_meeting_id ?? '',
               country: result.data.data.country ?? '',
-              timezone_id: result.data.data.timezone_id ?? ''
+              timezone_id: result.data.data.timezone_id ?? '',
+              percentile: result.data.data.percentile ?? '',
+              score: result.data.data.score ?? '',
+              tagline: result.data.data.tagline ?? ''
             })
             await tutorDispatch({ type: 'loading', loading: false })
           } catch (error) {

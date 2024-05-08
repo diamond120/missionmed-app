@@ -71,7 +71,10 @@ function TutorReducer(tutor, action) {
         mockLessionTime: action.mockLessionTime,
         ucatLessionTime: action.ucatLessionTime,
         personalMeetingId: action.personalMeetingId,
-        country: action.country
+        country: action.country,
+        percentile: action.percentile,
+        score: action.score,
+        tagline: action.tagline
       };
     }
     case 'update': {

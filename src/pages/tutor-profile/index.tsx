@@ -21,6 +21,7 @@ import CommonService from "../../api/services/Common";
 import { useTutor } from "../../api/providers/TutorProvider"
 import MeetingLink from "./meeting-link";
 import SpecialDays from "./special-days";
+import UcatPerformance from "./ucat-performance";
 
 const TutorProfile = () => {
   
@@ -82,7 +83,8 @@ const TutorProfile = () => {
               </div>
               <Education />
               <BiographyTutor />
-              <AchievementTutor />
+              {/* <AchievementTutor /> */}
+              <UcatPerformance />
               <PersonalityTutor />
             </TabPane>
 
