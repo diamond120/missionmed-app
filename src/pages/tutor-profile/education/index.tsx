@@ -1,5 +1,5 @@
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Select, Spin } from "antd";
+import { Button, Checkbox, Form, Select, Spin } from "antd";
 import React, { FC, useState } from "react";
 import TutorService from "../../../api/services/Tutor";
 import { useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
@@ -45,7 +45,7 @@ const Education: FC<Any> = ({ props }) => {
     if (res.success) {
       dispatch({
         type: "updateEducations",
-        educations: res.data.data.educations.map((edu) => ({ school: edu.school ?? "", degree: edu.degree ?? "" }))
+        educations: res.data.data.educations.map((edu) => ({ school: edu.school ?? "", degree: edu.degree ?? "", is_primary: edu.is_primary }))
       })
     } else {
       console.log(res.message);
@@ -96,7 +96,7 @@ const Education: FC<Any> = ({ props }) => {
   return (
     <div className={"education-section"}>
       <h2 className={"education-section-title"}>Education</h2>
-      <Form className={"education-form"} form={form} onFinish={onFinish} initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0) ? tutor.educations : [{ school: "", degree: "" }] }}>
+      <Form className={"education-form"} form={form} onFinish={onFinish} initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0) ? tutor.educations : [{ school: "", degree: "", is_primary: false}] }}>
         <Form.List name={"educations"}>
           {(fields, { add, remove }) => (
             <React.Fragment>
@@ -121,6 +121,23 @@ const Education: FC<Any> = ({ props }) => {
                     label={"Degree"}
                   >
                     <CustomDegreeSelectInput />
+                  </Form.Item>
+                  <Form.Item
+                    {...restField}
+                    name={[name, 'is_primary']}
+                  >
+                    <Checkbox disabled={!editing} 
+                      onChange={(e) => {
+                        const isChecked = e.target.checked;
+                        const newValues = fields.map(field => ({
+                          ...field,
+                          is_primary: field.key === key ? isChecked : false
+                        }));
+                        form.setFieldsValue({ educations: newValues });
+                      }}
+                    >
+                      <span>Primary</span>
+                    </Checkbox>
                   </Form.Item>
                   {fields.length > 1 ? (
                     <div style={{ justifyContent: "right", display: "flex", marginBottom: "10px" }}>
