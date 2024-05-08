@@ -125,6 +125,7 @@ const Education: FC<Any> = ({ props }) => {
                   <Form.Item
                     {...restField}
                     name={[name, 'is_primary']}
+                    valuePropName="checked"
                   >
                     <Checkbox disabled={!editing} 
                       onChange={(e) => {
