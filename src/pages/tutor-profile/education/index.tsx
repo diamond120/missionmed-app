@@ -96,7 +96,7 @@ const Education: FC<Any> = ({ props }) => {
   return (
     <div className={"education-section"}>
       <h2 className={"education-section-title"}>Education</h2>
-      <Form className={"education-form"} form={form} onFinish={onFinish} initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0) ? tutor.educations : [{ id: 0, school: "", degree: "", is_primary: false}] }}>
+      <Form className={"education-form"} form={form} onFinish={onFinish} initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0) ? tutor.educations : [{ school: "", degree: "", is_primary: false}] }}>
         <Form.List name={"educations"}>
           {(fields, { add, remove }) => (
             <React.Fragment>
