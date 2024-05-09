@@ -32,6 +32,7 @@ const StudentReadingTraining = lazy(() => import("./student-reading-training"))
 const MockPremiumLink = lazy(() => import("./mock-premium-link"))
 const UCATPremiumLink = lazy(() => import("./ucat-premium-link"))
 const TeachingPremiumLink = lazy(() => import("./teaching-premium-link"))
+const MockSimulation = lazy(() => import("./mock-simulation"))
 
 const routes: RouteObject[] = [
   {
@@ -178,6 +179,11 @@ const routes: RouteObject[] = [
       {
         Component: AIStory,
         path: "/student/reading-trainer",
+        index: true,
+      },
+      {
+        Component: MockSimulation,
+        path: "/student/mock-simulation",
         index: true,
       },
       {
