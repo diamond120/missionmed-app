@@ -56,7 +56,20 @@ export const DefaultLayout: FC = () => {
     })
   }
 
+  const getTokenResponse = async () => {
+    try {
+        const response =  await CommonService.getAPI("/check-jwt-token");
+        if (response.data.status_code == 401) {
+          localStorage.clear();
+          navigate('/sign_in')
+        }
+      } catch (e) {
+        // navigate('/sign_in')
+      }
+  }
+
   useEffect(() => {
+    getTokenResponse();
     if (!localStorage.getItem("jwt")) {
       navigate("/sign_in")
     } else {
