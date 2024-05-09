@@ -30,7 +30,7 @@ const Education: FC<Any> = ({ props }) => {
   //   "University of Wollongong",
   // ]
   const optionsSchools: string[] = (profileStaticData.university ? profileStaticData.university.map(l => ({ key: l.id, label: l.title, value: l.title })) : [])
-  const optionsDegrees: string[] = profileStaticData.degree ? profileStaticData.degree.map(l => ({ label: l.title, value: l.title })) : []
+  const optionsDegrees: string[] = (profileStaticData.degree ? profileStaticData.degree.map(l => ({ label: l.title, value: l.title })) : [])
   const [form] = Form.useForm();
 
   const handleEditClick = (e) => {
