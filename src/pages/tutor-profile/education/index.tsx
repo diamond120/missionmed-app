@@ -30,7 +30,7 @@ const Education: FC<Any> = ({ props }) => {
   //   "University of Wollongong",
   // ]
   const optionsSchools: string[] = (profileStaticData.university ? profileStaticData.university.map(l => ({ key: l.id, label: l.title, value: l.title })) : [])
-  const optionsDegrees: string[] = (profileStaticData.degree ? profileStaticData.degree.map(l => ({ label: l.title, value: l.title })) : [])
+  const optionsDegrees: string[] = [...(profileStaticData.degree ? profileStaticData.degree.map(l => ({ label: l.title, value: l.title })) : []),{label: 'None of above', value: 'None of above'}]
   const [form] = Form.useForm();
 
   const handleEditClick = (e) => {
@@ -96,7 +96,7 @@ const Education: FC<Any> = ({ props }) => {
   return (
     <div className={"education-section"}>
       <h2 className={"education-section-title"}>Education</h2>
-      <Form className={"education-form"} form={form} onFinish={onFinish} initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0) ? tutor.educations : [{ school: "", degree: "", is_primary: false}] }}>
+      <Form className={"education-form"} form={form} onFinish={onFinish} initialValues={{ educations: (tutor?.educations && tutor?.educations.length > 0) ? tutor.educations : [{ id: 0, school: "", degree: "", is_primary: false}] }}>
         <Form.List name={"educations"}>
           {(fields, { add, remove }) => (
             <React.Fragment>
@@ -127,12 +127,14 @@ const Education: FC<Any> = ({ props }) => {
                     name={[name, 'is_primary']}
                     valuePropName="checked"
                   >
-                    <Checkbox disabled={!editing} 
+                    <Checkbox
+                      disabled={!editing}
                       onChange={(e) => {
                         const isChecked = e.target.checked;
-                        const newValues = fields.map(field => ({
+                        const educations = form.getFieldValue('educations')
+                        const newValues = educations.map((field, index) => ({
                           ...field,
-                          is_primary: field.key === key ? isChecked : false
+                          is_primary: index === key ? isChecked : false
                         }));
                         form.setFieldsValue({ educations: newValues });
                       }}
