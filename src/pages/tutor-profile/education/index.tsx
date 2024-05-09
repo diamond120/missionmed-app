@@ -127,12 +127,14 @@ const Education: FC<Any> = ({ props }) => {
                     name={[name, 'is_primary']}
                     valuePropName="checked"
                   >
-                    <Checkbox disabled={!editing} 
+                    <Checkbox
+                      disabled={!editing}
                       onChange={(e) => {
                         const isChecked = e.target.checked;
-                        const newValues = fields.map(field => ({
+                        const educations = form.getFieldValue('educations')
+                        const newValues = educations.map((field, index) => ({
                           ...field,
-                          is_primary: field.key === key ? isChecked : false
+                          is_primary: index === key ? isChecked : false
                         }));
                         form.setFieldsValue({ educations: newValues });
                       }}
