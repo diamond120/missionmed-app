@@ -154,7 +154,7 @@ const AIStory = () => {
             setQuestionList(null);
             setStoryLoader(true)
             const categoryName = category;
-            const minWordCount = 800;
+            const minWordCount = 450;
             await fetchCategoryArticles(categoryName, minWordCount)
             .then( async (articles) => {
             
