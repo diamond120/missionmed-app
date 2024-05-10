@@ -7,6 +7,8 @@ import "./index.less";
 
 export default function index() {
   const { TabPane } = Tabs;
+
+ 
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -28,8 +30,17 @@ export default function index() {
                 <div className={"upcoming-sessions"}>
                   <Alert
                     message="Please read the following carefully."
-                    description="You should currently be sitting at a UCAT Mock Testing centre. These mocks are designed to be sat under proctoring and test conditions. Ensure that you have the following equipment before you begin.
-                    Whiteboard & Pen Earplugs Keyboard & Mouse When you launch the simulation, you will be prompted for a code which you should have with you. If there are any issues, please notify the proctor immediately."
+                    description={
+                      <code>
+                        <div className="text">You should currently be sitting at a UCAT Mock Testing centre. These mocks are designed to be sat under proctoring and test conditions. Ensure that you have the following equipment before you begin.</div>
+                        <ul>
+                          <li>Whiteboard & Pen</li>
+                          <li>Earplugs</li>
+                          <li>Keyboard & Mouse</li>
+                        </ul>
+                        <div className="text">When you launch the simulation, you will be prompted for a code which you should have with you. If there are any issues, please notify the proctor immediately.</div>
+                      </code>
+                    }
                     type="info"
                     closable
                     showIcon

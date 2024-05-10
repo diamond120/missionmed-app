@@ -15,6 +15,18 @@
                     font-weight: 600;
                     color: #000;
                }
+               .ant-alert-description{
+                    .text {
+                         font-family: Metropolis, sans-serif;
+                    }
+                    ul{
+                         li {
+                              list-style: disc;
+                              list-style-position: inside;
+                              padding-left: 5px;
+                         }
+                    }
+               }
           }
      }
      .mocks-items{
@@ -45,6 +57,10 @@
                margin-bottom: 8px;
                flex-wrap: wrap;
                gap: 15px;
+               font-family: Metropolis, sans-serif;
+               strong{
+                    color: #312D42;;
+               }
                @media (max-width:767px){
                     padding: 15px 20px;
                }
@@ -60,7 +76,7 @@
                .input-type{
                     padding: 8px 12px;
                     border-radius: 8px;
-                    &:focus{
+                    &:focus, &.ant-input-affix-wrapper-focused{
                          box-shadow: none;
                     }
                     .anticon-lock svg{
