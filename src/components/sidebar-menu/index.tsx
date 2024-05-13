@@ -245,7 +245,9 @@ const SidebarMenu: React.FC = ({className , callBack}) => {
           >
             {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
             <Menu.Item className="" onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
+            { showStory && isStudent &&
             <Menu.Item className=""key={"/student/mock-simulation"} onClick={() =>{navigate('/student/mock-simulation')}} > Mock Simulations  </Menu.Item>
+            }
           </SubMenu>
           { showStory && isStudent &&
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<DashboardOutlined />}>
