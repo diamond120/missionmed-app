@@ -68,6 +68,7 @@ const UcatPerformance: FC<any> = ({ props }) => {
             className="input"
             disabled={!editing}
             onChange={(e) => setPercentile(e.target.value)}
+            style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }}
           />
         </Form.Item>
         <Form.Item
@@ -86,6 +87,7 @@ const UcatPerformance: FC<any> = ({ props }) => {
             className="input"
             disabled={!editing}
             onChange={(e) => setScore(e.target.value)}
+            style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }}
           />
         </Form.Item>
         <Form.Item
@@ -104,6 +106,7 @@ const UcatPerformance: FC<any> = ({ props }) => {
             className="input"
             disabled={!editing}
             onChange={(e) => setTagline(e.target.value)}
+            style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }}
           />
         </Form.Item>
         {editing ? (

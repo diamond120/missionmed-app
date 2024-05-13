@@ -1,0 +1,88 @@
+.mock-simulation{
+     .ant-alert{
+          margin-top: 16px;
+          &.ant-alert-info{
+               border: 1px solid #91CAFF;
+              background: #E6F4FF;
+              border-radius: 8px;
+              padding: 20px 24px;
+              .ant-alert-icon {
+                   svg {
+                        fill: #2816EE;
+                    }
+              }
+              .ant-alert-message {
+                    font-weight: 600;
+                    color: #000;
+               }
+               .ant-alert-description{
+                    .text {
+                         font-family: Metropolis, sans-serif;
+                    }
+                    ul{
+                         li {
+                              list-style: disc;
+                              list-style-position: inside;
+                              padding-left: 5px;
+                         }
+                    }
+               }
+          }
+     }
+     .mocks-items{
+          &.available-mocks{
+               margin-bottom: 24px;
+               .secondary-button{
+                    &:hover{
+                         background-color: transparent;
+                         color: #0958D9;
+                         border-color: #0958D9;
+                    }
+               }
+          }
+          .title {
+               font-size: 20px;
+               color: #312D42;
+               font-weight: 600;
+               margin-top: 10px;
+           }
+          .item{
+               background-color: #FFF;
+               border-radius: 8px;
+               box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.02), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+               padding: 26px 31px;
+               display: flex;
+               align-items: center;
+               justify-content: space-between;
+               margin-bottom: 8px;
+               flex-wrap: wrap;
+               gap: 15px;
+               font-family: Metropolis, sans-serif;
+               strong{
+                    color: #312D42;;
+               }
+               @media (max-width:767px){
+                    padding: 15px 20px;
+               }
+               &:not(:last-child){
+                    margin-bottom: 16px;
+               }
+               .secondary-button{
+                    border-radius: 8px;
+                    border: 1px solid #00000026;
+                    font-size: 16px;
+                    line-height: 24px;
+               }
+               .input-type{
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    &:focus, &.ant-input-affix-wrapper-focused{
+                         box-shadow: none;
+                    }
+                    .anticon-lock svg{
+                         fill: #00000073;
+                    }
+               }
+           }
+     }
+}
