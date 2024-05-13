@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Layout, Menu, Avatar, Badge } from 'antd';
-import { UserOutlined, ReadOutlined, BellOutlined, LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
+import { UserOutlined, ReadOutlined, BellOutlined, DesktopOutlined,LogoutOutlined, FileDoneOutlined, CaretRightOutlined, CaretDownOutlined, CommentOutlined, CrownOutlined , DashboardOutlined} from '@ant-design/icons';
 import { useNavigate, useLocation } from "react-router-dom"
 import { SvgIcon } from "../icon";
 import { useUser } from "../../api/providers/UserProvider";
@@ -245,8 +245,11 @@ const SidebarMenu: React.FC = ({className , callBack}) => {
           >
             {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
             <Menu.Item className="" onClick={() => { navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session') }} key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'} > Teaching Session  </Menu.Item>
-            <Menu.Item className=""key={"/student/mock-simulation"} onClick={() =>{navigate('/student/mock-simulation')}} > Mock Simulations  </Menu.Item>
+            
           </SubMenu>
+          { isStudent &&
+            <Menu.Item  className={"custom-profile-item"} key={"/student/mock-simulation"} onClick={() =>{navigate('/student/mock-simulation')}} icon={<DesktopOutlined />}> Mock Simulations  </Menu.Item>
+            }
           { showStory && isStudent &&
             <Menu.Item  key={"/student/reading-trainer"} onClick={() =>{navigate('/student/reading-trainer')}}  className={"custom-profile-item"} icon={<DashboardOutlined />}>
               Speed Reading Trainer  
