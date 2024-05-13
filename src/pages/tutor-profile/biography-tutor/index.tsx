@@ -59,9 +59,13 @@ const BiographyTutor: FC<ANY> = ({ props }) => {
             <Editor
               apiKey={TINYMCE_API_KEY}
               disabled={!editing}
+              key={editing}
               initialValue={tutor?.biography ?? ''}
               onEditorChange={(content) => {
                 setBiography(content)
+              }}
+              init={{
+                content_style: `body { background-color: ${!editing ? "#f5f5f5" : "#ffffff"} ; color: ${!editing ? "#bfbfbf" : "#000000"}}`
               }}
             />
           </Form.Item>
