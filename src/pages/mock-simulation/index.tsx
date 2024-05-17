@@ -126,10 +126,11 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-                  {pastMocks?.map((item, index) => (
+                  {(pastMocks?.length > 0) &&
                   <div className="mocks-items past-mocks">
                     <div className="mocks-item">
                       <h4 className="title">Past Mocks</h4>
+                      {pastMocks?.map((item, index) => (
                         <div className="item" key={index}>
                           <div>
                             <strong>{item?.package?.name}</strong> <br />
@@ -144,12 +145,12 @@ const Index = () => {
                             }}>View Performance</Button>
                           </div>
                         </div>
+                      ))}
                     </div>
                   </div>
-                  ))}
+                  }
                 </div>
               </TabPane>
-
               <TabPane tab={"Performance"} key={"Performance"}>
                 <Performance mocks={mocks} selectedMockId={selectedMockId} setActiveTab={setActiveTab} />
               </TabPane>
