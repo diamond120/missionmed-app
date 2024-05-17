@@ -1,6 +1,17 @@
 @import url("../../components/app/index.less");
 
 .mock-simulation {
+     @media (max-width:767px){
+          .ant-table  {
+               .ant-table-content{
+                    width: 100%;
+                    overflow: auto;
+                    tr td, tr th{    
+                         padding: 7px 10px;
+                    }
+               }
+          }
+     }
      .ant-alert {
           margin-top: 16px;
 
@@ -117,13 +128,17 @@
                display: flex;
                flex-direction: row;
                gap: 20px;
-
+               @media (max-width:992px){
+                    flex-direction: column;
+               }
                .results {
                     width: 60%;
                     display: flex;
                     flex-direction: column;
                     gap: 5px;
-
+                    @media (max-width:992px){
+                         width: 100%;
+                    }
                     .back-header {
                          gap: 5px;
                          display: flex;
@@ -164,7 +179,9 @@
 
                          .footer-table {
                               display: flex;
-
+                              @media (max-width:992px){
+                                   flex-wrap: wrap;
+                              }
                               .footer-label {
                                    padding: 15px;
                                    white-space: nowrap;
@@ -176,7 +193,13 @@
                                    display: grid;
                                    grid-template-columns: repeat(10, 35px);
                                    grid-gap: 5px;
-
+                                   @media (max-width:992px){
+                                        display: flex;
+                                        flex-wrap: wrap;
+                                        .value {
+                                             min-width: 45px;
+                                        }
+                                   }
                                    .value {
                                         background-color: #a8e2c8;
                                         padding: 2px 8px;
@@ -184,9 +207,22 @@
                                         display: flex;
                                         justify-content: center;
                                         align-items: center;
-                                        font-size: 10px;
+                                        font-size: 14px;
                                         color: @med-text-color;
-                                        font-weight: 500;
+                                        font-weight: 900;
+                                        letter-spacing: 0;
+                                        -webkit-text-stroke: 1px #fff;
+                                        text-shadow: 0px 0px 0 #fff, -1px -1px 0 #FFF, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+                                        &.red{
+                                             background: url('../../assets/images/red.png') 100% repeat;
+                                             background-color: #fff;
+                                             background-size: cover;
+                                        }
+                                        &.orange{
+                                             background: url('../../assets/images/orange.png') 100% repeat;
+                                             background-color: #fff;
+                                             background-size: cover;
+                                        }
                                    }
                               }
                          }
@@ -195,7 +231,9 @@
 
                .predicated {
                     width: 40%;
-
+                    @media (max-width:992px){
+                         width: 100%;
+                    }
                     .label-container {
                          border-bottom: 1px solid #f0f0f0;
 
@@ -211,12 +249,14 @@
 
                          .chart-container {
                               display: grid;
-                              grid-template-columns: repeat(3, 120px);
+                              grid-template-columns: repeat(3, minmax(0, 1fr));
                               justify-content: center;
                               align-items: center;
                               gap: 10px;
                               margin-top: 10px;
-
+                              // @media (max-width:767px){
+                              //      grid-template-columns: repeat(3, minmax(0, 1fr));
+                              // }
                               .chart-item {
                                    .chart-label {
                                         color: #000;
@@ -232,4 +272,25 @@
                }
           }
      }
+}
+.progress-bar{
+     display: flex;
+     align-items: center;
+     gap: 0;
+     span{
+          background-color: #32b878;
+          display: inline-block;
+          height: 10px;
+          &.orange{
+               background: url('../../assets/images/progress-orange.png') 100% repeat;
+               background-color: #fff;
+               background-size: contain;
+         }
+         &.red{
+              background: url('../../assets/images/progress-red.png') 100% repeat;
+              background-color: #fff;
+              background-size: contain  ;
+         }
+     }
+     
 }
