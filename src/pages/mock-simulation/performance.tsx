@@ -23,6 +23,81 @@ interface PredicatedDataType {
   score: string;
   pr: number
 }
+
+type ScoreTable = {
+  estimatedScore: number;
+  vr: number;
+  qr: number;
+  ar: number;
+  dm: number;
+};
+
+type BandRange = {
+  band: number;
+  minScore: number;
+  maxScore: number;
+};
+
+const scoreTable: ScoreTable[] = [
+  { estimatedScore: 300, vr: 0, qr: 0, ar: 0, dm: 0 },
+  { estimatedScore: 330, vr: 6, qr: 4, ar: 5, dm: 4 },
+  { estimatedScore: 350, vr: 8, qr: 6, ar: 7, dm: 5 },
+  { estimatedScore: 380, vr: 9, qr: 8, ar: 9, dm: 6 },
+  { estimatedScore: 400, vr: 11, qr: 10, ar: 11, dm: 7 },
+  { estimatedScore: 430, vr: 12, qr: 12, ar: 12, dm: 8 },
+  { estimatedScore: 450, vr: 14, qr: 14, ar: 14, dm: 9 },
+  { estimatedScore: 480, vr: 15, qr: 16, ar: 16, dm: 10 },
+  { estimatedScore: 500, vr: 17, qr: 17, ar: 18, dm: 11 },
+  { estimatedScore: 530, vr: 18, qr: 18, ar: 20, dm: 12 },
+  { estimatedScore: 550, vr: 20, qr: 19, ar: 22, dm: 13 },
+  { estimatedScore: 580, vr: 21, qr: 20, ar: 23, dm: 14 },
+  { estimatedScore: 600, vr: 23, qr: 21, ar: 25, dm: 15 },
+  { estimatedScore: 630, vr: 24, qr: 22, ar: 27, dm: 16 },
+  { estimatedScore: 650, vr: 26, qr: 23, ar: 29, dm: 17 },
+  { estimatedScore: 680, vr: 27, qr: 24, ar: 31, dm: 18 },
+  { estimatedScore: 700, vr: 29, qr: 25, ar: 32, dm: 19 },
+  { estimatedScore: 730, vr: 30, qr: 26, ar: 34, dm: 20 },
+  { estimatedScore: 750, vr: 32, qr: 27, ar: 36, dm: 21 },
+  { estimatedScore: 780, vr: 33, qr: 28, ar: 38, dm: 22 },
+  { estimatedScore: 800, vr: 35, qr: 29, ar: 41, dm: 23 },
+  { estimatedScore: 830, vr: 36, qr: 30, ar: 43, dm: 24 },
+  { estimatedScore: 850, vr: 38, qr: 31, ar: 44, dm: 25 },
+  { estimatedScore: 880, vr: 39, qr: 32, ar: 45, dm: 26 },
+  { estimatedScore: 900, vr: 41, qr: 33, ar: 47, dm: 27 }
+];
+
+const sjtBands: BandRange[] = [
+  { band: 1, minScore: 56, maxScore: 66 },
+  { band: 2, minScore: 37, maxScore: 55 },
+  { band: 3, minScore: 17, maxScore: 36 },
+  { band: 4, minScore: 0, maxScore: 16 }
+];
+
+function findEstimatedScore(rawScore: number, scoreType: keyof ScoreTable): number {
+  for (let i = scoreTable.length - 1; i >= 0; i--) {
+      if (rawScore >= scoreTable[i][scoreType]) {
+          return scoreTable[i].estimatedScore;
+      }
+  }
+  return 300; // return the lowest score if raw score is below the minimum in the table
+}
+
+function calculateScores(rawScores: [number, number, number, number]): [number, number, number, number] {
+  const vrScore = findEstimatedScore(rawScores[0], 'vr');
+  const qrScore = findEstimatedScore(rawScores[1], 'qr');
+  const arScore = findEstimatedScore(rawScores[2], 'ar');
+  const dmScore = findEstimatedScore(rawScores[3], 'dm');
+  return [vrScore, dmScore, qrScore, arScore];
+}
+
+function determineSJTband(score: number): number {
+  const foundBand = sjtBands.find(band => score >= band.minScore && score <= band.maxScore);
+  if (!foundBand) {
+      throw new Error('Invalid score: Score must be between 0 and 66.');
+  }
+  return foundBand.band;
+}
+
 const PredicatedColumns: TableProps<PredicatedDataType>["columns"] = [
   {
     title: "Subtest",
@@ -44,6 +119,12 @@ interface Props {
 function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   const [mockId, setMockId] = useState<number>(selectedMockId)
   const [mockData, setMockData] = useState<any>()
+  // Example usage:
+  const scores = calculateScores([39, 32, 42, 25]);
+  console.log(scores);  // Logs the estimated scores for each subsection
+  // Example usage:
+  const sjtScore = 40;
+  console.log(determineSJTband(sjtScore))
 
   useEffect(() => {
     if (mockId)
@@ -117,7 +198,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     {
       key: "5",
       subtest: "Situational Judgement",
-      score: "Brand 3",
+      score: "Band 3",
       pr: -7
     },
   ];
@@ -144,23 +225,26 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
             {mockData?.package?.name}
           </span>
 
-          {mockData?.sections?.map((item: any, index: number) => {
-            const incorrect = (item?.questions?.length - item?.correct - item?.partially_correct)
+            {mockData?.sections?.map((item: any, index: number) => {
+              const correctAnswers = typeof item?.correct != "undefined" ? item?.correct : 0;
+              const partiallyCorrectAnswers = typeof item?.partially_correct != "undefined" ? item?.partially_correct : 0;
+              const totalQuestions = item?.questions?.length;
+              const incorrect = (totalQuestions - correctAnswers - partiallyCorrectAnswers)
             return (
               <div className="question-item" key={index} >
                 <span className="question-title">{item?.name}</span>
                 <div className="progress-bar">
-                  <span className="green" style={{ width: `${(100 * item?.correct) / item?.questions?.length}%` }}></span>
-                  <span className="orange" style={{ width: `${(100 * item?.partially_correct) / item?.questions?.length}%` }}></span>
-                  <span className="red" style={{ width: `${(100 * incorrect) / item?.questions?.length}%` }}></span>
+                  <span className="green" style={{ width: `${(100 * correctAnswers) / totalQuestions}%` }}></span>
+                  <span className="orange" style={{ width: `${(100 * partiallyCorrectAnswers) / totalQuestions}%` }}></span>
+                  <span className="red" style={{ width: `${(100 * incorrect) / totalQuestions}%` }}></span>
                 </div>
                 <Table
                   columns={columns}
                   dataSource={[{
                     key: '1',
-                    questions: `${item?.questions?.length} questions`,
-                    correct: `${item?.correct} correct`,
-                    partially_correct: `${item?.partially_correct} partially correct`,
+                    questions: `${totalQuestions} questions`,
+                    correct: `${correctAnswers} correct`,
+                    partially_correct: `${partiallyCorrectAnswers} partially correct`,
                     incorrect: `${incorrect} incorrect`
                   }]}
                   pagination={false}
