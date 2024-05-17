@@ -36,7 +36,8 @@
     "react-timezone-select": "^2.1.2",
     "vite-plugin-svgr": "^3.2.0",
     "wtf-plugin-api": "^2.0.0",
-    "wtf_wikipedia": "^10.3.0"
+    "wtf_wikipedia": "^10.3.0",
+    "@vitejs/plugin-react": "^4.2.1"
   },
   "proxy": "http://192.168.1.125:8081",
   "devDependencies": {
@@ -44,7 +45,6 @@
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
