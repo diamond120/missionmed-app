@@ -6,7 +6,7 @@
                .ant-table-content{
                     width: 100%;
                     overflow: auto;
-                    tr td, tr th{    
+                    tr td, tr th{
                          padding: 7px 10px;
                     }
                }
@@ -203,6 +203,7 @@
                                    }
                                    .value {
                                         min-width: 35px;
+                                        min-height: 35px;
                                         background-color: #a8e2c8;
                                         padding: 2px 8px;
                                         border-radius: 3px;
@@ -211,11 +212,11 @@
                                         align-items: center;
                                         font-size: 14px;
                                         color: @med-text-color;
-                                        font-weight: 900;
+                                        font-weight: 700;
                                         letter-spacing: 0;
                                         cursor: pointer;
-                                        -webkit-text-stroke: 1px #fff;
-                                        text-shadow: 0px 0px 0 #fff, -1px -1px 0 #FFF, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+                                        text-shadow: 2px 2px 2px #fff,0 0 1em #fff,0 0 .2em #fff;
+                                        border: 1px dotted gray;
                                         &.red{
                                              background: url('../../assets/images/red.png') 100% repeat;
                                              background-color: #fff;
@@ -225,6 +226,11 @@
                                              background: url('../../assets/images/orange.png') 100% repeat;
                                              background-color: #fff;
                                              background-size: cover;
+                                        }
+                                        &:hover {
+                                             font-size: 16px;
+                                             padding: 0px 6px;
+                                             border: 1px solid #000;
                                         }
                                    }
                               }
@@ -303,5 +309,5 @@
               background-size: contain  ;
          }
      }
-     
+
 }

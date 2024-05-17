@@ -130,11 +130,11 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         onChange={(e) => setMockId(e)}
       >
         {mocks?.map((item, index) => (
-          <Option key={index} value={item?.package?.id}  >{item?.package?.name}</Option>
+          <Option key={index} value={item.id}  >{item?.package?.name}</Option>
         ))}
       </Select>
-
-      <div className="completed-mocks">
+      {mockId && (
+        <div className="completed-mocks">
         <div className="results">
           <div className="back-header" onClick={() => setActiveTab('Simulate')} >
             <ArrowLeftOutlined />
@@ -256,6 +256,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
 
         </div>
       </div>
+      )}
+
     </div>
   );
 }

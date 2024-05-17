@@ -133,7 +133,7 @@ const Index = () => {
                             <Button className={"secondary-button"} >Review</Button>
                             <Button className={"secondary-button"} onClick={() => {
                               setActiveTab('Performance')
-                              setSelectedMockId(item?.package?.id)
+                              setSelectedMockId(item.id)
                             }}>View Performance</Button>
                           </div>
                         </div>
