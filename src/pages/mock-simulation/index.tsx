@@ -144,7 +144,7 @@ const Index = () => {
               </TabPane>
 
               <TabPane tab={"Performance"} key={"Performance"}>
-                <Performance mocks={mocks} mockId={selectedMockId} />
+                <Performance mocks={mocks} selectedMockId={selectedMockId} setActiveTab={setActiveTab} />
               </TabPane>
               <TabPane tab={"Review"} key={"Review"}>
                 <div className={"upcoming-sessions"}>Tab 3</div>

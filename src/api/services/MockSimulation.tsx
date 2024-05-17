@@ -11,7 +11,7 @@ export const getSessions = () => {
     return http.get(`/sessions`, config);
 }
 
-export const createSession = (data:any) => {
+export const createSession = (data: any) => {
     const token = `Bearer ${getToken()}`;
     const config = {
         headers: {
@@ -21,4 +21,14 @@ export const createSession = (data:any) => {
     }
 
     return http.post(`/sessions`, data, config,);
+}
+
+export const getSessionDetail = (sessionId: number) => {
+    const token = `Bearer ${getToken()}`;
+    const config = {
+        headers: {
+            'Authorization': token
+        }
+    }
+    return http.get(`/sessions/${sessionId}`, config);
 }
