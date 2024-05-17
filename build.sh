@@ -1,5 +1,4 @@
 node -v
-
 npm -v
 
 echo "\nRun yarn install \n"
