@@ -5,10 +5,11 @@ import Section from "../../components/shared-ui/Section";
 import { Button, Input, Tabs } from "antd";
 import "./index.less";
 import Performance from "./performance";
-import { createSession, getSessions } from "../../api/services/MockSimulation";
+import { createSession, getSessions, getPackages } from "../../api/services/MockSimulation";
 import { EXAM_APP_URL } from '../../config/app-config'
 import { useUser } from "../../api/providers/UserProvider";
 import { Session } from "./types";
+import moment from "moment";
 
 const Index = () => {
   const { TabPane } = Tabs;
@@ -24,17 +25,23 @@ const Index = () => {
 
   useEffect(() => {
     const init = async () => {
+      const resAvailable = await getPackages()
+      if (resAvailable?.data) {
+        const available = await resAvailable.data;
+        setAvailableMocks(available);
+      }
       const res = await getSessions()
       if (res?.data) {
-        const available = await res?.data?.filter((i: Session) => i?.completed === 0)
-        const past = await res?.data?.filter((i: Session) => i?.completed === 1)
+        // const past = await res?.data?.filter((i: Session) => i?.completed === 1)
+        const past = await res.data
         setMocks(res.data)
-        setAvailableMocks(available)
         setPastMocks(past)
       }
     }
     init()
   }, [])
+
+  console.log("availableMocks", availableMocks);
 
 
   async function launchExam(package_id: number) {
@@ -102,8 +109,8 @@ const Index = () => {
                       {availableMocks?.map((item, index) => (
                         <div className="item" key={index}>
                           <div>
-                            <strong>{item?.package?.name}</strong> <br />
-                            <div>{item?.package?.type}</div>
+                            <strong>{item?.name}</strong> <br />
+                            <div>{item?.type}</div>
                           </div>
                           <div className="btn-group">
                             <Input className="input-type" placeholder="Exam Code" prefix={<LockOutlined />}
@@ -113,7 +120,7 @@ const Index = () => {
                               }}
                               value={index === examCodeIndex ? examCode : ''}
                             />
-                            <Button className={"secondary-button"} onClick={() => launchExam(item?.package_id)} >Launch Exam</Button>
+                            <Button className={"secondary-button"} onClick={() => launchExam(item?.id)} >Launch Exam</Button>
                           </div>
                         </div>
                       ))}
@@ -128,6 +135,7 @@ const Index = () => {
                           <div>
                             <strong>{item?.package?.name}</strong> <br />
                             <div>{item?.package?.type}</div>
+                            <div className="small-date-time">({moment(item?.started_at).format('dddd, MMMM Do YYYY hh:mm A') })</div>
                           </div>
                           <div className="btn-group">
                             <Button className={"secondary-button"} >Review</Button>

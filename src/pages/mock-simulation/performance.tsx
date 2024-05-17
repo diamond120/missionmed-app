@@ -8,6 +8,7 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useEffect, useState } from "react";
 import { getSessionDetail } from "../../api/services/MockSimulation";
 import { EXAM_APP_URL } from '../../config/app-config'
+import moment from "moment";
 
 interface VerbalDataType {
   key: string;
@@ -211,7 +212,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         onChange={(e) => setMockId(e)}
       >
         {mocks?.map((item, index) => (
-          <Option key={index} value={item.id}  >{item?.package?.name}</Option>
+          <Option key={index} value={item.id}  >{item?.package?.name} - ({moment(item?.started_at).format('MMMM Do YYYY hh:mm A') })</Option>
         ))}
       </Select>
       {mockId && (

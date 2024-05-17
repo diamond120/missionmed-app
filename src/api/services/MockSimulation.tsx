@@ -1,6 +1,16 @@
 import { getToken } from '../../common/common';
 import http from "../http-common";
 
+export const getPackages = () => {
+    const token = `Bearer ${getToken()}`;
+    const config = {
+        headers: {
+            'Authorization': token
+        }
+    }
+    return http.get(`/packages`, config);
+}
+
 export const getSessions = () => {
     const token = `Bearer ${getToken()}`;
     const config = {
