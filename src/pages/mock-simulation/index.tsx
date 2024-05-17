@@ -126,11 +126,10 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-
+                  {pastMocks?.map((item, index) => (
                   <div className="mocks-items past-mocks">
                     <div className="mocks-item">
                       <h4 className="title">Past Mocks</h4>
-                      {pastMocks?.map((item, index) => (
                         <div className="item" key={index}>
                           <div>
                             <strong>{item?.package?.name}</strong> <br />
@@ -145,9 +144,9 @@ const Index = () => {
                             }}>View Performance</Button>
                           </div>
                         </div>
-                      ))}
                     </div>
                   </div>
+                  ))}
                 </div>
               </TabPane>
 
