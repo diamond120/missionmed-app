@@ -126,7 +126,7 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
-
+                  {(pastMocks?.length > 0) &&
                   <div className="mocks-items past-mocks">
                     <div className="mocks-item">
                       <h4 className="title">Past Mocks</h4>
@@ -148,9 +148,9 @@ const Index = () => {
                       ))}
                     </div>
                   </div>
+                  }
                 </div>
               </TabPane>
-
               <TabPane tab={"Performance"} key={"Performance"}>
                 <Performance mocks={mocks} selectedMockId={selectedMockId} setActiveTab={setActiveTab} />
               </TabPane>
