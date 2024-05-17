@@ -4,6 +4,7 @@ import { Alert, Breadcrumb } from "antd";
 import Section from "../../components/shared-ui/Section";
 import { Button, Input,Tabs } from "antd";
 import "./index.less";
+import Performance from "./performance";
 
 export default function index() {
   const { TabPane } = Tabs;
@@ -92,7 +93,7 @@ export default function index() {
               </TabPane>
 
               <TabPane tab={"Performance"} key={"Performance"}>
-                <div className={"upcoming-past"}>Tab 2</div>
+                <Performance/>
               </TabPane>
               <TabPane tab={"Review"} key={"Review"}>
                 <div className={"upcoming-sessions"}>Tab 3</div>
