@@ -1,8 +1,9 @@
 import { Select, TableProps } from "antd";
 import { Option } from "antd/lib/mentions";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Table } from "antd";
-import { Tiny, Column } from "@ant-design/plots";
+import { Table } from 'antd';
+import { Tiny, Column } from '@ant-design/plots';
+import { Session } from './types';
 
 interface VerbalDataType {
   key: string;
@@ -82,14 +83,19 @@ const PredicatedColumns: TableProps<PredicatedDataType>["columns"] = [
     key: "score",
   },
 ];
+interface Props {
+  mocks: Array<Session>
+  mockId: number
+}
 
-function Performance() {
+function Performance({ mocks, mockId }: Props) {
+
   const verbalData: VerbalDataType[] = [
     {
-      key: "1",
-      questions: "8 questions",
-      correct: "7 correct",
-      incorrect: "1 incorrect",
+      key: '1',
+      questions: '8 questions',
+      correct: '7 correct',
+      incorrect: '1 incorrect'
     },
   ];
 
@@ -173,11 +179,12 @@ function Performance() {
 
   return (
     <div className="performance-tab">
-      <Select placeholder="Select" style={{ width: 328 }}>
-        <Option value="MockI">Mock I</Option>
-        <Option value="MockII">Mock II</Option>
-        <Option value="MockIIII">Mock III</Option>
-        <Option value="MockV">Mock V</Option>
+      <Select placeholder="Select" style={{ width: 328 }} value={mockId}
+        onChange={(e) => console.log(e)}
+      >
+        {mocks?.map((item, index) => (
+          <Option key={index} value={item?.package?.id}  >{item?.package?.name}</Option>
+        ))}
       </Select>
 
       <div className="completed-mocks">
@@ -193,9 +200,9 @@ function Performance() {
           <div className="question-item">
             <span className="question-title">Verbal Reasoning Questions</span>
             <div className="progress-bar">
-                <span className="green" style={{width:"10%"}}></span>
-                <span className="orange" style={{width:"65%"}}></span>
-                <span className="red" style={{width:"25%"}}></span>
+              <span className="green" style={{ width: "10%" }}></span>
+              <span className="orange" style={{ width: "65%" }}></span>
+              <span className="red" style={{ width: "25%" }}></span>
             </div>
             <Table
               columns={columns}
@@ -223,12 +230,13 @@ function Performance() {
             />
           </div>
 
+
           <div className="question-item">
             <span className="question-title">Decision Making Questions</span>
             <div className="progress-bar">
-                <span className="green" style={{width:"10%"}}></span>
-                <span className="orange" style={{width:"65%"}}></span>
-                <span className="red" style={{width:"25%"}}></span>
+              <span className="green" style={{ width: "10%" }}></span>
+              <span className="orange" style={{ width: "65%" }}></span>
+              <span className="red" style={{ width: "25%" }}></span>
             </div>
             <Table
               columns={decisionColumns}
@@ -261,9 +269,9 @@ function Performance() {
               Quantitative Reasoning Questions
             </span>
             <div className="progress-bar">
-                <span className="green" style={{width:"30%"}}></span>
-                <span className="orange" style={{width:"45%"}}></span>
-                <span className="red" style={{width:"25%"}}></span>
+              <span className="green" style={{ width: "30%" }}></span>
+              <span className="orange" style={{ width: "45%" }}></span>
+              <span className="red" style={{ width: "25%" }}></span>
             </div>
             <Table
               columns={columns}
@@ -329,75 +337,75 @@ function Performance() {
 export default Performance;
 
 const resion = [
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
-  { value: "43s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
+  { value: "43s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
 ];
 const quantitative = [
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
-  { value: "42s", color: "#eda2bf", flag: "red"},
-  { value: "43s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "15s", color: "#a8e2c8", flag: "green"},
-  { value: "29s", color: "#a8e2c8", flag: "green"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
-  { value: "32s", color: "#f7c2a0", flag: "orange"},
-  { value: "25s", color: "#a8e2c8", flag: "green"},
-  { value: "35s", color: "#a8e2c8", flag: "green"},
-  { value: "22s", color: "#eda2bf", flag: "red"},
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
+  { value: "42s", color: "#eda2bf", flag: "red" },
+  { value: "43s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "15s", color: "#a8e2c8", flag: "green" },
+  { value: "29s", color: "#a8e2c8", flag: "green" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
+  { value: "32s", color: "#f7c2a0", flag: "orange" },
+  { value: "25s", color: "#a8e2c8", flag: "green" },
+  { value: "35s", color: "#a8e2c8", flag: "green" },
+  { value: "22s", color: "#eda2bf", flag: "red" },
 ];

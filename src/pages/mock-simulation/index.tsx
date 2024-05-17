@@ -1,15 +1,63 @@
-import React from "react";
-import { HomeOutlined, InfoCircleFilled, LockOutlined} from "@ant-design/icons";
-import { Alert, Breadcrumb } from "antd";
+import React, { useEffect, useState } from "react";
+import { HomeOutlined, InfoCircleFilled, LockOutlined } from "@ant-design/icons";
+import { Alert, Breadcrumb, message } from "antd";
 import Section from "../../components/shared-ui/Section";
-import { Button, Input,Tabs } from "antd";
+import { Button, Input, Tabs } from "antd";
 import "./index.less";
 import Performance from "./performance";
+import { createSession, getSessions } from "../../api/services/MockSimulation";
+import { EXAM_APP_URL } from '../../config/app-config'
+import { useUser } from "../../api/providers/UserProvider";
+import { Session } from "./types";
 
-export default function index() {
+const Index = () => {
   const { TabPane } = Tabs;
+  const [availableMocks, setAvailableMocks] = useState<Array<Session>>([])
+  const [mocks, setMocks] = useState<Array<Session>>([])
+  const [pastMocks, setPastMocks] = useState<Array<Session>>([])
+  const [activeTab, setActiveTab] = useState<string>('Simulate')
+  const [examCode, setExamCode] = useState<string | number>('')
+  const [examCodeIndex, setExamCodeIndex] = useState<number>()
+  const [selectedMockId, setSelectedMockId] = useState<number>()
 
- 
+  const user = useUser();
+
+  useEffect(() => {
+    const init = async () => {
+      const res = await getSessions()
+      if (res?.data) {
+        const available = await res?.data?.filter((i: Session) => i?.completed === 0)
+        const past = await res?.data?.filter((i: Session) => i?.completed === 1)
+        setMocks(res.data)
+        setAvailableMocks(available)
+        setPastMocks(past)
+      }
+    }
+    init()
+  }, [])
+
+
+  async function launchExam(package_id: number) {
+    if (examCode) {
+      const params = {
+        user_id: user?.id,
+        package_id: package_id,
+        redirect_url: EXAM_APP_URL,
+        exam_code: examCode
+      }
+      const res = await createSession(params)
+      if (res) {
+        if (res?.data?.id) {
+          setExamCode('')
+          window.open(`${EXAM_APP_URL}?session_id=${res?.data?.id}`, "_blank", "noreferrer")
+        }
+        else
+          message.error('Please enter correct exam code')
+      }
+    } else
+      message.error('Please enter exam code')
+  }
+
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -26,7 +74,7 @@ export default function index() {
           </div>
           <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
             <h2 className={"secondary-title"}>UCAT Simulation Mocks </h2>
-            <Tabs defaultActiveKey={"Upcoming"}>
+            <Tabs defaultActiveKey={'Simulate'} activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
               <TabPane tab={"Simulate"} key={"Simulate"}>
                 <div className={"upcoming-sessions"}>
                   <Alert
@@ -51,49 +99,52 @@ export default function index() {
                   <div className="mocks-items available-mocks">
                     <div className="mocks-item">
                       <h4 className="title">Available Mocks</h4>
-                      <div className="item">
-                         <div>
-                              <strong>UCAT Mock I</strong> <br />
-                              <div>Good Luck!</div>
-                         </div>
-                         <div className="btn-group">
-                              <Input className="input-type" placeholder="Exam Code" prefix={<LockOutlined />} />
-                              <Button className={"secondary-button"} >Launch Exam</Button>
-                         </div>
-                      </div>
+                      {availableMocks?.map((item, index) => (
+                        <div className="item" key={index}>
+                          <div>
+                            <strong>{item?.package?.name}</strong> <br />
+                            <div>{item?.package?.type}</div>
+                          </div>
+                          <div className="btn-group">
+                            <Input className="input-type" placeholder="Exam Code" prefix={<LockOutlined />}
+                              onChange={(e) => {
+                                setExamCode(e.target.value)
+                                setExamCodeIndex(index)
+                              }}
+                              value={index === examCodeIndex ? examCode : ''}
+                            />
+                            <Button className={"secondary-button"} onClick={() => launchExam(item?.package_id)} >Launch Exam</Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
                   <div className="mocks-items past-mocks">
                     <div className="mocks-item">
                       <h4 className="title">Past Mocks</h4>
-                      <div className="item">
-                         <div>
-                              <strong>UCAT Mock I</strong> <br />
-                              <div>Good Luck!</div>
-                         </div>
-                         <div className="btn-group">
-                              <Button className={"secondary-button"} >Review</Button>
-                              <Button className={"secondary-button"} >View Performance</Button>
-                         </div>
-                      </div>
-                      <div className="item">
-                         <div>
-                              <strong>UCAT Mock I</strong> <br />
-                              <div>Good Luck!</div>
-                         </div>
-                         <div className="btn-group">
-                              <Button className={"secondary-button"} >Review</Button>
-                              <Button className={"secondary-button"} >View Performance</Button>
-                         </div>
-                      </div>
+                      {pastMocks?.map((item, index) => (
+                        <div className="item" key={index}>
+                          <div>
+                            <strong>{item?.package?.name}</strong> <br />
+                            <div>{item?.package?.type}</div>
+                          </div>
+                          <div className="btn-group">
+                            <Button className={"secondary-button"} >Review</Button>
+                            <Button className={"secondary-button"} onClick={() => {
+                              setActiveTab('Performance')
+                              setSelectedMockId(item?.package?.id)
+                            }}>View Performance</Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </TabPane>
 
               <TabPane tab={"Performance"} key={"Performance"}>
-                <Performance/>
+                <Performance mocks={mocks} mockId={selectedMockId} />
               </TabPane>
               <TabPane tab={"Review"} key={"Review"}>
                 <div className={"upcoming-sessions"}>Tab 3</div>
@@ -105,3 +156,4 @@ export default function index() {
     </React.Fragment>
   );
 }
+export default Index
