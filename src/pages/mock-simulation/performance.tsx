@@ -107,7 +107,7 @@ const PredicatedColumns: TableProps<PredicatedDataType>["columns"] = [
     key: "subtest",
   },
   {
-    title: "Medify Score",
+    title: "MissionMed Score",
     dataIndex: "score",
     key: "score",
   },
@@ -154,7 +154,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     {
       key: "5",
       subtest: "Situational Judgement",
-      score: "-",
+      score: "Band -",
       type: 'sr',
       pr: -7
     },
@@ -187,11 +187,12 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
           predicatedD.score = String(scores[2])
         } else if(predicatedD.type === 'dm') {
           predicatedD.score = String(scores[3])
-        } else if(predicatedD.type === 'sj') {
-          predicatedD.score = String(determineSJTband(sjtScore))
+        } else if(predicatedD.type === 'sr') {
+          predicatedD.score = 'Band '+String(determineSJTband(sjtScore))
         }
         return predicatedD
       })
+      console.log(tempPredicatedData)
       setPredicatedData(tempPredicatedData);
       setScoreTableKey((preV) => preV + 10)
     }
