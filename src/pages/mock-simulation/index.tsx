@@ -155,7 +155,15 @@ const Index = () => {
                 <Performance mocks={mocks} selectedMockId={selectedMockId} setActiveTab={setActiveTab} />
               </TabPane>
               <TabPane tab={"Review"} key={"Review"}>
-                <div className={"upcoming-sessions"}>Tab 3</div>
+                <div
+                  className={"personality-tutor-wrap"}
+                  style={{ position: "relative", width: "max-content" }}
+                >
+                  <img alt={"example"} src="/src/assets/images/mock-simulation-review.png" width={600}  />
+                  <div className={"coming-soon"} style={{}}>
+                    <span className="freeze-span">Coming Soon</span>
+                  </div>
+                </div>
               </TabPane>
             </Tabs>
           </div>
