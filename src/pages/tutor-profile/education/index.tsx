@@ -39,6 +39,11 @@ const Education: FC<Any> = ({ props }) => {
   }
 
   const updatedTutor = async (formData) => {
+    const allFalse = formData.educations.every((education) => education.is_primary === false)
+    if(allFalse === true && formData.educations.length > 0){
+      formData.educations[0].is_primary = true
+    }
+    
     const res = await TutorService.updateProfile({
       educations: formData.educations
     });
