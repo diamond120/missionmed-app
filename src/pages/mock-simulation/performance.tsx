@@ -22,6 +22,7 @@ interface PredicatedDataType {
   key: string;
   subtest: string;
   score: string;
+  type?: string;
   pr: number
 }
 
@@ -120,12 +121,44 @@ interface Props {
 function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   const [mockId, setMockId] = useState<number>(selectedMockId)
   const [mockData, setMockData] = useState<any>()
-  // Example usage:
-  const scores = calculateScores([39, 32, 42, 25]);
-  console.log(scores);  // Logs the estimated scores for each subsection
-  // Example usage:
-  const sjtScore = 40;
-  console.log(determineSJTband(sjtScore))
+  const [scoreTableKey, setScoreTableKey] = useState<number>(52)
+  const [predicatedData, setPredicatedData] = useState<PredicatedDataType[]>([
+    {
+      key: "1",
+      subtest: "Verbal Reasoning",
+      score: "-",
+      type: "vr",
+      pr: 18
+    },
+    {
+      key: "2",
+      subtest: "Decision Making",
+      score: "-",
+      type: "dm",
+      pr: 17
+    },
+    {
+      key: "3",
+      subtest: "Quantitative Reasoning",
+      score: "-",
+      type: "qr",
+      pr: 3
+    },
+    {
+      key: "4",
+      subtest: "Abstract Reasoning",
+      score: "-",
+      type: "ar",
+      pr: 18
+    },
+    {
+      key: "5",
+      subtest: "Situational Judgement",
+      score: "-",
+      type: 'sr',
+      pr: -7
+    },
+  ])
 
   useEffect(() => {
     if (mockId)
@@ -136,6 +169,31 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     const res = await getSessionDetail(mockId)
     if (res.data) {
       setMockData(res.data)
+      const sections = res.data.sections
+      const result = sections.reduce((acc, item) => {
+          acc[item.type] = item.total_score;
+          return acc;
+      }, {});
+      const scores = calculateScores([result['VR'], result['QR'], result['AR'], result['DM']]);
+      const  sjtScore = result['SJ'];
+      console.log(result,scores, sjtScore);
+      let tempPredicatedData = predicatedData
+      tempPredicatedData = predicatedData.map((predicatedD, index) => {
+        if (predicatedD.type === 'vr') {
+          predicatedD.score = String(scores[0])
+        } else if (predicatedD.type === 'qr') {
+          predicatedD.score = String(scores[1])
+        } else if (predicatedD.type === 'ar') {
+          predicatedD.score = String(scores[2])
+        } else if(predicatedD.type === 'dm') {
+          predicatedD.score = String(scores[3])
+        } else if(predicatedD.type === 'sj') {
+          predicatedD.score = String(determineSJTband(sjtScore))
+        }
+        return predicatedD
+      })
+      setPredicatedData(tempPredicatedData);
+      setScoreTableKey((preV) => preV + 10)
     }
   }
 
@@ -170,39 +228,6 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     window.open(`${EXAM_APP_URL}/?session_id=${mockId}`, "_blank", "noreferrer")
     // Perform your desired action here
   };
-
-  const predicatedData: PredicatedDataType[] = [
-    {
-      key: "1",
-      subtest: "Verbal Reasoning",
-      score: "850",
-      pr: 18
-    },
-    {
-      key: "2",
-      subtest: "Decision Making",
-      score: "700-800",
-      pr: 17
-    },
-    {
-      key: "3",
-      subtest: "Quantitative Reasoning",
-      score: "630",
-      pr: 3
-    },
-    {
-      key: "4",
-      subtest: "Abstract Reasoning",
-      score: "670",
-      pr: 18
-    },
-    {
-      key: "5",
-      subtest: "Situational Judgement",
-      score: "Band 3",
-      pr: -7
-    },
-  ];
 
   return (
     <div className="performance-tab">
@@ -280,8 +305,9 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
           <div className="label-container">
             <span className="predicated-label">Predicated Scores</span>
           </div>
-          <div className="container">
+          <div className="container" data-key={scoreTableKey}>
             <Table
+              key={scoreTableKey}
               columns={PredicatedColumns}
               dataSource={predicatedData}
               pagination={false}
