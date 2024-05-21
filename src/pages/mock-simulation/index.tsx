@@ -49,7 +49,7 @@ const Index = () => {
       const params = {
         user_id: user?.id,
         package_id: package_id,
-        redirect_url: APP_URL,
+        redirect_url: `${APP_URL}/student/mock-simulation`,
         exam_code: examCode
       }
       const res = await createSession(params)
