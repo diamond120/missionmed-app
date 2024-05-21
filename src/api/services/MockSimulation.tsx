@@ -8,7 +8,7 @@ export const getPackages = () => {
             'Authorization': token
         }
     }
-    return http.get(`/packages`, config);
+    return http.get(`/student/packages`, config);
 }
 
 export const getSessions = () => {

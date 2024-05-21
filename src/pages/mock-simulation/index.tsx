@@ -6,7 +6,7 @@ import { Button, Input, Tabs } from "antd";
 import "./index.less";
 import Performance from "./performance";
 import { createSession, getSessions, getPackages } from "../../api/services/MockSimulation";
-import { EXAM_APP_URL } from '../../config/app-config'
+import { EXAM_APP_URL, APP_URL } from '../../config/app-config'
 import { useUser } from "../../api/providers/UserProvider";
 import { Session } from "./types";
 import moment from "moment";
@@ -49,7 +49,7 @@ const Index = () => {
       const params = {
         user_id: user?.id,
         package_id: package_id,
-        redirect_url: EXAM_APP_URL,
+        redirect_url: APP_URL,
         exam_code: examCode
       }
       const res = await createSession(params)
