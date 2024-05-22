@@ -304,7 +304,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         {/* predicated scores */}
         <div className="predicated">
           <div className="label-container">
-            <span className="predicated-label">Predicated Scores</span>
+            <span className="predicated-label">Predicted Scores</span>
           </div>
           <div className="container">
             <Table
