@@ -1,4 +1,4 @@
-import { Select, TableProps } from "antd";
+import { Select, Spin, TableProps } from "antd";
 import { Option } from "antd/lib/mentions";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Table } from 'antd';
@@ -6,10 +6,10 @@ import { Session } from './types';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useEffect, useState } from "react";
-import { getSessionDetail } from "../../api/services/MockSimulation";
+import { getSessionDetail, getpackage } from "../../api/services/MockSimulation";
 import { EXAM_APP_URL } from '../../config/app-config'
 import moment from "moment";
-
+import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 interface VerbalDataType {
   key: string;
   questions: string;
@@ -24,6 +24,8 @@ interface PredicatedDataType {
   score: string;
   type?: string;
   pr: number
+  data: number[]
+  color: string
 }
 
 type ScoreTable = {
@@ -77,9 +79,9 @@ const sjtBands: BandRange[] = [
 
 function findEstimatedScore(rawScore: number, scoreType: keyof ScoreTable): number {
   for (let i = scoreTable.length - 1; i >= 0; i--) {
-      if (rawScore >= scoreTable[i][scoreType]) {
-          return scoreTable[i].estimatedScore;
-      }
+    if (rawScore >= scoreTable[i][scoreType]) {
+      return scoreTable[i].estimatedScore;
+    }
   }
   return 300; // return the lowest score if raw score is below the minimum in the table
 }
@@ -95,7 +97,7 @@ function calculateScores(rawScores: [number, number, number, number]): [number, 
 function determineSJTband(score: number): number {
   const foundBand = sjtBands.find(band => score >= band.minScore && score <= band.maxScore);
   if (!foundBand) {
-      throw new Error('Invalid score: Score must be between 0 and 66.');
+    throw new Error('Invalid score: Score must be between 0 and 66.');
   }
   return foundBand.band;
 }
@@ -128,73 +130,131 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       subtest: "Verbal Reasoning",
       score: "-",
       type: "vr",
-      pr: 18
+      pr: 0,
+      data: [],
+      color: '#f098b2'
     },
     {
       key: "2",
       subtest: "Decision Making",
       score: "-",
       type: "dm",
-      pr: 17
+      pr: 0,
+      data: [],
+      color: '#f098b2'
     },
     {
       key: "3",
       subtest: "Quantitative Reasoning",
       score: "-",
       type: "qr",
-      pr: 3
+      pr: 0,
+      data: [],
+      color: '#f098b2'
     },
     {
       key: "4",
       subtest: "Abstract Reasoning",
       score: "-",
       type: "ar",
-      pr: 18
+      pr: 0,
+      data: [],
+      color: '#f098b2'
     },
     {
       key: "5",
       subtest: "Situational Judgement",
       score: "Band -",
       type: 'sr',
-      pr: -7
+      pr: 0,
+      data: [],
+      color: '#f098b2'
     },
   ])
+  const [mine, setMine] = useState<number[]>([])
+  const [scores, setScores] = useState<number[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    if (mockId)
+    if (mockId) {
       getMockData()
+    }
   }, [mockId])
 
+  async function getPackageData(id: any) {
+    try {
+      await setLoading(true)
+      const res = await getpackage(id)
+      if (res.data) {
+        let score = await Object.values(res.data.scores)
+        score = await score?.map(i => { return JSON.parse(i) })
+        setScores(score)
+
+        let mineData = await res.data.mine[0]
+        mineData = await JSON.parse(mineData)
+        await setMine(mineData)
+
+        const predicated: PredicatedDataType[] = await predicatedData
+        for (let i = 0; i < mine?.length; i++) {
+          const percentage = await ((mine[i] * 100) / 44).toFixed(0)
+          predicated[i].pr = percentage
+          predicated[i].color = percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2'
+        }
+        if (score && score?.length > 0) {
+          const verbal = await score?.map(i => { return i[0] })
+          predicated[0].data = verbal
+          const decision = await score?.map(i => { return i[1] })
+          predicated[1].data = decision
+          const quantitative = await score?.map(i => { return i[2] })
+          predicated[2].data = quantitative
+          const abstract = await score?.map(i => { return i[2] })
+          predicated[3].data = abstract
+          const situational = await score?.map(i => { return i[2] })
+          predicated[4].data = situational
+        }
+
+        await setPredicatedData(predicated)
+      }
+      await setLoading(false)
+    } catch (e) {
+      setLoading(false)
+    }
+  }
+
   async function getMockData() {
-    const res = await getSessionDetail(mockId)
-    if (res.data) {
-      setMockData(res.data)
-      const sections = res.data.sections
-      const result = sections.reduce((acc, item) => {
+    try {
+      await setLoading(true)
+      const res = await getSessionDetail(mockId)
+      if (res.data) {
+        await setMockData(res.data)
+        const sections = res.data.sections
+        const result = sections.reduce((acc, item) => {
           acc[item.type] = item.total_score;
           return acc;
-      }, {});
-      const scores = calculateScores([result['VR'], result['QR'], result['AR'], result['DM']]);
-      const  sjtScore = result['SJ'];
-      console.log(result,scores, sjtScore);
-      let tempPredicatedData = predicatedData
-      tempPredicatedData = predicatedData.map((predicatedD, index) => {
-        if (predicatedD.type === 'vr') {
-          predicatedD.score = String(scores[0])
-        } else if (predicatedD.type === 'qr') {
-          predicatedD.score = String(scores[1])
-        } else if (predicatedD.type === 'ar') {
-          predicatedD.score = String(scores[2])
-        } else if(predicatedD.type === 'dm') {
-          predicatedD.score = String(scores[3])
-        } else if(predicatedD.type === 'sr') {
-          predicatedD.score = 'Band '+String(determineSJTband(sjtScore))
-        }
-        return predicatedD
-      })
-      console.log(tempPredicatedData)
-      setPredicatedData(tempPredicatedData);
-      setScoreTableKey((preV) => preV + 10)
+        }, {});
+        const scores = await calculateScores([result['VR'], result['QR'], result['AR'], result['DM']]);
+        const sjtScore = result['SJ'];
+        let tempPredicatedData = await predicatedData
+        tempPredicatedData = await predicatedData.map((predicatedD) => {
+          if (predicatedD.type === 'vr') {
+            predicatedD.score = String(scores[0])
+          } else if (predicatedD.type === 'qr') {
+            predicatedD.score = String(scores[1])
+          } else if (predicatedD.type === 'ar') {
+            predicatedD.score = String(scores[2])
+          } else if (predicatedD.type === 'dm') {
+            predicatedD.score = String(scores[3])
+          } else if (predicatedD.type === 'sr') {
+            predicatedD.score = 'Band ' + String(determineSJTband(sjtScore))
+          }
+          return predicatedD
+        })
+        await setPredicatedData(tempPredicatedData);
+        await setScoreTableKey((preV) => preV + 10)
+        await getPackageData(res.data.package.id)
+      }
+    } catch (error) {
+      setLoading(false)
     }
   }
 
@@ -238,136 +298,157 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         onChange={(e) => setMockId(e)}
       >
         {mocks?.map((item, index) => (
-          <Option key={index} value={item.id}  >{item?.package?.name} - ({moment(item?.started_at).format('MMMM Do YYYY hh:mm A') })</Option>
+          <Option key={index} value={item.id}  >{item?.package?.name} - ({moment(item?.started_at).format('MMMM Do YYYY hh:mm A')})</Option>
         ))}
       </Select>
       {mockId && (
         <div className="completed-mocks">
-        <div className="results">
-          <div className="back-header" onClick={() => setActiveTab('Simulate')} >
-            <ArrowLeftOutlined />
-            <span>Completed Mocks</span>
-          </div>
-          <span className="title">
-            {mockData?.package?.name}
-          </span>
+          <div className="results">
+            <div className="back-header" onClick={() => setActiveTab('Simulate')} >
+              <ArrowLeftOutlined />
+              <span>Completed Mocks</span>
+            </div>
+            <span className="title">
+              {mockData?.package?.name}
+            </span>
 
             {mockData?.sections?.map((item: any, index: number) => {
               const correctAnswers = typeof item?.correct != "undefined" ? item?.correct : 0;
               const partiallyCorrectAnswers = typeof item?.partially_correct != "undefined" ? item?.partially_correct : 0;
               const totalQuestions = item?.questions?.length;
               const incorrect = (totalQuestions - correctAnswers - partiallyCorrectAnswers)
-            return (
-              <div className="question-item" key={index} >
-                <span className="question-title">{item?.name}</span>
-                <div className="progress-bar">
-                  <span className="green" style={{ width: `${(100 * correctAnswers) / totalQuestions}%` }}></span>
-                  <span className="orange" style={{ width: `${(100 * partiallyCorrectAnswers) / totalQuestions}%` }}></span>
-                  <span className="red" style={{ width: `${(100 * incorrect) / totalQuestions}%` }}></span>
-                </div>
-                <Table
-                  columns={columns}
-                  dataSource={[{
-                    key: '1',
-                    questions: `${totalQuestions} questions`,
-                    correct: `${correctAnswers} correct`,
-                    partially_correct: `${partiallyCorrectAnswers} partially correct`,
-                    incorrect: `${incorrect} incorrect`
-                  }]}
-                  pagination={false}
-                  bordered
-                  footer={() => {
-                    return (
-                      <div className="footer-table">
-                        <span className="footer-label">{item?.name}</span>
-                        <div className="footer-value">
-                          {item?.questions?.map((question: any, _index: number) => (
-                            <div
-                              key={mockData?.package?.id}
-                              className={`value ${question?.score === 2 ? 'orange' : question?.score === 3 || question?.score === 1 ? 'green' : 'red'}`}
-                              style={{ backgroundColor: question?.score === 2 ? '#f7c2a0' : question?.score === 3 || question?.score === 1 ? '#a8e2c8' : '#eda2bf' }}
-                              onClick={() => window.open(`${EXAM_APP_URL}/?session_id=${mockId}&question_id=${question?.id}`, "_blank", "noreferrer")}
-                            >
-                              {question?.duration}s
-                            </div>
-                          ))}
+              return (
+                <div className="question-item" key={index} >
+                  <span className="question-title">{item?.name}</span>
+                  <div className="progress-bar">
+                    <span className="green" style={{ width: `${(100 * correctAnswers) / totalQuestions}%` }}></span>
+                    <span className="orange" style={{ width: `${(100 * partiallyCorrectAnswers) / totalQuestions}%` }}></span>
+                    <span className="red" style={{ width: `${(100 * incorrect) / totalQuestions}%` }}></span>
+                  </div>
+                  <Table
+                    columns={columns}
+                    dataSource={[{
+                      key: '1',
+                      questions: `${totalQuestions} questions`,
+                      correct: `${correctAnswers} correct`,
+                      partially_correct: `${partiallyCorrectAnswers} partially correct`,
+                      incorrect: `${incorrect} incorrect`
+                    }]}
+                    pagination={false}
+                    bordered
+                    footer={() => {
+                      return (
+                        <div className="footer-table">
+                          <span className="footer-label">{item?.name}</span>
+                          <div className="footer-value">
+                            {item?.questions?.map((question: any, _index: number) => (
+                              <div
+                                key={mockData?.package?.id}
+                                className={`value ${question?.score === 2 ? 'orange' : question?.score === 3 || question?.score === 1 ? 'green' : 'red'}`}
+                                style={{ backgroundColor: question?.score === 2 ? '#f7c2a0' : question?.score === 3 || question?.score === 1 ? '#a8e2c8' : '#eda2bf' }}
+                                onClick={() => window.open(`${EXAM_APP_URL}/?session_id=${mockId}&question_id=${question?.id}`, "_blank", "noreferrer")}
+                              >
+                                {question?.duration}s
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  }}
-                />
-              </div>
-            )
-          })}
-        </div>
-
-        {/* predicated scores */}
-        <div className="predicated">
-          <div className="label-container">
-            <span className="predicated-label">Predicted Scores</span>
-          </div>
-          <div className="container">
-            <Table
-              key={scoreTableKey}
-              columns={PredicatedColumns}
-              dataSource={predicatedData}
-              pagination={false}
-              bordered
-            />
-            <div className="chart-container">
-              {predicatedData?.map((item, index) => (
-                <div className="chart-item" key={index}>
-                  <span className="chart-label">{item.subtest} {item?.pr}%</span>
-                  <LineChart
-                    xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-                    series={[
-                      {
-                        data: [0, 5.5, 2, 8.5, 1.5, 5],
-                        area: true,
-                        showMark: false,
-                        color: item?.pr > 0 && item?.pr <= 10 ? '#718dd2' : item?.pr > 10 ? '#62a593' : '#e58cab'
-                      },
-                    ]}
-                    width={200}
-                    height={175}
-                    sx={{
-                      '& .MuiMarkElement-root': {
-                        strokeWidth: 1
-                      }
+                      );
                     }}
                   />
                 </div>
-              ))}
-            </div>
+              )
+            })}
           </div>
-          {mockData?.sections && (
+
+          {/* predicated scores */}
+          <div className="predicated">
             <div className="label-container">
-              <span className="predicated-label">Timing Statistics</span>
-            </div>)}
-          {mockData?.sections?.map((item: any, index: number) => {
-            const correct = item?.questions?.filter((i: any) => i?.score === 3 || i?.score === 1)
-            const partially_correct = item?.questions?.filter((i: any) => i?.score === 2)
-            const incorrect = item?.questions?.filter((i: any) => i?.score === 0)
+              <span className="predicated-label">Predicted Scores</span>
+            </div>
+            <div className="container">
+              <Table
+                key={scoreTableKey}
+                columns={PredicatedColumns}
+                dataSource={predicatedData}
+                pagination={false}
+                bordered
+              />
+              {loading
+                ?
+                <Spin />
+                :
+                <div className="chart-container">
+                  {predicatedData && predicatedData?.map((item, index) => {
+                    const total = item.data.length
+                    const lessScore = item?.data?.filter(i => i < mine[index])
+                    const percentage = ((lessScore?.length * 100) / total).toFixed(0)
+                    console.log(percentage, lessScore,total)
+                    return (
+                      <div className="chart-item" key={index}>
+                        <span className="chart-label">{item.subtest} {percentage}%</span>
+                        {item?.data && item?.data?.length > 0 &&
+                          <LineChart
+                            xAxis={[{
+                              // data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]
+                              data: item?.data?.map((i, index) => { return index + 1 }),
+                              label:'Student'
+                            }]}
+                            yAxis={[{ data: item?.data?.map((i, index) => { return index + 1 }),label:'Score' }]}
+                            series={[
+                              {
+                                data: item?.data,
+                                area: true,
+                                showMark: false,
+                                color: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2'
+                              },
+                            ]}
+                            height={175}
+                          >
+                            <ChartsReferenceLine
+                              y={mine[index] ?? 0}
+                              lineStyle={{ strokeWidth: 1.9, stroke: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2' }}
+                              labelStyle={{ fontSize: '10', fill: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2' }}
+                              label={`${mine[index] ?? 0}`}
+                              labelAlign="start"
+                              classes={{ line: 'chart-line', label: 'line-label' }}
+                            />
+                          </LineChart>
+                        }
+                      </div>
+                    )
+                  })}
+                </div>
+              }
+            </div>
+            {mockData?.sections && (
+              <div className="label-container">
+                <span className="predicated-label">Timing Statistics</span>
+              </div>)}
+            {mockData?.sections?.map((item: any, index: number) => {
+              const correct = item?.questions?.filter((i: any) => i?.score === 3 || i?.score === 1)
+              const partially_correct = item?.questions?.filter((i: any) => i?.score === 2)
+              const incorrect = item?.questions?.filter((i: any) => i?.score === 0)
 
-            return (
-              <div className="bar-chart" key={index}>
-                <span className="chart-label">{item?.name}</span>
-                <BarChart
-                  series={[
-                    // { data: item?.questions?.map((i: any) => { return i?.duration }), }
-                    { data: correct?.map((i: any) => { return i?.duration }), label: 'Correct' }, { data: partially_correct?.map((i: any) => { return i?.duration }), label: 'Partially Correct' }, { data: incorrect?.map((i: any) => { return i?.duration }), label: 'Incorrect' }
-                  ]}
-                  height={200}
-                  yAxis={[{ data: item?.questions?.map((i: any) => { return i?.duration }) }]}
-                  xAxis={[{ data: item?.questions?.map((i: any, index: number) => { return index }), scaleType: 'band' }]}
-                  colors={['#a8e2c8', '#f7c2a0', '#eda2bf']}
-                />
-              </div>
-            )
-          })}
+              return (
+                <div className="bar-chart" key={index}>
+                  <span className="chart-label">{item?.name}</span>
+                  <BarChart
+                    series={[
+                      // { data: item?.questions?.map((i: any) => { return i?.duration }), }
+                      { data: correct?.map((i: any) => { return i?.duration }), label: 'Correct' }, { data: partially_correct?.map((i: any) => { return i?.duration }), label: 'Partially Correct' }, { data: incorrect?.map((i: any) => { return i?.duration }), label: 'Incorrect' }
+                    ]}
+                    height={200}
+                    yAxis={[{ data: item?.questions?.map((i: any) => { return i?.duration }) }]}
+                    xAxis={[{ data: item?.questions?.map((i: any, index: number) => { return index }), scaleType: 'band' }]}
+                    colors={['#a8e2c8', '#f7c2a0', '#eda2bf']}
+                  />
+                </div>
+              )
+            })}
 
+          </div>
         </div>
-      </div>
       )}
 
     </div>

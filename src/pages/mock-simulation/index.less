@@ -1,12 +1,13 @@
 @import url("../../components/app/index.less");
 
 .mock-simulation {
-     @media (max-width:767px){
-          .ant-table  {
-               .ant-table-content{
+     @media (max-width:767px) {
+          .ant-table {
+               .ant-table-content {
                     width: 100%;
                     overflow: auto;
-                    tr td, tr th{
+                    tr td,
+                    tr th {
                          padding: 7px 10px;
                     }
                }
@@ -128,17 +129,21 @@
                display: flex;
                flex-direction: row;
                gap: 20px;
-               @media (max-width:1040px){
+
+               @media (max-width:1040px) {
                     flex-direction: column;
                }
+
                .results {
                     width: 60%;
                     display: flex;
                     flex-direction: column;
                     gap: 5px;
-                    @media (max-width:1040px){
+
+                    @media (max-width:1040px) {
                          width: 100%;
                     }
+
                     .back-header {
                          gap: 5px;
                          display: flex;
@@ -180,9 +185,11 @@
 
                          .footer-table {
                               display: flex;
-                              @media (max-width:992px){
+
+                              @media (max-width:992px) {
                                    flex-wrap: wrap;
                               }
+
                               .footer-label {
                                    padding: 15px;
                                    white-space: nowrap;
@@ -194,13 +201,16 @@
                                    display: flex;
                                    flex-wrap: wrap;
                                    grid-gap: 5px;
-                                   @media (max-width:992px){
+
+                                   @media (max-width:992px) {
                                         display: flex;
                                         flex-wrap: wrap;
+
                                         .value {
                                              min-width: 45px;
                                         }
                                    }
+
                                    .value {
                                         min-width: 35px;
                                         min-height: 35px;
@@ -215,18 +225,21 @@
                                         font-weight: 700;
                                         letter-spacing: 0;
                                         cursor: pointer;
-                                        text-shadow: 2px 2px 2px #fff,0 0 1em #fff,0 0 .2em #fff;
+                                        text-shadow: 2px 2px 2px #fff, 0 0 1em #fff, 0 0 .2em #fff;
                                         border: 1px dotted gray;
-                                        &.red{
+
+                                        &.red {
                                              background: url('../../assets/images/red.png') 100% repeat;
                                              background-color: #fff;
                                              background-size: cover;
                                         }
-                                        &.orange{
+
+                                        &.orange {
                                              background: url('../../assets/images/orange.png') 100% repeat;
                                              background-color: #fff;
                                              background-size: cover;
                                         }
+
                                         &:hover {
                                              font-size: 16px;
                                              padding: 0px 6px;
@@ -240,9 +253,11 @@
 
                .predicated {
                     width: 40%;
-                    @media (max-width:1040px){
+
+                    @media (max-width:1040px) {
                          width: 100%;
                     }
+
                     .label-container {
                          border-bottom: 1px solid #f0f0f0;
 
@@ -258,22 +273,26 @@
 
                          .chart-container {
                               display: grid;
-                              grid-template-columns: repeat(2, minmax(0, 1fr));
+                              grid-template-columns: repeat(1, minmax(0, 1fr));
                               justify-content: center;
                               align-items: center;
                               gap: 10px;
                               margin-top: 10px;
-                              @media (max-width:1150px){
+
+                              @media (max-width:1150px) {
                                    grid-template-columns: repeat(1, minmax(0, 1fr));
                                    justify-content: center;
-                                   text-align:center;
-                                   .chart-item{
-                                        text-align:center;
-                                        & > div{
+                                   text-align: center;
+
+                                   .chart-item {
+                                        text-align: center;
+
+                                        &>div {
                                              margin: 0 auto;
                                         }
                                    }
                               }
+
                               .chart-item {
                                    .chart-label {
                                         color: #000;
@@ -290,30 +309,34 @@
           }
      }
 }
-.progress-bar{
+
+.progress-bar {
      display: flex;
      align-items: center;
      gap: 0;
-     span{
+
+     span {
           background-color: #32b878;
           display: inline-block;
           height: 10px;
-          &.orange{
+
+          &.orange {
                background: url('../../assets/images/progress-orange.png') 100% repeat;
                background-color: #fff;
                background-size: contain;
-         }
-         &.red{
-              background: url('../../assets/images/progress-red.png') 100% repeat;
-              background-color: #fff;
-              background-size: contain  ;
-         }
+          }
+
+          &.red {
+               background: url('../../assets/images/progress-red.png') 100% repeat;
+               background-color: #fff;
+               background-size: contain;
+          }
      }
 }
 
 .small-date-time {
-	font-size: 10px;
-	font-style: italic;
+     font-size: 10px;
+     font-style: italic;
 }
 
 .coming-soon {
@@ -331,4 +354,13 @@
      color: #181041;
      font-weight: bolder;
      cursor: not-allowed;
+}
+
+.line-label {
+     font-size: 12px !important;
+     font-weight: bold !important;
+}
+
+.css-2hwitm-MuiAreaElement-root {
+     opacity: .5 !important;
 }
