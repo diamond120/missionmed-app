@@ -42,3 +42,13 @@ export const getSessionDetail = (sessionId: number) => {
     }
     return http.get(`/sessions/${sessionId}`, config);
 }
+
+export const getpackage = (packageId: number) => {
+    const token = `Bearer ${getToken()}`;
+    const config = {
+        headers: {
+            'Authorization': token
+        }
+    }
+    return http.get(`/student/packages/${packageId}`, config);
+}
