@@ -41,9 +41,6 @@ const Index = () => {
     init()
   }, [])
 
-  console.log("availableMocks", availableMocks);
-
-
   async function launchExam(package_id: number) {
     if (examCode) {
       const params = {
@@ -139,9 +136,9 @@ const Index = () => {
                           </div>
                           <div className="btn-group">
                             <Button className={"secondary-button"} >Review</Button>
-                            <Button className={"secondary-button"} onClick={() => {
-                              setActiveTab('Performance')
-                              setSelectedMockId(item.id)
+                            <Button className={"secondary-button"} onClick={async () => {
+                              await setSelectedMockId(item.id)
+                              await setActiveTab('Performance')
                             }}>View Performance</Button>
                           </div>
                         </div>

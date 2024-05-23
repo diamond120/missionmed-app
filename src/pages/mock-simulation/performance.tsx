@@ -182,16 +182,78 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
-    if (mockId) {
-      getMockData()
+    if (selectedMockId) {
+      setMockId(selectedMockId)
     }
+  }, [selectedMockId])
+
+  useEffect(() => {
+    const init = async () => {
+      await setScores([])
+      await setMine([])
+      await getMockData()
+    }
+    init()
   }, [mockId])
 
   async function getPackageData(id: any) {
     try {
       await setLoading(true)
+
       const res = await getpackage(id)
       if (res.data) {
+        await setPredicatedData([
+          {
+            key: "1",
+            subtest: "Verbal Reasoning",
+            score: "-",
+            type: "vr",
+            pr: 0,
+            data: [],
+            packageScore: [],
+            color: '#f098b2'
+          },
+          {
+            key: "2",
+            subtest: "Decision Making",
+            score: "-",
+            type: "dm",
+            pr: 0,
+            data: [],
+            packageScore: [],
+            color: '#f098b2'
+          },
+          {
+            key: "3",
+            subtest: "Quantitative Reasoning",
+            score: "-",
+            type: "qr",
+            pr: 0,
+            data: [],
+            packageScore: [],
+            color: '#f098b2'
+          },
+          {
+            key: "4",
+            subtest: "Abstract Reasoning",
+            score: "-",
+            type: "ar",
+            pr: 0,
+            data: [],
+            packageScore: [],
+            color: '#f098b2'
+          },
+          {
+            key: "5",
+            subtest: "Situational Judgement",
+            score: "Band -",
+            type: 'sr',
+            pr: 0,
+            data: [],
+            packageScore: [],
+            color: '#f098b2'
+          },
+        ])
         let score = await Object.values(res.data.scores)
         score = await score?.map(i => { return JSON.parse(i) })
         setScores(score)
@@ -242,7 +304,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         const scores = await calculateScores([result['VR'], result['QR'], result['AR'], result['DM']]);
         const sjtScore = result['SJ'];
         let tempPredicatedData = await predicatedData
-        tempPredicatedData = await predicatedData.map((predicatedD) => {
+        tempPredicatedData = await predicatedData?.map((predicatedD) => {
           if (predicatedD.type === 'vr') {
             predicatedD.score = String(scores[0])
           } else if (predicatedD.type === 'qr') {
@@ -386,7 +448,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 <Spin />
                 :
                 <div className="chart-container">
-                  {predicatedData && predicatedData?.map((item, index) => {
+                  {predicatedData && (scores?.length > 0 || mine?.length > 0) && predicatedData?.map((item, index) => {
                     const total = item?.packageScore?.length
                     const lessScore = item?.packageScore?.filter(i => i < mine[index])
                     const percentage: number = ((lessScore?.length * 100) / total).toFixed(0)
@@ -398,6 +460,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                         </div>
                         {item?.data && item?.data?.length > 0 &&
                           <LineChart
+                            key={`${index}_${mockId}`}
                             xAxis={[{
                               data: [0, 11, 22, 33, 44],
                               label: 'Score',
