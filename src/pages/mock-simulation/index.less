@@ -6,6 +6,7 @@
                .ant-table-content {
                     width: 100%;
                     overflow: auto;
+
                     tr td,
                     tr th {
                          padding: 7px 10px;
@@ -13,6 +14,7 @@
                }
           }
      }
+
      .ant-alert {
           margin-top: 16px;
 
@@ -294,9 +296,15 @@
                               }
 
                               .chart-item {
-                                   .chart-label {
-                                        color: #000;
-                                        font-size: 12px;
+                                   .chart-heading {
+                                        display: flex;
+                                        flex-direction: column;
+                                        gap: 5px;
+                                        .chart-label {
+                                             color: #000;
+                                             font-size: 14px;
+                                             font-weight: 600;
+                                        }
                                    }
                               }
                          }
