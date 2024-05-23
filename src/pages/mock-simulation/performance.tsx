@@ -25,6 +25,7 @@ interface PredicatedDataType {
   type?: string;
   pr: number
   data: number[]
+  packageScore: number[]
   color: string
 }
 
@@ -132,6 +133,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       type: "vr",
       pr: 0,
       data: [],
+      packageScore: [],
       color: '#f098b2'
     },
     {
@@ -141,6 +143,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       type: "dm",
       pr: 0,
       data: [],
+      packageScore: [],
       color: '#f098b2'
     },
     {
@@ -150,6 +153,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       type: "qr",
       pr: 0,
       data: [],
+      packageScore: [],
       color: '#f098b2'
     },
     {
@@ -159,6 +163,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       type: "ar",
       pr: 0,
       data: [],
+      packageScore: [],
       color: '#f098b2'
     },
     {
@@ -168,6 +173,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       type: 'sr',
       pr: 0,
       data: [],
+      packageScore: [],
       color: '#f098b2'
     },
   ])
@@ -200,17 +206,18 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
           predicated[i].pr = percentage
           predicated[i].color = percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2'
         }
+
         if (score && score?.length > 0) {
-          const verbal = await score?.map(i => { return i[0] })
-          predicated[0].data = verbal
-          const decision = await score?.map(i => { return i[1] })
-          predicated[1].data = decision
-          const quantitative = await score?.map(i => { return i[2] })
-          predicated[2].data = quantitative
-          const abstract = await score?.map(i => { return i[2] })
-          predicated[3].data = abstract
-          const situational = await score?.map(i => { return i[2] })
-          predicated[4].data = situational
+          for (let i = 0; i < predicatedData?.length; i++) {
+            const filterScrore = await score?.map((value: any) => { return value[i] })
+            const userTotal: number[] = []
+            await userTotal.push(filterScrore?.filter(value => value >= 0 && value <= 11)?.length)
+            await userTotal.push(filterScrore?.filter(value => value > 11 && value <= 22)?.length)
+            await userTotal.push(filterScrore?.filter(value => value > 22 && value <= 33)?.length)
+            await userTotal.push(filterScrore?.filter(value => value > 33 && value <= 44)?.length)
+            predicated[i].data = userTotal
+            predicated[i].packageScore = filterScrore
+          }
         }
 
         await setPredicatedData(predicated)
@@ -380,33 +387,44 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 :
                 <div className="chart-container">
                   {predicatedData && predicatedData?.map((item, index) => {
-                    const total = item.data.length
-                    const lessScore = item?.data?.filter(i => i < mine[index])
-                    const percentage = ((lessScore?.length * 100) / total).toFixed(0)
-                    console.log(percentage, lessScore,total)
+                    const total = item?.packageScore?.length
+                    const lessScore = item?.packageScore?.filter(i => i < mine[index])
+                    const percentage: number = ((lessScore?.length * 100) / total).toFixed(0)
                     return (
                       <div className="chart-item" key={index}>
-                        <span className="chart-label">{item.subtest} {percentage}%</span>
+                        <div className="chart-heading" >
+                          <span className="chart-label">{item.subtest}</span>
+                          <span className="">{`You performed better than ${percentage}% of the cohort.`}</span>
+                        </div>
                         {item?.data && item?.data?.length > 0 &&
                           <LineChart
                             xAxis={[{
-                              // data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]
-                              data: item?.data?.map((i, index) => { return index + 1 }),
-                              label:'Student'
+                              data: [0, 11, 22, 33, 44],
+                              label: 'Score',
+                              valueFormatter: (value, context) =>
+                                value >= 0 && value <= 11 && context.location === 'tooltip'
+                                  ? '0 - 11'
+                                  : value >= 12 && value <= 22 && context.location === 'tooltip' ?
+                                    '12 - 22'
+                                    : value >= 23 && value <= 33 && context.location === 'tooltip' ?
+                                      '23 - 33'
+                                      : value >= 34 && value <= 44 && context.location === 'tooltip' ?
+                                        '34 - 44'
+                                        : String(value),
                             }]}
-                            yAxis={[{ data: item?.data?.map((i, index) => { return index + 1 }),label:'Score' }]}
+                            yAxis={[{ data: item?.data?.map((i, index) => { return index + 1 }), label: 'Student' }]}
                             series={[
                               {
-                                data: item?.data,
+                                data: item.data,
                                 area: true,
                                 showMark: false,
                                 color: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2'
                               },
                             ]}
-                            height={175}
+                            height={180}
                           >
                             <ChartsReferenceLine
-                              y={mine[index] ?? 0}
+                              x={mine[index] ?? 0}
                               lineStyle={{ strokeWidth: 1.9, stroke: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2' }}
                               labelStyle={{ fontSize: '10', fill: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2' }}
                               label={`${mine[index] ?? 0}`}
