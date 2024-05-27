@@ -413,8 +413,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                             {item?.questions?.map((question: any, _index: number) => (
                               <div
                                 key={mockData?.package?.id}
-                                className={`value ${question?.score === 2 ? 'orange' : question?.score === 3 || question?.score === 1 ? 'green' : 'red'}`}
-                                style={{ backgroundColor: question?.score === 2 ? '#f7c2a0' : question?.score === 3 || question?.score === 1 ? '#a8e2c8' : '#eda2bf' }}
+                                className={`value ${question.score === 2 || (question.type === 'MC' && question.score === 1) ? 'green' : item.type === 'DD' && question.score === 1 ? 'orange' : 'red'}`}
+                                style={{ backgroundColor: question.score === 2 || (question.type === 'MC' && question.score === 1) ? '#a8e2c8' : item.type === 'DD' && question.score === 1 ? '#f7c2a0' : '#eda2bf' }}
                                 onClick={() => window.open(`${EXAM_APP_URL}/?session_id=${mockId}&question_id=${question?.id}`, "_blank", "noreferrer")}
                               >
                                 {question?.duration}s
@@ -507,8 +507,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 <span className="predicated-label">Timing Statistics</span>
               </div>)}
             {mockData?.sections?.map((item: any, index: number) => {
-              const correct = item?.questions?.filter((i: any) => i?.score === 3 || i?.score === 1)
-              const partially_correct = item?.questions?.filter((i: any) => i?.score === 2)
+              const correct = item?.questions?.filter((i: any) => i.score === 2 || (i.type === 'MC' && i.score === 1))
+              const partially_correct = item?.questions?.filter((i: any) => i.type === 'DD' && i.score === 1)
               const incorrect = item?.questions?.filter((i: any) => i?.score === 0)
 
               return (
