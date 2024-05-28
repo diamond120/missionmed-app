@@ -123,7 +123,7 @@ interface Props {
 
 function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   const [mockId, setMockId] = useState<number>(selectedMockId)
-  const [mockData, setMockData] = useState<any>()
+  const [mockData, setMockData] = useState<any>([])
   const [scoreTableKey, setScoreTableKey] = useState<number>(52)
   const [predicatedData, setPredicatedData] = useState<PredicatedDataType[]>([
     {
@@ -254,12 +254,11 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
             color: '#f098b2'
           },
         ])
-        let score = await Object.values(res.data.scores)
-        score = await score?.map(i => { return JSON.parse(i) })
-        setScores(score)
+        let score = await res.data.scores?.length > 0 ? Object.values(res.data.scores) : []
+        score = await score?.map((i: any) => { return JSON.parse(i) })
 
-        let mineData = await res.data.mine[0]
-        mineData = await JSON.parse(mineData)
+        let mineData = await res.data.mine?.length > 0 ? res.data.mine[0] : []
+        mineData = await mineData?.length > 0 ? JSON.parse(mineData) : []
         await setMine(mineData)
 
         const predicated: PredicatedDataType[] = await predicatedData
@@ -286,6 +285,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
       }
       await setLoading(false)
     } catch (e) {
+      console.log(e)
       setLoading(false)
     }
   }
@@ -293,6 +293,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   async function getMockData() {
     try {
       await setLoading(true)
+      await setMockData([])
       const res = await getSessionDetail(mockId)
       if (res.data) {
         await setMockData(res.data)
@@ -413,8 +414,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                             {item?.questions?.map((question: any, _index: number) => (
                               <div
                                 key={mockData?.package?.id}
-                                className={`value ${question.score === 2 || (question.type === 'MC' && question.score === 1) ? 'green' : item.type === 'DD' && question.score === 1 ? 'orange' : 'red'}`}
-                                style={{ backgroundColor: question.score === 2 || (question.type === 'MC' && question.score === 1) ? '#a8e2c8' : item.type === 'DD' && question.score === 1 ? '#f7c2a0' : '#eda2bf' }}
+                                className={`value ${question.score === 2 || (question.type === 'MC' && question.score === 1) ? 'green' : question.type === 'DD' && question.score === 1 ? 'orange' : 'red'}`}
+                                style={{ backgroundColor: question.score === 2 || (question.type === 'MC' && question.score === 1) ? '#a8e2c8' : question.type === 'DD' && question.score === 1 ? '#f7c2a0' : '#eda2bf' }}
                                 onClick={() => window.open(`${EXAM_APP_URL}/?session_id=${mockId}&question_id=${question?.id}`, "_blank", "noreferrer")}
                               >
                                 {question?.duration}s
@@ -448,10 +449,10 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 <Spin />
                 :
                 <div className="chart-container">
-                  {predicatedData && (scores?.length > 0 || mine?.length > 0) && predicatedData?.map((item, index) => {
+                  {predicatedData?.map((item, index) => {
                     const total = item?.packageScore?.length
-                    const lessScore = item?.packageScore?.filter(i => i < mine[index])
-                    const percentage: number = ((lessScore?.length * 100) / total).toFixed(0)
+                    const lessScore = mine?.length > 0 ? item?.packageScore?.filter(i => i < mine[index]) : []
+                    const percentage: number | string = ((lessScore?.length * 100) / total).toFixed(0)
                     return (
                       <div className="chart-item" key={index}>
                         <div className="chart-heading" >
@@ -487,10 +488,10 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                             height={180}
                           >
                             <ChartsReferenceLine
-                              x={mine[index] ?? 0}
+                              x={mine?.length > 0 ? mine[index] : 0}
                               lineStyle={{ strokeWidth: 1.9, stroke: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2' }}
                               labelStyle={{ fontSize: '10', fill: percentage >= 90 ? '#97dbbb' : percentage < 90 && percentage >= 70 ? '#ffb67f' : '#f098b2' }}
-                              label={`${mine[index] ?? 0}`}
+                              label={`${mine?.length > 0 ? mine[index] : ''}`}
                               labelAlign="start"
                               classes={{ line: 'chart-line', label: 'line-label' }}
                             />
