@@ -345,11 +345,11 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
           if (predicatedD.type === "vr") {
             predicatedD.score = String(scores[0]);
           } else if (predicatedD.type === "qr") {
-            predicatedD.score = String(scores[1]);
-          } else if (predicatedD.type === "ar") {
             predicatedD.score = String(scores[2]);
-          } else if (predicatedD.type === "dm") {
+          } else if (predicatedD.type === "ar") {
             predicatedD.score = String(scores[3]);
+          } else if (predicatedD.type === "dm") {
+            predicatedD.score = String(scores[1]);
           } else if (predicatedD.type === "sr") {
             predicatedD.score = "Band " + String(determineSJTband(sjtScore));
           }
