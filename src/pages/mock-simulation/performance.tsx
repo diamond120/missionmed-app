@@ -383,10 +383,19 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
             </span>
 
             {mockData?.sections?.map((item: any, index: number) => {
-              const correctAnswers = typeof item?.correct != "undefined" ? item?.correct : 0;
-              const partiallyCorrectAnswers = typeof item?.partially_correct != "undefined" ? item?.partially_correct : 0;
               const totalQuestions = item?.questions?.length;
-              const incorrect = (totalQuestions - correctAnswers - partiallyCorrectAnswers)
+              let correctAnswers = 0;
+              let partiallyCorrectAnswers = 0;
+              let incorrect = 0;
+              item.questions.forEach(question => {
+                if ((question.score == 1 && question.type == "MC") || question.score == 2) {
+                  correctAnswers++;
+                } else if (question.score == 1 && question.type == "DD") {
+                  partiallyCorrectAnswers++;
+                } else if (question.score == 0) {
+                  incorrect++;
+                }
+              });
               return (
                 <div className="question-item" key={index} >
                   <span className="question-title">{item?.name}</span>
