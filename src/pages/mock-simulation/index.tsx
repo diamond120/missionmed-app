@@ -180,7 +180,7 @@ const Index = () => {
                     <Row gutter={20}>
                       <Col md={24} xl={12}>
                           <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Verbal Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4')}>
-                            <img src="/src/assets/images/VR.png" className="w-full" alt="" />
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/VR.png" className="w-full" alt="" />
                           </Button>
                       </Col>
                     </Row>
@@ -207,12 +207,12 @@ const Index = () => {
                     <Row gutter={20}>
                       <Col md={24} xl={12}> 
                           <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/DM/DM+2+FINAL.mov')}>
-                            <img src="/src/assets/images/DM.png" className="w-full" alt="" />
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/DM.png" className="w-full" alt="" />
                           </Button>
                       </Col>
                       <Col md={24} xl={12}>
                           <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/DM/New+DM+1.mp4')}>
-                            <img src="/src/assets/images/DM2.png" className="w-full" alt="" />
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/DM2.png" className="w-full" alt="" />
                           </Button>
                       </Col>
                     </Row>
@@ -224,7 +224,7 @@ const Index = () => {
                       <Row gutter={20}>
                         <Col md={24} xl={12}> 
                           <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Quantitative Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/QR/QR+Solutions+(USE+THIS)+(FINAL)(1).mp4')}>
-                          <img src="/src/assets/images/QR.png" className="w-full" alt="" />
+                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/QR.png" className="w-full" alt="" />
                           </Button>
                         </Col>
                       </Row>
@@ -234,12 +234,12 @@ const Index = () => {
                       <Row gutter={20}>
                         <Col md={24} xl={12}> 
                           <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/AR/AR-LAST+BIT+FINAL.mp4')}>
-                          <img src="/src/assets/images/AR.png" className="w-full" alt="" />
+                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/AR.png" className="w-full" alt="" />
                             </Button>
                         </Col>
                         <Col md={24} xl={12}> 
                           <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/AR/AR-Part-1.mp4')}>
-                          <img src="/src/assets/images/AR2.png" className="w-full" alt="" />
+                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/AR2.png" className="w-full" alt="" />
                             </Button>
                         </Col>
                       </Row>
@@ -249,7 +249,7 @@ const Index = () => {
                       <Row gutter={20}>
                         <Col md={24} xl={12}> 
                             <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Situational Judgement','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/SJT/SJT+Solutions.mp4')}>
-                            <img src="/src/assets/images/SJT.png" className="w-full" alt="" />
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/SJT.png" className="w-full" alt="" />
                             </Button>
                         </Col>
                       </Row>
