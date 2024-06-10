@@ -372,3 +372,39 @@
 .css-2hwitm-MuiAreaElement-root {
      opacity: .5 !important;
 }
+.video-player{
+     border-radius: 10px;
+}
+.subTabs{
+     .w-full{
+          width: 100%;
+     }
+     .videoplay-btn{
+          height: auto;
+          background-color: transparent;
+          padding: 0;
+          border-radius: 10px;
+          &:focus, &:hover{
+               background-color: transparent;
+               box-shadow: none;
+          }
+     }
+     .videoplay-btn{
+          img{
+               border-radius: 10px;
+          }
+     }
+     .ant-row{
+          .ant-col:not(:last-child){
+               margin-bottom: 20px;
+          }
+     }
+}
+.upc-agenda{
+     &.con-box{
+          margin-top: 25px;
+          @media (max-width:767px){
+               margin-top: 20px;
+          }
+     }
+}
