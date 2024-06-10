@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { HomeOutlined, InfoCircleFilled, LockOutlined } from "@ant-design/icons";
-import { Alert, Breadcrumb, message } from "antd";
+import { Alert, Breadcrumb, Col, Row, message } from "antd";
 import Section from "../../components/shared-ui/Section";
-import { Button, Input, Tabs } from "antd";
+import { Button, Input, Tabs, Modal} from "antd";
 import "./index.less";
 import Performance from "./performance";
 import { createSession, getSessions, getPackages } from "../../api/services/MockSimulation";
@@ -10,6 +10,8 @@ import { EXAM_APP_URL, APP_URL } from '../../config/app-config'
 import { useUser } from "../../api/providers/UserProvider";
 import { Session } from "./types";
 import moment from "moment";
+
+
 
 const Index = () => {
   const { TabPane } = Tabs;
@@ -20,9 +22,12 @@ const Index = () => {
   const [examCode, setExamCode] = useState<string | number>('')
   const [examCodeIndex, setExamCodeIndex] = useState<number>()
   const [selectedMockId, setSelectedMockId] = useState<number>()
+  const [open, setOpen] = useState(false);
+  const [video, setVideo] = useState('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4');
+  const [videotitle, setVideoTitle] = useState('Verbal Reasoning');
 
   const user = useUser();
-
+  const vidRef = useRef(null);
   useEffect(() => {
     const init = async () => {
       const resAvailable = await getPackages()
@@ -62,6 +67,18 @@ const Index = () => {
       message.error('Please enter exam code')
   }
 
+  const handlePlayVideo = async (title,url) => {
+    await setOpen(true)
+    await setVideoTitle(title)
+    await setVideo(url);
+    await vidRef.current.play();
+  }
+
+  useEffect(()=>{
+    if(!open && vidRef.current)
+      vidRef.current.pause()
+  },[open])
+
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -76,9 +93,10 @@ const Index = () => {
           <div className="flex">
             <h2 className={"tab-title"}>Mock Simulation</h2>
           </div>
-          <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
+          <div className={"upc-agenda con-box"}>
             <h2 className={"secondary-title"}>UCAT Simulation Mocks </h2>
             <Tabs defaultActiveKey={'Simulate'} activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
+              
               <TabPane tab={"Simulate"} key={"Simulate"}>
                 <div className={"upcoming-sessions"}>
                   <Alert
@@ -148,20 +166,99 @@ const Index = () => {
                   }
                 </div>
               </TabPane>
+              
               <TabPane tab={"Performance"} key={"Performance"}>
                 <Performance mocks={mocks} selectedMockId={selectedMockId} setActiveTab={setActiveTab} />
               </TabPane>
-              <TabPane tab={"Review"} key={"Review"}>
-                <div
-                  className={"personality-tutor-wrap"}
-                  style={{ position: "relative", width: "max-content" }}
-                >
-                  <img alt={"example"} src="/src/assets/images/mock-simulation-review.png" width={600}  />
-                  <div className={"coming-soon"} style={{}}>
-                    <span className="freeze-span">Coming Soon</span>
-                  </div>
-                </div>
+
+              <TabPane tab={"Review"} key={"Review"} className="subTabs">
+
+                  <Tabs defaultActiveKey={'verbalReasoning'}>
+                    
+                    <TabPane tab={"Verbal Reasoning"} key={"verbalReasoning"}>
+
+                    <Row gutter={20}>
+                      <Col md={24} xl={12}>
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Verbal Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4')}>
+                            <img src="/src/assets/images/VR.png" className="w-full" alt="" />
+                          </Button>
+                      </Col>
+                    </Row>
+
+                      <Modal
+                        title={videotitle}
+                        centered
+                        open={open}
+                        onOk={() => setOpen(false)}
+                        onCancel={() => setOpen(false)}
+                        width={1000}
+                        footer={null}
+                      >
+                        <video ref={vidRef} key={video} width="100%" controls autoPlay className="video-player">
+                          <source src={video} type="video/mp4" />
+                          Your browser does not support HTML video.
+                        </video>
+
+                      </Modal>
+                              
+                    </TabPane>
+
+                    <TabPane tab={"Decision Making"} key={"decisionMaking"}>
+                    <Row gutter={20}>
+                      <Col md={24} xl={12}> 
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/DM/DM+2+FINAL.mov')}>
+                            <img src="/src/assets/images/DM.png" className="w-full" alt="" />
+                          </Button>
+                      </Col>
+                      <Col md={24} xl={12}>
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/DM/New+DM+1.mp4')}>
+                            <img src="/src/assets/images/DM2.png" className="w-full" alt="" />
+                          </Button>
+                      </Col>
+                    </Row>
+
+
+                    </TabPane>
+                    
+                    <TabPane tab={"Quantitative Reasoning"} key={"quantitativeReasoning"}>
+                      <Row gutter={20}>
+                        <Col md={24} xl={12}> 
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Quantitative Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/QR/QR+Solutions+(USE+THIS)+(FINAL)(1).mp4')}>
+                          <img src="/src/assets/images/QR.png" className="w-full" alt="" />
+                          </Button>
+                        </Col>
+                      </Row>
+                    </TabPane>
+                    
+                    <TabPane tab={"Abstract Reasoning"} key={"abstractReasoning"}>
+                      <Row gutter={20}>
+                        <Col md={24} xl={12}> 
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/AR/AR-LAST+BIT+FINAL.mp4')}>
+                          <img src="/src/assets/images/AR.png" className="w-full" alt="" />
+                            </Button>
+                        </Col>
+                        <Col md={24} xl={12}> 
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/AR/AR-Part-1.mp4')}>
+                          <img src="/src/assets/images/AR2.png" className="w-full" alt="" />
+                            </Button>
+                        </Col>
+                      </Row>
+                    </TabPane>
+                    
+                    <TabPane tab={"Situational Judgement"} key={"situationalJudgement"}>
+                      <Row gutter={20}>
+                        <Col md={24} xl={12}> 
+                            <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Situational Judgement','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/SJT/SJT+Solutions.mp4')}>
+                            <img src="/src/assets/images/SJT.png" className="w-full" alt="" />
+                            </Button>
+                        </Col>
+                      </Row>
+                    </TabPane>
+
+                  </Tabs> 
+                  
               </TabPane>
+              
             </Tabs>
           </div>
         </div>
