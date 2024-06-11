@@ -707,7 +707,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             {title}
           </Button>
         ) : (
-          <Button className={"primary-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
+          <Button className={"primary-button disable-button"} disabled={credit == 0 || credit == '' || credit == undefined} onClick={showModal}>
             {title}
           </Button>)
       }
