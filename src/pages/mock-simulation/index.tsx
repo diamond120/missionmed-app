@@ -13,9 +13,6 @@ import moment from "moment";
 import {PlayCircleFilled } from '@ant-design/icons';
 import { Typography } from 'antd';
 
-
-
-
 const Index = () => {
   const { TabPane } = Tabs;
   const [availableMocks, setAvailableMocks] = useState<Array<Session>>([])
