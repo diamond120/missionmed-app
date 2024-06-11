@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { HomeOutlined, InfoCircleFilled, LockOutlined } from "@ant-design/icons";
-import { Alert, Breadcrumb, Col, Row, message } from "antd";
+import { Alert, Breadcrumb, Col, Row, Select, message } from "antd";
 import Section from "../../components/shared-ui/Section";
 import { Button, Input, Tabs, Modal} from "antd";
 import "./index.less";
@@ -11,6 +11,8 @@ import { useUser } from "../../api/providers/UserProvider";
 import { Session } from "./types";
 import moment from "moment";
 import {PlayCircleFilled } from '@ant-design/icons';
+import { Typography } from 'antd';
+
 
 
 
@@ -26,7 +28,8 @@ const Index = () => {
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4');
   const [videotitle, setVideoTitle] = useState('Verbal Reasoning');
-
+  const [mockId, setMockId] = useState<number>(selectedMockId);
+  const { Title } = Typography;
   const user = useUser();
   const vidRef = useRef(null);
   useEffect(() => {
@@ -154,7 +157,10 @@ const Index = () => {
                             <div className="small-date-time">({moment(item?.started_at).format('dddd, MMMM Do YYYY hh:mm A') })</div>
                           </div>
                           <div className="btn-group">
-                            <Button className={"secondary-button"} >Review</Button>
+                            <Button className={"secondary-button"} onClick={async () => {
+                              await setMockId(item.id)
+                              await setActiveTab('Review')
+                            }}>Review</Button>
                             <Button className={"secondary-button"} onClick={async () => {
                               await setSelectedMockId(item.id)
                               await setActiveTab('Performance')
@@ -173,15 +179,30 @@ const Index = () => {
               </TabPane>
 
               <TabPane tab={"Review"} key={"Review"} className="subTabs">
+                <Select
+                  placeholder="Select"
+                  style={{ width: 328 }}
+                  value={mockId}
+                  onChange={(e) => setMockId(e)}
+                >
+                  {mocks?.map((item, index) => (
+                    <Option key={index} value={item.id}>
+                      {item?.package?.name} - (
+                      {moment(item?.started_at).format("MMMM Do YYYY hh:mm A")})
+                    </Option>
+                  ))}
+                </Select>
+                 
 
-                  <Tabs defaultActiveKey={'verbalReasoning'}>
-                    
+                  {mocks?.filter((item) => mockId === item.id && item.package_id === 28 ).length > 0 ? (
+                    <Tabs defaultActiveKey={'verbalReasoning'}>
+                      
                     <TabPane tab={"Verbal Reasoning"} key={"verbalReasoning"}>
 
                     <Row gutter={20}>
                       <Col md={24} xl={12}>
-                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Verbal Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4')}>
-                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/VR.png" className="w-full" alt="" />
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Verbal Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/VR/VR.mp4')}>
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/VR.png" className="w-full" alt="" />
                             <PlayCircleFilled />
                           </Button>
                       </Col>
@@ -207,15 +228,15 @@ const Index = () => {
 
                     <TabPane tab={"Decision Making"} key={"decisionMaking"}>
                     <Row gutter={20}>
-                      <Col md={24} xl={12}> 
-                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/DM/DM+2+FINAL.mov')}>
-                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/DM.png" className="w-full" alt="" />
+                        <Col md={24} xl={12}>
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/DM/New+DM+1.mp4')}>
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/DM2.png" className="w-full" alt="" />
                             <PlayCircleFilled />
                           </Button>
                       </Col>
-                      <Col md={24} xl={12}>
-                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/DM/New+DM+1.mp4')}>
-                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/DM2.png" className="w-full" alt="" />
+                      <Col md={24} xl={12}> 
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/DM/DM+2+FINAL.mov')}>
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/DM.png" className="w-full" alt="" />
                             <PlayCircleFilled />
                           </Button>
                       </Col>
@@ -227,8 +248,8 @@ const Index = () => {
                     <TabPane tab={"Quantitative Reasoning"} key={"quantitativeReasoning"}>
                       <Row gutter={20}>
                         <Col md={24} xl={12}> 
-                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Quantitative Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/QR/QR+Solutions+(USE+THIS)+(FINAL)(1).mp4')}>
-                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/QR.png" className="w-full" alt="" />
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Quantitative Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/QR/QR+Solutions+(USE+THIS)+(FINAL)(1).mp4')}>
+                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/QR.png" className="w-full" alt="" />
                           <PlayCircleFilled />
                           </Button>
                         </Col>
@@ -238,15 +259,15 @@ const Index = () => {
                     <TabPane tab={"Abstract Reasoning"} key={"abstractReasoning"}>
                       <Row gutter={20}>
                         <Col md={24} xl={12}> 
-                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/AR/AR-LAST+BIT+FINAL.mp4')}>
-                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/AR.png" className="w-full" alt="" />
-                          <PlayCircleFilled />
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/AR/AR-Part-1.mp4')}>
+                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/AR2.png" className="w-full" alt="" />
+                            <PlayCircleFilled />
                             </Button>
                         </Col>
                         <Col md={24} xl={12}> 
-                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/AR/AR-Part-1.mp4')}>
-                            <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/AR2.png" className="w-full" alt="" />
-                            <PlayCircleFilled />
+                          <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/AR/AR-LAST+BIT+FINAL.mp4')}>
+                          <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/AR.png" className="w-full" alt="" />
+                          <PlayCircleFilled />
                             </Button>
                         </Col>
                       </Row>
@@ -255,8 +276,8 @@ const Index = () => {
                     <TabPane tab={"Situational Judgement"} key={"situationalJudgement"}>
                       <Row gutter={20}>
                         <Col md={24} xl={12}> 
-                            <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Situational Judgement','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/SJT/SJT+Solutions.mp4')}>
-                              <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/images/SJT.png" className="w-full" alt="" />
+                            <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Situational Judgement','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/SJT/SJT+Solutions.mp4')}>
+                              <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-I-Official/images/SJT.png" className="w-full" alt="" />
                               <PlayCircleFilled />
                             </Button>
                         </Col>
@@ -264,7 +285,10 @@ const Index = () => {
                     </TabPane>
 
                   </Tabs> 
-                  
+                    ):(
+                      <Alert message="No Review Added" type="info" showIcon />
+                    ) 
+                  } 
               </TabPane>
               
             </Tabs>
