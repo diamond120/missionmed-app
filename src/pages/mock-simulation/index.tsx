@@ -83,8 +83,6 @@ const Index = () => {
       vidRef.current.pause()
   },[open])
 
-  // console.log('%cLod','color:#ea580c;font-size:20px;font-weight:bold;');
-  // console.log(mocks?.filter((item, index) => mockId === item.id && item.package_id === 18 ));
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -196,7 +194,7 @@ const Index = () => {
                 </Select>
                  
 
-                  {mocks?.filter((item) => mockId === item.id && item.package_id === 18 ).length > 0 ? (
+                  {mocks?.filter((item) => mockId === item.id && item.package_id === 28 ).length > 0 ? (
                     <Tabs defaultActiveKey={'verbalReasoning'}>
                       
                     <TabPane tab={"Verbal Reasoning"} key={"verbalReasoning"}>
