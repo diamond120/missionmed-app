@@ -22,6 +22,7 @@
     "@mui/material": "^5.15.18",
     "@mui/x-charts": "^7.5.0",
     "@tinymce/tinymce-react": "^4.3.2",
+    "@vitejs/plugin-react": "^4.2.1",
     "antd": "4.24.14",
     "axios": "^1.5.0",
     "express": "^4.18.2",
@@ -29,6 +30,7 @@
     "react": "^18.2.0",
     "react-credit-cards": "^0.8.3",
     "react-dom": "^18.2.0",
+    "react-papaparse": "^4.4.0",
     "react-responsive": "^9.0.2",
     "react-router-dom": "^6.15.0",
     "react-select": "^5.7.4",
@@ -36,8 +38,7 @@
     "react-timezone-select": "^2.1.2",
     "vite-plugin-svgr": "^3.2.0",
     "wtf-plugin-api": "^2.0.0",
-    "wtf_wikipedia": "^10.3.0",
-    "@vitejs/plugin-react": "^4.2.1"
+    "wtf_wikipedia": "^10.3.0"
   },
   "proxy": "http://192.168.1.125:8081",
   "devDependencies": {
