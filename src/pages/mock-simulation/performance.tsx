@@ -634,8 +634,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 </div>
                 <div className="value" >
                   <span>Rank {rank}</span>
-                  <div className="divider" />
-                  <span>{prOfBetterPerformed}%tile</span>
+                  {/* <div className="divider" />
+                  <span>{prOfBetterPerformed}%tile</span> */}
                 </div>
 
                 <div className="tip-label" >
