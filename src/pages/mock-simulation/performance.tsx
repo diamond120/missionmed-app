@@ -1,7 +1,7 @@
 import { Select, Spin, TableProps } from "antd";
 import { Option } from "antd/lib/mentions";
-import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Table } from "antd";
+import { ArrowLeftOutlined, QuestionCircleFilled, SignalFilled } from "@ant-design/icons";
+import { Table, Tooltip } from "antd";
 import { Session } from "./types";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { BarChart } from "@mui/x-charts/BarChart";
@@ -13,6 +13,9 @@ import {
 import { EXAM_APP_URL } from "../../config/app-config";
 import moment from "moment";
 import { ChartsReferenceLine } from "@mui/x-charts/ChartsReferenceLine";
+import { Button } from 'antd';
+import Papa from 'papaparse';
+
 interface VerbalDataType {
   key: string;
   questions: string;
@@ -190,6 +193,10 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   const [mine, setMine] = useState<number[]>([]);
   const [scores, setScores] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [totalScaledScore, setTotalScaledScore] = useState<number>(0)
+  const [rank, setRank] = useState<number>(0)
+  const [prOfBetterPerformed, setPrOfBetterPerformed] = useState<number | string>(0)
+  const [UCATPR, setUCATPR] = useState<number>(0)
 
   useEffect(() => {
     if (selectedMockId) {
@@ -205,6 +212,42 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     };
     init();
   }, [mockId]);
+
+  useEffect(() => {
+    if (totalScaledScore > 0)
+      getLastYearData()
+  }, [totalScaledScore])
+
+  async function getLastYearData() {
+    const response: any = await fetch('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/Official+UCAT+Statistics.csv');
+    const reader = response.body.getReader();
+    const result = await reader.read();
+    const decoder = new TextDecoder('utf-8');
+    const csv = decoder.decode(result.value);
+
+    await Papa.parse(csv, {
+      header: true,
+      complete: async (results) => {
+        const data: any = results.data;
+        const header: any = results.meta.fields
+        if (data?.length > 0 && header) {
+          const lastScore = await data?.findIndex((i: any) => i[header[0]] === '')
+          if (totalScaledScore < Number(data[0]?.[header[0]]))
+            await setUCATPR(0)
+          else if (totalScaledScore > Number(data[(lastScore - 1)]?.[header[0]]))
+            await setUCATPR(100)
+          else {
+            const percentage = await data.reduce((a: any, b: any) => (
+              b?.[header[0]] <= totalScaledScore && b?.[header[0]] >= a?.[header[0]]
+                ? b
+                : a
+            ), { [header[0]]: -Infinity })
+            await setUCATPR(percentage?.[header[1]])
+          }
+        }
+      },
+    });
+  }
 
   async function getPackageData(id: any) {
     try {
@@ -285,11 +328,45 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
             percentage >= 90
               ? "#97dbbb"
               : percentage < 90 && percentage >= 70
-              ? "#ffb67f"
-              : "#f098b2";
+                ? "#ffb67f"
+                : "#f098b2";
         }
 
         if (score && score?.length > 0) {
+          // calculate rank
+          let usersRankScores: number[] = []
+          usersRankScores = await score?.map((i: any) => {
+            let userTotal = 0
+            i?.map((value: any) => {
+              userTotal += Number(value)
+            })
+            return userTotal
+          })
+          await usersRankScores.sort(function (a, b) { return b - a })
+          let mineTotalScore = 0
+          await mineData?.map((i: any) => mineTotalScore += i)
+
+          const totalUser = usersRankScores
+          usersRankScores = await usersRankScores.filter(function (item, index, inputArray) {
+            return inputArray.indexOf(item) == index;
+          });
+
+          const rank = await usersRankScores?.findIndex((i) => i == mineTotalScore)
+          setRank((rank + 1))
+
+          //what percentage of people you did better than.
+          const lessScore =
+            mineData?.length > 0
+              ? totalUser?.filter((i) => i < mineTotalScore)
+              : [];
+          const percentage: number | string = await (
+            (lessScore?.length * 100) /
+            totalUser?.length
+          ).toFixed(0);
+
+          setPrOfBetterPerformed(percentage)
+
+          //Relative Performance chart calculation
           for (let i = 0; i < predicatedData?.length; i++) {
             const filterScrore = await score?.map((value: any) => {
               return value[i];
@@ -341,20 +418,26 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         ]);
         const sjtScore = result["SJ"];
         let tempPredicatedData = await predicatedData;
+        let total = 0
         tempPredicatedData = await predicatedData?.map((predicatedD) => {
           if (predicatedD.type === "vr") {
             predicatedD.score = String(scores[0]);
+            total += scores[0]
           } else if (predicatedD.type === "qr") {
             predicatedD.score = String(scores[2]);
+            total += scores[2]
           } else if (predicatedD.type === "ar") {
             predicatedD.score = String(scores[3]);
+            total += scores[3]
           } else if (predicatedD.type === "dm") {
             predicatedD.score = String(scores[1]);
+            total += scores[1]
           } else if (predicatedD.type === "sr") {
             predicatedD.score = "Band " + String(determineSJTband(sjtScore));
           }
           return predicatedD;
         });
+        await setTotalScaledScore(total)
         await setPredicatedData(tempPredicatedData);
         await setScoreTableKey((preV) => preV + 10);
         await getPackageData(res.data.package.id);
@@ -457,9 +540,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                     <span
                       className="orange"
                       style={{
-                        width: `${
-                          (100 * partiallyCorrectAnswers) / totalQuestions
-                        }%`,
+                        width: `${(100 * partiallyCorrectAnswers) / totalQuestions
+                          }%`,
                       }}
                     ></span>
                     <span
@@ -491,26 +573,25 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                               (question: any, _index: number) => (
                                 <div
                                   key={mockData?.package?.id}
-                                  className={`value ${
-                                    question.score === 2 ||
+                                  className={`value ${question.score === 2 ||
                                     (question.type === "MC" &&
                                       question.score === 1)
-                                      ? "green"
-                                      : question.type === "DD" &&
-                                        question.score === 1
+                                    ? "green"
+                                    : question.type === "DD" &&
+                                      question.score === 1
                                       ? "orange"
                                       : "red"
-                                  }`}
+                                    }`}
                                   style={{
                                     backgroundColor:
                                       question.score === 2 ||
-                                      (question.type === "MC" &&
-                                        question.score === 1)
+                                        (question.type === "MC" &&
+                                          question.score === 1)
                                         ? "#a8e2c8"
                                         : question.type === "DD" &&
                                           question.score === 1
-                                        ? "#f7c2a0"
-                                        : "#eda2bf",
+                                          ? "#f7c2a0"
+                                          : "#eda2bf",
                                   }}
                                   onClick={() =>
                                     window.open(
@@ -534,8 +615,56 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
             })}
           </div>
 
-          {/* predicated scores */}
           <div className="predicated">
+            {/* UCAT Percentile */}
+            {(mockData?.completed === 1 || mockData?.completed === '1' || mockData?.completed === true) &&
+              <div className="ucat-pr">
+                <div className="label-container">
+                  <span className="predicated-ucat-label">UCAT Percentile</span>
+                </div>
+                <div className="ucat-label">
+                  <span>The MissionMed cohort percentile is only valid at the end of the exam period of which you will be notified.</span>
+                </div>
+
+                <div className="tip-label" >
+                  <span>Relative to MissionMed Cohort</span>
+                  <Tooltip placement="rightTop" title="This is a percentile calculated relative to the rest of the MissionMed cohort. It represents what percentage of people you did better than.">
+                    <QuestionCircleFilled />
+                  </Tooltip>
+                </div>
+                <div className="value" >
+                  <span>Rank {rank}</span>
+                  <div className="divider" />
+                  <span>{prOfBetterPerformed}%tile</span>
+                </div>
+
+                <div className="tip-label" >
+                  <span>Total Cognitive Scaled Score</span>
+                  <Tooltip placement="rightTop" title="This is the total sum of you individual scaled sub-test scores.">
+                    <QuestionCircleFilled />
+                  </Tooltip>
+                </div>
+                <div className="value" >
+                  <span>{totalScaledScore}</span>
+                </div>
+
+                <div className="tip-label" >
+                  <span>Relative to {moment().subtract('year', 1).format('yyyy')} UCAT Cohort</span>
+                  <Tooltip placement="rightTop" title="This is a percentile calculated from what you would have received in last year’s percentile conversion based on your UCAT scaled score.">
+                    <QuestionCircleFilled />
+                  </Tooltip>
+                </div>
+                <div className="value" >
+                  <span>{UCATPR}%tile</span>
+                </div>
+
+                <div>
+                  <Button icon={<SignalFilled />} onClick={() => window.open('http://missionmed.com.au/learn/', '_blank')} >Uni-specific UCAT Thresholds</Button>
+                </div>
+              </div>
+            }
+
+            {/* predicated scores */}
             <div className="label-container">
               <span className="predicated-label">Predicted Scores</span>
             </div>
@@ -551,9 +680,9 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 <Spin />
               ) : (
                 <>
-                  <div className="label-container" style={{marginTop: "16px"}}>
+                  <div className="label-container" style={{ marginTop: "16px" }}>
                     <span className="predicated-label">Relative Performance</span>
-                    <span style={{display: "block"}}>This will only be accurate after the exam period is finished.</span>
+                    <span style={{ display: "block" }}>This will only be accurate after the exam period is finished.</span>
                   </div>
                   <div className="chart-container">
                     {predicatedData?.map((item, index) => {
@@ -581,22 +710,22 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                                   label: "Score",
                                   valueFormatter: (value, context) =>
                                     value >= 0 &&
-                                    value <= 11 &&
-                                    context.location === "tooltip"
+                                      value <= 11 &&
+                                      context.location === "tooltip"
                                       ? "0 - 11"
                                       : value >= 12 &&
                                         value <= 22 &&
                                         context.location === "tooltip"
-                                      ? "12 - 22"
-                                      : value >= 23 &&
-                                        value <= 33 &&
-                                        context.location === "tooltip"
-                                      ? "23 - 33"
-                                      : value >= 34 &&
-                                        value <= 44 &&
-                                        context.location === "tooltip"
-                                      ? "34 - 44"
-                                      : String(value),
+                                        ? "12 - 22"
+                                        : value >= 23 &&
+                                          value <= 33 &&
+                                          context.location === "tooltip"
+                                          ? "23 - 33"
+                                          : value >= 34 &&
+                                            value <= 44 &&
+                                            context.location === "tooltip"
+                                            ? "34 - 44"
+                                            : String(value),
                                 },
                               ]}
                               yAxis={[
@@ -616,8 +745,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                                     percentage >= 90
                                       ? "#97dbbb"
                                       : percentage < 90 && percentage >= 70
-                                      ? "#ffb67f"
-                                      : "#f098b2",
+                                        ? "#ffb67f"
+                                        : "#f098b2",
                                 },
                               ]}
                               height={180}
@@ -630,8 +759,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                                     percentage >= 90
                                       ? "#97dbbb"
                                       : percentage < 90 && percentage >= 70
-                                      ? "#ffb67f"
-                                      : "#f098b2",
+                                        ? "#ffb67f"
+                                        : "#f098b2",
                                 }}
                                 labelStyle={{
                                   fontSize: "10",
@@ -639,8 +768,8 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                                     percentage >= 90
                                       ? "#97dbbb"
                                       : percentage < 90 && percentage >= 70
-                                      ? "#ffb67f"
-                                      : "#f098b2",
+                                        ? "#ffb67f"
+                                        : "#f098b2",
                                 }}
                                 label={`${mine?.length > 0 ? mine[index] : ""}`}
                                 labelAlign="start"
