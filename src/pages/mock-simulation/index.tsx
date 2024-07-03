@@ -46,7 +46,6 @@ const Index = () => {
     }
     init()
   }, [])
-
   async function launchExam(package_id: number) {
     if (examCode) {
       const params = {
@@ -189,8 +188,6 @@ const Index = () => {
                     </Option>
                   ))}
                 </Select>
-                 
-
                   {mocks?.filter((item) => mockId === item.id && item.package_id === 28 ).length > 0 ? (
                     <Tabs defaultActiveKey={'verbalReasoning'}>
                       
@@ -282,10 +279,74 @@ const Index = () => {
                     </TabPane>
 
                   </Tabs> 
+                    ):mocks?.filter((item) => mockId === item.id && item.package_id === 36 ).length > 0 ? (
+                      <Tabs defaultActiveKey={'verbalReasoning'}>
+                        <TabPane tab={"Verbal Reasoning"} key={"verbalReasoning"}>
+                          <Row gutter={20}>
+                            <Col md={24} xl={12}>
+                                <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Verbal Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/VR/VR+Mock+2.mp4')}>
+                                  <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/images/VR+(1).png" className="w-full" alt="" />
+                                  <PlayCircleFilled />
+                                </Button>
+                            </Col>
+                          </Row>
+    
+                          <Modal
+                            title={videotitle}
+                            centered
+                            open={open}
+                            onOk={() => setOpen(false)}
+                            onCancel={() => setOpen(false)}
+                            width={1000}
+                            footer={null}
+                          >
+                            <video ref={vidRef} key={video} width="100%" controls autoPlay className="video-player">
+                              <source src={video} type="video/mp4" />
+                              Your browser does not support HTML video.
+                            </video>
+    
+                          </Modal>
+                        </TabPane>
+  
+                        <TabPane tab={"Decision Making"} key={"decisionMaking"}>
+                          <Row gutter={20}>
+                              <Col md={24} xl={12}>
+                                <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Decision Making','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/DM/Mock+II+DM+Solutions+(Final)+-+Made+with+Clipchamp_1719973638340(1).mp4')}>
+                                  <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/images/DM+(1).png" className="w-full" alt="" />
+                                  <PlayCircleFilled />
+                                </Button>
+                            </Col>
+                          </Row>
+                        </TabPane>
+                        
+                        <TabPane tab={"Quantitative Reasoning"} key={"quantitativeReasoning"}>
+                          <Row gutter={20}>
+                            <Col md={24} xl={12}> 
+                              <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Quantitative Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/QR/Mock+II+QR+Solutions+(Final)+-+Made+with+Clipchamp_1719973236382(1).mp4')}>
+                              <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/images/QR+(1).png" className="w-full" alt="" />
+                              <PlayCircleFilled />
+                              </Button>
+                            </Col>
+                          </Row>
+                        </TabPane>
+
+                        <TabPane tab={"Abstract Reasoning"} key={"abstractReasoning"}>
+                          <Row gutter={20}>
+                            <Col md={24} xl={12}> 
+                              <Button type="primary" className="videoplay-btn" onClick={() => handlePlayVideo('Abstract Reasoning','https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/AR/AR+Mock2.mp4')}>
+                                <img src="https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/UCAT-Mock-II-Official/images/AR+(1).png" className="w-full" alt="" />
+                                <PlayCircleFilled />
+                                </Button>
+                            </Col>
+                          </Row>
+                        </TabPane>
+                      </Tabs> 
                     ):(
                       <Alert message="No Review Added" type="info" showIcon />
                     ) 
                   } 
+                  
+                  
               </TabPane>
               
             </Tabs>
