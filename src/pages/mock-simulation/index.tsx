@@ -49,8 +49,6 @@ const Index = () => {
     }
     init()
   }, [])
-
-  console.log(pastMocks);
   async function launchExam(package_id: number) {
     if (examCode) {
       const params = {
