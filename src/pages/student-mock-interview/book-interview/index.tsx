@@ -325,11 +325,13 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
         <div className={"choose-tutor"}>
           <div className="btn-group" >
             <h3 className={"title"}>Recommended for you</h3>
+      
             {user.role === 'tutor' && (
               <div className="tutor_Search">
                 <Search placeholder="input search text" onSearch={onSearch} allowClear />
               </div>)}
           </div>
+          <h4 className={"sub-title"} style={{ padding: '0 10px' }}>We recommend you pick someone you haven’t sat a mock with before.</h4>
           <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select tutor" }]}>
             <TutorCollapse tutors={tutors} />
           </Form.Item>
