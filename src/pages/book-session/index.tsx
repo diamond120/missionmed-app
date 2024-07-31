@@ -370,7 +370,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                 <Search placeholder="input search text" onSearch={onSearch} allowClear />
               </div>)}
           </div>
-          <h3 className={"title"}>We recommend you pick someone you haven’t sat a mock with before.</h3>
+          <h4 className={"sub-title"} style={{ padding: '0 10px' }}>We recommend you pick someone you haven’t sat a mock with before.</h4>
           {userRole === 'tutor' ? (
             <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select student" }]}>
               <TutorCollapse students={students} />
