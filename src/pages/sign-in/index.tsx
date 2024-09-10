@@ -8,7 +8,6 @@ import { useAuthContext } from "../../api/context/AuthContext.js";
 import posthog from "posthog-js";
 
 const SignIn = () => {
-
   const [form] = Form.useForm();
   // //const [loginMutation, { loading, error, data }] = useLoginMutation();
   const navigate = useNavigate()
@@ -18,9 +17,11 @@ const SignIn = () => {
   const { setAuthenticated } = useAuthContext();
 
   const onFinish = async (values: any) => {
+    const response = await fetch('https://ipapi.co/timezone/');
+    const timezone = await response.text();
     const { email, password } = values;
     try {
-      const result = await Authentication.login({ email, password });
+      const result = await Authentication.login({ email, password , timezone});
       if (result.data.success) {
         if (result.data.data && result.data.data.token) {
           posthog.capture('Login', { user: result.data.data });
