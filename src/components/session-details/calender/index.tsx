@@ -9,6 +9,8 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { formatTime } from "../../../common/common";
 import { useTutor } from "../../../api/providers/TutorProvider";
 import { useUser } from "../../../api/providers/UserProvider";
+import { useRef } from 'react';
+import moment from "moment";
 
 function formatDate(inputDateStr) {
   const inputDate = new Date(inputDateStr);
@@ -25,13 +27,15 @@ function formatDate(inputDateStr) {
 }
 
 const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, prev }) => {
-
+  const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
   const [filterDateSet, setFilterDateSet] = useState(false);
   const [spinning, setSpinning] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subSlotList, setSubSlotList] = useState<any>([]);
+  const [weekAvailable, setWeekAvailable] = useState(true);
+  const [weekDates,setWeekDates]= useState(null)
   const [spin, setSpin] = useState<boolean>(true);
   const tutor = useTutor();
   const user = useUser();
@@ -81,12 +85,74 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   };
 
+  const getWeekAvailable = async (tutorId) => {
+    try {
+      const params = {
+        startDate : filterDate.startDate,
+        endDate : filterDate.endDate,
+        type :'teachingsession',
+        role : user.role,
+      }
+
+      if(user.role == 'student') { 
+        params.tutorId = tutorId 
+      } else {
+        params.studentId = tutorId 
+        params.tutorId = tutor.id 
+      } 
+
+      const response = await CommonService.postAPI("/student/slots-available",params);
+      if (response.data.success) {
+            setWeekAvailable(response.data.data)
+            if(!response.data.data) {
+              getAvailableWeekDates(tutorId)
+            }else
+            setWeekDates(null)
+            
+        } else {
+        throw new Error(response.data.message);
+      }
+
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  const getAvailableWeekDates = async (tutorId) => {
+    try {
+      const params = {
+        startDate : filterDate.startDate,
+        endDate : filterDate.endDate,
+        type :'teachingsession',
+        role : user.role,
+      }
+
+      if(user.role == 'student') { 
+        params.tutorId = tutorId 
+      } else {
+        params.studentId = tutorId 
+        params.tutorId = tutor.id 
+      } 
+
+      const response = await CommonService.postAPI("/student/available-week-slots",params);
+      if (response.data.success) {
+            setWeekDates(response.data.data)
+        } else {
+        throw new Error(response.data.message);
+      }
+
+    }catch(error){
+      console.log(error)
+    }
+  }
+
   const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, filterDate, rescheduleDate]);
 
   
   useEffect(() => {
     if (filterDateSet) {
       memoizedGetSlotsist(tutorId);
+      getWeekAvailable(tutorId);
     }
   }, [memoizedGetSlotsist, tutorId, filterDateSet]);
 
@@ -200,6 +266,15 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     return () => clearTimeout(timeoutId);
   }, []); 
 
+  const handleGoToWeek = () => {
+      const calendarApi = calendarRef.current.getApi();
+      if(weekDates?.week_start){
+      const date = new Date(weekDates?.week_start); // Convert the selected date string to a Date object
+      calendarApi.gotoDate(date); // Navigate to the selected date
+  } };
+
+  const weekStart = moment(weekDates?.week_start);
+   const weekNumber = weekStart.week();
   return (
     <>
       {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>
@@ -217,7 +292,22 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
         <span> Finding available slot......</span>
       </div>
       <div style={{ display: !spin ? 'block' : 'none' }}>
+      {!weekAvailable && (
+        <>
+        <div style={{display:'flex',justifyContent:'center',gap:13}}>
+          <p className="text-center">Please switch to</p>
+          <button style={{backgroundColor:'transparent',border:0,padding:0,height:22,color:'#2816EE', cursor:'pointer'}} onClick={handleGoToWeek}>
+            <strong>
+              {`week ${weekNumber} (${moment(weekDates?.week_start).format('MMM D')} - ${moment(weekDates?.week_end).format("D, YYYY")})`}
+            </strong>
+          </button>
+          <p className="text-center">for more available dates.</p>
+
+        </div>
+      </>
+      )}
         <FullCalendar
+        ref={calendarRef}
           plugins={[dayGridPlugin, timeGridPlugin]}
           initialView="timeGridWeek"
           dayHeaders={true}
