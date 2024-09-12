@@ -257,14 +257,14 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true,  message:"Please select slot"}]}></Form.Item>
       {!weekAvailable && (
         <>
-        <div style={{display:'flex',justifyContent:'center',gap:10}}>
-          <p className="text-center">Please switch to</p>
+        <div className="cus-alert">
+          <div className="text-center">Please switch to</div>
           <button style={{backgroundColor:'transparent',border:0,padding:0,height:22,color:'#2816EE', cursor:'pointer'}} onClick={handleGoToWeek}>
             <strong>
-              {` week ${weekNumber} (${moment(weekDates?.week_start).format('MMM D')} - ${moment(weekDates?.week_end).format("D, YYYY")})`}
+              {`Week ${weekNumber} (${moment(weekDates?.week_start).format('MMM D')} - ${moment(weekDates?.week_end).format("D, YYYY")})`}
             </strong>
           </button>
-          <p className="text-center">for more available dates.</p>
+          <div className="text-center">for more available dates.</div>
 
         </div>
       </>
