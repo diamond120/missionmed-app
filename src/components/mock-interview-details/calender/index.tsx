@@ -9,6 +9,8 @@ import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
 import { useUser } from "../../../api/providers/UserProvider";
 import { useTutor } from "../../../api/providers/TutorProvider";
+import { useRef } from 'react';
+import moment from "moment";
 
 function formatDate(inputDateStr) {
   const inputDate = new Date(inputDateStr);
@@ -25,13 +27,15 @@ function formatDate(inputDateStr) {
 }
 
 const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
-
+  const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
   const [filterDateSet, setFilterDateSet] = useState(false);
   const [spinning, setSpinning] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subSlotList, setSubSlotList] = useState<any>([]);
+  const [weekAvailable, setWeekAvailable] = useState(true);
+  const [weekDates,setWeekDates]= useState(null)
   const user = useUser();
   const tutor = useTutor();
     
@@ -67,6 +71,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if (response.data.success) {
             const slotList = response.data.data ?? [];
             setSlots(slotList); 
+
           } else {
           throw new Error(response.data.message);
           prev() 
@@ -77,9 +82,72 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       }
     };
 
+    const getWeekAvailable = async (tutorId) => {
+      try {
+        const params = {
+          startDate : filterDate.startDate,
+          endDate : filterDate.endDate,
+          type :'mockinterview',
+          role : user.role,
+        }
+
+        if(user.role == 'student') { 
+          params.tutorId = tutorId 
+        } else {
+          params.studentId = tutorId 
+          params.tutorId = tutor.id 
+        } 
+
+        const response = await CommonService.postAPI("/student/slots-available",params);
+        if (response.data.success) {
+              setWeekAvailable(response.data.data)
+              if(!response.data.data) {
+                getAvailableWeekDates(tutorId)
+              }else
+              setWeekDates(null)
+              
+          } else {
+          throw new Error(response.data.message);
+        }
+
+      }catch(error){
+        console.log(error)
+      }
+    }
+
+    const getAvailableWeekDates = async (tutorId) => {
+      try {
+        const params = {
+          startDate : filterDate.startDate,
+          endDate : filterDate.endDate,
+          type :'mockinterview',
+          role : user.role,
+        }
+
+        if(user.role == 'student') { 
+          params.tutorId = tutorId 
+        } else {
+          params.studentId = tutorId 
+          params.tutorId = tutor.id 
+        } 
+
+        const response = await CommonService.postAPI("/student/available-week-slots",params);
+        if (response.data.success) {
+              setWeekDates(response.data.data)
+          } else {
+          throw new Error(response.data.message);
+        }
+
+      }catch(error){
+        console.log(error)
+      }
+    }
+    
+    
     useEffect(() => {
       if(filterDateSet == true) {
         getSlotsist(tutorId);
+        getWeekAvailable(tutorId);
       }
     }, [tutorId,filterDate,filterDateSet,subSlotList]);
 
@@ -171,6 +239,14 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       next();
     }
 
+    const handleGoToWeek = () => {
+      const calendarApi = calendarRef.current.getApi();
+      if(weekDates?.week_start){
+      const date = new Date(weekDates?.week_start); // Convert the selected date string to a Date object
+      calendarApi.gotoDate(date); // Navigate to the selected date
+   } };
+   const weekStart = moment(weekDates?.week_start);
+   const weekNumber = weekStart.week();
     return (
       <>
       {
@@ -179,7 +255,22 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       <Form.Item name="date" hidden={true} rules={[{ required: true , message:"Please select date"}]}></Form.Item>
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true , message:"Please select slot"}]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true,  message:"Please select slot"}]}></Form.Item>
+      {!weekAvailable && (
+        <>
+        <div style={{display:'flex',justifyContent:'center',gap:10}}>
+          <p className="text-center">Please switch to</p>
+          <button style={{backgroundColor:'transparent',border:0,padding:0,height:22,color:'#2816EE', cursor:'pointer'}} onClick={handleGoToWeek}>
+            <strong>
+              {` week ${weekNumber} (${moment(weekDates?.week_start).format('MMM D')} - ${moment(weekDates?.week_end).format("D, YYYY")})`}
+            </strong>
+          </button>
+          <p className="text-center">for more available dates.</p>
+
+        </div>
+      </>
+      )}
       <FullCalendar
+        ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin]}
         initialView="timeGridWeek"
         dayHeaders={true}    
