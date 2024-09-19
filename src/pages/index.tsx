@@ -33,6 +33,7 @@ const MockPremiumLink = lazy(() => import("./mock-premium-link"))
 const UCATPremiumLink = lazy(() => import("./ucat-premium-link"))
 const TeachingPremiumLink = lazy(() => import("./teaching-premium-link"))
 const MockSimulation = lazy(() => import("./mock-simulation"))
+const SpecialOffers = lazy(() => import("./special-offers"))
 
 const routes: RouteObject[] = [
   {
@@ -184,6 +185,11 @@ const routes: RouteObject[] = [
       {
         Component: MockSimulation,
         path: "/student/mock-simulation",
+        index: true,
+      },
+      {
+        Component: SpecialOffers,
+        path: "/student/special-offers",
         index: true,
       },
       {
