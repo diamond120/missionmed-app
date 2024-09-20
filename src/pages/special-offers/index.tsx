@@ -1,24 +1,25 @@
 import React from 'react'
-import { Breadcrumb, Alert, Space, Divider, message } from 'antd'
+import { Breadcrumb, Alert, Space, Divider, message, Tooltip } from 'antd'
 import { HomeOutlined, QuestionCircleFilled } from "@ant-design/icons";
 import "./index.less";
 import Offer from '../../assets/images/offer.png'
 
 function SpecialOffers() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [messageApi, contextHolder] = message.useMessage();
 
-  function copyCode(text: string) {
-    try {
-      navigator.clipboard.writeText(text)
-      messageApi.success('Copied');
-    } catch (error: any) {
-      messageApi.error(error)
-    }
-  }
+  // function copyCode(text: string) {
+  //   try {
+  //     navigator.clipboard.writeText(text)
+  //     messageApi.success('Copied');
+  //   } catch (error: any) {
+  //     messageApi.error(error)
+  //   }
+  // }
 
   return (
     <React.Fragment>
-      {contextHolder}
+      {/* {contextHolder} */}
       <Breadcrumb>
         <Breadcrumb.Item href={"/"}>
           <HomeOutlined />
@@ -30,7 +31,10 @@ function SpecialOffers() {
           <h2 className={"tab-title"}>Special Offers</h2>
         </div>
 
-        <h2 className={"secondary-title"}>Discounts from Partners<QuestionCircleFilled style={{ marginLeft: "8px" }} /></h2>
+        <h2 className={"secondary-title"}>Discounts from Partners
+          <Tooltip title="We have partnered with other tutoring centres to offer you discounts as a MissionMed student.">
+            <QuestionCircleFilled style={{ marginLeft: "8px" }} /></Tooltip>
+        </h2>
 
         <Alert
           message="As a student of MissionMed you also get exclusive discounts with our official partners. These promotional codes will only work for those who are our students. You must enter the discount code exactly as it appears into the partner’s checkout page promotional code section."
@@ -39,7 +43,7 @@ function SpecialOffers() {
           showIcon
         />
 
-        <div className='card-container' >
+        <div className='card-container' onClick={() => window.open('https://zhangshsc.com.au/', '_blank')} >
           {Array.from({ length: 1 })?.map(() => (
             <div className='card'>
               <div className='card-header'>
@@ -56,7 +60,10 @@ function SpecialOffers() {
                 </div>
                 <Space split={<Divider type="vertical" />}>
                   <span>15% OFF</span>
-                  <span style={{ cursor: 'pointer' }} onClick={() => copyCode('MISSIONMED')}>MISSIONMED</span>
+                  <span
+                  // style={{ cursor: 'pointer' }}
+                  // onClick={() => copyCode('MISSIONMED')}
+                  >MISSIONMED</span>
                 </Space>
               </div>
             </div>
