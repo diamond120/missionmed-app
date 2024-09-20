@@ -7,7 +7,6 @@ import CommonService from "../api/services/Common";
 import {REACT_APP_CLIENT_ID, SCOPES, REACT_APP_API_KEY} from "../config/app-config";
 
 const CalendarAuth = () => {
-  console.log(REACT_APP_CLIENT_ID, 'REACT_APP_CLIENT_ID, SCOPES, REACT_APP_API_KEY')
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [fullName, setFullName] = useState('');
   useEffect(() => {
