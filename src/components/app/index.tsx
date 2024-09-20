@@ -6,7 +6,7 @@ import { TutorProvider } from "../../api/providers/TutorProvider.jsx";
 import AuthContext from "../../api/context/AuthContext.js";
 import posthog from 'posthog-js';
 import {POST_HOG_KEY} from "../../config/app-config";
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 // type AppProps = {
   //   app: { api: boolean },
   //   user: { authenticated: boolean | null; role: string | null }
@@ -33,6 +33,7 @@ import {POST_HOG_KEY} from "../../config/app-config";
 
   const [authenticated, setAuthenticated] = useState(false);
    return ( 
+    <GoogleOAuthProvider clientId="1045932655481-t6l168m2k4noic55a2jgsn5n75t2697o.apps.googleusercontent.com"> 
    <AuthContext.Provider value={{authenticated, setAuthenticated}}>
     <UserProvider>
     <StudentProvider>
@@ -42,7 +43,8 @@ import {POST_HOG_KEY} from "../../config/app-config";
      </StudentProvider>
     </UserProvider>
   </AuthContext.Provider>
-  )
+  </GoogleOAuthProvider>
+  );
 })
 // const useApp = () => useContext(Context)
 // export { ContextProvider, useApp }

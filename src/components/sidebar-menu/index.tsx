@@ -13,6 +13,7 @@ import "./index.less"
 import http from "../../api/http-common.js";
 import { getToken } from "../../common/common.js";
 import CommonService from "../../api/services/Common";
+import CalendarAuth from "../CalenderAuth.js";
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -255,6 +256,7 @@ const SidebarMenu: React.FC = ({className , callBack}) => {
               Speed Reading Trainer  
             </Menu.Item>
           }
+        
         </>
         {/* )} */}
 

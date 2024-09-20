@@ -21,11 +21,14 @@
     "@fullcalendar/timegrid": "^6.1.9",
     "@mui/material": "^5.15.18",
     "@mui/x-charts": "^7.5.0",
+    "@react-oauth/google": "^0.12.1",
     "@tinymce/tinymce-react": "^4.3.2",
     "@vitejs/plugin-react": "^4.2.1",
     "antd": "4.24.14",
     "axios": "^1.5.0",
     "express": "^4.18.2",
+    "gapi-script": "^1.2.0",
+    "googleapis": "^144.0.0",
     "posthog-js": "^1.126.0",
     "react": "^18.2.0",
     "react-credit-cards": "^0.8.3",
@@ -37,8 +40,8 @@
     "react-select-country-list": "^2.2.3",
     "react-timezone-select": "^2.1.2",
     "vite-plugin-svgr": "^3.2.0",
-    "wtf-plugin-api": "^2.0.0",
-    "wtf_wikipedia": "^10.3.0"
+    "wtf_wikipedia": "^10.3.0",
+    "wtf-plugin-api": "^2.0.0"
   },
   "proxy": "http://192.168.1.125:8081",
   "devDependencies": {
