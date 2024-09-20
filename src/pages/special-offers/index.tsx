@@ -40,7 +40,7 @@ function SpecialOffers() {
         />
 
         <div className='card-container' >
-          {Array.from({ length: 4 })?.map(() => (
+          {Array.from({ length: 1 })?.map(() => (
             <div className='card'>
               <div className='card-header'>
                 <label>Zhang’s HSC Coaching</label>
