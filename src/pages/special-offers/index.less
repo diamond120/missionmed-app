@@ -9,6 +9,13 @@
 
     .card-container {
         margin-top: 20px;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+
+        @media (max-width: 640px) {
+            justify-content: center;
+        }
 
         .card {
             width: fit-content;

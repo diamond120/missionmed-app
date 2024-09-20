@@ -1,12 +1,24 @@
 import React from 'react'
-import { Breadcrumb, Alert, Space, Divider } from 'antd'
+import { Breadcrumb, Alert, Space, Divider, message } from 'antd'
 import { HomeOutlined, QuestionCircleFilled } from "@ant-design/icons";
 import "./index.less";
 import Offer from '../../assets/images/offer.png'
 
 function SpecialOffers() {
+  const [messageApi, contextHolder] = message.useMessage();
+
+  function copyCode(text: string) {
+    try {
+      navigator.clipboard.writeText(text)
+      messageApi.success('Copied');
+    } catch (error: any) {
+      messageApi.error(error)
+    }
+  }
+
   return (
     <React.Fragment>
+      {contextHolder}
       <Breadcrumb>
         <Breadcrumb.Item href={"/"}>
           <HomeOutlined />
@@ -28,25 +40,27 @@ function SpecialOffers() {
         />
 
         <div className='card-container' >
-          <div className='card'>
-            <div className='card-header'>
-              <label>Zhang’s HSC Coaching</label>
-              <span>11 State Ranks in Physics, Chemistry (2023)</span>
-            </div>
-            <img className='offer-img' src={Offer} />
-            <div className='details'>
-              <span className='helights-label'>Highlights</span>
-              <div className='helights'>
-                <span>• Offers Chemistry, Physics</span>
-                <span>• 12 Full Mark 99.95s in 2023</span>
-                <span>• 11 State Ranks in 2023</span>
+          {Array.from({ length: 4 })?.map(() => (
+            <div className='card'>
+              <div className='card-header'>
+                <label>Zhang’s HSC Coaching</label>
+                <span>11 State Ranks in Physics, Chemistry (2023)</span>
               </div>
-              <Space split={<Divider type="vertical" />}>
-                <span>15% OFF</span>
-                <span>MISSIONMED</span>
-              </Space>
+              <img className='offer-img' src={Offer} />
+              <div className='details'>
+                <span className='helights-label'>Highlights</span>
+                <div className='helights'>
+                  <span>• Offers Chemistry, Physics</span>
+                  <span>• 12 Full Mark 99.95s in 2023</span>
+                  <span>• 11 State Ranks in 2023</span>
+                </div>
+                <Space split={<Divider type="vertical" />}>
+                  <span>15% OFF</span>
+                  <span style={{ cursor: 'pointer' }} onClick={() => copyCode('MISSIONMED')}>MISSIONMED</span>
+                </Space>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </React.Fragment >
