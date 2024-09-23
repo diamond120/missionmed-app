@@ -28,7 +28,7 @@ const TutorProfile = () => {
   
   const [rating, setRating] = useState(null);
   const tutor = useTutor();
-
+  console.log(tutor.email,'tutor')
   // const tutorId = useMeQuery()?.data?.me?.tutor?.data?.id
   // const tutor = useTutorsQuery({ variables: { filter: { id: { eq: tutorId}}}})?.data?.tutors?.data[0]
 
@@ -97,7 +97,7 @@ const TutorProfile = () => {
                   <SpecialDays/>
                 </div>
                 <div>
-                {tutor?.email === "shahddit@gmail.com" && (
+ {tutor?.email === "shahddit@gmail.com" && (
                 <div className={"specializations-section"}>
                 <h2 className={"specializations-section-title"}>Google Calendar</h2>
 
