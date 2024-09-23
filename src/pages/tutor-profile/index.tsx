@@ -11,6 +11,7 @@ import PersonalityTutor from "./personality-tutor"
 import Education from "./education"
 import WorkingDaysHours from "./working-days-hours"
 import Specializations from "./specializations"
+import CalendarAuth from "../../components/CalenderAuth"
 import BufferTime from "./buffer-time"
 import AverageRating from "./average-rating"
 import Rating from "./clarity-rating"
@@ -89,12 +90,19 @@ const TutorProfile = () => {
             </TabPane>
 
             <TabPane tab={"Teaching"} key={"teaching"}>
+                  
               <div className={"working-time-wrap"}>
                 <div className="flex-col">
                   <WorkingDaysHours />
                   <SpecialDays/>
                 </div>
                 <div>
+                <div className={"specializations-section"}>
+                <h2 className={"specializations-section-title"}>Google Calendar</h2>
+
+                
+                 <CalendarAuth />
+                </div>
                   <Specializations />
                   <BufferTime />
                   <MeetingLink />

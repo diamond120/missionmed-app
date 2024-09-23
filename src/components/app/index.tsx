@@ -42,7 +42,7 @@ import {POST_HOG_KEY} from "../../config/app-config";
      </StudentProvider>
     </UserProvider>
   </AuthContext.Provider>
-  )
+  );
 })
 // const useApp = () => useContext(Context)
 // export { ContextProvider, useApp }

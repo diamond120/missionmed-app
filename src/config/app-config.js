@@ -5,3 +5,10 @@ export const TINYMCE_API_KEY =  import.meta.env.VITE_TINYMCE_API_KEY
 export const POST_HOG_KEY = import.meta.env.VITE_POST_HOG_KEY
 export const EXAM_APP_URL = import.meta.env.VITE_EXAM_APP_URL
 export const APP_URL = import.meta.env.VITE_APP_URL
+export const REACT_APP_API_KEY = import.meta.env.VITE_REACT_APP_API_KEY
+export const REACT_APP_CLIENT_ID = import.meta.env.VITE_REACT_APP_CLIENT_ID
+export const SCOPES = import.meta.env.VITE_SCOPES
+
+
+
+
