@@ -28,7 +28,6 @@ const TutorProfile = () => {
   
   const [rating, setRating] = useState(null);
   const tutor = useTutor();
-  console.log(tutor.email,'tutor')
   // const tutorId = useMeQuery()?.data?.me?.tutor?.data?.id
   // const tutor = useTutorsQuery({ variables: { filter: { id: { eq: tutorId}}}})?.data?.tutors?.data[0]
 
