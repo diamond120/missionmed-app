@@ -35,9 +35,12 @@ const CalendarAuth = () => {
     setIsSignedIn(isSignedIn);
     if (isSignedIn) {
       const authInstance = gapi.auth2.getAuthInstance();
-      const userProfile = authInstance.currentUser.get().getBasicProfile();
-      const userEmail = userProfile.getEmail();
-      setFullName(userEmail); // Set fullName after sign-in
+      const currentUser = authInstance.currentUser.get();
+      if (currentUser) {
+        const userProfile = currentUser.getBasicProfile();
+        const email = userProfile ? userProfile.getEmail() : '';
+        setFullName(email); // Update email when signed in
+      }
     } else {
       setFullName(''); // Clear fullName if signed out
     }
@@ -51,10 +54,10 @@ const CalendarAuth = () => {
       access_type: 'offline',
     };
     auth2.grantOfflineAccess(options)
-    .then((authResult) => {
+    .then(async (authResult) => {
       if (authResult.code) {
-        sendAccessTokenToBackend(authResult.code);
-        message.success("Google calender connected Successfully!");
+        await sendAccessTokenToBackend(authResult.code);
+        message.success("Google calendar connected successfully!");
       } else {
         console.error("Login failed");
       }
@@ -65,14 +68,8 @@ const CalendarAuth = () => {
   };
 
   const sendAccessTokenToBackend = async(authorizeCode) => {
-    const auth2 = await gapi.auth2.getAuthInstance();
-    const currentUser = await auth2.currentUser.get()
-    const userProfile = await currentUser.getBasicProfile();
-    const email = await userProfile.getEmail()
-    const fullName = await userProfile.getName();
     const data = {
       authorizeCode: authorizeCode,
-      email: email
     };
     const response = await CommonService.postAPI("/tutor/google-callback-signin", data);
     if (response.data.success) {
@@ -80,7 +77,6 @@ const CalendarAuth = () => {
     } else {
       throw new Error(response.data.message);
     }
-  
   };
 
   const removeTokenToBackend = async(email) => {
@@ -98,16 +94,23 @@ const CalendarAuth = () => {
 
   const handleSignOutClick = () => {
     const authInstance = gapi.auth2.getAuthInstance();
-  
+
     // Get the current signed-in user's data
     const user = authInstance.currentUser.get();
     
     // Get user's basic profile (e.g., email)
     const profile = user.getBasicProfile();
     const userEmail = profile.getEmail();
+    
+    // Remove token from backend
     removeTokenToBackend(userEmail);
-    gapi.auth2.getAuthInstance().signOut();
-    message.success("Google calender disconected Successfully!");
+    
+    // Sign out the user and clear the session
+    authInstance.signOut().then(() => {
+      authInstance.disconnect(); // This ensures the session is fully cleared
+      setFullName('');
+      message.success("Google calendar disconnected successfully!");
+    });
   };
 
   return (

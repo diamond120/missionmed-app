@@ -71,8 +71,22 @@ const SpecialDays: FC<Any> = ({props}) => {
       title: 'Action',
       dataIndex: '',
       key: 'x',
-      render: (text, record) => <div className='d_flex_10'> <a > <AddException title='Add Exception' callAdded={() => {fetchData()}}  editedData={record} /> </a> <a onClick={()=> deleteException(record)}><DeleteOutlined style={{color: '#FF4D4F' }} /></a></div>,
-    },
+      render: (text, record) => {
+        if (record.event_id) {
+          return <span style={{ color: 'black' }}>Sync from your Google Calendar, so you cannot edit/delete from here.</span>;
+        }
+        return (
+          <div className='d_flex_10'>
+            <a>
+              <AddException title='Add Exception' callAdded={() => { fetchData(); }} editedData={record} />
+            </a>
+            <a onClick={() => deleteException(record)}>
+              <DeleteOutlined style={{ color: '#FF4D4F' }} />
+            </a>
+          </div>
+        );
+      },
+    }
   ];
 
   useEffect(() => {
