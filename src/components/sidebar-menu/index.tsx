@@ -256,7 +256,9 @@ const SidebarMenu: React.FC = ({className , callBack}) => {
               Speed Reading Trainer  
             </Menu.Item>
           }
-        
+          {isStudent &&
+            <Menu.Item className={"custom-profile-item"} key={"/student/special-offers"} onClick={() => { navigate('/student/special-offers') }} icon={<CrownOutlined />}>Special Offers</Menu.Item>
+          }
         </>
         {/* )} */}
 
