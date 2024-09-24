@@ -254,6 +254,10 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     setIsModalOpen(false);
     next();
   }
+  const getDayName = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleString('default', { weekday: 'long' });
+  };
 
   useEffect(() => {
     const addClassToParent = () => {
@@ -352,9 +356,19 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
             rules={[{ required: true, message: "Please select slot." }]}
           >
             <Radio.Group >
-              {subSlotList.map((slot, index) => (
-                <Radio key={index} value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
-              ))}
+            {subSlotList.map((slot, index) => {
+                // Check if the current slot date is different from the previous slot's date
+                const showDate = index === 0 || slot.date !== subSlotList[index - 1].date;
+
+                return (
+                    <div key={index}>
+                        {showDate && <div style={{fontSize: "15px",color: "#000000",fontWeight: 600}}>{slot.date} ({getDayName(slot.date)})</div>}
+                        <Radio value={index}>
+                            {`${formatTime(slot.start)} - ${formatTime(slot.end)}`}
+                        </Radio>
+                    </div>
+                );
+            })}
             </Radio.Group>
           </Form.Item>
         </Form>
