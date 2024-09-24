@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { getToken } from '../common/common';
 import CommonService from "../api/services/Common";
 import {REACT_APP_CLIENT_ID, SCOPES, REACT_APP_API_KEY} from "../config/app-config";
-
+import google from '../assets/images/google.png';
 const CalendarAuth = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [fullName, setFullName] = useState('');
@@ -122,12 +122,18 @@ const CalendarAuth = () => {
               {isSignedIn ? (
         <>
           <p>You are connected with <b>{fullName ? `${fullName}` : ''}</b></p>
-          <button className="ant-btn ant-btn-default form-button" onClick={handleSignOutClick}>Disconnect</button>
+          <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleSignOutClick}>
+            <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
+            Sign out with Google
+          </button>
         </>
       ) : (
         <>
         <p>Sync your google calendar events</p>
-        <button className="ant-btn ant-btn-default form-button" onClick={handleAuthClick}>Connect</button>
+        <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleAuthClick}>
+          <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
+          Sign in with Google
+        </button>
         </>
       )}
         </div>
