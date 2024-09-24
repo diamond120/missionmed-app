@@ -362,7 +362,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
 
                 return (
                     <div key={index}>
-                        {showDate && <div style={{fontSize: "15px",color: "#000000",fontWeight: 600}}>{slot.date} ({getDayName(slot.date)})</div>}
+                        {showDate && <div style={{fontSize: "15px",color: "#000000",fontWeight: 600}}>{moment(slot.date).format('MMM DD, YYYY')} ({getDayName(slot.date)})</div>}
                         <Radio value={index}>
                             {`${formatTime(slot.start)} - ${formatTime(slot.end)}`}
                         </Radio>
