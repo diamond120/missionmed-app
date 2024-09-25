@@ -48,7 +48,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       };
       setfilterDate(data);
       setFilterDateSet(true);
-      console.log("test");
     }
 
     const getSlotsist = async (tutorId) => {
