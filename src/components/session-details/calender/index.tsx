@@ -373,8 +373,6 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
           </Form.Item>
         </Form>
       </Modal>
-
-
     </>
   )
 }

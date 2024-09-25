@@ -9,7 +9,9 @@ import google from '../assets/images/google.png';
 const CalendarAuth = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [fullName, setFullName] = useState('');
+  const [tokenData, setAccessToken] = useState('');
   useEffect(() => {
+    getAccessToken();
     const initClient = () => {
       gapi.client
         .init({
@@ -30,6 +32,18 @@ const CalendarAuth = () => {
 
     gapi.load("client:auth2", initClient);
   }, []);
+
+  const getAccessToken = async() => {   
+    try {
+      const response = await CommonService.getAPI("/tutor/access-token");
+      if (response.data.success) {
+        setAccessToken(response.data.data); 
+        console.log('success get access token', response.data.data);
+      }
+    } catch (error) {
+       throw new Error(error.message);
+    }
+  }
 
   const updateSigninStatus = (isSignedIn) => {
     setIsSignedIn(isSignedIn);
@@ -57,6 +71,7 @@ const CalendarAuth = () => {
     .then(async (authResult) => {
       if (authResult.code) {
         await sendAccessTokenToBackend(authResult.code);
+        getAccessToken();
         message.success("Google calendar connected successfully!");
       } else {
         console.error("Login failed");
@@ -79,11 +94,8 @@ const CalendarAuth = () => {
     }
   };
 
-  const removeTokenToBackend = async(email) => {
-    const data = {
-      email: email
-    };
-    const response = await CommonService.postAPI("/tutor/google-callback-signout", data);
+  const removeTokenToBackend = async() => {
+    const response = await CommonService.postAPI("/tutor/google-callback-signout");
     if (response.data.success) {
       console.log('success');
     } else {
@@ -94,22 +106,14 @@ const CalendarAuth = () => {
 
   const handleSignOutClick = () => {
     const authInstance = gapi.auth2.getAuthInstance();
-
-    // Get the current signed-in user's data
-    const user = authInstance.currentUser.get();
-    
-    // Get user's basic profile (e.g., email)
-    const profile = user.getBasicProfile();
-    const userEmail = profile.getEmail();
-    
     // Remove token from backend
-    removeTokenToBackend(userEmail);
+    removeTokenToBackend();
     
     // Sign out the user and clear the session
     authInstance.signOut().then(() => {
-      authInstance.disconnect(); // This ensures the session is fully cleared
-      setFullName('');
+      setAccessToken('');
       message.success("Google calendar disconnected successfully!");
+      authInstance.disconnect(); // This ensures the session is fully cleared
     });
   };
 
@@ -119,23 +123,23 @@ const CalendarAuth = () => {
           <div className={"specializations-form-item"}>
 
               <div className={"specializations-checkboxes"}  >
-              {isSignedIn ? (
-        <>
-          <p>You are connected with <b>{fullName ? `${fullName}` : ''}</b></p>
-          <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleSignOutClick}>
-            <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
-            Sign out with Google
-          </button>
-        </>
-      ) : (
-        <>
-        <p>Sync your google calendar events</p>
-        <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleAuthClick}>
-          <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
-          Sign in with Google
-        </button>
-        </>
-      )}
+              {tokenData?.access_token ? ( // Check if access token exists
+              <>
+                <p>You are connected with <b>{tokenData?.autheticate_user_email}</b></p>
+                <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleSignOutClick}>
+                  <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
+                  Sign out with Google
+                </button>
+              </>
+            ) : (
+              <>
+                <p>Sync your Google calendar events</p>
+                <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleAuthClick}>
+                  <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
+                  Sign in with Google
+                </button>
+              </>
+            )}
         </div>
           
           </div>
