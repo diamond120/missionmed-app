@@ -59,9 +59,9 @@ const BufferTime: FC<Any> = ({props}) => {
             <div className={"buffer-time-form-item"}>
               <p className={"label"}>Buffer Time</p>
               <Radio.Group className={"buffer-time-checkboxes"} onChange={handleTimeChange} value={selectedTime}>
-                <Radio className={"buffer-time-checkbox"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",}} value={'0'}>0</Radio>
-                <Radio className={"buffer-time-checkbox"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",}} value={'30'}>30</Radio>
-                <Radio className={"buffer-time-checkbox"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",}} value={'60'}>60</Radio>
+                <Radio className={"buffer-time-checkbox"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",}} value={'0'}>0 minutes</Radio>
+                <Radio className={"buffer-time-checkbox"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",}} value={'30'}>30 minutes</Radio>
+                <Radio className={"buffer-time-checkbox"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",}} value={'60'}>60 minutes</Radio>
               </Radio.Group>
             </div>
           </Form.Item>
