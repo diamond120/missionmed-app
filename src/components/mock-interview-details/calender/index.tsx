@@ -48,6 +48,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       };
       setfilterDate(data);
       setFilterDateSet(true);
+      console.log("test");
     }
 
     const getSlotsist = async (tutorId) => {
@@ -143,12 +144,28 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       }
     }
     
-    
     useEffect(() => {
       if(filterDateSet == true) {
         getSlotsist(tutorId);
         getWeekAvailable(tutorId);
       }
+
+      const addClassToParentAfterDateChange = () => {
+        const elementsWithABCClass = document.querySelectorAll('.otherslot');
+        elementsWithABCClass.forEach(element => {
+          element.parentNode.classList.add('bookedslot');
+        });
+
+        const unavailableElement = document.querySelectorAll('.unavailable');
+
+        unavailableElement.forEach(element => {
+          element.parentNode.style.zIndex = 5;
+        });
+      };
+      const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+
+      return () => clearTimeout(timeoutId);
+
     }, [tutorId,filterDate,filterDateSet,subSlotList]);
 
     useEffect(() => {
@@ -157,8 +174,15 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         elementsWithABCClass.forEach(element => {
           element.parentNode.classList.add('bookedslot');
         });
+
+        const unavailableElement = document.querySelectorAll('.unavailable');
+
+        unavailableElement.forEach(element => {
+          element.parentNode.style.zIndex = 5;
+        });
       };
       const timeoutId = setTimeout(addClassToParent, 5000);
+
       return () => clearTimeout(timeoutId);
     }, []); 
 

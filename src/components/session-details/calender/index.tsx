@@ -154,6 +154,21 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       memoizedGetSlotsist(tutorId);
       getWeekAvailable(tutorId);
     }
+    const addClassToParentAfterDateChange = () => {
+      const elementsWithABCClass = document.querySelectorAll('.otherslot');
+      elementsWithABCClass.forEach(element => {
+        element.parentNode.classList.add('bookedslot');
+      });
+
+      const unavailableElement = document.querySelectorAll('.unavailable');
+
+      unavailableElement.forEach(element => {
+        element.parentNode.style.zIndex = 5;
+      });
+    };
+    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+
+    return () => clearTimeout(timeoutId);
   }, [memoizedGetSlotsist, tutorId, filterDateSet]);
 
   // useEffect(() => {
@@ -260,13 +275,20 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
   };
 
   useEffect(() => {
-    const addClassToParent = () => {
+    const addClassToParentAfterDateChange = () => {
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
         element.parentNode.classList.add('bookedslot');
       });
+
+      const unavailableElement = document.querySelectorAll('.unavailable');
+
+      unavailableElement.forEach(element => {
+        element.parentNode.style.zIndex = 5;
+      });
     };
-    const timeoutId = setTimeout(addClassToParent, 5000);
+    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+
     return () => clearTimeout(timeoutId);
   }, []); 
 
