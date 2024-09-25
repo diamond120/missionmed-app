@@ -111,6 +111,21 @@ function formatDate(inputDateStr) {
         if (filterDateSet && timezoneNew) {
           memoizedGetSlotsist(tutorId);
         }
+        const addClassToParentAfterDateChange = () => {
+          const elementsWithABCClass = document.querySelectorAll('.otherslot');
+          elementsWithABCClass.forEach(element => {
+            element.parentNode.classList.add('bookedslot');
+          });
+  
+          const unavailableElement = document.querySelectorAll('.unavailable');
+  
+          unavailableElement.forEach(element => {
+            element.parentNode.style.zIndex = 5;
+          });
+        };
+        const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+  
+        return () => clearTimeout(timeoutId);
       }, [memoizedGetSlotsist, tutorId, filterDateSet, timezoneNew]);
 
 
@@ -170,13 +185,20 @@ function formatDate(inputDateStr) {
   };
 
   useEffect(() => {
-    const addClassToParent = () => {
+    const addClassToParentAfterDateChange = () => {
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
         element.parentNode.classList.add('bookedslot');
       });
+
+      const unavailableElement = document.querySelectorAll('.unavailable');
+
+      unavailableElement.forEach(element => {
+        element.parentNode.style.zIndex = 5;
+      });
     };
-    const timeoutId = setTimeout(addClassToParent, 5000);
+    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+
     return () => clearTimeout(timeoutId);
   }, []); 
 
