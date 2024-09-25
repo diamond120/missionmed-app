@@ -50,18 +50,18 @@ export const LayoutWithoutLogin: FC = () => {
           }
         } else {
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
-            if(!['/forgot-password', '/resetpassword','/sign_in'].includes(location.pathname) ) {
+            if(!['/forgot-password','/sign_in'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword')) {
               navigate("/")
             }
           } else {
-            if(!['/forgot-password', '/resetpassword'].includes(location.pathname) ) {
+            if(!['/forgot-password'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword') ) {
               navigate("/sign_in")
             }  
           }
         }
       }
     } catch (e) {
-      if(!['/forgot-password', '/resetpassword'].includes(location.pathname) ) {
+      if(!['/forgot-password'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword')) {
        navigate("/sign_in")
       }
     }
