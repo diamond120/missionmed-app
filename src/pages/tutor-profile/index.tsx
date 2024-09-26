@@ -96,12 +96,10 @@ const TutorProfile = () => {
                   <SpecialDays/>
                 </div> 
                 <div>
-              {tutor?.email === "shahddit@gmail.com" && (
                 <div className={"specializations-section"}>
                 <h2 className={"specializations-section-title"}>Google Calendar</h2>
                  <CalendarAuth />
                 </div>
-                )}
                   <Specializations />
                   <BufferTime />
                   <MeetingLink />
