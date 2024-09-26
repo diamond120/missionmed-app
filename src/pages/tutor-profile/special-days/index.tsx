@@ -73,7 +73,7 @@ const SpecialDays: FC<Any> = ({props}) => {
       key: 'x',
       render: (text, record) => {
         if (record.event_id) {
-          return <span style={{ color: 'black' }}>Sync from your Google Calendar, so you cannot edit/delete from here.</span>;
+          return <span style={{ color: 'black' }}>Sync from your Google Calendar, so you cannot edit/delete from here.<br />Note: Before and After Buffer time added in your Google Calendar event.</span>;
         }
         return (
           <div className='d_flex_10'>
