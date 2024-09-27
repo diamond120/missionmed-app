@@ -1,6 +1,6 @@
 // CalendarAuth.js
 import { gapi } from 'gapi-script';
-import { message, Form } from "antd";
+import { message, Form, Spin } from "antd";
 import React, { useEffect, useState } from 'react';
 import { getToken } from '../common/common';
 import CommonService from "../api/services/Common";
@@ -10,6 +10,7 @@ const CalendarAuth = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [fullName, setFullName] = useState('');
   const [tokenData, setAccessToken] = useState('');
+  const [loading, setLoading] = useState(false); 
   useEffect(() => {
     getAccessToken();
     const initClient = () => {
@@ -70,8 +71,10 @@ const CalendarAuth = () => {
     auth2.grantOfflineAccess(options)
     .then(async (authResult) => {
       if (authResult.code) {
+        setLoading(true);
         await sendAccessTokenToBackend(authResult.code);
-        getAccessToken();
+        await getAccessToken();
+        setLoading(false);
         message.success("Google calendar connected successfully!");
       } else {
         console.error("Login failed");
@@ -117,36 +120,70 @@ const CalendarAuth = () => {
     });
   };
 
+  const GoogleAuthButton = ({ onClick, label, isLoading }) => (
+    <button
+      className="ant-btn ant-btn-default form-button google-auth"
+      onClick={onClick}
+      disabled={isLoading} // Disable the button when loading
+    >
+      <img
+        className="offer-img"
+        src={google}
+        style={{ width: '30px', height: '30px', marginRight: '8px' }}
+        alt="Google logo"
+      />
+      {label}
+    </button>
+  );
+  
+  const GoogleAuthStatus = ({ email }) => (
+    <p>
+      You are connected with <b>{email}</b>
+    </p>
+  );
+  
   return (
-      <Form className={"specializations-form"}>
-        <Form.Item>
-          <div className={"specializations-form-item"}>
-
-              <div className={"specializations-checkboxes"}  >
-              {tokenData?.access_token ? ( // Check if access token exists
+    <Form className="specializations-form">
+      <Form.Item>
+        <div className="specializations-form-item">
+          <div className="specializations-checkboxes">
+            {loading ? (
               <>
-                <p>You are connected with <b>{tokenData?.autheticate_user_email}</b></p>
-                <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleSignOutClick}>
-                  <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
-                  Sign out with Google
-                </button>
+                <Spin />
+                <GoogleAuthButton
+                  onClick={handleSignOutClick}
+                  label="Sign out with Google"
+                  isLoading={loading}
+                />
+                {tokenData?.access_token && (
+                  <GoogleAuthStatus email={tokenData.autheticate_user_email} />
+                )}
+              </>
+            ) : tokenData?.access_token ? (
+              <>
+                <GoogleAuthStatus email={tokenData.autheticate_user_email} />
+                <GoogleAuthButton
+                  onClick={handleSignOutClick}
+                  label="Sign out with Google"
+                  isLoading={loading}
+                />
               </>
             ) : (
               <>
                 <p>Sync your Google calendar events</p>
-                <button className="ant-btn ant-btn-default form-button google-auth" onClick={handleAuthClick}>
-                  <img className="offer-img" src={google} style={{ width: '30px', height: '30px', marginRight: '8px' }} alt="Google logo" />
-                  Sign in with Google
-                </button>
+                <GoogleAuthButton
+                  onClick={handleAuthClick}
+                  label="Sign in with Google"
+                  isLoading={loading}
+                />
               </>
             )}
-        </div>
-          
           </div>
-        </Form.Item>
-        </Form>
-     
+        </div>
+      </Form.Item>
+    </Form>
   );
+  
 };
 
 export default CalendarAuth;
