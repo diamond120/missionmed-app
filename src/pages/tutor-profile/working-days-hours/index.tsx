@@ -275,7 +275,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
           { tutor.bufferTime && (
             <Alert
             message="Warning"
-            description={'You set '+tutor.bufferTime + ' buffer time. If you will not add '+tutor.bufferTime + ' buffer between 2 slot then it will not consider buffer time setting.'}
+            description={'You set '+tutor.bufferTime + ' minutes buffer time. If you will not add '+tutor.bufferTime + ' minutes buffer time between 2 slots then it will not consider buffer time setting.'}
             type="warning"
             showIcon
             style={{marginBottom :20}}
