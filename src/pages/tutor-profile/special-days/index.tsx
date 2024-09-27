@@ -11,12 +11,11 @@ const SpecialDays: FC<Any> = ({ props }) => {
   const tutor = useTutor();
   const [data, setData] = useState([]);
   const [filterName, setFilterName] = useState([]);
+  const [current, setCurrent] = useState(1);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
   const [loading, setLoading] = useState(false);
+  const [showPastEvents, setShowPastEvents] = useState(false); 
   const [modal, contextHolder] = Modal.useModal();
-  const [showSpecialDays, setShowSpecialDays] = useState(false); // State for checkbox
-  const [includePastData, setIncludePastData] = useState(false); // New state to track checkbox
-
   interface DataType {
     id: React.Key;
     name: string;
@@ -93,53 +92,54 @@ const SpecialDays: FC<Any> = ({ props }) => {
 
   useEffect(() => {
     fetchData();
-  }, [pagination.current, pagination.pageSize, showSpecialDays, includePastData]); // Add includePastData to dependencies
+}, [pagination.current, pagination.pageSize, showPastEvents]); 
 
-  const setState = (data) => {
-    setData(data.map((item: any) => {
-      item.duration = `${moment(item.start_day).format('D MMMM')} - ${moment(item.end_day).format('D MMMM')}`;
-      return item;
-    }));
-    setFilterName(data.map(item => ({
-      text: item.name,
-      value: item.name
-    })));
-  };
-  
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await CommonService.getAPI('/tutor/get-exceptions', {
-        params: {
-          page: pagination.current,
+
+const setState = (data) => {
+  const formattedData = data.map((item) => {
+    item.duration = `${moment(item.start_day).format('D MMMM')} - ${moment(item.end_day).format('D MMMM')}`;
+    return item;
+  });
+
+  setData(formattedData); // Set the formatted data to the state
+  setFilterName(formattedData.map(item => ({
+    text: item.name,
+    value: item.name
+  })));
+};
+
+const onChange = (page)=> {
+   setCurrent(page)
+   fetchData(page);
+ };
+
+const fetchData = async (page) => {
+  setLoading(true);
+  try {
+      const response = await CommonService.postAPI('/tutor/get-exceptions', {
+          page: page,
           pageSize: pagination.pageSize,
-          showSpecialDays, // Pass this flag to the API if needed
-          includePastData // New parameter to include past data
-        }
+          showPast: showPastEvents,
       });
+
       if (response.data.success) {
-        setState(response.data.data);
-        setPagination(prev => ({ ...prev, total: response.data.total }));
+          const data = response.data.data.data; 
+          setState(data); // Set the data
+          
+          setPagination(prev => ({
+            ...prev,
+            total: response.data.data.total, // Ensure this reflects the total records count
+        }));
+        console.log('pagination', pagination);
       } else {
-        throw new Error(response.data.message);
+          throw new Error(response.data.message);
       }
-    } catch (error) {
+  } catch (error) {
       message.error(error.message);
-    } finally {
+  } finally {
       setLoading(false);
-    }
-  };
-
-  const handleTableChange = (pagination) => {
-    setPagination(pagination);
-  };
-
-  const handleCheckboxChange = (e) => {
-    const checked = e.target.checked;
-    setShowSpecialDays(checked); // Update the checkbox state
-    setIncludePastData(checked); // Also update the past data checkbox
-  };
-
+  }
+};
 
   const deleteException = async (data: any) => {
     modal.confirm({
@@ -164,14 +164,6 @@ const SpecialDays: FC<Any> = ({ props }) => {
     });
   };
 
-  const filteredData = data.filter(item => {
-    const startDate = moment(item.start_day); // Assume start_day is in your data
-    const isPastOrToday = moment(startDate).isBefore(moment(), 'day'); // Check if the date is past or today
-
-    // If showSpecialDays is checked, include past events (including today)
-    return showSpecialDays ? isPastOrToday : startDate.isSameOrAfter(moment().startOf('day')); // Show past or future based on checkbox state
-  });
-  
     if (tutor?.loading || loading) {
       return (
         <div className="spinner-container">
@@ -184,22 +176,23 @@ const SpecialDays: FC<Any> = ({ props }) => {
     <>
       <div className={"specializations-section"}>
         <h2 className={"specializations-section-title"}>Special Days</h2>
-        {data.length > 0 && ( // Render checkbox only if there are data
-          <Checkbox 
-            checked={showSpecialDays}
-            onChange={handleCheckboxChange}
-          >
-            Show Past Special Days
-          </Checkbox>
-        )}
-        <Table
-          columns={columns}
-          dataSource={filteredData}
-          pagination={{
-            ...pagination,
-            style: { padding: '10px' }, // Apply your custom css here
-          }}
-          onChange={handleTableChange}
+        <Checkbox 
+          onChange={(e) => setShowPastEvents(e.target.checked)} // Toggle checkbox state
+          checked={showPastEvents}
+          style={{ paddingBottom: '10px' }}
+        >
+          Show Past Special Days
+        </Checkbox>
+        <Table 
+            columns={columns} 
+            dataSource={data} 
+            pagination={{
+                current: current,
+                pageSize: pagination.pageSize,
+                total: pagination.total, 
+                onChange: onChange, // Fetch data for the new page
+            }} 
+            loading={loading}
         />
         <AddException title='Add Exception' callAdded={() => { fetchData(); }} />
         {contextHolder}
