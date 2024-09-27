@@ -33,18 +33,11 @@ const SpecialDays: FC<Any> = ({ props }) => {
     {
       title: 'Type',
       dataIndex: 'type',
-      defaultSortOrder: 'ascend',
       sorter: (a, b) => a.type.localeCompare(b.type),
     },
     {
       title: 'Duration',
       dataIndex: 'duration',
-      defaultSortOrder: 'ascend',
-      sorter: (a, b) => {
-        const startDateA = new Date(a.duration.split(' - ')[0]);
-        const startDateB = new Date(b.duration.split(' - ')[0]);
-        return startDateA - startDateB;
-      },
       render: (text, record) => (
         <div>
           <p>{text}</p>
@@ -55,7 +48,6 @@ const SpecialDays: FC<Any> = ({ props }) => {
                 startDate: new Date(`2000-01-01 ${hour.start}`),
                 endDate: new Date(`2000-01-01 ${hour.end}`),
               }))
-              .sort((a, b) => a.startDate - b.startDate)
               .map((hour, index) => (
                 <div key={index} style={{ marginTop: 1 }}>
                   <Tag color="blue" style={{ borderRadius: 5 }}>
@@ -89,7 +81,7 @@ const SpecialDays: FC<Any> = ({ props }) => {
       },
     }
   ];
-
+  
   useEffect(() => {
     fetchData();
 }, [pagination.current, pagination.pageSize, showPastEvents]); 
