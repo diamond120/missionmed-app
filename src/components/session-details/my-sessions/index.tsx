@@ -187,6 +187,14 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
                 </Button>}
                 {/* <Link to={`/student/interview-summary/${session.id}/${pagesession}`}> */}
                 <Button className={"secondary-button"} onClick={() => { navigate(`/student/interview-summary/${session.id}/${pagesession}`) }} >View Summary</Button>
+                <Button className={"secondary-button"}  onClick={(event) => {
+                const linkToOpen = session.sessionLink  ? session.sessionLink  : session.sessionLink.defaultSessionLink;
+                if(linkToOpen) {
+                  window.open(linkToOpen , '_blank')
+                } else {
+                  event.preventDefault();
+                }
+              }} >Session Link </Button>
                 {/* </Link> */}
                 {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
               </>
@@ -195,6 +203,14 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               <>
                 {/* <Link to={`/tutor/interview-summary/${session.id}/${pagesession}`}> */}
                 <Button className={"secondary-button"} onClick={() => { navigate(`/tutor/interview-summary/${session.id}/${pagesession}`) }}>Session Summary</Button>
+                <Button className={"secondary-button"}  onClick={(event) => {
+                const linkToOpen = session.sessionLink  ? session.sessionLink  : session.sessionLink.defaultSessionLink;
+                if(linkToOpen) {
+                  window.open(linkToOpen , '_blank')
+                } else {
+                  event.preventDefault();
+                }
+              }} >Session Link </Button>
                 {/* </Link> */}
                 {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
               </>
