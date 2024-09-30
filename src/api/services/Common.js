@@ -1,57 +1,30 @@
 import http from "../http-common";
-import {getToken} from "../../common/common";
 
-const getProfileStaticData = (data = {}) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-    ...data
-  }
-
-  return http.get("/lists", config);
+const getProfileStaticData = () => {
+    return http.get("/lists");
 };
 
 const getUniversityTutorList = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/university-tutors-list`, data, config);
-}
-
-const checkSession = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-  }
-  return http.post(`/student/check-sessions`, data, config);
-}
-
-const getAPI = (path) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.get(path, config);
+    return http.post(`/university-tutors-list`, data);
 };
 
-const postAPI = (path,data, cancelToken ='') => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    },
-    cancelToken: cancelToken || undefined
-  }
-  return http.post(path, data, config);
+const checkSession = (data) => {
+    return http.post(`/student/check-sessions`, data);
+};
+
+const getAPI = (path) => {
+    return http.get(path);
+};
+
+const postAPI = (path, data, cancelToken = "") => {
+    const config = {
+        cancelToken: cancelToken || undefined,
+    };
+    return http.post(path, data, config);
+};
+
+const getUserDetails = () => {
+    return http.get("/userdetails");
 };
 
 const Service = {
@@ -59,7 +32,8 @@ const Service = {
     getUniversityTutorList,
     checkSession,
     getAPI,
-    postAPI
+    postAPI,
+    getUserDetails,
 };
 
 export default Service;

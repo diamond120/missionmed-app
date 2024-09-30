@@ -1,10 +1,8 @@
 import "./DefaultLayout.less"
 import { Layout } from "antd"
-import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
+import { FC, Suspense, useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
-import { useBreakpoints } from "../screen"
 import SidebarMenu from "../sidebar-menu"
-import User from "../../api/services/User";
 import { useUserDispatch, useUser } from "../../api/providers/UserProvider.jsx";
 import Student from "../../api/services/Student.js";
 import { useStudentDispatch } from "../../api/providers/StudentProvider.jsx";
@@ -13,15 +11,9 @@ import Tutor from "../../api/services/Tutor.js";
 import ProfileStaticDataContext from "../../api/context/ProfileStaticDataContext";
 import CommonService from "../../api/services/Common";
 import NotificationContext from "../../api/context/NotificationContext";
+import { getToken } from "~/common/common"
 
-const { Sider, Content } = Layout
-
-const siderStyle: CSSProperties = {
-  maxWidth: "200px",
-  width: "20%",
-  minHeight: "100%",
-  backgroundColor: "#1E1450",
-}
+const { Content } = Layout
 
 export const DefaultLayout: FC = () => {
   const navigate = useNavigate()
@@ -32,21 +24,11 @@ export const DefaultLayout: FC = () => {
   const [profileStaticData, setProfileStaticData] = useState({});
   const [loading, setLaoding] = useState(true)
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-  const [toggle,setToggle] = useState(false)
-  const resetTutorContext = () => {
-    tutorDispatch({
-      type: "reset"
-    })
-  }
+  const [toggle,setToggle] = useState<boolean>(false)
 
-  const resetStudentContext = () => {
-    studentDispatch({
-      type: "reset"
-    });
-  }
 
-  const getUserDetails = async (token) => {
-    const result = await User.getUserDetails(token);
+  const fetchUser = async () => {
+    const result = await CommonService.getUserDetails();
     dispatch({
       type: "set",
       id: result.data.data.id,
@@ -70,11 +52,11 @@ export const DefaultLayout: FC = () => {
 
   useEffect(() => {
     getTokenResponse();
-    if (!localStorage.getItem("jwt")) {
+    if (!getToken()) {
       navigate("/sign_in")
     } else {
       if (Object.keys(user).length === 0) {
-        getUserDetails(localStorage.getItem("jwt"));
+        fetchUser();
       }
       (async () => {
         await setLaoding(true)
@@ -191,14 +173,8 @@ export const DefaultLayout: FC = () => {
         getTutorProfile();
       }
     }
-
-    return () => {
-      // resetTutorContext();
-      // resetStudentContext();
-    };
   }, [user]);
 
-  const { isTablet } = useBreakpoints()
   if (loading)
     return null
 

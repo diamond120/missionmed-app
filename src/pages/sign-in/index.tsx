@@ -1,27 +1,30 @@
 import "./index.less"
 import { Form, Input, Button, Checkbox, message } from 'antd';
-import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import Authentication from "../../api/services/Authentication";
 import { useNavigate } from "react-router-dom"
 import { useUserDispatch } from "../../api/providers/UserProvider.jsx";
 import { useAuthContext } from "../../api/context/AuthContext.js";
 import posthog from "posthog-js";
+import { useState } from "react";
 
 const SignIn = () => {
   const [form] = Form.useForm();
-  // //const [loginMutation, { loading, error, data }] = useLoginMutation();
   const navigate = useNavigate()
-  // // const isTutor = useMeQuery().data?.me?.tutor?.data?.id
-  // // const isStudent = useMeQuery().data?.me?.student?.data?.id
   const dispatch = useUserDispatch();
   const { setAuthenticated } = useAuthContext();
+  const [timezone, setTimezone] = useState<string>('')
 
   const onFinish = async (values: any) => {
-    const response = await fetch('https://ipapi.co/timezone/');
-    const timezone = await response.text();
+    let userTimezone = timezone;
+    if (!timezone) {
+      const response = await fetch('https://ipapi.co/timezone/');
+      userTimezone = await response.text();
+      setTimezone(userTimezone)
+    }
+
     const { email, password } = values;
     try {
-      const result = await Authentication.login({ email, password , timezone});
+      const result = await Authentication.login({ email, password , timezone: userTimezone});
       if (result.data.success) {
         if (result.data.data && result.data.data.token) {
           posthog.capture('Login', { user: result.data.data });

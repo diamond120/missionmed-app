@@ -39,8 +39,8 @@
     "react-select-country-list": "^2.2.3",
     "react-timezone-select": "^2.1.2",
     "vite-plugin-svgr": "^3.2.0",
-    "wtf_wikipedia": "^10.3.0",
-    "wtf-plugin-api": "^2.0.0"
+    "wtf-plugin-api": "^2.0.0",
+    "wtf_wikipedia": "^10.3.0"
   },
   "proxy": "http://192.168.1.125:8081",
   "devDependencies": {
@@ -53,7 +53,6 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "less": "^4.2.0",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vite-plugin-imp": "^2.4.0"
+    "vite": "^4.4.5"
   }
 }
