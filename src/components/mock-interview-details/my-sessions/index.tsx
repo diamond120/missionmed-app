@@ -187,7 +187,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
                 <Button className={"secondary-button"} type='link' onClick={() => { navigate(`/tutor/interview-summary/${session.id}`) }}>Session Summary</Button>
                 {(session.sessionLink || session.defaultSessionLink) && (
                 <Button className={"secondary-button"}  onClick={(event) => {
-                const linkToOpen = session.sessionLink  ? session.sessionLink  : session.sessionLink.defaultSessionLink;
+                const linkToOpen = session.sessionLink  ? session.sessionLink  : session.defaultSessionLink;
                 if(linkToOpen) {
                   window.open(linkToOpen , '_blank')
                 } else {
