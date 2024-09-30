@@ -1,5 +1,4 @@
-import http from "../http-common";
-import { getToken } from "../../common/common.js";
+import http from "~/api/http-common";
 
 const get = (customConfig) => {
   return http.get(`/notification/list`, {...customConfig });
@@ -10,23 +9,11 @@ const getUnreadNotificationCount = (customConfig, data={}) => {
 };
 
 const deleteNotification = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/notification/delete`, data, headerConfig);
+  return http.post(`/notification/delete`, data);
 };
 
 const update = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const headerConfig = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/notification/update`, data, headerConfig);
+  return http.post(`/notification/update`, data);
 };
 
 const Service = {
