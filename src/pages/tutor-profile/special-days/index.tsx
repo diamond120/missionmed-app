@@ -7,7 +7,7 @@ import AddException from '../add-exception';
 import CommonService from "../../../api/services/Common";
 import moment from 'moment';
 
-const SpecialDays: FC<Any> = ({ props }) => {
+const SpecialDays: FC<Any> = ({ props, isGoogleVerification }) => {
   const tutor = useTutor();
   const [data, setData] = useState([]);
   const [filterName, setFilterName] = useState([]);
@@ -81,6 +81,11 @@ const SpecialDays: FC<Any> = ({ props }) => {
       },
     }
   ];
+  useEffect(() => {
+    if (isGoogleVerification) {
+      fetchData();
+    }
+  }, [isGoogleVerification]);
   
   useEffect(() => {
     fetchData();

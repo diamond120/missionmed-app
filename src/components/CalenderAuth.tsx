@@ -6,7 +6,7 @@ import { getToken } from '../common/common';
 import CommonService from "../api/services/Common";
 import {REACT_APP_CLIENT_ID, SCOPES, REACT_APP_API_KEY} from "../config/app-config";
 import google from '../assets/images/google.png';
-const CalendarAuth = () => {
+const CalendarAuth = ({setGoogleVerification}) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [fullName, setFullName] = useState('');
   const [tokenData, setAccessToken] = useState('');
@@ -61,7 +61,36 @@ const CalendarAuth = () => {
     }
   };
 
-  const handleAuthClick = () => {
+  const fetchData = async (page) => {
+    setLoading(true);
+    try {
+        const response = await CommonService.postAPI('/tutor/get-exceptions', {
+            page: page,
+            pageSize: pagination.pageSize,
+            showPast: showPastEvents,
+        });
+  
+        if (response.data.success) {
+            const data = response.data.data.data; 
+            setState(data); // Set the data
+            
+            setPagination(prev => ({
+              ...prev,
+              total: response.data.data.total, // Ensure this reflects the total records count
+          }));
+          console.log('pagination', pagination);
+        } else {
+            throw new Error(response.data.message);
+        }
+    } catch (error) {
+        message.error(error.message);
+    } finally {
+        setLoading(false);
+    }
+  };
+  
+  const handleAuthClick = async() => {
+    await setGoogleVerification(false);
     const auth2 = gapi.auth2.getAuthInstance();
 
     // Configure OfflineAccessOptions to request offline access (refresh token)
@@ -75,6 +104,7 @@ const CalendarAuth = () => {
         await sendAccessTokenToBackend(authResult.code);
         await getAccessToken();
         setLoading(false);
+        setGoogleVerification(true);
         message.success("Google calendar connected successfully!");
       } else {
         console.error("Login failed");
