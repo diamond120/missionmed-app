@@ -60,34 +60,6 @@ const CalendarAuth = ({setGoogleVerification}) => {
       setFullName(''); // Clear fullName if signed out
     }
   };
-
-  const fetchData = async (page) => {
-    setLoading(true);
-    try {
-        const response = await CommonService.postAPI('/tutor/get-exceptions', {
-            page: page,
-            pageSize: pagination.pageSize,
-            showPast: showPastEvents,
-        });
-  
-        if (response.data.success) {
-            const data = response.data.data.data; 
-            setState(data); // Set the data
-            
-            setPagination(prev => ({
-              ...prev,
-              total: response.data.data.total, // Ensure this reflects the total records count
-          }));
-          console.log('pagination', pagination);
-        } else {
-            throw new Error(response.data.message);
-        }
-    } catch (error) {
-        message.error(error.message);
-    } finally {
-        setLoading(false);
-    }
-  };
   
   const handleAuthClick = async() => {
     await setGoogleVerification(false);
