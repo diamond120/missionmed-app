@@ -27,6 +27,7 @@ import UcatPerformance from "./ucat-performance";
 const TutorProfile = () => {
   
   const [rating, setRating] = useState(null);
+  const [isGoogleVerification, setGoogleVerification] = useState(false);
   const tutor = useTutor();
   // const tutorId = useMeQuery()?.data?.me?.tutor?.data?.id
   // const tutor = useTutorsQuery({ variables: { filter: { id: { eq: tutorId}}}})?.data?.tutors?.data[0]
@@ -93,12 +94,12 @@ const TutorProfile = () => {
               <div className={"working-time-wrap"}>
                 <div className="flex-col">
                   <WorkingDaysHours />
-                  <SpecialDays/>
+                  <SpecialDays isGoogleVerification={isGoogleVerification}/>
                 </div> 
                 <div>
                 <div className={"specializations-section"}>
                 <h2 className={"specializations-section-title"}>Google Calendar</h2>
-                 <CalendarAuth />
+                 <CalendarAuth setGoogleVerification={setGoogleVerification} />
                 </div>
                   <Specializations />
                   <BufferTime />
