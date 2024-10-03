@@ -1,7 +1,7 @@
 import "./DefaultLayout.less"
 import { Layout } from "antd"
 import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useLocation, useNavigate } from "react-router-dom"
 import { useBreakpoints } from "../screen"
 import SidebarMenu from "../sidebar-menu"
 import User from "../../api/services/User";
@@ -25,6 +25,7 @@ const siderStyle: CSSProperties = {
 
 export const DefaultLayout: FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const dispatch = useUserDispatch();
   const user = useUser();
   const studentDispatch = useStudentDispatch();
@@ -69,6 +70,10 @@ export const DefaultLayout: FC = () => {
   }
 
   useEffect(() => {
+    if(location.pathname.startsWith('/impersonate')) {
+      localStorage.clear()
+      return;
+    }
     getTokenResponse();
     if (!localStorage.getItem("jwt")) {
       navigate("/sign_in")
