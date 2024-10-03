@@ -7,7 +7,7 @@ import AddException from '../add-exception';
 import CommonService from "../../../api/services/Common";
 import moment from 'moment';
 
-const SpecialDays: FC<Any> = ({ props }) => {
+const SpecialDays: FC<Any> = ({ props, isGoogleVerification }) => {
   const tutor = useTutor();
   const [data, setData] = useState([]);
   const [filterName, setFilterName] = useState([]);
@@ -81,6 +81,11 @@ const SpecialDays: FC<Any> = ({ props }) => {
       },
     }
   ];
+  useEffect(() => {
+    if (isGoogleVerification) {
+      fetchData();
+    }
+  }, [isGoogleVerification]);
   
   useEffect(() => {
     fetchData();
@@ -156,14 +161,6 @@ const fetchData = async (page) => {
     });
   };
 
-    if (tutor?.loading || loading) {
-      return (
-        <div className="spinner-container">
-          <Spin />
-        </div>
-      );
-    }
-
   return (
     <>
       <div className={"specializations-section"}>
@@ -175,17 +172,19 @@ const fetchData = async (page) => {
         >
           Show Past Special Days
         </Checkbox>
-        <Table 
-            columns={columns} 
-            dataSource={data} 
-            pagination={{
-                current: current,
-                pageSize: pagination.pageSize,
-                total: pagination.total, 
-                onChange: onChange, // Fetch data for the new page
-            }} 
-            loading={loading}
-        />
+       {/* The loader is only applied to the table here */}
+       <Spin spinning={loading}>
+          <Table 
+              columns={columns} 
+              dataSource={data} 
+              pagination={{
+                  current: current,
+                  pageSize: pagination.pageSize,
+                  total: pagination.total, 
+                  onChange: onChange, 
+              }} 
+          />
+        </Spin>
         <AddException title='Add Exception' callAdded={() => { fetchData(); }} />
         {contextHolder}
       </div>
