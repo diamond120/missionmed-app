@@ -27,6 +27,10 @@ export const LayoutWithoutLogin: FC = () => {
 
 
   useEffect(() => {
+    if(location.pathname.startsWith('/impersonate')) {
+      localStorage.clear()
+      return;
+    }
     if (localStorage.getItem("jwt") && user) {
       if(user.role == "student"){
         navigate("/application_review")
@@ -38,6 +42,10 @@ export const LayoutWithoutLogin: FC = () => {
 
 
   useEffect(() => {
+    if(location.pathname.startsWith('/impersonate')) {
+      localStorage.clear()
+      return;
+    }
     handleReading();
   }, [])
   const handleReading = async () => {
