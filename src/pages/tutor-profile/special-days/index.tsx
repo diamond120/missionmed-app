@@ -149,7 +149,7 @@ const fetchData = async (page) => {
         try {
           const response = await CommonService.getAPI(`/tutor/delete-exception/${data.id}`);
           if (response.data.success) {
-            setState(response.data.data);
+            fetchData()
             message.success('Exception deleted successfully');
           } else {
             throw new Error(response.data.message);
