@@ -199,6 +199,11 @@ const routes: RouteObject[] = [
       {
         Component: Outlet,
         path: '*'
+      },
+      {
+        Component: Impersonate,
+        path: '/impersonate',
+        index: true
       }
     ]
   }
