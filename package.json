@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "node server.cjs"
+    "start": "node server.mjs"
   },
   "dependencies": {
     "@ant-design/charts": "^2.1.1",
@@ -25,6 +25,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "antd": "4.24.14",
     "axios": "^1.5.0",
+    "chalk": "^5.3.0",
     "express": "^4.18.2",
     "gapi-script": "^1.2.0",
     "googleapis": "^144.0.0",
