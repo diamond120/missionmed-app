@@ -147,6 +147,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
   
       await TutorService.updateProfile({
         workingHours: workingHours,
+        meeting: true,
       });
   
       dispatch({

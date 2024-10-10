@@ -1,7 +1,7 @@
 import './DefaultLayout.less'
 import { Layout } from 'antd'
 import { FC, Suspense, useContext, useEffect, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import SidebarMenu from '../sidebar-menu'
 import { UserContext } from '../../api/providers/UserProvider.jsx'
 import Student from '../../api/services/Student.js'
@@ -17,6 +17,7 @@ const { Content } = Layout
 
 export const DefaultLayout: FC = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, dispatch } = useContext(UserContext)
   const studentDispatch = useStudentDispatch()
   const tutorDispatch = useTutorDispatch()
@@ -51,6 +52,10 @@ export const DefaultLayout: FC = () => {
   }
 
   useEffect(() => {
+    if (location.pathname.startsWith('/impersonate')) {
+      localStorage.clear()
+      return
+    }
     getTokenResponse()
     if (!getToken()) {
       navigate('/sign_in')

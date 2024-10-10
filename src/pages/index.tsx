@@ -1,14 +1,13 @@
 import { FC, lazy, memo } from 'react'
-import { DefaultLayout } from '~/components/layout'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { LayoutWithoutLogin } from '~/components/layout/LayoutWithoutLogin'
-import { Loader } from '~/components/layout/Loader'
-// import { calendarLayout } from '~/components/layout/calendarLayout'
-// import TutorCalendar from '~/pages/tutor-calendar-teaching'
+import { DefaultLayout } from '../components/layout'
+import { LayoutWithoutLogin } from '../components/layout/LayoutWithoutLogin'
+// import { calendarLayout } from '../components/layout/calendarLayout'
+import { Loader } from '../components/layout/Loader'
+// import TutorCalendar from './tutor-calendar-teaching'
 
-// TODO: Need to fix css issue on sign_in page
-const ResetPassword = lazy<FC>(() => import('~/pages/reset-password'))
-const ForgotPassword = lazy<FC>(() => import('~/pages/forgot-password'))
+const ForgotPassword = lazy<FC>(() => import('./forgot-password'))
+const ResetPassword = lazy<FC>(() => import('./reset-password'))
 const Home = lazy<FC>(/*home-page-bundle*/ () => import('./home'))
 const ApplicationsReview = lazy(/*application-review-page-bundle*/ () => import('./application-review'))
 const Application = lazy(/*application-page-bundle*/ () => import('./application'))
@@ -28,12 +27,13 @@ const StudentUCATSession = lazy(() => import('./student-ucat-session'))
 const TutorUCATSession = lazy(() => import('./tutor-ucat-session'))
 const StudentTeachingSession = lazy(() => import('./student-teaching-session'))
 const TutorTeachingSession = lazy(() => import('./tutor-teaching-session'))
+// const StudentReadingTraining = lazy(() => import('./student-reading-training'))
 const MockPremiumLink = lazy(() => import('./mock-premium-link'))
 const UCATPremiumLink = lazy(() => import('./ucat-premium-link'))
 const TeachingPremiumLink = lazy(() => import('./teaching-premium-link'))
 const MockSimulation = lazy(() => import('./mock-simulation'))
 const SpecialOffers = lazy(() => import('./special-offers'))
-// const StudentReadingTraining = lazy(() => import("./student-reading-training"));
+const Impersonate = lazy(() => import('./application/impersonate'))
 
 const routes: RouteObject[] = [
   {
@@ -78,6 +78,11 @@ const routes: RouteObject[] = [
       {
         Component: TeachingPremiumLink,
         path: '/teaching-premium',
+        index: true
+      },
+      {
+        Component: Impersonate,
+        path: '/impersonate',
         index: true
       }
     ]

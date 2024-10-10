@@ -17,17 +17,25 @@ export const LayoutWithoutLogin: FC = () => {
   const location = useLocation()
 
   useEffect(() => {
-    if (localStorage.getItem('jwt') && user) {
-      if (user.role == 'student') {
-        navigate('/application_review')
-      } else {
-        navigate('/tutor/application_review')
+    if(location.pathname.startsWith('/impersonate')) {
+      localStorage.clear()
+      return;
+    }
+    if (localStorage.getItem("jwt") && user) {
+      if(user.role == "student"){
+        navigate("/application_review")
+      }else{
+        navigate("/tutor/application_review")
       }
     }
   }, [user])
 
   useEffect(() => {
-    handleReading()
+    if(location.pathname.startsWith('/impersonate')) {
+      localStorage.clear()
+      return;
+    }
+    handleReading();
   }, [])
   const handleReading = async () => {
     try {
