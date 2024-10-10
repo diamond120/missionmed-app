@@ -27,6 +27,7 @@ const ChangePassword = ({ title, moduleType }) => {
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    form.resetFields()
   }
 
   const showModal = () => {
