@@ -82,7 +82,7 @@ export const DefaultLayout: FC = () => {
   }, [])
 
   useEffect(() => {
-    if (Object.keys(user).length > 0 || !user?.id) {
+    if (Object.keys(user).length > 0 && user?.id) {
       if (user.role == 'student') {
         // resetTutorContext();
         const getStudentProfile = async () => {
