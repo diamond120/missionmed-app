@@ -19,20 +19,24 @@ export default function Impersonate() {
             }
 
             const response = await Service.getUserDetails(token);
+            let redirectTo = '/'
             if (response) {
                 setAuthenticated(true);
+                const role = String(response.data.data.role).toLowerCase()
                 dispatch({
                     type: "set",
                     id: response.data.data.id,
                     name: response.data.data.name,
                     email: response.data.data.email,
-                    role: response.data.data.role,
+                    role: role,
                 });
+
+                redirectTo = `/${role === 'student' ? 'student': 'tutor'}_profile`
             }
 
             // Because we are impersonating student user only for now.
             // and to avoid multiple redirects.
-            navigate("/student_profile");
+            navigate(redirectTo);
         };
 
         init();
