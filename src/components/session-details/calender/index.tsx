@@ -26,7 +26,7 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, prev }) => {
+const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezone, next, prev }) => {
   const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -85,7 +85,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   };
 
-  const getWeekAvailable = async (tutorId) => {
+  const getWeekAvailable = async (tutorId, studentId) => {
     try {
       const params = {
         startDate : filterDate.startDate,
@@ -97,7 +97,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       if(user.role == 'student') { 
         params.tutorId = tutorId 
       } else {
-        params.studentId = tutorId 
+        params.studentId = studentId,
         params.tutorId = tutor.id 
       } 
 
@@ -105,7 +105,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       if (response.data.success) {
             setWeekAvailable(response.data.data)
             if(!response.data.data) {
-              getAvailableWeekDates(tutorId)
+              getAvailableWeekDates(tutorId, studentId)
             }else
             setWeekDates(null)
             
@@ -118,7 +118,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   }
 
-  const getAvailableWeekDates = async (tutorId) => {
+  const getAvailableWeekDates = async (tutorId, studentId) => {
     try {
       const params = {
         startDate : filterDate.startDate,
@@ -130,7 +130,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       if(user.role == 'student') { 
         params.tutorId = tutorId 
       } else {
-        params.studentId = tutorId 
+        params.studentId = studentId 
         params.tutorId = tutor.id 
       } 
 
@@ -146,13 +146,13 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   }
 
-  const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, filterDate, rescheduleDate]);
+  const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, studentId, filterDate, rescheduleDate]);
 
   
   useEffect(() => {
     if (filterDateSet) {
-      memoizedGetSlotsist(tutorId);
-      getWeekAvailable(tutorId);
+      memoizedGetSlotsist(tutorId, studentId);
+      getWeekAvailable(tutorId, studentId);
     }
     const addClassToParentAfterDateChange = () => {
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
@@ -202,12 +202,12 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     }
   };
 
-  const setSlot = async (startDate, endDate, date, studentId) => {
+  const setSlot = async (startDate, endDate, date) => {
     try {
       setSpinning(true);
       if(user.role === 'tutor')
       {
-        studentId = tutorId;
+        studentId = studentId;
         tutorId = tutor.id;
       }
       const data = {
@@ -249,7 +249,6 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
     const data = form.getFieldsValue(true);
     if (subSlotList.length > 0 && data.subSlot >= 0) {
       let studentId;
-    
       const slot = subSlotList[data.subSlot];
       form.setFieldValue('sessionStartTime', slot.start);
       form.setFieldValue('sessionEndTime', slot.end);
@@ -259,10 +258,9 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       form.setFieldValue('newTutorId', data.tutorId);
       if(user.role === 'tutor')
       {
-        studentId = tutorId;
         data.tutorId = tutor.id
       }
-      form.setFieldValue('studentId', studentId);
+      form.setFieldValue('studentId', data.studentId);
       form.setFieldValue('tutorId', data.tutorId);
     }
     await form.validateFields();

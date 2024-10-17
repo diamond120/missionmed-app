@@ -67,7 +67,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             </li>
           </ul>
 
-          <div className="btn-group" style={{ marginTop: "32px" }}>
+          <div className="btn-group" style={{ marginTop: "32px", flexWrap: "wrap" }}>
             {/* <a href={upcomingInterview['sessionLink'] || upcomingInterview['defaultSessionLink']} target="_blank" disabled={credit == 0}>
               <Button className={"primary-button"}>Join Session </Button>
             </a> */}
@@ -101,7 +101,6 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                   >
                     {" "}
                     Reschedule{" "}
-
                   </Button>
                 </Tooltip>
               ) : (
@@ -109,9 +108,12 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
               )
             ) : null}
             {user.role == "tutor" && (
-              // <div className="btn-group" style={{ marginTop: "10px" }}>
+              <>
+              {/* // <div className="btn-group" style={{ marginTop: "10px" }}> */}
+              <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               <Button className={"secondary-button"} onClick={handleClick} >Edit Session Link</Button>
-              // </div>
+              {/* // </div> */}
+              </>
             )}
           </div>
 

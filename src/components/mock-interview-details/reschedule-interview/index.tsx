@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Modal, message, Select,  Radio, Row, Col, Input } from "antd";
+import { Button, Form, Modal, message, Select,  Radio, Row, Col, Input, Alert, Spin } from "antd";
 import CommonService from "../../../api/services/Common";
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
@@ -7,7 +7,7 @@ import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
 import "./index.less";
-
+import { useUser } from "../../../api/providers/UserProvider";
 const { TextArea } = Input;
 
 const RescheduleInterview = ({
@@ -23,9 +23,10 @@ const RescheduleInterview = ({
   const [modalTitle, setModalTitle] = useState("");
   const [universityList, setUniversityList] = useState([]);
   const totalSteps = 3;
-
   const [interviewSummary, setInterviewSummary] = useState(null);
-
+  const [loading, setLoading] = useState(false);
+  const user = useUser();
+  const userRole = user.role;
   const getInterviewSummary = async (sessionId) => {
     try {
       const data = {
@@ -100,6 +101,7 @@ const RescheduleInterview = ({
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const formData = form.getFieldsValue(true);
     formData.bookingFor = 'Mock interviews';
     try {
@@ -109,20 +111,26 @@ const RescheduleInterview = ({
       const response = await CommonService.postAPI('/student/reschedule-interview',{...formData, mockinterviewId:interviewSummary?.id});
       if (response.data.success) {
         const result = response.data.data;
+        console.log('result',result)
         updateUpcomingSession(result.id, {
           date: result.date,
           mock_interview: result.mock_interview,
           session_end_time: result.session_end_time,
           session_start_time: result.session_start_time,
         });
-        navigate("/student/mock-interview");
+        setLoading(false);
+        const path = userRole === 'student' ? '/student/mock-interview' : '/tutor/mock-interview';
+        navigate(path);
         message.success("You've successfully rescheduled mock interview");
       } else {
+        setLoading(false);
         throw new Error(response.data.message);
       }
     } catch (e) {
+      setLoading(false);
       message.error(e.message);
     }
+    
     handleCancel();
   };
 
@@ -222,7 +230,8 @@ const RescheduleInterview = ({
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={interviewSummary?.tutor_id}  rescheduleDate={interviewSummary?.session_start_time}  form={form} next={next} timezone={timezone}/>
+      <Calender tutorId={interviewSummary?.tutor_id} studentId={interviewSummary?.student_id}  rescheduleDate={interviewSummary?.student_session_start_time}  form={form} next={next} timezone={timezone}/>
+      {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;
   };
@@ -314,6 +323,9 @@ const RescheduleInterview = ({
               Next Step
             </Button>
           ),
+          loading == true ? (
+            <Spin />
+          ) : (
           activeStep === totalSteps && (
             <Button
               className={"primary-button"}
@@ -322,6 +334,7 @@ const RescheduleInterview = ({
             >
               Confirm
             </Button>
+          )
           ),
         ]}
       >

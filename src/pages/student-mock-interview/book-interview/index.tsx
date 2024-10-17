@@ -343,7 +343,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-        <Calender tutorId={form.getFieldValue('tutorId')} form={form} timezone={timezone} next={next} prev={prev} />
+        <Calender tutorId={form.getFieldValue('tutorId')} studentId={form.getFieldValue('tutorId')} form={form} timezone={timezone} next={next} prev={prev} />
         {(user.role == 'tutor' && (timezone != tutors.find(tutor => tutor.id == form.getFieldValue('tutorId'))?.timezone)) && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;

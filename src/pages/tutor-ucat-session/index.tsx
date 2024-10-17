@@ -6,7 +6,7 @@ import { Breadcrumb, Button, message } from "antd";
 import SessionDetails from "../../components/session-details";
 import CommonService from "../../api/services/Common";
 import BookSession from "../book-session";
-
+import RescheduleInterview from "../../components/session-details/reschedule-interview";
 const TutorUCATSession = () => {
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -15,8 +15,10 @@ const TutorUCATSession = () => {
   const [agenda, setAgenda] = useState(null);
   const [freezeSessions, setFreezeSessions] = useState([]);
   const [timezone, setTimeZone] = useState("");
+  const [isOpenReschedule, setIsOpenReschedule] = useState(false);
+  const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
 
-  const getMockInterviewDetails = async () => {
+  const getUCATSessionDetails = async () => {
     try {
       const data = {
         bookingFor : 'UCAT 1-to-1 Tutoring'
@@ -49,6 +51,16 @@ const TutorUCATSession = () => {
     }
   };
 
+  const handleReschedule = (sessionId) => {
+    setIsOpenReschedule(true);
+    setRescheduleSessionId(sessionId);
+    getUCATSessionDetails();
+  }
+
+  const handleOpen = (state) => {
+    setIsOpenReschedule(state);
+  }
+
   const handleEditAgenda = async(agendaDetails) => {
     try{
       const data = {
@@ -78,12 +90,19 @@ const TutorUCATSession = () => {
   }
 
   const addUpcomingSessionTutor = () => {
-    getMockInterviewDetails();
+    getUCATSessionDetails();
   }
 
   useEffect(() => {
-    getMockInterviewDetails();
+    getUCATSessionDetails();
   }, []);
+
+  const updateUpcomingSession = (sessionId, data) => {
+    getUCATSessionDetails();
+  }
+  const cancleUpSession = (data) => {
+    getUCATSessionDetails();
+  };
 
   const handleEditLink = async(detail) => {
     try{
@@ -95,7 +114,7 @@ const TutorUCATSession = () => {
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
         message.success(response.data.message);
-        getMockInterviewDetails();
+        getUCATSessionDetails();
       }else{
         throw new Error(response.data.message)
       }
@@ -133,8 +152,10 @@ const TutorUCATSession = () => {
             pastSessions={pastSessions}
             agenda={agenda}
             handleEditAgenda={handleEditAgenda}
+            handleReschedule={handleReschedule}
             handleEditLink= {handleEditLink}
             freezeSessions={freezeSessions}
+            cancleUpSession={cancleUpSession}
           />
           ) : (
             <div className="mock-interview">
@@ -161,6 +182,7 @@ const TutorUCATSession = () => {
           ) }
         </div>
       </Section>
+      <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone} />
     </>
   );
 };

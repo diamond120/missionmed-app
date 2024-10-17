@@ -4,19 +4,21 @@ import { useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useNavigate } from "react-router-dom";
 import FreezeSession from "../freeze-session";
-
+import { useUser } from "../../api/providers/UserProvider";
 const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSession}) => {
   const navigate = useNavigate();
   
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const user = useUser();
+  const userRole = user.role;
   const handleSubmit = async () => {
     try{
       setLoading(true);
       let data = {
-        sessionId : addUpcomingSession.id
+        sessionId : addUpcomingSession.id,
+        studentId : addUpcomingSession.student_id
       }
       let response 
       if (moduleType == 'mock') { 
@@ -26,12 +28,13 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
       }
       if(response.data.success){
         cancleUpcomingSession(addUpcomingSession);
+        const path = userRole === 'student' ? '/student' : '/tutor';
         if(moduleType == 'teaching') {
-          navigate("/student/teaching-session") 
+          navigate(`${path}/teaching-session`) 
         }  else if (moduleType == 'mock') { 
-          navigate("/student/mock-interview");
+          navigate(`${path}/mock-interview`);
         } else {
-          navigate("/student/ucat-session")
+          navigate(`${path}/ucat-session`)
         }
         message.success('You’ve successfully cancel session');
       }else{
