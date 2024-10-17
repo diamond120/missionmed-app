@@ -54,7 +54,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
     try {
       if(user.role === 'tutor')
       {
-        studentId = tutorId;
+        studentId = studentId;
         tutorId = tutor.id;
       }
       const data = {
@@ -249,6 +249,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
     const data = form.getFieldsValue(true);
     if (subSlotList.length > 0 && data.subSlot >= 0) {
       let studentId;
+    
       const slot = subSlotList[data.subSlot];
       form.setFieldValue('sessionStartTime', slot.start);
       form.setFieldValue('sessionEndTime', slot.end);

@@ -79,8 +79,15 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
           ) : (
             <>  
             <Button className={"secondary-button"} onClick={handleCancel}>Back</Button>
-            {addUpcomingSession.session_type == 'Recurring Session' &&
-            <FreezeSession title='Freeze Sessions' moduleType="teaching" addFreezeSession={() => {handleOk() , cancleUpcomingSession(addUpcomingSession) }} showCancelModal={showModal} sessionType={addUpcomingSession.session_type} /> }
+            {addUpcomingSession.session_type == 'Recurring Session' && userRole === 'student' && (
+                <FreezeSession 
+                    title='Freeze Sessions' 
+                    moduleType="teaching" 
+                    addFreezeSession={() => { handleOk(); cancleUpcomingSession(addUpcomingSession); }} 
+                    showCancelModal={showModal} 
+                    sessionType={addUpcomingSession.session_type} 
+                />
+            )}
             <Button className={"primary-button"} style={{backgroundColor: 'red'}} htmlType="submit" onClick={handleSubmit}>{addUpcomingSession.session_type == 'Recurring Session' ? 'Cancel Sessions' :  'Cancel Session'}</Button>
             </>
           )}
