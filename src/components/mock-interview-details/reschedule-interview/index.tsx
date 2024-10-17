@@ -111,7 +111,6 @@ const RescheduleInterview = ({
       const response = await CommonService.postAPI('/student/reschedule-interview',{...formData, mockinterviewId:interviewSummary?.id});
       if (response.data.success) {
         const result = response.data.data;
-        console.log('result',result)
         updateUpcomingSession(result.id, {
           date: result.date,
           mock_interview: result.mock_interview,
