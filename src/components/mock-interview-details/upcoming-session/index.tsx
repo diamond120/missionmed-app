@@ -100,7 +100,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-            {user?.role === "tutor" && (
+            {user?.role === "tutor" &&  user.email === 'shahddit@gmail.com' &&(
             <>
               <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
@@ -109,7 +109,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
           </div>
         </div>
       </div>
-
+     
       <Modal
         title="Edit Session Link"
         open={isModalOpen}

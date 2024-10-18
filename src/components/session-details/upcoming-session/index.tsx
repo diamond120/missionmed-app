@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 
 const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink, credit }) => {
   const user = useUser();
+
   const isSessionOnToday = useMemo(
     () => checkSessionOnToday(upcomingInterview.date),
     [upcomingInterview.date]
@@ -107,7 +108,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-            {user.role == "tutor" && (
+            {user.role == "tutor" && user.email == 'shahddit@gmail.com' && (
               <>
               {/* // <div className="btn-group" style={{ marginTop: "10px" }}> */}
               <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
