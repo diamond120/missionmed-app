@@ -149,8 +149,8 @@ const StudentMockInterview = () => {
             <h2 className={"tab-title"}>Mock Interview</h2>
 
             <div className="d_flex_center">
-              <div><b>Credit: {student === '' ? <Spin style={{ marginLeft: 10 }} /> : student}</b></div>
-              {(student == 0) && <a href="https://missionmed.com.au/interview-mastery-course-landing/#PricingPanel" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a>}
+              <div><b>Mock Interviews Remaining: {student === '' ? <Spin style={{ marginLeft: 10 }} /> : student}</b></div>
+              {(student == 0) && <a href="https://missionmed.com.au/checkout_step/mock-interview-checkout/" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a>}
               {(student > 0) && <BookInterview addUpcomingSession={addUpcomingSession} timezone={timezone} />}
 
             </div>
