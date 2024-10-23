@@ -190,13 +190,13 @@ const StudentTeachingSession = () => {
                   credit == '0' ?
                     <div className={"tagLayout errorTagStyle"}>
                       <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
-                        {upcomingSessions.length > 0 ? <a href="https://missionmed.com.au/checkout_step/interview-private-checkout/" style={{ color: 'inherit', textDecoration: 'none' }}>Purchase More Hours</a> : 'No Teaching Session Remaining'}
+                        {upcomingSessions.length > 0 ? <a href="https://missionmed.com.au/checkout_step/interview-private-checkout/" style={{ color: 'inherit', textDecoration: 'none' }}>Purchase More Hours</a> : <a href="https://missionmed.com.au/checkout_step/interview-private-checkout/" style={{ color: 'inherit', textDecoration: 'none' }}>No Teaching Session Remaining</a>}
                       </Tag>
                     </div>
                     :
                     <div className={"tagLayout"} >
                       <Tag icon={<CheckCircleOutlined />} className={"tagStyle"} color="success">
-                        {credit} Teaching Sessions Remaining
+                        Teaching Sessions Remaining: {credit}
                       </Tag>
                     </div>
               }
