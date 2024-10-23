@@ -303,13 +303,15 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
    const weekNumber = weekStart.week();
   return (
     <>
-      {spinning && (
-        <div className="spin-container">
-          <Spin
-            size="large"
-            indicator={<LoadingOutlined style={{ fontSize: 48, marginRight: 10 }} spin />}
-          />
-          <span style={{ fontSize: '18px', marginLeft: '10px' }}>Finding available slot......</span>
+       {spinning && (
+        <div className="overlay">
+          <div className="spin-container">
+            <Spin
+              size="large"
+              indicator={<LoadingOutlined style={{ fontSize: 48, marginRight: 10 }} spin />}
+            />
+            <span style={{ fontSize: '23px', marginLeft: '10px', color: '#fff' }}>Finding available slot......</span>
+          </div>
         </div>
       )}
       <Form.Item name="date" hidden={true} rules={[{ required: true, message: "Please select date" }]}></Form.Item>
