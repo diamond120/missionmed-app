@@ -204,7 +204,7 @@ const StudentUCATSession = () => {
                     :
                     <div className={"tagLayout"} >
                       <Tag icon={<CheckCircleOutlined />} className={"tagStyle"} color="success">
-                        {credit} UCAT Sessions Remaining
+                        UCAT Sessions Remaining: {credit} 
                       </Tag>
                     </div>
               }

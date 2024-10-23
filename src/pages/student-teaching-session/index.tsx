@@ -196,7 +196,7 @@ const StudentTeachingSession = () => {
                     :
                     <div className={"tagLayout"} >
                       <Tag icon={<CheckCircleOutlined />} className={"tagStyle"} color="success">
-                        {credit} Teaching Sessions Remaining
+                        Teaching Sessions Remaining: {credit}
                       </Tag>
                     </div>
               }
