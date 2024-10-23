@@ -51,7 +51,6 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
     }
 
     const getSlotsist = async (tutorId) => {
-      setSpinning(true);
       try {
         const data = {
           startDate : filterDate.startDate,
@@ -72,14 +71,12 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if (response.data.success) {
             const slotList = response.data.data ?? [];
             setSlots(slotList); 
-            setSpinning(false);
+
           } else {
-            setSpinning(false);
           throw new Error(response.data.message);
           prev() 
         }
       } catch (e) {
-        setSpinning(false);
         message.error(e.message);
          prev()
       }
@@ -280,15 +277,9 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
    const weekNumber = weekStart.week();
     return (
       <>
-     {spinning && (
-        <div className="spin-container">
-          <Spin
-            size="large"
-            indicator={<LoadingOutlined style={{ fontSize: 48, marginRight: 10 }} spin />}
-          />
-          <span style={{ fontSize: '18px', marginLeft: '10px' }}>Finding available slot......</span>
-        </div>
-      )}
+      {
+        spinning && <><Spin  size="large" indicator={<LoadingOutlined style={{ fontSize: 24 ,marginRight:10}}  spin  />} /> <span> Finding available slot......</span></> 
+      }
       <Form.Item name="date" hidden={true} rules={[{ required: true , message:"Please select date"}]}></Form.Item>
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true , message:"Please select slot"}]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true,  message:"Please select slot"}]}></Form.Item>

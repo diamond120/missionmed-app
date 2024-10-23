@@ -36,6 +36,7 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
   const [subSlotList, setSubSlotList] = useState<any>([]);
   const [weekAvailable, setWeekAvailable] = useState(true);
   const [weekDates,setWeekDates]= useState(null)
+  const [spin, setSpin] = useState<boolean>(true);
   const tutor = useTutor();
   const user = useUser();
   const handleDateClick = (dateInfo) => {
@@ -50,7 +51,6 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
   } 
 
   const getSlotsist = async(tutorId, studentId, role) => {
-    setSpinning(true);
     try {
       if(user.role === 'tutor')
       {
@@ -72,14 +72,14 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       if (response.data.success) {
         const slotList = response.data.data ?? [];
         setSlots(slotList);
-        setSpinning(false);
+        setSpin(false);
       } else {
-        setSpinning(false);
+        setSpin(false);
         prev();
         throw new Error(response.data.message);
       }
     } catch (e) {
-      setSpinning(false);
+      setSpin(false);
       prev();
       message.error(e.message);
     }
@@ -303,16 +303,8 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
    const weekNumber = weekStart.week();
   return (
     <>
-      {spinning && (
-        <div className="spin-container">
-          <Spin
-            size="large"
-            indicator={<LoadingOutlined style={{ fontSize: 48, marginRight: 10 }} spin />}
-          />
-          <span style={{ fontSize: '18px', marginLeft: '10px' }}>Finding available slot......</span>
-        </div>
-      )}
-     
+      {spinning && <> <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} /> <span> Finding available slot......</span> </>
+      }
       <Form.Item name="date" hidden={true} rules={[{ required: true, message: "Please select date" }]}></Form.Item>
       <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
       <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true, message: "Please select slot" }]}></Form.Item>
@@ -321,8 +313,11 @@ const Calender = ({ tutorId, rescheduleDate, form, moduleType, timezone, next, p
       <Form.Item name="role" hidden={true}></Form.Item>
       <Form.Item name="newTutorId" hidden={true}></Form.Item>
 
-     
-      <div>
+      <div style={{ display: spin ? 'block' : 'none' }}>
+        <Spin size="large" indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />
+        <span> Finding available slot......</span>
+      </div>
+      <div style={{ display: !spin ? 'block' : 'none' }}>
       {!weekAvailable && (
         <>
         <div className="cus-alert">
