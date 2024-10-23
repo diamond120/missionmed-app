@@ -1,54 +1,21 @@
-import { getToken } from '../../common/common';
 import http from "../http-common";
 
 export const getPackages = () => {
-    const token = `Bearer ${getToken()}`;
-    const config = {
-        headers: {
-            'Authorization': token
-        }
-    }
-    return http.get(`/student/packages`, config);
-}
+    return http.get(`/student/packages`);
+};
 
 export const getSessions = () => {
-    const token = `Bearer ${getToken()}`;
-    const config = {
-        headers: {
-            'Authorization': token
-        }
-    }
-    return http.get(`/sessions`, config);
-}
+    return http.get(`/sessions`);
+};
 
 export const createSession = (data: any) => {
-    const token = `Bearer ${getToken()}`;
-    const config = {
-        headers: {
-            'Authorization': token
-        },
-
-    }
-
-    return http.post(`/sessions`, data, config,);
-}
+    return http.post(`/sessions`, data);
+};
 
 export const getSessionDetail = (sessionId: number) => {
-    const token = `Bearer ${getToken()}`;
-    const config = {
-        headers: {
-            'Authorization': token
-        }
-    }
-    return http.get(`/sessions/${sessionId}`, config);
-}
+    return http.get(`/sessions/${sessionId}`);
+};
 
 export const getpackage = (packageId: number) => {
-    const token = `Bearer ${getToken()}`;
-    const config = {
-        headers: {
-            'Authorization': token
-        }
-    }
-    return http.get(`/student/packages/${packageId}`, config);
-}
+    return http.get(`/student/packages/${packageId}`);
+};

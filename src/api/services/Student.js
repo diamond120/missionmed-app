@@ -1,34 +1,15 @@
-import http from "../http-common";
-import { getToken } from "../../common/common.js";
+import http from "~/api/http-common";
 
 const getProfile = () => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.get(`/student/profile`, config);
+  return http.get(`/student/profile`);
 };
 
 const updateProfile = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/student/update`, data, config);
+  return http.post(`/student/update`, data);
 };
 
 const updateAppInfo = (data) => {
-  const token = `Bearer ${getToken()}`;
-  const config = {
-    headers:{
-      'Authorization': token
-    }
-  }
-  return http.post(`/student/update/application_info`, data, config);
+  return http.post(`/student/update/application_info`, data);
 };
 
 const Service = {

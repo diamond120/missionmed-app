@@ -1,27 +1,26 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, Modal, Tabs } from "antd";
-import RateSession from "../../../components/rate-session";
-import { formatDateV1 } from "../../../common/common";
-import { useUser } from "../../../api/providers/UserProvider";
-import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
-import "./index.less";
-import CancleSession from "../../../pages/cancle-session";
-import { RightOutlined, DownOutlined } from '@ant-design/icons';
+import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Button, Form, Input, Modal, Tabs } from 'antd'
+import RateSession from '../../../components/rate-session'
+import { UserContext } from '../../../api/providers/UserProvider'
+import { groupSessionsByDate, formatTime, formatDateV1 } from '../../../common/common'
+import './index.less'
+import CancleSession from '../../../pages/cancle-session'
+import { RightOutlined, DownOutlined } from '@ant-design/icons'
 
 const SessionList = ({
   date,
   sessions,
   type,
-  handleRateSession = () => { },
+  handleRateSession = () => {},
   handleReschedule,
   pagesession,
   cancleUpSession,
   handleEditLink
 }) => (
-  <div className="sessions">
-    <h4 className="sessions-date">{formatDateV1(date)}</h4>
-    <ul className="sessions-list">
+  <div className='sessions'>
+    <h4 className='sessions-date'>{formatDateV1(date)}</h4>
+    <ul className='sessions-list'>
       {sessions.map((session) => (
         <SessionItem
           session={session}
@@ -36,14 +35,14 @@ const SessionList = ({
       ))}
     </ul>
   </div>
-);
+)
 
-const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, pagesession, cancleUpSession, handleEditLink }) => {
-  const user = useUser();
-  const userRole = user.role;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
-  const { TextArea } = Input;
+const SessionItem = ({ session, type, handleRateSession = () => {}, handleReschedule, pagesession, cancleUpSession, handleEditLink }) => {
+  const { user } = useContext(UserContext)
+  const userRole = user.role
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [form] = Form.useForm()
+  const { TextArea } = Input
 
   const [details, setDetails] = useState(false)
 
@@ -52,168 +51,189 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   }
 
   const handleSubmit = async () => {
-    const values = await form.validateFields();
+    const values = await form.validateFields()
     const data = {
       link: values.sessionLink,
       sessionId: values.sessionId
     }
-    handleEditLink(data);
-    setIsModalOpen(false);
-  };
+    handleEditLink(data)
+    setIsModalOpen(false)
+  }
 
   const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   const validateURL = (rule, value, callback) => {
     if (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(value)) {
-      callback('Please enter a valid URL');
+      callback('Please enter a valid URL')
     } else {
-      callback();
+      callback()
     }
-  };
-  form.setFieldsValue({ sessionLink: session.sessionLink });
-  const navigate = useNavigate();
+  }
+  form.setFieldsValue({ sessionLink: session.sessionLink })
+  const navigate = useNavigate()
   return (
-    <li className="item" style={{ position: "relative" }}>
-      <div style={{ display: "flex" }}>
-        <div className="time">
-          <div style={{ paddingBottom: "5px" }}>
+    <li className='item' style={{ position: 'relative' }}>
+      <div style={{ display: 'flex' }}>
+        <div className='time'>
+          <div style={{ paddingBottom: '5px' }}>
             <strong>{formatTime(session.session_start_time)}</strong>
           </div>
-          <div className={"end-time"}>{formatTime(session.session_end_time)}</div>
+          <div className={'end-time'}>{formatTime(session.session_end_time)}</div>
         </div>
         <div>
-          <div style={{ paddingBottom: "5px" }}>
-            {pagesession == "ucat" && (
+          <div style={{ paddingBottom: '5px' }}>
+            {pagesession == 'ucat' && (
               <>
                 <strong>UCAT Teaching Session</strong>
               </>
             )}
-            {pagesession == "teaching" && (
+            {pagesession == 'teaching' && (
               <>
                 <strong>Interview Teaching Session</strong>
               </>
             )}
             <strong>{session.mock_interview}</strong>
           </div>
-          <div className={"mock_interview"}>
-            {userRole == "tutor" ? session.student_name : session.tutor_name}
-          </div>
+          <div className={'mock_interview'}>{userRole == 'tutor' ? session.student_name : session.tutor_name}</div>
         </div>
       </div>
 
-      {type == "freeze" && (
+      {type == 'freeze' && (
         <>
-          {
-            session.is_freeze == 1 && (
-              <div className={"freeze-div"} ><span className="freeze-span" >Freezed</span>
-              </div>)
-          }
+          {session.is_freeze == 1 && (
+            <div className={'freeze-div'}>
+              <span className='freeze-span'>Freezed</span>
+            </div>
+          )}
         </>
       )}
 
-      {(userRole == 'student' && type == "upcoming") && (
+      {userRole == 'student' && type == 'upcoming' && (
         <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap' }}>
-
-          <Button disabled={(session.isWithin24Hours) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-          <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+          <Button
+            disabled={session.isWithin24Hours || session.is_freeze == 1}
+            className={'secondary-button'}
+            onClick={() => handleReschedule(session.id)}
+          >
+            Reschedule
+          </Button>
+          <CancleSession
+            title={'Cancel Session'}
+            moduleType={pagesession}
+            addUpcomingSession={session}
+            cancleUpcomingSession={cancleUpSession}
+          />
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
         </div>
       )}
-      {userRole == "tutor" && type == "upcoming" && (
+      {userRole == 'tutor' && type == 'upcoming' && (
         <>
-          <div className="btn-group" style={{ marginTop: "10px" }}>
-            <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+          <div className='btn-group' style={{ marginTop: '10px' }}>
+            <Button className={'secondary-button'} onClick={handleClick}>
+              Edit Session Link
+            </Button>
             {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           </div>
           <Modal
-            title="Edit Session Link"
+            title='Edit Session Link'
             open={isModalOpen}
             onOk={handleSubmit}
             onCancel={handleCancel}
-            className={"mock-interview-modal"}
-            width={"600px"}
+            className={'mock-interview-modal'}
+            width={'600px'}
             footer={[
-              <div key="buttonGroup" className='button-group'>
-                <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+              <div key='buttonGroup' className='button-group'>
+                <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
                   Discard
                 </Button>
-                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
                   Save Changes
                 </Button>
               </div>
             ]}
           >
-            <Form form={form} layout="vertical">
+            <Form form={form} layout='vertical'>
               <Form.Item
                 key={'test' + session.id}
-                label="Edit Session Link"
-                name="sessionLink"
-                rules={[{ required: true },
-                { validator: validateURL }]}
+                label='Edit Session Link'
+                name='sessionLink'
+                rules={[{ required: true }, { validator: validateURL }]}
                 initialValue={session?.sessionLink}
-
               >
-                <TextArea
-                  style={{ height: 50 }}
-                  placeholder=""
-                />
+                <TextArea style={{ height: 50 }} placeholder='' />
               </Form.Item>
-              <Form.Item
-                name="sessionId"
-                initialValue={session?.id}
-              >
-                <Input type="hidden" />
+              <Form.Item name='sessionId' initialValue={session?.id}>
+                <Input type='hidden' />
               </Form.Item>
             </Form>
           </Modal>
         </>
       )}
-      {type == "past" && (
+      {type == 'past' && (
         <>
-          <div
-            className={"button-group"}
-            style={{ display: "flex", columnGap: "16px" }}
-          >
-
-            {userRole == "student" && (
+          <div className={'button-group'} style={{ display: 'flex', columnGap: '16px' }}>
+            {userRole == 'student' && (
               <>
-                {!session?.hasSessionRate && <Button
-                  className={"secondary-button"}
-                  onClick={(event) => handleRateSession(event, session)}
-                >
-                  Rate Session
-                </Button>}
+                {!session?.hasSessionRate && (
+                  <Button className={'secondary-button'} onClick={(event) => handleRateSession(event, session)}>
+                    Rate Session
+                  </Button>
+                )}
                 {/* <Link to={`/student/interview-summary/${session.id}/${pagesession}`}> */}
-                <Button className={"secondary-button"} onClick={() => { navigate(`/student/interview-summary/${session.id}/${pagesession}`) }} >View Summary</Button>
+                <Button
+                  className={'secondary-button'}
+                  onClick={() => {
+                    navigate(`/student/interview-summary/${session.id}/${pagesession}`)
+                  }}
+                >
+                  View Summary
+                </Button>
                 {(session.sessionLink || session.defaultSessionLink) && (
-                <Button className={"secondary-button"}  onClick={(event) => {
-                const linkToOpen = session.sessionLink  ? session.sessionLink  : session.defaultSessionLink;
-                if(linkToOpen) {
-                  window.open(linkToOpen , '_blank')
-                } else {
-                  event.preventDefault();
-                }
-              }} >Session Link </Button>
+                  <Button
+                    className={'secondary-button'}
+                    onClick={(event) => {
+                      const linkToOpen = session.sessionLink ? session.sessionLink : session.defaultSessionLink
+                      if (linkToOpen) {
+                        window.open(linkToOpen, '_blank')
+                      } else {
+                        event.preventDefault()
+                      }
+                    }}
+                  >
+                    Session Link{' '}
+                  </Button>
                 )}
                 {/* </Link> */}
                 {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
               </>
             )}
-            {userRole == "tutor" && (
+            {userRole == 'tutor' && (
               <>
                 {/* <Link to={`/tutor/interview-summary/${session.id}/${pagesession}`}> */}
-                <Button className={"secondary-button"} onClick={() => { navigate(`/tutor/interview-summary/${session.id}/${pagesession}`) }}>Session Summary</Button>
+                <Button
+                  className={'secondary-button'}
+                  onClick={() => {
+                    navigate(`/tutor/interview-summary/${session.id}/${pagesession}`)
+                  }}
+                >
+                  Session Summary
+                </Button>
                 {(session.sessionLink || session.defaultSessionLink) && (
-                <Button className={"secondary-button"}  onClick={(event) => {
-                const linkToOpen = session.sessionLink  ? session.sessionLink  : session.defaultSessionLink;
-                if(linkToOpen) {
-                  window.open(linkToOpen , '_blank')
-                } else {
-                  event.preventDefault();
-                }
-              }} >Session Link </Button>
+                  <Button
+                    className={'secondary-button'}
+                    onClick={(event) => {
+                      const linkToOpen = session.sessionLink ? session.sessionLink : session.defaultSessionLink
+                      if (linkToOpen) {
+                        window.open(linkToOpen, '_blank')
+                      } else {
+                        event.preventDefault()
+                      }
+                    }}
+                  >
+                    Session Link{' '}
+                  </Button>
                 )}
                 {/* </Link> */}
                 {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
@@ -223,144 +243,147 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         </>
       )}
 
-      {details &&
-        <div style={{ display: "flex" }} className="w_full roll-out">
-          <div className="time pe-full">
-            <div style={{ paddingBottom: "5px" }}>
-              <strong>{userRole == "tutor" ? "Student Details" : " Tutor Details"}</strong>
+      {details && (
+        <div style={{ display: 'flex' }} className='w_full roll-out'>
+          <div className='time pe-full'>
+            <div style={{ paddingBottom: '5px' }}>
+              <strong>{userRole == 'tutor' ? 'Student Details' : ' Tutor Details'}</strong>
             </div>
-            <div className={"end-time"}>Location : {session.location ?? 'N/A'}</div>
-            <div className={"end-time"}>Currinculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
-            <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
-            <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
+            <div className={'end-time'}>Location : {session.location ?? 'N/A'}</div>
+            <div className={'end-time'}>Currinculum : {!session.state || session.state == '' ? 'N/A' : session.state}</div>
+            <div className={'end-time'}>Phone Number : {session.phone_number ?? 'N/A'}</div>
+            <div className={'end-time'}>Email : {session.email ?? 'N/A'}</div>
           </div>
           <div>
-            <div style={{ paddingBottom: "5px" }}>
+            <div style={{ paddingBottom: '5px' }}>
               <strong>Session Details</strong>
             </div>
-            <div className={"mock_interview"}>Applicant Cycle : {session.applicant_cycle ?? 'N/A'}</div>
-            <div className={"mock_interview"}>Applicant Type : {session.applicant_type ?? 'N/A'}</div>
+            <div className={'mock_interview'}>Applicant Cycle : {session.applicant_cycle ?? 'N/A'}</div>
+            <div className={'mock_interview'}>Applicant Type : {session.applicant_type ?? 'N/A'}</div>
           </div>
         </div>
-      }
+      )}
     </li>
+  )
+}
 
-  );
-};
-
-const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions }) => {
-  const { TabPane } = Tabs;
-  const navigation = useNavigate();
-  const [rateSession, setRateSession] = useState(null);
-  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
-  const formatedpastSessions = groupSessionsByDate(pastSessions, "desc");
-  let formatedFreezeSessions = {};
+const Mysessions = ({
+  moduleType,
+  upcomingSessions,
+  pastSessions,
+  updatePastSession,
+  handleReschedule,
+  cancleUpSession,
+  handleEditLink,
+  freezeSessions
+}) => {
+  const { TabPane } = Tabs
+  const navigation = useNavigate()
+  const [rateSession, setRateSession] = useState(null)
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, 'asc')
+  const formatedpastSessions = groupSessionsByDate(pastSessions, 'desc')
+  let formatedFreezeSessions = {}
   if (freezeSessions) {
-    formatedFreezeSessions = groupSessionsByDate(freezeSessions, "asc");
+    formatedFreezeSessions = groupSessionsByDate(freezeSessions, 'asc')
   }
 
   const handleRateSession = (event, session) => {
-    setRateSession({ id: session.id, tutorId: session.tutor_id });
-  };
+    setRateSession({ id: session.id, tutorId: session.tutor_id })
+  }
 
   const handleRateCancel = () => {
-    setRateSession(null);
-  };
+    setRateSession(null)
+  }
 
   return (
     <>
-      <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
-        <h2 className={"secondary-title"}>My Sessions </h2>
-        <Tabs defaultActiveKey={"Upcoming"}>
-          <TabPane tab={"Upcoming"} key={"Upcoming"}>
-            <div className={"upcoming-sessions"}>
+      <div className={'upc-agenda con-box'} style={{ marginTop: '55px' }}>
+        <h2 className={'secondary-title'}>My Sessions </h2>
+        <Tabs defaultActiveKey={'Upcoming'}>
+          <TabPane tab={'Upcoming'} key={'Upcoming'}>
+            <div className={'upcoming-sessions'}>
               {Object.keys(formatedUpcomingSessios).map((date, index) => (
                 <SessionList
                   date={date}
                   sessions={formatedUpcomingSessios[date]}
-                  type={"upcoming"}
+                  type={'upcoming'}
                   handleReschedule={handleReschedule}
                   key={`upcomingSessions${index}`}
                   pagesession={moduleType}
                   cancleUpSession={cancleUpSession}
                   handleEditLink={handleEditLink}
-
                 />
               ))}
-              {
-                (Object.keys(formatedUpcomingSessios).length <= 0) &&
-                (
-                  <li className="item">
-                    <div style={{ display: "flex" }}>
-                      <div className="time">
-                        <div style={{ paddingBottom: "5px" }}>
-                          <h1><strong>No Upcoming sessions found.</strong></h1>
-                        </div>
+              {Object.keys(formatedUpcomingSessios).length <= 0 && (
+                <li className='item'>
+                  <div style={{ display: 'flex' }}>
+                    <div className='time'>
+                      <div style={{ paddingBottom: '5px' }}>
+                        <h1>
+                          <strong>No Upcoming sessions found.</strong>
+                        </h1>
                       </div>
                     </div>
-                  </li>
-                )
-              }
+                  </div>
+                </li>
+              )}
             </div>
           </TabPane>
 
-          <TabPane tab={"Past"} key={"Past"}>
-            <div className={"upcoming-past"}>
+          <TabPane tab={'Past'} key={'Past'}>
+            <div className={'upcoming-past'}>
               {Object.keys(formatedpastSessions).map((date, index) => (
                 <SessionList
                   date={date}
                   sessions={formatedpastSessions[date]}
-                  type={"past"}
+                  type={'past'}
                   handleRateSession={handleRateSession}
                   key={`pastSessions${index}`}
                   pagesession={moduleType}
                 />
               ))}
-              {
-                (Object.keys(formatedpastSessions).length <= 0) &&
-                (
-                  <li className="item">
-                    <div style={{ display: "flex" }}>
-                      <div className="time">
-                        <div style={{ paddingBottom: "5px" }}>
-                          <h1><strong>No past sessions found.</strong></h1>
-                        </div>
+              {Object.keys(formatedpastSessions).length <= 0 && (
+                <li className='item'>
+                  <div style={{ display: 'flex' }}>
+                    <div className='time'>
+                      <div style={{ paddingBottom: '5px' }}>
+                        <h1>
+                          <strong>No past sessions found.</strong>
+                        </h1>
                       </div>
                     </div>
-                  </li>
-                )
-              }
+                  </div>
+                </li>
+              )}
             </div>
           </TabPane>
-          <TabPane tab={"Freeze"} key={"Freeze"}>
-            <div className={"upcoming-sessions"}>
+          <TabPane tab={'Freeze'} key={'Freeze'}>
+            <div className={'upcoming-sessions'}>
               {Object.keys(formatedFreezeSessions).map((date, index) => (
                 <SessionList
                   date={date}
                   sessions={formatedFreezeSessions[date]}
-                  type={"freeze"}
+                  type={'freeze'}
                   handleReschedule={handleReschedule}
                   key={`upcomingSessions${index}`}
                   pagesession={moduleType}
                   cancleUpSession={cancleUpSession}
                   handleEditLink={handleEditLink}
-
                 />
               ))}
-              {
-                (Object.keys(formatedFreezeSessions).length <= 0) &&
-                (
-                  <li className="item">
-                    <div style={{ display: "flex" }}>
-                      <div className="time">
-                        <div style={{ paddingBottom: "5px" }}>
-                          <h1><strong>No Freeze sessions found.</strong></h1>
-                        </div>
+              {Object.keys(formatedFreezeSessions).length <= 0 && (
+                <li className='item'>
+                  <div style={{ display: 'flex' }}>
+                    <div className='time'>
+                      <div style={{ paddingBottom: '5px' }}>
+                        <h1>
+                          <strong>No Freeze sessions found.</strong>
+                        </h1>
                       </div>
                     </div>
-                  </li>
-                )
-              }
+                  </div>
+                </li>
+              )}
             </div>
           </TabPane>
         </Tabs>
@@ -373,7 +396,7 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
         updatePastSession={updatePastSession}
       />
     </>
-  );
-};
+  )
+}
 
-export default Mysessions;
+export default Mysessions

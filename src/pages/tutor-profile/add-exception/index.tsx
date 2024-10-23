@@ -254,7 +254,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
                     name="type"
                     rules={[{ required: true , message: 'Please choose type'}]}
                 >
-                <Radio.Group style={{ display: 'flex' }} onChange={() => { console.log('test')}}>
+                <Radio.Group style={{ display: 'flex' }}>
                     <Radio value="Off">Off</Radio>
                     <Radio value="Extra Availability">Extra Availability</Radio>
                 </Radio.Group>

@@ -1,20 +1,15 @@
-
-import { Typography } from "antd"
-import React, { FC, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import {useUser} from "../../api/providers/UserProvider";
+import { Typography } from 'antd'
+import React, { FC, useContext, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../api/providers/UserProvider'
 
 const Home: FC = () => {
   const navigate = useNavigate()
-  const user = useUser();
+  const { user } = useContext(UserContext)
 
   useEffect(() => {
-    if(user.role == "student"){
-      navigate("/application_review")
-    }else{
-      navigate("/tutor/application_review")
-    }
-  },[user.role])
+    navigate(user.role == 'student' ? '/application_review' : '/tutor/application_review')
+  }, [user.role])
 
   return (
     <React.Fragment>

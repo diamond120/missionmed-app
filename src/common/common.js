@@ -1,10 +1,7 @@
 import moment from 'moment';
 import Payment from 'payment'
 
-export const getToken = () => {
-  const token = localStorage.getItem('jwt');
-  return token;
-}
+export const getToken = () =>  localStorage.getItem('jwt');
 
 export const makeOptions = (options) => {
   return options.map(o => ({ value: o.id, label: o.title }))
