@@ -198,13 +198,13 @@ const StudentUCATSession = () => {
                   credit == '0' ?
                     <div className={"tagLayout errorTagStyle"}>
                       <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
-                        {upcomingSessions.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
+                        {upcomingSessions.length > 0 ? <a href="https://missionmed.com.au/checkout_step/ucat-private-checkout/" style={{ color: 'inherit', textDecoration: 'none' }}>Purchase More Hours</a> : 'No UCAT Session Remaining'}
                       </Tag>
                     </div>
                     :
                     <div className={"tagLayout"} >
                       <Tag icon={<CheckCircleOutlined />} className={"tagStyle"} color="success">
-                        {credit} Hours Remaining
+                        {credit} UCAT Sessions Remaining
                       </Tag>
                     </div>
               }
