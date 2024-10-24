@@ -1,8 +1,8 @@
 import "./index.less";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Breadcrumb, Button, Spin, message } from "antd";
-import { HomeOutlined, CalendarOutlined } from "@ant-design/icons";
+import { Breadcrumb, Button, Spin, message, Tag} from "antd";
+import { HomeOutlined, CalendarOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
 import MockInterviewDetails from "../../components/mock-interview-details";
@@ -149,12 +149,31 @@ const StudentMockInterview = () => {
             <h2 className={"tab-title"}>Mock Interview</h2>
 
             <div className="d_flex_center">
-              <div><b>Mock Interviews Remaining: {student === '' ? <Spin style={{ marginLeft: 10 }} /> : student}</b></div>
-              {(student == 0) && <a href="https://missionmed.com.au/checkout_step/mock-interview-checkout/" target="_blank"><Button className={"primary-button"} >Buy Mock Interview</Button></a>}
-              {(student > 0) && <BookInterview addUpcomingSession={addUpcomingSession} timezone={timezone} />}
 
+            <div className={"tagLayout"}>
+                {student === '' ? (
+                  <div className="errorTagStyle">
+                    <Spin style={{ marginLeft: 10 }} />
+                  </div>
+                ) : (
+                  <Tag 
+                    icon={<CheckCircleOutlined />} 
+                    className={"tagStyle"} 
+                    color="success"
+                  >
+                    Mock Interviews Remaining: {student === '0' ? '0' : student}
+                  </Tag>
+                )}
+              </div>
+
+              {student === '0' ? (
+                <a href="https://missionmed.com.au/checkout_step/mock-interview-checkout/" target="_blank">
+                  <Button className={"primary-button"}>Buy Mock Interview</Button>
+                </a>
+              ) : student > 0 && (
+                <BookInterview addUpcomingSession={addUpcomingSession} timezone={timezone} />
+              )}
             </div>
-
           </div>
           {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
             <MockInterviewDetails
