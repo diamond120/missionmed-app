@@ -253,11 +253,11 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
               >
                 {/* <span>{tutor.degree}</span> &#8226; <span>{tutor.school}</span> */}
 
-                <span>
+                <div className="school-degree">
                   {tutor.university && tutor.university.map((item, index) => (
-                    <span key={index}>{item.school}({item.degree}) {tutor.university.length - 1 != index && ','}</span>
+                    <span  key={index}>{item.school}<span className="dot"></span> {item.degree} {tutor.university.length - 1 != index && ','}</span>
                   ))}
-                </span>
+                </div>
               </div>
             </div>
           </div>
@@ -271,25 +271,66 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
     onChange,
     tutors,
   }) {
+    const defaultActiveKey = tutors.length > 0 ? [tutors[0].id.toString()] : [];
+       // State to track the expanded panel
+    const [activeKey, setActiveKey] = useState(defaultActiveKey);
+
+    useEffect(() => {
+      // Set initial tutor selection based on activeKey (expanded collapse)
+      if (!value && tutors.length > 0) {
+        const initialTutorId = defaultActiveKey[0]; // Get the first tutor's id or defaultActiveKey
+        if (initialTutorId) {
+          onChange({ target: { value: Number(initialTutorId) } }); // Trigger onChange with the initial tutor's id
+        }
+      }
+    }, [tutors, onChange, value, defaultActiveKey]);
+  
+    // Sync activeKey with the selected radio value (if provided)
+    useEffect(() => {
+      if (value && value.toString() !== activeKey[0]) {
+        setActiveKey([value.toString()]);
+      }
+    }, [value]);
+  
+    // Handle Collapse change and sync with radio selection
+    const handleCollapseChange = (key) => {
+      setActiveKey(key);
+      if (key) {
+        const selectedTutor = tutors.find((tutor) => tutor.id.toString() === key);
+        if (selectedTutor && onChange) {
+          // Pass the selected tutor ID via onChange when the panel is expanded
+          onChange({ target: { value: selectedTutor.id } });
+        }
+      }
+    };
+  
+    // Handle Radio Change
+    const handleRadioChange = (e) => {
+      const selectedValue = e.target.value;
+      onChange(e); // Trigger onChange to update the form field
+      setActiveKey([selectedValue.toString()]); // Expand the corresponding panel
+    };
     return (
-      <Radio.Group onChange={onChange} value={value}>
+      <Radio.Group onChange={handleRadioChange} value={value}>
         {user.role === 'student' ?
           <Collapse
             bordered={false}
-            defaultActiveKey={["1"]}
+            activeKey={activeKey}
+            onChange={handleCollapseChange}
             expandIconPosition={`end`}
             className="site-collapse-custom-collapse"
+            accordion
           >
             {tutors.map((tutor) => (
               <Panel
                 header={<TutorPanelHeader tutor={tutor} />}
                 key={tutor.id}
                 className="site-collapse-custom-panel"
-              >
+              > 
+              <strong>Biography</strong>
                 <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
               </Panel>
             ))}
-
           </Collapse>
           :
           <>
@@ -333,7 +374,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
           </div>
           <h4 className={"sub-title"} style={{ padding: '0 10px' }}>We recommend you pick someone you haven’t sat a mock with before.</h4>
           <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select tutor" }]}>
-            <TutorCollapse tutors={tutors} />
+            <TutorCollapse tutors={tutors} value={form.getFieldValue('tutorId')} onChange={(e) => form.setFieldValue('tutorId', e.target.value)}  />
           </Form.Item>
         </div>
       </>
