@@ -280,12 +280,13 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                     fontSize: 12,
                   }}
                 >
-                  <span>
+                   
+                  <div className="school-degree">
                     {tutor.university && tutor.university.map((item, index) => (
-                      <span key={index}>{item.school}.{item.degree}
+                      <span key={index}>{item.school}<span className="dot"></span>{item.degree}
                         {tutor.university.length - 1 != index && ','}</span>
                     ))}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
