@@ -221,7 +221,6 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
           <div className={"avatar"}>
             <Avatar
               src={tutor.profile_picture}
-              size={40}
               icon={<UserOutlined />}
             />
             <div className={"name-degree"}>
@@ -255,7 +254,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
 
                 <div className="school-degree">
                   {tutor.university && tutor.university.map((item, index) => (
-                    <span  key={index}>{item.school}<span className="dot"></span> {item.degree} {tutor.university.length - 1 != index && ','}</span>
+                    <span  key={index}>{item.degree}<span className="dot"></span> {item.school} {tutor.university.length - 1 != index && ','}</span>
                   ))}
                 </div>
               </div>
@@ -327,8 +326,12 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
                 key={tutor.id}
                 className="site-collapse-custom-panel"
               > 
-              <strong>Biography</strong>
-                <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
+                {tutor.biography && (
+                  <>
+                    <strong class="biography">Biography</strong>
+                    <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
+                  </>
+                )}
               </Panel>
             ))}
           </Collapse>
