@@ -124,7 +124,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       {userRole == "tutor" && type == "upcoming" && (
         <>
           <div className="btn-group" style={{ marginTop: "10px" }}>
-          {user.role == "tutor" && user.email == 'shahddit@gmail.com' && (
+          {user.role == "tutor" && (
             <>
             <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
               <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />

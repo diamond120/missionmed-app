@@ -100,7 +100,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-            {user?.role === "tutor" &&  user.email === 'shahddit@gmail.com' &&(
+            {user?.role === "tutor" &&(
             <>
               <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
