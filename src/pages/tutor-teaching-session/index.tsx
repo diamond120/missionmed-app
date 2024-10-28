@@ -5,6 +5,7 @@ import { HomeOutlined, FileSearchOutlined, CalendarOutlined } from "@ant-design/
 import { Breadcrumb, Button, message } from "antd";
 import BookSession from "../book-session";
 import SessionDetails from "../../components/session-details";
+import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import CommonService from "../../api/services/Common";
 
 const TutorTeachingSession = () => {
@@ -14,7 +15,9 @@ const TutorTeachingSession = () => {
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
   const [freezeSessions, setFreezeSessions] = useState([]);
-
+  const [isOpenReschedule, setIsOpenReschedule] = useState(false);
+  const [moduleType, setModuleType] = useState("teaching");
+  const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const getMockInterviewDetails = async () => {
     try {
       const data = {
@@ -115,9 +118,28 @@ const TutorTeachingSession = () => {
     }
   }
 
+  const updateUpcomingSession = (sessionId, data) => {
+    getMockInterviewDetails();
+  }
+
+  const handleReschedule = (sessionId) => {
+    setIsOpenReschedule(true);
+    setRescheduleSessionId(sessionId);
+    getMockInterviewDetails();
+  }
+
+
+  const handleOpen = (state) => {
+    setIsOpenReschedule(state);
+  }
+
   useEffect(() => {
     getMockInterviewDetails();
   }, []);
+
+  const cancleUpSession = (data) => {
+    getMockInterviewDetails();
+  };
 
   return (
     <>
@@ -146,8 +168,10 @@ const TutorTeachingSession = () => {
             upcomingSessions={upcomingSessions}
             pastSessions={pastSessions}
             agenda={agenda}
+            handleReschedule={handleReschedule}
             handleEditAgenda={handleEditAgenda}
             handleEditLink= {handleEditLink}
+            cancleUpSession={cancleUpSession}
             freezeSessions={freezeSessions}
           /> ) : (
             <div className="mock-interview">
@@ -173,6 +197,7 @@ const TutorTeachingSession = () => {
             </div>
           )}
         </div>
+        <RescheduleInterview isOpen={isOpenReschedule} moduleType={moduleType} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone} />
       </Section>
     </>
   );

@@ -26,7 +26,7 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
+const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev}) => {
   const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -63,7 +63,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if(user.role == 'student') { 
           data.tutorId = tutorId 
         } else {
-          data.studentId = tutorId 
+          data.studentId = studentId 
           data.tutorId = tutor.id 
         } 
 
@@ -85,7 +85,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       }
     };
 
-    const getWeekAvailable = async (tutorId) => {
+    const getWeekAvailable = async (tutorId, studentId) => {
       try {
         const params = {
           startDate : filterDate.startDate,
@@ -97,7 +97,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if(user.role == 'student') { 
           params.tutorId = tutorId 
         } else {
-          params.studentId = tutorId 
+          params.studentId = studentId 
           params.tutorId = tutor.id 
         } 
 
@@ -105,7 +105,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if (response.data.success) {
               setWeekAvailable(response.data.data)
               if(!response.data.data) {
-                getAvailableWeekDates(tutorId)
+                getAvailableWeekDates(tutorId, studentId)
               }else
               setWeekDates(null)
               
@@ -118,7 +118,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
       }
     }
 
-    const getAvailableWeekDates = async (tutorId) => {
+    const getAvailableWeekDates = async (tutorId, studentId) => {
       try {
         const params = {
           startDate : filterDate.startDate,
@@ -130,7 +130,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if(user.role == 'student') { 
           params.tutorId = tutorId 
         } else {
-          params.studentId = tutorId 
+          params.studentId = studentId,
           params.tutorId = tutor.id 
         } 
 
@@ -148,8 +148,8 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
     
     useEffect(() => {
       if(filterDateSet == true) {
-        getSlotsist(tutorId);
-        getWeekAvailable(tutorId);
+        getSlotsist(tutorId, studentId);
+        getWeekAvailable(tutorId, studentId);
       }
 
       const addClassToParentAfterDateChange = () => {
@@ -224,7 +224,7 @@ const Calender = ({tutorId, form, rescheduleDate,next,timezone,prev}) => {
         if(user.role == 'student') { 
           data.tutorId = tutorId 
         } else {
-          data.studentId = tutorId 
+          data.studentId = studentId 
           data.tutorId = tutor.id 
         } 
       

@@ -104,6 +104,12 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       {userRole == "tutor" && type == "upcoming" && (
         <>
           <div className="btn-group" style={{ marginTop: "10px" }}>
+          {user.role == "tutor" && (
+          <>
+          <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+          <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+          </>
+          )}
             <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
             {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           </div>
