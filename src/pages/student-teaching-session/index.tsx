@@ -190,7 +190,9 @@ const StudentTeachingSession = () => {
                   credit == '0' ?
                     <div className={"tagLayout errorTagStyle"}>
                       <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
-                        {upcomingSessions.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
+                      <a href="https://missionmed.com.au/checkout_step/interview-private-checkout/" target="_blank" style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {upcomingSessions.length > 0 ? 'Purchase More Hours' : 'No Teaching Session Remaining'}
+                      </a>
                       </Tag>
                     </div>
                     :

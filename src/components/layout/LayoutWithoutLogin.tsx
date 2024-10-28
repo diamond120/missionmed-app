@@ -58,18 +58,18 @@ export const LayoutWithoutLogin: FC = () => {
           }
         } else {
           if( response.data.data.show_story_feature == 1 && response.data.data.allow_without_login == 1  ) {
-            if(!['/forgot-password','/sign_in'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword')) {
+            if(!['/forgot-password','/sign_in'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword') && !String(location.pathname).startWith('google5f2b2bf91c3f04a8')) {
               navigate("/")
             }
           } else {
-            if(!['/forgot-password'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword') ) {
+            if(!['/forgot-password'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword')  && !String(location.pathname).startWith('google5f2b2bf91c3f04a8')) {
               navigate("/sign_in")
             }  
           }
         }
       }
     } catch (e) {
-      if(!['/forgot-password'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword')) {
+      if(!['/forgot-password'].includes(location.pathname) && !String(location.pathname).startsWith('/resetpassword') && !String(location.pathname).startWith('google5f2b2bf91c3f04a8')) {
        navigate("/sign_in")
       }
     }

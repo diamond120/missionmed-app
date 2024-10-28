@@ -220,7 +220,6 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             <div className={"avatar"}>
               <Avatar
                 src={student.profile_picture}
-                size={40}
                 icon={<UserOutlined />}
               />
               <div className={"name-degree"}>
@@ -280,12 +279,13 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                     fontSize: 12,
                   }}
                 >
-                  <span>
+                   
+                  <div className="school-degree">
                     {tutor.university && tutor.university.map((item, index) => (
-                      <span key={index}>{item.school}({item.degree})
+                      <span key={index}>{item.degree}<span className="dot"></span>{item.school}
                         {tutor.university.length - 1 != index && ','}</span>
                     ))}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -302,16 +302,57 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     tutors,
     students
   }) {
+    const defaultActiveKey =  tutors && tutors?.length > 0 ? [tutors[0].id.toString()] : [];
+
+    const [activeKey, setActiveKey] = useState(defaultActiveKey);
+    useEffect(() => {
+      // Set initial tutor selection based on activeKey (expanded collapse)
+      if (!value && tutors && tutors?.length > 0 && (userRole !== 'tutor')) {
+        const initialTutorId = defaultActiveKey[0]; // Get the first tutor's id or defaultActiveKey
+        if (initialTutorId) {
+          onChange({ target: { value: Number(initialTutorId) } }); // Trigger onChange with the initial tutor's id
+        }
+      }
+    }, [tutors, onChange, value, defaultActiveKey]);
+  
+    // Sync activeKey with the selected radio value (if provided)
+    useEffect(() => {
+      if (value && value.toString() !== activeKey[0] && (userRole !== 'tutor')) {
+        setActiveKey([value.toString()]);
+      }
+    }, [value]);
+  
+    // Handle Collapse change and sync with radio selection
+    const handleCollapseChange = (key) => {
+      setActiveKey(key);
+      if (key) {
+        const selectedTutor = tutors.find((tutor) => tutor.id.toString() === key);
+        if (selectedTutor && onChange) {
+          // Pass the selected tutor ID via onChange when the panel is expanded
+          onChange({ target: { value: selectedTutor.id } });
+        }
+      }
+    };
+  
+    // Handle Radio Change
+    const handleRadioChange = (e) => {
+      const selectedValue = e.target.value;
+      onChange(e); // Trigger onChange to update the form field
+      setActiveKey([selectedValue.toString()]); // Expand the corresponding panel
+    };
+
     return (
       <>
         {userRole !== 'tutor' ?
           (
-            <Radio.Group onChange={onChange} value={value}>
+            <Radio.Group onChange={handleRadioChange} value={value}>
               <Collapse
                 bordered={false}
-                defaultActiveKey={["1"]}
+                activeKey={activeKey}
+                onChange={handleCollapseChange}
                 expandIconPosition={`end`}
                 className="site-collapse-custom-collapse"
+                accordion
               >
 
                 {tutors && tutors.map((tutor) => (
@@ -320,7 +361,12 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                     key={tutor.id}
                     className="site-collapse-custom-panel"
                   >
-                    <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
+                      {tutor.biography && (
+                        <>
+                          <strong className="biography">Biography</strong>
+                          <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
+                        </>
+                      )}
 
                   </Panel>
                 ))}
