@@ -51,7 +51,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
 
   const getUniversityTutorList = async () => {
     try {
-      form.setFieldValue('mockInterview', '');
+      // form.setFieldValue('mockInterview', '');
       const data = {
         lessionType: 'Mock interviews',
         university: form.getFieldValue("university"),
