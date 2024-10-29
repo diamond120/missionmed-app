@@ -418,7 +418,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
           </div>
           <h4 className={"sub-title"} style={{ padding: '0 10px' }}>We recommend you pick someone you haven’t sat a mock with before.</h4>
           {userRole === 'tutor' ? (
-            <Form.Item name="tutorId" label="" rules={[{ required: true, message: "Please select student" }]}>
+            <Form.Item name="studentId" label="" rules={[{ required: true, message: "Please select student" }]}>
               <TutorCollapse students={students} />
             </Form.Item>
           ) : (
@@ -434,7 +434,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
   const Step3From = () => {
     return <>
       <div className={"book-time-cal"}>
-        <Calender tutorId={form.getFieldValue('tutorId')} form={form} moduleType={moduleType} timezone={timezone} next={next} prev={prev} />
+        <Calender tutorId={form.getFieldValue('tutorId')} studentId={form.getFieldValue('studentId')} form={form} moduleType={moduleType} timezone={timezone} next={next} prev={prev} />
         {(userRole == 'tutor' && (timezone != students.find(student => student.id == form.getFieldValue('tutorId'))?.timezone)) && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;
@@ -442,7 +442,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
   const checkingDate = async (date, startTime, endTime, getday, studentId, tutorId) => {
     if (user.role === 'tutor') {
-      studentId = form.getFieldValue('newTutorId');
+      studentId = form.getFieldValue('studentId');
       tutorId = tutor.id;
     } else {
       tutorId = form.getFieldValue('newTutorId');

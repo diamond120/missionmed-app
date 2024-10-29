@@ -6,6 +6,8 @@ import MockInterviewDetails from "../../components/mock-interview-details";
 import "./index.less";
 import CommonService from "../../api/services/Common";
 import BookInterview from "../student-mock-interview/book-interview";
+import RescheduleInterview from "../../components/mock-interview-details/reschedule-interview";
+import React from "react";
 
 const TutorMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -13,6 +15,8 @@ const TutorMockInterview = () => {
   const [pastSessions, setPastSessions] = useState([]);
   const [agenda, setAgenda] = useState(null);
   const [timezone, setTimeZone] = useState("");
+  const [isOpenReschedule, setIsOpenReschedule] = useState(false);
+  const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const getMockInterviewDetails = async () => {
     try {
       const data = {
@@ -41,6 +45,15 @@ const TutorMockInterview = () => {
     }
   };
 
+  const handleReschedule = (sessionId) => {
+    setIsOpenReschedule(true);
+    setRescheduleSessionId(sessionId);
+  }
+
+  const handleOpen = (state) => {
+    setIsOpenReschedule(state);
+  }
+
   const handleEditAgenda = async (agendaDetails) => {
     try {
       const data = {
@@ -63,6 +76,15 @@ const TutorMockInterview = () => {
     getMockInterviewDetails();
   }, []);
 
+
+  const updateUpcomingSession = (sessionId, data) => {
+    getMockInterviewDetails();
+  }
+
+  const cancleUpSession = () => {
+    getMockInterviewDetails();
+  }
+  
   const handleEditLink = async(detail) => {
     try{
       const data = {
@@ -109,8 +131,10 @@ const TutorMockInterview = () => {
             upcomingSessions={upcomingSessions}
             pastSessions={pastSessions}
             agenda={agenda}
+            handleReschedule={handleReschedule}
             handleEditAgenda={handleEditAgenda}
             handleEditLink= {handleEditLink}
+            cancleUpSession={cancleUpSession}
           />
           ) : (
           <div className="mock-interview">
@@ -138,6 +162,7 @@ const TutorMockInterview = () => {
           }
         </div>
       </Section>
+      <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone} />
     </>
   );
 };

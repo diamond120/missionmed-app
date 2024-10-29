@@ -69,7 +69,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
             </li>
           </ul>
 
-          <div className="btn-group" style={{ marginTop: "32px" }}>
+          <div className="btn-group" style={{ marginTop: "32px", flexWrap: "wrap"}}>
             <Button className={"primary-button"}  onClick={(event) => {
                 const linkToOpen = upcomingInterview['sessionLink']  ? upcomingInterview['sessionLink']  : upcomingInterview['defaultSessionLink'];
                 if(linkToOpen) {
@@ -78,6 +78,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                   event.preventDefault();
                 }
               }} >Join Session </Button>
+           
             {user.role == "student" ? (
               upcomingInterview['isWithin24Hours'] ? (
 
@@ -99,13 +100,16 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                 <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-            {user.role == "tutor" && (
+            {user?.role === "tutor" &&(
+            <>
+              <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+            </>
             )}
           </div>
         </div>
       </div>
-
+     
       <Modal
         title="Edit Session Link"
         open={isModalOpen}
