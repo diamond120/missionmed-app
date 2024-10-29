@@ -24,6 +24,7 @@ const RescheduleInterview = ({
   const [universityList, setUniversityList] = useState([]);
   const totalSteps = 3;
   const [interviewSummary, setInterviewSummary] = useState(null);
+  const [mockInterviewList, setMockInterviewList] = useState([]);
   const [loading, setLoading] = useState(false);
   const user = useUser();
   const userRole = user.role;
@@ -36,6 +37,15 @@ const RescheduleInterview = ({
       const response = await CommonService.postAPI('/session-summary',data);
       if (response.data.success) {
         setInterviewSummary(response.data.data);
+        // Set mockInterviewList based on universitywisemock value
+        const interviewCount = await response.data.data.universityWiseMock;
+        const MockInterviewList =await Array.from({ length: interviewCount }, (_, i) => ({
+          id: i + 1,
+          value: `Mock Interview #${i + 1}`,
+        }));
+        setMockInterviewList(MockInterviewList);
+        form.setFieldsValue({ university: response.data.data?.university });
+        form.setFieldsValue({ mockInterview: response.data.data?.mock_interview });
       } else {
         throw new Error(response.data.message);
       }
@@ -64,11 +74,14 @@ const RescheduleInterview = ({
   };
 
   useEffect(() => {
-    if (sessionId) {
+    if (sessionId && isOpen) {
+      console.log("id : ", sessionId, isOpen)
       getInterviewSummary(sessionId);
     }
     setModalTitle("Reschedule Interview");
     setActiveStep(1);
+    if(!isOpen)
+    setInterviewSummary(null)
   }, [sessionId,isOpen]);
 
   useEffect(() => {
@@ -141,12 +154,6 @@ const RescheduleInterview = ({
   const handleOk = () => {
     handleOpen(false);
   };
-
-  const mockInterviewList = [
-    { id: 1, value: "Mock Interview#1" },
-    { id: 2, value: "Mock Interview#2" },
-    { id: 3, value: "Mock Interview#3" },
-  ];
 
   const getMockInterviewList = () => {
     return mockInterviewList;
