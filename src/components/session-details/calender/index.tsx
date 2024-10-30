@@ -72,14 +72,20 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
       if (response.data.success) {
         const slotList = response.data.data ?? [];
         setSlots(slotList);
-        setSpinning(false);
+        setTimeout(() => {
+          setSpinning(false);
+        }, 3000);
       } else {
-        setSpinning(false);
+        setTimeout(() => {
+          setSpinning(false);
+        }, 3000);
         prev();
         throw new Error(response.data.message);
       }
     } catch (e) {
-      setSpinning(false);
+      setTimeout(() => {
+        setSpinning(false);
+      }, 3000);
       prev();
       message.error(e.message);
     }
