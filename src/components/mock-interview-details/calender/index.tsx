@@ -72,14 +72,20 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
         if (response.data.success) {
             const slotList = response.data.data ?? [];
             setSlots(slotList); 
-            setSpinning(false);
+            setTimeout(() => {
+              setSpinning(false);
+            }, 3000);
           } else {
-            setSpinning(false);
+            setTimeout(() => {
+              setSpinning(false);
+            }, 3000);
           throw new Error(response.data.message);
           prev() 
         }
       } catch (e) {
-        setSpinning(false);
+        setTimeout(() => {
+          setSpinning(false);
+        }, 3000);
         message.error(e.message);
          prev()
       }
@@ -172,6 +178,8 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
 
     useEffect(() => {
       const addClassToParent = () => {
+      console.log('timeinminute')
+
         const elementsWithABCClass = document.querySelectorAll('.otherslot');
         elementsWithABCClass.forEach(element => {
           element.parentNode.classList.add('bookedslot');
@@ -183,6 +191,7 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
           element.parentNode.style.zIndex = 5;
         });
       };
+      console.log('settime')
       const timeoutId = setTimeout(addClassToParent, 5000);
 
       return () => clearTimeout(timeoutId);
