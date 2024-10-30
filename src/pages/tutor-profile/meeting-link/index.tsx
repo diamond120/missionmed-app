@@ -52,7 +52,7 @@ const MeetingLink: FC<Any> = () => {
                 <Form.Item
                     name={"bufferTime"}>
                     <div className={"link-form-item"}>
-                        <p className={"label"}>Set your personal meeting ID</p>
+                        <p className={"label"}>Set your Personal Meeting Link</p>
                         <br />
                         <p>This will be the link that your student receives. Please check to make sure it work properly.</p>
                         <Input.TextArea className={"biography-input w-full"} placeholder={"Set your Personal Meeting Link URL"} disabled={!editing} style={{ color: !editing ? "#bfbfbf" : "", backgroundColor: !editing ? "#f5f5f5" : "" }} defaultValue={tutor?.personalMeetingId ?? ''} onChange={e => setPersonalMeetingId(e.target.value)} />
