@@ -74,10 +74,12 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
             setSlots(slotList); 
             setTimeout(() => {
               setSpinning(false);
+              applyZIndexToUnavailable();
             }, 3000);
           } else {
             setTimeout(() => {
               setSpinning(false);
+              applyZIndexToUnavailable();
             }, 3000);
           throw new Error(response.data.message);
           prev() 
@@ -152,6 +154,13 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
       }
     }
     
+    const applyZIndexToUnavailable = () => {
+      const unavailableElement = document.querySelectorAll('.unavailable');
+      unavailableElement.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '7', 'important');
+      });
+    };
+
     useEffect(() => {
       if(filterDateSet == true) {
         getSlotsist(tutorId, studentId);
@@ -164,11 +173,7 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
           element.parentNode.classList.add('bookedslot');
         });
 
-        const unavailableElement = document.querySelectorAll('.unavailable');
-
-        unavailableElement.forEach(element => {
-          element.parentNode.style.zIndex = 7;
-        });
+        applyZIndexToUnavailable();
       };
       const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
 
@@ -185,14 +190,9 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
           element.parentNode.classList.add('bookedslot');
         });
 
-        const unavailableElement = document.querySelectorAll('.unavailable');
-
-        unavailableElement.forEach(element => {
-          element.parentNode.style.zIndex = 7;
-        });
+        applyZIndexToUnavailable();
       };
-      console.log('settime')
-      const timeoutId = setTimeout(addClassToParent, 5000);
+      const timeoutId = setTimeout(addClassToParent, 3000);
 
       return () => clearTimeout(timeoutId);
     }, []); 

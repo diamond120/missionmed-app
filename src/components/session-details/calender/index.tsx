@@ -74,10 +74,12 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
         setSlots(slotList);
         setTimeout(() => {
           setSpinning(false);
+          applyZIndexToUnavailable();
         }, 3000);
       } else {
         setTimeout(() => {
           setSpinning(false);
+          applyZIndexToUnavailable();
         }, 3000);
         prev();
         throw new Error(response.data.message);
@@ -154,7 +156,13 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
 
   const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, studentId, filterDate, rescheduleDate]);
 
-  
+  const applyZIndexToUnavailable = () => {
+    const unavailableElement = document.querySelectorAll('.unavailable');
+    unavailableElement.forEach(element => {
+      element.parentNode.style.setProperty('z-index', '7', 'important');
+    });
+  };
+
   useEffect(() => {
     if (filterDateSet) {
       memoizedGetSlotsist(tutorId, studentId);
@@ -166,11 +174,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
         element.parentNode.classList.add('bookedslot');
       });
 
-      const unavailableElement = document.querySelectorAll('.unavailable');
-
-      unavailableElement.forEach(element => {
-        element.parentNode.style.zIndex = 7;
-      });
+      applyZIndexToUnavailable();
     };
     const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
 
@@ -285,12 +289,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
       elementsWithABCClass.forEach(element => {
         element.parentNode.classList.add('bookedslot');
       });
-
-      const unavailableElement = document.querySelectorAll('.unavailable');
-
-      unavailableElement.forEach(element => {
-        element.parentNode.style.zIndex = 7;
-      });
+      applyZIndexToUnavailable();
     };
     const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
 
