@@ -179,11 +179,10 @@ const RescheduleInterview = ({
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-              Tutor
+            {userRole === 'tutor' ? 'Student' : 'Tutor'}
             </h4>
-            <div style={{ fontSize: 16 }}>{interviewSummary?.tutorName}</div>
+            <div style={{ fontSize: 16 }}>{userRole === 'tutor' ? interviewSummary?.studentName : interviewSummary?.tutorName}</div>
           </div>
-
           <Row>
             <Col span={10} sm={8}>
               <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
