@@ -130,10 +130,14 @@ const SessionItem = ({ session, type, handleRateSession = () => {}, handleResche
       )}
       {userRole == 'tutor' && type == 'upcoming' && (
         <>
-          <div className='btn-group' style={{ marginTop: '10px' }}>
-            <Button className={'secondary-button'} onClick={handleClick}>
-              Edit Session Link
-            </Button>
+          <div className="btn-group" style={{ marginTop: "10px" }}>
+          {user.role == "tutor" && (
+            <>
+            <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+              <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+              </>
+            )}
+            <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
             {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           </div>
           <Modal

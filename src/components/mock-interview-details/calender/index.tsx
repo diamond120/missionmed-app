@@ -1,364 +1,386 @@
-import './index.less'
+import "./index.less"
 import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from '@fullcalendar/timegrid'
-import { useContext, useEffect, useState } from 'react'
-import { formatTime } from '../../../common/common'
-import { Button, Form, Modal, Radio, Spin, message } from 'antd'
-import CommonService from '../../../api/services/Common'
-import { LoadingOutlined } from '@ant-design/icons'
-import { UserContext } from '../../../api/providers/UserProvider'
-import { useTutor } from '../../../api/providers/TutorProvider'
-import { useRef } from 'react'
-import moment from 'moment'
+import { useContext, useEffect, useState } from "react";
+import {formatTime} from "../../../common/common";
+import { Button, Form, Modal, Radio, Spin, message } from "antd";
+import CommonService from "../../../api/services/Common";
+import { LoadingOutlined } from '@ant-design/icons';
+import { UserContext } from "../../../api/providers/UserProvider";
+import { useTutor } from "../../../api/providers/TutorProvider";
+import { useRef } from 'react';
+import moment from "moment";
 
 function formatDate(inputDateStr) {
-  const inputDate = new Date(inputDateStr)
-  const year = inputDate.getFullYear()
-  const month = (inputDate.getMonth() + 1).toString().padStart(2, '0') // Months are zero-indexed
-  const day = inputDate.getDate().toString().padStart(2, '0')
-  const hours = inputDate.getHours().toString().padStart(2, '0')
-  const minutes = inputDate.getMinutes().toString().padStart(2, '0')
-  const ampm = hours >= 12 ? 'pm' : 'am'
+  const inputDate = new Date(inputDateStr);
+  const year = inputDate.getFullYear();
+  const month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed
+  const day = inputDate.getDate().toString().padStart(2, '0');
+  const hours = inputDate.getHours().toString().padStart(2, '0');
+  const minutes = inputDate.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
   // Convert hours from 24-hour format to 12-hour format
-  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0')
-  const formattedDate = `${year}-${month}-${day} ${formattedHours}:${minutes} ${ampm}`
-  return formattedDate
+  const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+  const formattedDate = `${year}-${month}-${day} ${formattedHours}:${minutes} ${ampm}`;
+  return formattedDate;
 }
 
-const Calender = ({ tutorId, form, rescheduleDate, next, timezone, prev }) => {
-  const calendarRef = useRef(null)
-  const [slotsList, setSlots] = useState([])
-  const [filterDate, setfilterDate] = useState({})
-  const [filterDateSet, setFilterDateSet] = useState(false)
-  const [spinning, setSpinning] = useState<boolean>(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [subSlotList, setSubSlotList] = useState<any>([])
-  const [weekAvailable, setWeekAvailable] = useState(true)
-  const [weekDates, setWeekDates] = useState(null)
-  const { user } = useContext(UserContext)
-  const tutor = useTutor()
-
-  const handleDateClick = (dateInfo) => {
-    const dateObjectEnd = new Date(dateInfo.endStr)
-    const dateObjectStart = new Date(dateInfo.startStr)
-    const data = {
-      startDate: dateObjectStart.toISOString().split('T')[0],
-      endDate: dateObjectEnd.toISOString().split('T')[0]
-    }
-    setfilterDate(data)
-    setFilterDateSet(true)
-  }
-
-  const getSlotsist = async (tutorId) => {
-    try {
+const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev}) => {
+  const calendarRef = useRef(null);
+  const [slotsList, setSlots] = useState([]);
+  const [filterDate, setfilterDate] = useState({});
+  const [filterDateSet, setFilterDateSet] = useState(false);
+  const [spinning, setSpinning] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [subSlotList, setSubSlotList] = useState<any>([]);
+  const [weekAvailable, setWeekAvailable] = useState(true);
+  const [weekDates,setWeekDates]= useState(null)
+  const { user } = useContext(UserContext);
+  const tutor = useTutor();
+    
+    const handleDateClick = (dateInfo) => {
+      const dateObjectEnd = new Date(dateInfo.endStr);
+      const dateObjectStart = new Date(dateInfo.startStr); 
       const data = {
-        startDate: filterDate.startDate,
-        endDate: filterDate.endDate,
-        rescheduleDate: rescheduleDate,
-        type: 'mockinterview',
-        role: user.role
-      }
-      if (user.role == 'student') {
-        data.tutorId = tutorId
-      } else {
-        data.studentId = tutorId
-        data.tutorId = tutor.id
-      }
-
-      const response = await CommonService.postAPI('/student/slots-list', data)
-      if (response.data.success) {
-        const slotList = response.data.data ?? []
-        setSlots(slotList)
-      } else {
-        throw new Error(response.data.message)
-        prev()
-      }
-    } catch (e) {
-      message.error(e.message)
-      prev()
-    }
-  }
-
-  const getWeekAvailable = async (tutorId) => {
-    try {
-      const params = {
-        startDate: filterDate.startDate,
-        endDate: filterDate.endDate,
-        type: 'mockinterview',
-        role: user.role
-      }
-
-      if (user.role == 'student') {
-        params.tutorId = tutorId
-      } else {
-        params.studentId = tutorId
-        params.tutorId = tutor.id
-      }
-
-      const response = await CommonService.postAPI('/student/slots-available', params)
-      if (response.data.success) {
-        setWeekAvailable(response.data.data)
-        if (!response.data.data) {
-          getAvailableWeekDates(tutorId)
-        } else setWeekDates(null)
-      } else {
-        throw new Error(response.data.message)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getAvailableWeekDates = async (tutorId) => {
-    try {
-      const params = {
-        startDate: filterDate.startDate,
-        endDate: filterDate.endDate,
-        type: 'mockinterview',
-        role: user.role
-      }
-
-      if (user.role == 'student') {
-        params.tutorId = tutorId
-      } else {
-        params.studentId = tutorId
-        params.tutorId = tutor.id
-      }
-
-      const response = await CommonService.postAPI('/student/available-week-slots', params)
-      if (response.data.success) {
-        setWeekDates(response.data.data)
-      } else {
-        throw new Error(response.data.message)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    if (filterDateSet == true) {
-      getSlotsist(tutorId)
-      getWeekAvailable(tutorId)
+        'startDate' :  dateObjectStart.toISOString().split('T')[0],
+        'endDate' : dateObjectEnd.toISOString().split('T')[0],
+      };
+      setfilterDate(data);
+      setFilterDateSet(true);
     }
 
-    const addClassToParentAfterDateChange = () => {
-      const elementsWithABCClass = document.querySelectorAll('.otherslot')
-      elementsWithABCClass.forEach((element) => {
-        element.parentNode.classList.add('bookedslot')
-      })
+    const getSlotsist = async (tutorId) => {
+      setSpinning(true);
+      try {
+        const data = {
+          startDate : filterDate.startDate,
+          endDate : filterDate.endDate,
+          rescheduleDate : rescheduleDate,
+          type :'mockinterview',
+          role : user.role,
+        };
+        if(user.role == 'student') { 
+          data.tutorId = tutorId 
+        } else {
+          data.studentId = studentId 
+          data.tutorId = tutor.id 
+        } 
 
-      const unavailableElement = document.querySelectorAll('.unavailable')
 
-      unavailableElement.forEach((element) => {
-        element.parentNode.style.zIndex = 5
-      })
-    }
-    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000)
-
-    return () => clearTimeout(timeoutId)
-  }, [tutorId, filterDate, filterDateSet, subSlotList])
-
-  useEffect(() => {
-    const addClassToParent = () => {
-      const elementsWithABCClass = document.querySelectorAll('.otherslot')
-      elementsWithABCClass.forEach((element) => {
-        element.parentNode.classList.add('bookedslot')
-      })
-
-      const unavailableElement = document.querySelectorAll('.unavailable')
-
-      unavailableElement.forEach((element) => {
-        element.parentNode.style.zIndex = 5
-      })
-    }
-    const timeoutId = setTimeout(addClassToParent, 5000)
-
-    return () => clearTimeout(timeoutId)
-  }, [])
-
-  let selectedEvent = null
-
-  const handleEventClick = async (info) => {
-    const clickedEvent = info.event
-    if (clickedEvent.title == 'Available') {
-      if (selectedEvent) {
-        selectedEvent.setProp('backgroundColor', '#ffffff')
-        selectedEvent.setProp('textColor', '#2816EE')
+        const response = await CommonService.postAPI("/student/slots-list",data);
+        if (response.data.success) {
+            const slotList = response.data.data ?? [];
+            setSlots(slotList); 
+            setTimeout(() => {
+              setSpinning(false);
+              applyZIndexToUnavailable();
+            }, 3000);
+          } else {
+            setTimeout(() => {
+              setSpinning(false);
+              applyZIndexToUnavailable();
+            }, 3000);
+          throw new Error(response.data.message);
+          prev() 
+        }
+      } catch (e) {
+        setTimeout(() => {
+          setSpinning(false);
+        }, 3000);
+        message.error(e.message);
+         prev()
       }
-      clickedEvent.setProp('backgroundColor', '#2816EE')
-      clickedEvent.setProp('textColor', '#ffffff')
-      selectedEvent = clickedEvent
-      const startDate = formatDate(clickedEvent.start)
-      const endDate = formatDate(clickedEvent.end)
-      const date = clickedEvent.extendedProps.day
-      setSlot(startDate, endDate, date)
-    }
-  }
+    };
 
-  const setSlot = async (startDate, endDate, date) => {
-    setSpinning(true)
-    try {
-      const data = {
-        startDate: startDate,
-        endDate: endDate,
-        date: date,
-        type: 'mockinterview',
-        timezone: timezone,
-        rescheduleDate: rescheduleDate,
-        start: filterDate.startDate,
-        end: filterDate.endDate,
-        role: user.role
-      }
-      if (user.role == 'student') {
-        data.tutorId = tutorId
-      } else {
-        data.studentId = tutorId
-        data.tutorId = tutor.id
-      }
+    const getWeekAvailable = async (tutorId, studentId) => {
+      try {
+        const params = {
+          startDate : filterDate.startDate,
+          endDate : filterDate.endDate,
+          type :'mockinterview',
+          role : user.role,
+        }
 
-      let response = await CommonService.postAPI('/student/multiple-slots', data)
-      if (response.data.success && response.data.data.length > 0) {
-        const list = response.data.data ?? []
-        setSubSlotList(list)
-        setSpinning(false)
-        setIsModalOpen(true)
-      } else {
-        setSpinning(false)
-        throw new Error(response.data.message)
-      }
-    } catch (e) {
-      setSpinning(false)
-      message.error(e.message)
-    }
-  }
+        if(user.role == 'student') { 
+          params.tutorId = tutorId 
+        } else {
+          params.studentId = studentId 
+          params.tutorId = tutor.id 
+        } 
 
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
+        const response = await CommonService.postAPI("/student/slots-available",params);
+        if (response.data.success) {
+              setWeekAvailable(response.data.data)
+              if(!response.data.data) {
+                getAvailableWeekDates(tutorId, studentId)
+              }else
+              setWeekDates(null)
+              
+          } else {
+          throw new Error(response.data.message);
+        }
 
-  const handleSubmit = async () => {
-    const data = form.getFieldsValue(true)
-    if (subSlotList.length > 0 && data.subSlot >= 0) {
-      const slot = subSlotList[data.subSlot]
-      form.setFieldValue('sessionStartTime', slot.start)
-      form.setFieldValue('sessionEndTime', slot.end)
-      form.setFieldValue('date', slot.date)
-      if (user.role == 'tutor') {
-        form.setFieldValue('studentId', data.tutorId)
-        form.setFieldValue('tutorId', tutor.id)
+      }catch(error){
+        console.log(error)
       }
     }
-    await form.validateFields()
-    setIsModalOpen(false)
-    next()
-  }
-  const getDayName = (dateString) => {
-    const date = new Date(dateString)
-    return date.toLocaleString('default', { weekday: 'long' })
-  }
 
-  const handleGoToWeek = () => {
-    const calendarApi = calendarRef.current.getApi()
-    if (weekDates?.week_start) {
-      const date = new Date(weekDates?.week_start) // Convert the selected date string to a Date object
-      calendarApi.gotoDate(date) // Navigate to the selected date
+    const getAvailableWeekDates = async (tutorId, studentId) => {
+      try {
+        const params = {
+          startDate : filterDate.startDate,
+          endDate : filterDate.endDate,
+          type :'mockinterview',
+          role : user.role,
+        }
+
+        if(user.role == 'student') { 
+          params.tutorId = tutorId 
+        } else {
+          params.studentId = studentId,
+          params.tutorId = tutor.id 
+        } 
+
+        const response = await CommonService.postAPI("/student/available-week-slots",params);
+        if (response.data.success) {
+              setWeekDates(response.data.data)
+          } else {
+          throw new Error(response.data.message);
+        }
+
+      }catch(error){
+        console.log(error)
+      }
     }
-  }
-  const weekStart = moment(weekDates?.week_start)
-  const weekNumber = weekStart.week()
-  return (
-    <>
+    
+    const applyZIndexToUnavailable = () => {
+      const unavailableElement = document.querySelectorAll('.unavailable');
+      unavailableElement.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '7', 'important');
+      });
+    };
+
+    useEffect(() => {
+      if(filterDateSet == true) {
+        getSlotsist(tutorId, studentId);
+        getWeekAvailable(tutorId, studentId);
+      }
+
+      const addClassToParentAfterDateChange = () => {
+        const elementsWithABCClass = document.querySelectorAll('.otherslot');
+        elementsWithABCClass.forEach(element => {
+          element.parentNode.classList.add('bookedslot');
+        });
+
+        applyZIndexToUnavailable();
+      };
+      const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+
+      return () => clearTimeout(timeoutId);
+
+    }, [tutorId,filterDate,filterDateSet,subSlotList]);
+
+    useEffect(() => {
+      const addClassToParent = () => {
+      console.log('timeinminute')
+
+        const elementsWithABCClass = document.querySelectorAll('.otherslot');
+        elementsWithABCClass.forEach(element => {
+          element.parentNode.classList.add('bookedslot');
+        });
+
+        applyZIndexToUnavailable();
+      };
+      const timeoutId = setTimeout(addClassToParent, 3000);
+
+      return () => clearTimeout(timeoutId);
+    }, []); 
+
+    let selectedEvent = null;
+
+    const handleEventClick = async (info) => {
+      const clickedEvent = info.event;
+      if(clickedEvent.title == 'Available'){
+        if (selectedEvent) {
+          selectedEvent.setProp('backgroundColor', '#ffffff');
+          selectedEvent.setProp('textColor', '#2816EE');
+        }
+        clickedEvent.setProp('backgroundColor', '#2816EE');
+        clickedEvent.setProp('textColor', '#ffffff');
+        selectedEvent = clickedEvent;
+        const startDate = formatDate(clickedEvent.start);
+        const endDate = formatDate(clickedEvent.end);
+        const date = clickedEvent.extendedProps.day;
+        setSlot(startDate,endDate,date);
+      }
+    };
+
+    const setSlot = async (startDate, endDate, date) => {
+      setSpinning(true);
+      try {
+        const data = {
+          startDate : startDate,
+          endDate : endDate,
+          date: date,
+          type :'mockinterview',
+          timezone :timezone,
+          rescheduleDate : rescheduleDate,
+          start: filterDate.startDate,
+          end: filterDate.endDate,
+          role : user.role,
+        };
+        if(user.role == 'student') { 
+          data.tutorId = tutorId 
+        } else {
+          data.studentId = studentId 
+          data.tutorId = tutor.id 
+        } 
+      
+        let response = await CommonService.postAPI("/student/multiple-slots",data);
+        if (response.data.success && response.data.data.length > 0) {
+            const list = response.data.data ?? [];
+            setSubSlotList(list);
+            setSpinning(false);
+            setIsModalOpen(true);
+        } else {
+          setSpinning(false);
+          throw new Error(response.data.message); 
+        }
+      } catch (e) {
+        setSpinning(false);
+        message.error(e.message);
+      }
+    };
+
+    const handleCancel = () => {
+      setIsModalOpen(false);
+    };
+    
+    const handleSubmit =  async () => {
+      const data = form.getFieldsValue(true);
+      if (subSlotList.length > 0  && data.subSlot >= 0) {
+        const slot = subSlotList[data.subSlot];
+        form.setFieldValue('sessionStartTime', slot.start);
+        form.setFieldValue('sessionEndTime', slot.end);
+        form.setFieldValue('date', slot.date);
+        if(user.role == 'tutor') {
+          form.setFieldValue('studentId', data.tutorId);
+          form.setFieldValue('tutorId', tutor.id);
+        }
+      }
+      await form.validateFields();
+      setIsModalOpen(false);
+      next();
+    }
+    const getDayName = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleString('default', { weekday: 'long' });
+  };
+  
+
+    const handleGoToWeek = () => {
+      const calendarApi = calendarRef.current.getApi();
+      if(weekDates?.week_start){
+      const date = new Date(weekDates?.week_start); // Convert the selected date string to a Date object
+      calendarApi.gotoDate(date); // Navigate to the selected date
+   } };
+   const weekStart = moment(weekDates?.week_start);
+   const weekNumber = weekStart.week();
+    return (
+      <>
       {spinning && (
-        <>
-          <Spin size='large' indicator={<LoadingOutlined style={{ fontSize: 24, marginRight: 10 }} spin />} />{' '}
-          <span> Finding available slot......</span>
-        </>
+        <div className="overlay">
+          <div className="spin-container">
+            <Spin
+              size="large"
+              indicator={<LoadingOutlined style={{ fontSize: 48, marginRight: 10 }} spin />}
+            />
+            <span style={{ fontSize: '23px', marginLeft: '10px', color: '#fff' }}>Finding available slot......</span>
+          </div>
+        </div>
       )}
-      <Form.Item name='date' hidden={true} rules={[{ required: true, message: 'Please select date' }]}></Form.Item>
-      <Form.Item name='sessionStartTime' hidden={true} rules={[{ required: true, message: 'Please select slot' }]}></Form.Item>
-      <Form.Item name='sessionEndTime' hidden={true} rules={[{ required: true, message: 'Please select slot' }]}></Form.Item>
+      <Form.Item name="date" hidden={true} rules={[{ required: true , message:"Please select date"}]}></Form.Item>
+      <Form.Item name="sessionStartTime" hidden={true} rules={[{ required: true , message:"Please select slot"}]}></Form.Item>
+      <Form.Item name="sessionEndTime" hidden={true} rules={[{ required: true,  message:"Please select slot"}]}></Form.Item>
       {!weekAvailable && (
         <>
-          <div className='cus-alert'>
-            <div className='text-center'>Please switch to</div>
-            <button
-              style={{ backgroundColor: 'transparent', border: 0, padding: 0, height: 22, color: '#2816EE', cursor: 'pointer' }}
-              onClick={handleGoToWeek}
-            >
-              <strong>
-                {`Week ${weekNumber} (${moment(weekDates?.week_start).format('MMM D')} - ${moment(weekDates?.week_end).format('D, YYYY')})`}
-              </strong>
-            </button>
-            <div className='text-center'>for more available dates.</div>
-          </div>
-        </>
+        <div className="cus-alert">
+          <div className="text-center">Please switch to</div>
+          <button style={{backgroundColor:'transparent',border:0,padding:0,height:22,color:'#2816EE', cursor:'pointer'}} onClick={handleGoToWeek}>
+            <strong>
+              {`Week ${weekNumber} (${moment(weekDates?.week_start).format('MMM D')} - ${moment(weekDates?.week_end).format("D, YYYY")})`}
+            </strong>
+          </button>
+          <div className="text-center">for more available dates.</div>
+
+        </div>
+      </>
       )}
       <FullCalendar
         ref={calendarRef}
         plugins={[dayGridPlugin, timeGridPlugin]}
-        initialView='timeGridWeek'
-        dayHeaders={true}
+        initialView="timeGridWeek"
+        dayHeaders={true}    
         headerToolbar={{
-          left: 'today',
-          center: 'prev,title,next',
-          right: 'timeGridWeek,dayGridMonth'
+          left:'today',
+          center: "prev,title,next",
+          right: "timeGridWeek,dayGridMonth" 
         }}
         datesSet={handleDateClick}
         events={slotsList}
-        selectable={true}
+        selectable={true} 
         eventClick={handleEventClick}
         eventBorderColor='0'
         allDaySlot={false}
       />
       <Modal
-        title='Available Slot For Mock Interview'
-        open={isModalOpen}
-        onOk={handleSubmit}
-        onCancel={handleCancel}
-        className={'mock-interview-modal'}
-        width={'600px'}
-        footer={[
-          <div key='buttonGroup' className='button-group'>
-            <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
-              Discard
-            </Button>
-            <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
-              Save Changes
-            </Button>
-          </div>
-        ]}
-      >
-        <Form form={form} layout='vertical'>
-          <Form.Item
-            style={{ marginTop: '17px', marginBottom: '0px' }}
-            label='Slot Timing'
-            name='subSlot'
-            rules={[{ required: true, message: 'Please select slot.' }]}
-          >
-            <Radio.Group>
-              {subSlotList.map((slot, index) => {
+          title="Available Slot For Mock Interview"
+          open={isModalOpen}
+          onOk={handleSubmit}
+          onCancel={handleCancel}
+          className={"mock-interview-modal"}
+          width={"600px"}
+          footer={[
+            <div key="buttonGroup" className='button-group'>
+              <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+                Discard 
+              </Button>
+              <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                Save Changes
+              </Button>
+            </div>
+          ]}
+        >
+          <Form form={form} layout="vertical">
+            
+            <Form.Item
+              style={{ marginTop: "17px", marginBottom: "0px"}}
+              label="Slot Timing"
+              name="subSlot"
+              rules={[{ required: true, message:"Please select slot." }]}
+            > 
+            <Radio.Group >
+            {subSlotList.map((slot, index) => {
                 // Check if the current slot date is different from the previous slot's date
-                const showDate = index === 0 || slot.date !== subSlotList[index - 1].date
+                const showDate = index === 0 || slot.date !== subSlotList[index - 1].date;
 
                 return (
-                  <div key={index}>
-                    {showDate && (
-                      <div style={{ fontSize: '14px', color: '#000000', fontWeight: 600 }}>
-                        {moment(slot.date).format('MMM DD, YYYY')} ({getDayName(slot.date)})
-                      </div>
-                    )}
-                    <Radio value={index}>{`${formatTime(slot.start)} - ${formatTime(slot.end)}`}</Radio>
-                  </div>
-                )
-              })}
+                    <div key={index}>
+                        {showDate && <div style={{fontSize: "14px",color: "#000000",fontWeight: 600}}>{moment(slot.date).format('MMM DD, YYYY')} ({getDayName(slot.date)})</div>}
+                        <Radio value={index}>
+                            {`${formatTime(slot.start)} - ${formatTime(slot.end)}`}
+                        </Radio>
+                    </div>
+                );
+            })}
             </Radio.Group>
-          </Form.Item>
-        </Form>
+            </Form.Item>
+          </Form>
       </Modal>
-    </>
+      </>      
   )
+
 }
 
 export default Calender

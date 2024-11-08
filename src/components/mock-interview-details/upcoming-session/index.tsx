@@ -1,56 +1,62 @@
-import { Button, Form, Input, Modal, Tooltip } from 'antd'
-import { CalendarOutlined } from '@ant-design/icons'
-import { UserContext } from '../../../api/providers/UserProvider'
-import { formatDateV1, formatTime } from '../../../common/common'
-import './index.less'
-import { useContext, useState } from 'react'
+import { Button, Form, Input, Modal, Tooltip } from "antd";
+import { CalendarOutlined } from "@ant-design/icons";
+import { UserContext } from "../../../api/providers/UserProvider";
+import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/common";
+import "./index.less";
+import { useContext, useMemo, useState } from "react";
 
 const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink }) => {
-  const { user } = useContext(UserContext)
-  const title = sessionType == 'interview' ? 'Interview' : ''
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const { TextArea } = Input
-  const [form] = Form.useForm()
+  const { user } = useContext(UserContext);
+  const isSessionOnToday = useMemo(
+    () => checkSessionOnToday(upcomingInterview.date),
+    [upcomingInterview.date]
+  );
+  const title = sessionType == "interview" ? "Interview" : "";
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { TextArea } = Input;
+  const [form] = Form.useForm();
 
   const handleClick = () => {
     setIsModalOpen(true)
   }
 
   const handleSubmit = async () => {
-    const values = await form.validateFields()
+
+    const values = await form.validateFields();
     const data = {
       link: values.sessionLink,
       sessionId: values.sessionId
     }
-    handleEditLink(data)
-    upcomingInterview['sessionLink'] = values.sessionLink
-    setIsModalOpen(false)
-  }
+    handleEditLink(data);
+    upcomingInterview['sessionLink'] = values.sessionLink;
+    setIsModalOpen(false);
+
+  };
 
   const handleCancel = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   const validateURL = (rule, value, callback) => {
     if (value && !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(value)) {
-      callback('Please enter a valid URL')
+      callback('Please enter a valid URL');
     } else {
-      callback()
+      callback();
     }
-  }
+  };
 
-  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink })
+  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
 
   return (
     <>
-      <div className={'upcoming-session con-box'}>
-        <h2 className={'secondary-title'}>Upcoming {title}</h2>
-        <div className={'con-box-wrap'}>
-          <CalendarOutlined style={{ fontSize: '50px', color: '#A9A2F8' }} />
+      <div className={"upcoming-session con-box"}>
+        <h2 className={"secondary-title"}>Upcoming {title}</h2>
+        <div className={"con-box-wrap"}>
+          <CalendarOutlined style={{ fontSize: "50px", color: "#A9A2F8" }} />
 
-          <h2 className={'con-box-title'}>Next Interview Will Be</h2>
+          <h2 className={"con-box-title"}>Next Interview Will Be</h2>
           <ul>
-            {user.role == 'tutor' && (
+            {user.role == "tutor" && (
               <li>
                 <strong>Student:</strong> {upcomingInterview.student_name}
               </li>
@@ -59,34 +65,28 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
               <strong>Date: </strong> {formatDateV1(upcomingInterview.date)}
             </li>
             <li>
-              <strong>Time: </strong>{' '}
-              {`${formatTime(upcomingInterview['session_start_time'])} - ${formatTime(upcomingInterview['session_end_time'])}`}
+              <strong>Time: </strong> {`${formatTime(upcomingInterview['session_start_time'])} - ${formatTime(upcomingInterview['session_end_time'])}`}
             </li>
           </ul>
 
-          <div className='btn-group' style={{ marginTop: '32px' }}>
-            <Button
-              className={'primary-button'}
-              onClick={(event) => {
-                const linkToOpen = upcomingInterview['sessionLink']
-                  ? upcomingInterview['sessionLink']
-                  : upcomingInterview['defaultSessionLink']
-                if (linkToOpen) {
-                  window.open(linkToOpen, '_blank')
+          <div className="btn-group" style={{ marginTop: "32px", flexWrap: "wrap"}}>
+            <Button className={"primary-button"}  onClick={(event) => {
+                const linkToOpen = upcomingInterview['sessionLink']  ? upcomingInterview['sessionLink']  : upcomingInterview['defaultSessionLink'];
+                if(linkToOpen) {
+                  window.open(linkToOpen , '_blank')
                 } else {
-                  event.preventDefault()
+                  event.preventDefault();
                 }
-              }}
-            >
-              Join Session{' '}
-            </Button>
-            {user.role == 'student' ? (
+              }} >Join Session </Button>
+           
+            {user.role == "student" ? (
               upcomingInterview['isWithin24Hours'] ? (
+
                 <Tooltip
                   className={'button_tooltip'}
-                  title={'You can’t reschedule session less than 24 hours before it starts'}
-                  color={'#465078'}
-                >
+                  title={
+                    "You can’t reschedule session less than 24 hours before it starts"
+                  } color={"#465078"} >
                   <Button
                     className={`secondary-button button-disabled`}
                     onClick={() => false}
@@ -95,56 +95,62 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                     Reschedule
                   </Button>
                 </Tooltip>
+
               ) : (
-                <Button className={'secondary-button'} onClick={() => handleReschedule(upcomingInterview.id)}>
-                  {' '}
-                  Reschedule{' '}
-                </Button>
+                <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
               )
             ) : null}
-            {user.role == 'tutor' && (
-              <Button className={'secondary-button'} onClick={handleClick}>
-                Edit Session Link
-              </Button>
+            {user?.role === "tutor" &&(
+            <>
+              <Button className={"secondary-button"} onClick={() => handleReschedule(upcomingInterview.id)}> Reschedule </Button>
+              <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+            </>
             )}
           </div>
         </div>
       </div>
-
+     
       <Modal
-        title='Edit Session Link'
+        title="Edit Session Link"
         open={isModalOpen}
         onOk={handleSubmit}
         onCancel={handleCancel}
-        className={'mock-interview-modal'}
-        width={'600px'}
+        className={"mock-interview-modal"}
+        width={"600px"}
         footer={[
-          <div key='buttonGroup' className='button-group'>
-            <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
+          <div key="buttonGroup" className='button-group'>
+            <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
               Discard
             </Button>
-            <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
+            <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
               Save Changes
             </Button>
           </div>
         ]}
       >
-        <Form form={form} layout='vertical'>
+        <Form form={form} layout="vertical">
           <Form.Item
-            label='Edit Session Link'
-            name='sessionLink'
-            rules={[{ required: true }, { validator: validateURL }]}
+            label="Edit Session Link"
+            name="sessionLink"
+            rules={[{ required: true },
+            { validator: validateURL }]}
             initialValue={upcomingInterview?.sessionLink}
           >
-            <TextArea style={{ height: 50 }} placeholder='' />
+            <TextArea
+              style={{ height: 50 }}
+              placeholder=""
+            />
           </Form.Item>
-          <Form.Item name='sessionId' initialValue={upcomingInterview?.id}>
-            <Input type='hidden' />
+          <Form.Item
+            name="sessionId"
+            initialValue={upcomingInterview?.id}
+          >
+            <Input type="hidden" />
           </Form.Item>
         </Form>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default UpcomingSession
+export default UpcomingSession;

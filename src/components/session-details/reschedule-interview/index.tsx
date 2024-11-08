@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Form, Modal, message, Select, Radio, Row, Col, Input, Tooltip } from "antd";
+import { useContext, useEffect, useState } from "react";
+import { Button, Form, Modal, message, Select, Radio, Row, Col, Input, Tooltip, Spin, Alert } from "antd";
 import CommonService from "../../../api/services/Common";
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
@@ -8,7 +8,7 @@ import "./index.less";
 import { useNavigate } from "react-router-dom";
 import "./index.less";
 import { QuestionCircleFilled } from "@ant-design/icons";
-
+import { UserContext } from "../../../api/providers/UserProvider";
 const { TextArea } = Input;
 const RescheduleInterview = ({
   updateUpcomingSession,
@@ -24,9 +24,10 @@ const RescheduleInterview = ({
   const [modalTitle, setModalTitle] = useState("");
   const [universityList, setUniversityList] = useState([]);
   const [recurringAvailable, setRecurringAvailable] = useState(false);
-
+  const { user } = useContext(UserContext);
+  const userRole = user.role;
   const totalSteps = 3;
-
+  const [loading, setLoading] = useState(false);
   const [interviewSummary, setInterviewSummary] = useState(null);
   const [showDropdown, setShowDropdown] = useState(true);
   const [dayOfWeek, setDayOfWeek] = useState('Monday');
@@ -107,6 +108,7 @@ const RescheduleInterview = ({
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const formData = form.getFieldsValue(true);
     try {
       formData.bookingFor = (moduleType == 'teaching') ? 'Interview 1-to-1 Tutoring' : 'UCAT 1-to-1 Tutoring';
@@ -115,7 +117,9 @@ const RescheduleInterview = ({
       formData.endTime = formatTime(formData.sessionEndTime);
       formData.frequency = interviewSummary?.frequency;
       formData.tutorId = interviewSummary?.tutor_id;
+      formData.studentId = interviewSummary?.student_id;
       formData.bookingFor = interviewSummary?.booking_for;
+      formData.eventId = interviewSummary?.event_id;
       const response = await CommonService.postAPI('/student/reschedule-session', { ...formData, sessionId: interviewSummary?.id });
       if (response.data.success) {
         const result = response.data.data;
@@ -125,17 +129,18 @@ const RescheduleInterview = ({
           session_end_time: result.session_end_time,
           session_start_time: result.session_start_time,
         });
-        if (moduleType == 'teaching') {
-          navigate("/student/teaching-session");
-
-        } else {
-          navigate("/student/ucat-session");
-        }
+        setLoading(false);
+        const basePath = userRole === 'student' ? '/student' : '/tutor';
+        const sessionType = moduleType === 'teaching' ? 'teaching-session' : 'ucat-session';
+        const path = `${basePath}/${sessionType}`;
+        navigate(path);
         message.success("You've successfully rescheduled teaching session");
       } else {
+        setLoading(false);
         throw new Error(response.data.message);
       }
     } catch (e) {
+      setLoading(false);
       message.error(e.message);
     }
     handleCancel();
@@ -174,11 +179,10 @@ const RescheduleInterview = ({
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-              Tutor
+            {userRole === 'tutor' ? 'Student' : 'Tutor'}
             </h4>
-            <div style={{ fontSize: 16 }}>{interviewSummary?.tutorName}</div>
+            <div style={{ fontSize: 16 }}>{userRole === 'tutor' ? interviewSummary?.studentName : interviewSummary?.tutorName}</div>
           </div>
-
           <Row>
             <Col span={10} sm={8}>
               <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
@@ -237,7 +241,14 @@ const RescheduleInterview = ({
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-        <Calender tutorId={interviewSummary?.tutor_id} rescheduleDate={interviewSummary?.session_start_time} form={form} moduleType={moduleType} next={next} timezone={timezone} />
+        <Calender tutorId={interviewSummary?.tutor_id} studentId={interviewSummary?.student_id} rescheduleDate={interviewSummary?.student_session_start_time} form={form} moduleType={moduleType} next={next} timezone={timezone} />
+        {(userRole === 'tutor') && (
+          <Alert 
+            style={{ top: 23 }} 
+            message="Note: Timings in Calendar are displaying based on Student Timezone." 
+            showIcon 
+          />
+        )}
       </div>
     </>;
   };
@@ -369,6 +380,9 @@ const RescheduleInterview = ({
               Next Step
             </Button>
           ),
+          loading == true ? (
+            <Spin />
+          ) : (
           activeStep === totalSteps && (
             <Button
               className={"primary-button"}
@@ -377,6 +391,7 @@ const RescheduleInterview = ({
             >
               Confirm
             </Button>
+          )
           ),
         ]}
       >

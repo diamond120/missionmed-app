@@ -111,28 +111,29 @@ export default function TutorCalendarTeaching(tutorId?: number, next?: any, form
 
   const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, filterDate, timezoneNew])
 
-  useEffect(() => {
-    if (filterDateSet && timezoneNew) {
-      memoizedGetSlotsist(tutorId)
-    }
-    const addClassToParentAfterDateChange = () => {
-      const elementsWithABCClass = document.querySelectorAll('.otherslot')
-      elementsWithABCClass.forEach((element) => {
-        element.parentNode.classList.add('bookedslot')
-      })
+      useEffect(() => {
+        if (filterDateSet && timezoneNew) {
+          memoizedGetSlotsist(tutorId);
+        }
+        const addClassToParentAfterDateChange = () => {
+          const elementsWithABCClass = document.querySelectorAll('.otherslot');
+          elementsWithABCClass.forEach(element => {
+            element.parentNode.classList.add('bookedslot');
+          });
+  
+          const unavailableElement = document.querySelectorAll('.unavailable');
+  
+          unavailableElement.forEach(element => {
+            element.parentNode.style.zIndex = 7;
+          });
+        };
+        const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
+  
+        return () => clearTimeout(timeoutId);
+      }, [memoizedGetSlotsist, tutorId, filterDateSet, timezoneNew]);
 
-      const unavailableElement = document.querySelectorAll('.unavailable')
 
-      unavailableElement.forEach((element) => {
-        element.parentNode.style.zIndex = 5
-      })
-    }
-    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000)
-
-    return () => clearTimeout(timeoutId)
-  }, [memoizedGetSlotsist, tutorId, filterDateSet, timezoneNew])
-
-  let selectedEvent = null
+      let selectedEvent = null;
 
   const handleEventClick = async (info) => {
     const clickedEvent = info.event
@@ -196,11 +197,11 @@ export default function TutorCalendarTeaching(tutorId?: number, next?: any, form
 
       const unavailableElement = document.querySelectorAll('.unavailable')
 
-      unavailableElement.forEach((element) => {
-        element.parentNode.style.zIndex = 5
-      })
-    }
-    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000)
+      unavailableElement.forEach(element => {
+        element.parentNode.style.zIndex = 7;
+      });
+    };
+    const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
 
     return () => clearTimeout(timeoutId)
   }, [])

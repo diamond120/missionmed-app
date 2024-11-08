@@ -823,7 +823,6 @@ a {
   .ant-collapse-item {
     .ant-avatar-icon {
       font-size: 18px;
-      min-width: 40px;
     }
 
   }
@@ -938,5 +937,120 @@ a {
     }
     img{
       border-radius: 5px;
+    }
+}
+
+
+.ant-collapse{
+    .ant-collapse-item{
+      font-family: Metropolis, sans-serif;
+        border:2px solid transparent !important;
+      .ant-collapse-content-box{
+        .biography{
+          padding-top: 16px;
+          display: block;
+          border-top: 2px solid transparent !important;
+          margin-top:16px !important;
+        }
+          strong{
+            margin-bottom: 8px;
+            display: inline-block;
+          }
+        }
+      .ant-collapse-header{
+        .avatar{
+          .ant-avatar{
+            width: 40px;
+            min-width: 40px;
+            height: 40px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            svg{
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+        span.ant-radio {
+          display: none;
+        }
+        .school-degree {
+          span.dot {
+            display: inline-block;
+            background: #6B7393;
+            width: 5px;
+            border-radius: 50%;
+            height: 5px;
+            margin: 0 7px;
+            position: relative;
+            top: -1px;
+          }
+        }
+        .ant-collapse-expand-icon{
+            &:after {
+              content: '';
+              z-index: 9;
+              background: transparent;
+              inset: -20px;
+              position: absolute;
+          }
+        }
+        .ant-collapse-arrow{
+          svg{
+            background-image: url('data:image/svg+xml,<svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.9998 10.2493C16.8008 10.2503 16.6097 10.171 16.4698 10.0293L8.99985 2.55934L1.52985 10.0293C1.23434 10.3047 0.773837 10.2966 0.488225 10.011C0.202613 9.72535 0.194488 9.26485 0.469847 8.96934L8.46985 0.96934C8.76266 0.676887 9.23703 0.676887 9.52985 0.96934L17.5298 8.96934C17.8223 9.26216 17.8223 9.73652 17.5298 10.0293C17.39 10.171 17.1989 10.2503 16.9998 10.2493Z" fill="%239096AE"/></svg>');
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            background-position: center;
+            background-repeat: no-repeat;
+            transform: rotate(180deg) !important;
+            path{
+              display: none;
+            }
+          }
+        }
+        .ant-radio-wrapper{
+          &>span{
+            padding-left: 0 !important;
+          }
+        }
+        .avatar{
+          margin-left: 0 !important;
+          .ant-avatar{
+            transition: all .5s ease-in-out;
+          }
+        }
+      }
+
+      &.ant-collapse-item-active{
+        border-color:#1E1450 !important;
+        .biography{
+          border-color:#1E1450 !important;
+        }
+        .ant-collapse-header{
+          .avatar{
+            .ant-avatar{
+              width: 125px;
+              min-width: 125px;
+              height: 125px;
+              min-height: 125px;
+              svg{
+                width: 50px;
+                height: 50px;
+              }
+            }
+          }
+          .tutor-name{
+            font-size: 20px !important;
+          }
+          .ant-collapse-arrow{
+            svg{
+              transform: rotate(0deg) !important;
+            }
+          }
+        }
+      }
     }
 }

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button, Form, Modal, message, Select,  Radio, Row, Col, Input } from "antd";
+import { useContext, useEffect, useState } from "react";
+import { Button, Form, Modal, message, Select,  Radio, Row, Col, Input, Alert, Spin } from "antd";
 import CommonService from "../../../api/services/Common";
 import Calender from "../calender";
 import { formatDateV1, formatTime, getDay } from "../../../common/common";
@@ -7,7 +7,7 @@ import moment from "moment";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
 import "./index.less";
-
+import { UserContext } from "../../../api/providers/UserProvider";
 const { TextArea } = Input;
 
 const RescheduleInterview = ({
@@ -23,9 +23,11 @@ const RescheduleInterview = ({
   const [modalTitle, setModalTitle] = useState("");
   const [universityList, setUniversityList] = useState([]);
   const totalSteps = 3;
-
   const [interviewSummary, setInterviewSummary] = useState(null);
-
+  const [mockInterviewList, setMockInterviewList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const { user } = useContext(UserContext);
+  const userRole = user.role;
   const getInterviewSummary = async (sessionId) => {
     try {
       const data = {
@@ -35,6 +37,15 @@ const RescheduleInterview = ({
       const response = await CommonService.postAPI('/session-summary',data);
       if (response.data.success) {
         setInterviewSummary(response.data.data);
+        // Set mockInterviewList based on universitywisemock value
+        const interviewCount = await response.data.data.universityWiseMock;
+        const MockInterviewList =await Array.from({ length: interviewCount }, (_, i) => ({
+          id: i + 1,
+          value: `Mock Interview #${i + 1}`,
+        }));
+        setMockInterviewList(MockInterviewList);
+        form.setFieldsValue({ university: response.data.data?.university });
+        form.setFieldsValue({ mockInterview: response.data.data?.mock_interview });
       } else {
         throw new Error(response.data.message);
       }
@@ -63,11 +74,14 @@ const RescheduleInterview = ({
   };
 
   useEffect(() => {
-    if (sessionId) {
+    if (sessionId && isOpen) {
+      console.log("id : ", sessionId, isOpen)
       getInterviewSummary(sessionId);
     }
     setModalTitle("Reschedule Interview");
     setActiveStep(1);
+    if(!isOpen)
+    setInterviewSummary(null)
   }, [sessionId,isOpen]);
 
   useEffect(() => {
@@ -100,6 +114,7 @@ const RescheduleInterview = ({
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const formData = form.getFieldsValue(true);
     formData.bookingFor = 'Mock interviews';
     try {
@@ -115,14 +130,19 @@ const RescheduleInterview = ({
           session_end_time: result.session_end_time,
           session_start_time: result.session_start_time,
         });
-        navigate("/student/mock-interview");
+        setLoading(false);
+        const path = userRole === 'student' ? '/student/mock-interview' : '/tutor/mock-interview';
+        navigate(path);
         message.success("You've successfully rescheduled mock interview");
       } else {
+        setLoading(false);
         throw new Error(response.data.message);
       }
     } catch (e) {
+      setLoading(false);
       message.error(e.message);
     }
+    
     handleCancel();
   };
 
@@ -134,12 +154,6 @@ const RescheduleInterview = ({
   const handleOk = () => {
     handleOpen(false);
   };
-
-  const mockInterviewList = [
-    { id: 1, value: "Mock Interview#1" },
-    { id: 2, value: "Mock Interview#2" },
-    { id: 3, value: "Mock Interview#3" },
-  ];
 
   const getMockInterviewList = () => {
     return mockInterviewList;
@@ -156,9 +170,9 @@ const RescheduleInterview = ({
           </h3>
           <div style={{ marginBottom: 21 }}>
             <h4 style={{ marginBottom: 0, fontSize: 14, fontWeight: 600 }}>
-              Tutor
+            {userRole === 'tutor' ? 'Student' : 'Tutor'}
             </h4>
-            <div style={{ fontSize: 16 }}>{interviewSummary?.tutorName}</div>
+            <div style={{ fontSize: 16 }}> {userRole === 'tutor' ? interviewSummary?.studentName : interviewSummary?.tutorName}</div>
           </div>
 
           <Row>
@@ -222,7 +236,8 @@ const RescheduleInterview = ({
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={interviewSummary?.tutor_id}  rescheduleDate={interviewSummary?.session_start_time}  form={form} next={next} timezone={timezone}/>
+      <Calender tutorId={interviewSummary?.tutor_id} studentId={interviewSummary?.student_id}  rescheduleDate={interviewSummary?.student_session_start_time}  form={form} next={next} timezone={timezone}/>
+      {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;
   };
@@ -314,6 +329,9 @@ const RescheduleInterview = ({
               Next Step
             </Button>
           ),
+          loading == true ? (
+            <Spin />
+          ) : (
           activeStep === totalSteps && (
             <Button
               className={"primary-button"}
@@ -322,6 +340,7 @@ const RescheduleInterview = ({
             >
               Confirm
             </Button>
+          )
           ),
         ]}
       >

@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react'
-import Service from '~/api/services/Common'
-import { useAuthContext } from '~/api/context/AuthContext'
+import CommonService from '../../api/services/Common'
+import { useAuthContext } from '../../api/context/AuthContext'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { UserContext } from '~/api/providers/UserProvider'
+import { UserContext } from '../../api/providers/UserProvider'
 
 export default function Impersonate() {
   const [params] = useSearchParams()
@@ -18,27 +18,31 @@ export default function Impersonate() {
         localStorage.setItem('jwt', token)
       }
 
-      const response = await Service.getUserDetails()
+      const response = await CommonService.getUserDetails()
+      let redirectTo = '/'
       if (response) {
         setAuthenticated(true)
+        const role = String(response.data.data.role).toLowerCase()
         dispatch({
           type: 'set',
           payload: {
             id: response.data.data.id,
             name: response.data.data.name,
             email: response.data.data.email,
-            role: response.data.data.role
+            role: role
           }
         })
+
+        redirectTo = `/${role === 'student' ? 'student' : 'tutor'}_profile`
       }
 
       // Because we are impersonating student user only for now.
       // and to avoid multiple redirects.
-      navigate('/student_profile')
+      navigate(redirectTo)
     }
 
     init()
   }, [])
 
-  return <>Logging in...</>
+  return <>Loging in...</>
 }

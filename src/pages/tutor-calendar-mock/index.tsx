@@ -122,7 +122,7 @@ const TutorCalendarMock = (tutorId, next, form) => {
           const unavailableElement = document.querySelectorAll('.unavailable');
   
           unavailableElement.forEach(element => {
-            element.parentNode.style.zIndex = 5;
+            element.parentNode.style.zIndex = 7;
           });
         };
         const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
@@ -196,7 +196,7 @@ const TutorCalendarMock = (tutorId, next, form) => {
       const unavailableElement = document.querySelectorAll('.unavailable');
 
       unavailableElement.forEach(element => {
-        element.parentNode.style.zIndex = 5;
+        element.parentNode.style.zIndex = 7;
       });
     };
     const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
