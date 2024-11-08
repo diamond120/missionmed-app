@@ -208,7 +208,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     const init = async () => {
       await setScores([]);
       await setMine([]);
-      await getMockData();
+      mockId && await getMockData();
     };
     init();
   }, [mockId]);
