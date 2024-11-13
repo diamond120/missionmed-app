@@ -9,7 +9,7 @@ import MockInterviewDetails from "../../components/mock-interview-details";
 import moment from "moment";
 import RescheduleInterview from "../../components/mock-interview-details/reschedule-interview";
 import CommonService from "../../api/services/Common";
-
+import RateSession from "../../components/rate-session";
 const StudentMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
@@ -18,8 +18,9 @@ const StudentMockInterview = () => {
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const [student, setStudentData] = useState('');
-
   const [timezone, setTimeZone] = useState("");
+  const [isRateModalOpen, setIsRateModalOpen] = useState(false);
+  const [sessionData, setSessionData] = useState(null);
 
   const handleReschedule = (sessionId) => {
     setIsOpenReschedule(true);
@@ -78,6 +79,29 @@ const StudentMockInterview = () => {
     setPastSessions(updatedSessions);
   }
 
+  const CheckLastMock = async() => {
+    console.log("function")
+    const response = await CommonService.postAPI("/student/check-last-mock");
+    if (response.data.success) {
+      if(response.data.data.hasRating == false)
+      {
+        // message.error('Please book a mock interview first.');
+        setIsRateModalOpen(true); // Open the RateSession modal
+          setSessionData({
+            tutor: response.data.data.tutorName,
+            id: response.data.data.mockId, // Example session data, replace with actual data if available
+            tutorId: response.data.data.tutorId,
+          });
+      }
+    }
+   
+  };
+
+  const handleRateCancel = () => {
+    setIsRateModalOpen(false); // Close the modal
+    setSessionData(null); // Clear session data
+  };
+
   const getMockInterviewDetails = async () => {
     try {
       const data = {
@@ -110,7 +134,6 @@ const StudentMockInterview = () => {
 
   const handleEditAgenda = async (agendaDetails) => {
     try {
-
       const data = {
         "sessionId": upcomingInterview?.id,
         "agenda": agendaDetails,
@@ -133,6 +156,7 @@ const StudentMockInterview = () => {
 
   useEffect(() => {
     getMockInterviewDetails();
+    CheckLastMock();
   }, []);
 
   return (
@@ -224,6 +248,11 @@ const StudentMockInterview = () => {
           )}
         </div>
         <RescheduleInterview isOpen={isOpenReschedule} handleOpen={handleOpen} sessionId={rescheduleSessionId} updateUpcomingSession={updateUpcomingSession} timezone={timezone} />
+        <RateSession
+        session={sessionData}
+        isOpen={isRateModalOpen}
+        handleRateCancel={handleRateCancel}
+      />
       </Section>
     </React.Fragment>
   );
