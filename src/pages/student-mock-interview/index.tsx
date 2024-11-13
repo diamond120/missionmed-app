@@ -91,6 +91,7 @@ const StudentMockInterview = () => {
             tutor: response.data.data.tutorName,
             id: response.data.data.mockId, // Example session data, replace with actual data if available
             tutorId: response.data.data.tutorId,
+            tutorProfilePicture: response.data.data.tutorProfilePicture,
           });
       }
     }
