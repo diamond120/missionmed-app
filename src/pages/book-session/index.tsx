@@ -178,11 +178,11 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     form.resetFields();
   };
 
-  const showModal = () => {
-    getUniversityTutorList();
-    setIsModalOpen(true);
+  const showModal  = async () => {
+    await getUniversityTutorList();
     setActiveStep(1);
     setModalTitle("Choose Tutor");
+    setIsModalOpen(true);
   };
 
   const showModalTutor = () => {
@@ -302,25 +302,25 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     tutors,
     students
   }) {
-    const defaultActiveKey =  tutors && tutors?.length > 0 ? [tutors[0].id.toString()] : [];
+    const [activeKey, setActiveKey] = useState([]);
 
-    const [activeKey, setActiveKey] = useState(defaultActiveKey);
     useEffect(() => {
       // Set initial tutor selection based on activeKey (expanded collapse)
       if (!value && tutors && tutors?.length > 0 && (userRole !== 'tutor')) {
-        const initialTutorId = defaultActiveKey[0]; // Get the first tutor's id or defaultActiveKey
-        if (initialTutorId) {
-          onChange({ target: { value: Number(initialTutorId) } }); // Trigger onChange with the initial tutor's id
-        }
+        const firstTutorId = tutors[0]?.id?.toString();
+        setActiveKey([firstTutorId]);
+        onChange?.({ target: { value: Number(firstTutorId) } })
       }
-    }, [tutors, onChange, value, defaultActiveKey]);
+    }, [tutors]);
   
     // Sync activeKey with the selected radio value (if provided)
     useEffect(() => {
       if (value && value.toString() !== activeKey[0] && (userRole !== 'tutor')) {
-        setActiveKey([value.toString()]);
+        const firstTutorId = tutors[0]?.id?.toString();
+        setActiveKey([firstTutorId]);
+        onChange?.({ target: { value: Number(firstTutorId) } }); 
       }
-    }, [value]);
+    }, [tutors]);
   
     // Handle Collapse change and sync with radio selection
     const handleCollapseChange = (key) => {
@@ -337,8 +337,8 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     // Handle Radio Change
     const handleRadioChange = (e) => {
       const selectedValue = e.target.value;
-      onChange(e); // Trigger onChange to update the form field
-      setActiveKey([selectedValue.toString()]); // Expand the corresponding panel
+      setActiveKey([selectedValue.toString()]);
+      onChange?.(e); // Trigger onChange to update the form field
     };
 
     return (
