@@ -270,26 +270,26 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
     onChange,
     tutors,
   }) {
-    const defaultActiveKey = tutors.length > 0 ? [tutors[0].id.toString()] : [];
-       // State to track the expanded panel
-    const [activeKey, setActiveKey] = useState(defaultActiveKey);
+      // State to track the expanded panel
+    const [activeKey, setActiveKey] = useState([]);
 
     useEffect(() => {
       // Set initial tutor selection based on activeKey (expanded collapse)
       if (!value && tutors.length > 0) {
-        const initialTutorId = defaultActiveKey[0]; // Get the first tutor's id or defaultActiveKey
-        if (initialTutorId) {
-          onChange({ target: { value: Number(initialTutorId) } }); // Trigger onChange with the initial tutor's id
-        }
+        const firstTutorId = tutors[0]?.id?.toString(); // Get the first tutor's id or defaultActiveKey
+        setActiveKey([firstTutorId]);
+        onChange?.({ target: { value: Number(firstTutorId) } });
       }
-    }, [tutors, onChange, value, defaultActiveKey]);
+    }, [tutors]);
   
     // Sync activeKey with the selected radio value (if provided)
     useEffect(() => {
       if (value && value.toString() !== activeKey[0]) {
-        setActiveKey([value.toString()]);
+        const firstTutorId = tutors[0]?.id?.toString()
+        setActiveKey([firstTutorId]);
+        onChange?.({ target: { value: Number(firstTutorId) } });
       }
-    }, [value]);
+    }, [tutors]);
   
     // Handle Collapse change and sync with radio selection
     const handleCollapseChange = (key) => {
@@ -302,12 +302,11 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
         }
       }
     };
-  
     // Handle Radio Change
     const handleRadioChange = (e) => {
       const selectedValue = e.target.value;
-      onChange(e); // Trigger onChange to update the form field
-      setActiveKey([selectedValue.toString()]); // Expand the corresponding panel
+      setActiveKey([selectedValue.toString()]);
+      onChange?.(e); // Trigger onChange to update the form field
     };
     return (
       <Radio.Group onChange={handleRadioChange} value={value}>
