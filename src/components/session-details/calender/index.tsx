@@ -161,6 +161,10 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
     unavailableElement.forEach(element => {
       element.parentNode.style.setProperty('z-index', '7', 'important');
     });
+    const elementsWithABCClass = document.querySelectorAll('.otherslot');
+    elementsWithABCClass.forEach(element => {
+      element.parentNode.style.setProperty('z-index', '7', 'important');
+    });
   };
 
   useEffect(() => {
@@ -169,11 +173,6 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
       getWeekAvailable(tutorId, studentId);
     }
     const addClassToParentAfterDateChange = () => {
-      const elementsWithABCClass = document.querySelectorAll('.otherslot');
-      elementsWithABCClass.forEach(element => {
-        element.parentNode.classList.add('bookedslot');
-      });
-
       applyZIndexToUnavailable();
     };
     const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
@@ -285,10 +284,6 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
 
   useEffect(() => {
     const addClassToParentAfterDateChange = () => {
-      const elementsWithABCClass = document.querySelectorAll('.otherslot');
-      elementsWithABCClass.forEach(element => {
-        element.parentNode.classList.add('bookedslot');
-      });
       applyZIndexToUnavailable();
     };
     const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
