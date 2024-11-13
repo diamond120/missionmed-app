@@ -69,11 +69,13 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
   };
 
   const handleSubmit = () => {
+    setUploading(true);
     uploadReport(fileUrl).then(() => {
       setFileList([])
       setFileUrl("")
+      setUploading(false);
+      setReUpload(false);
     });
-    setReUpload(false);
   };
   const handleReUpload = () => {
     setReUpload(true);
@@ -136,7 +138,8 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
                 ) : (
                   <Button
                     key="submitSummary"
-                    disabled={fileList.length == 0}
+                    disabled={fileList.length == 0 || uploading}
+                    loading={uploading}
                     className={"secondary-button"}
                     onClick={handleSubmit}
                   >
