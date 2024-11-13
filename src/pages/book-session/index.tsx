@@ -178,8 +178,9 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     form.resetFields();
   };
 
-  const showModal  = async () => {
-    await getUniversityTutorList();
+  const showModal = () => {
+    setTutors([]);
+    getUniversityTutorList();
     setActiveStep(1);
     setModalTitle("Choose Tutor");
     setIsModalOpen(true);

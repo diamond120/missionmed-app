@@ -76,7 +76,14 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
     >
       <div style={{ textAlign: "center" }}>
         <SmileOutlined style={{ fontSize: 100, color: "#A9A2F8" }} />
-        <h3 className={"title"}>How Was Your Session?</h3>
+        <h3 className={"title"}>{session?.tutor ? (
+          <>
+            How Was Your Last Session With <br />
+            <i>{session.tutor}</i>&nbsp;?
+          </>
+        ) : (
+          'How Was Your Session?'
+        )}</h3>
         <div className={"text"}>
           We pride ourselves on quality and take your feedback very seriously.
           Please rate your today’s interaction with a tutor according to the
