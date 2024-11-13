@@ -1,5 +1,5 @@
-import { Button, Modal, Rate, Input, Form, message } from "antd";
-import { SmileOutlined } from "@ant-design/icons";
+import { Button, Modal, Rate, Input, Form, message, Avatar } from "antd";
+import { SmileOutlined, UserOutlined } from "@ant-design/icons";
 import "./index.less";
 import { useEffect, useState } from "react";
 import CommonService from "../../api/services/Common";
@@ -59,7 +59,7 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
 
   return (
     <Modal
-      title="Rate Session"
+      title={session?.tutor ? 'Leave Anonymous Feedback' : 'Rate Session'}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -75,10 +75,13 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
       ]}
     >
       <div style={{ textAlign: "center" }}>
-        <SmileOutlined style={{ fontSize: 100, color: "#A9A2F8" }} />
+        {session?.tutorProfilePicture 
+        ? <Avatar src={session?.tutorProfilePicture} size={100} icon={<UserOutlined />} />
+        : <SmileOutlined style={{ fontSize: 100, color: "#A9A2F8" }} />
+        }
         <h3 className={"title"}>{session?.tutor ? (
           <>
-            How Was Your Last Session With <br />
+            How Was Your Session With <br />
             <i>{session.tutor}</i>&nbsp;?
           </>
         ) : (
