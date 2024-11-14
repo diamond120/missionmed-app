@@ -120,6 +120,7 @@ const FinalReviewUpload: FC<UploadStepProps> = ({ getUrlFile, id, }) => {
             Help your student get their application submission ready.
           </p>
           <p className={"steps-upload-text"}>Supported file formats: PDF, DOC, DOCX</p>
+          <p className={"steps-upload-text"}>Maximum file size: 10MB</p>
 
           <div className={"upload-title"}>
             <p className={"upload-text"}>* Upload your Application Review</p>
