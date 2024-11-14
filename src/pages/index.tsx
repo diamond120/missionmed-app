@@ -68,21 +68,21 @@ const routes: RouteObject[] = [
         path: "/",
         index: true,
       },
-      {
-        Component: MockPremiumLink,
-        path: "/mock-premium",
-        index: true,
-      },
-      {
-        Component: UCATPremiumLink,
-        path: "/ucat-premium",
-        index: true,
-      },
-      {
-        Component: TeachingPremiumLink,
-        path: "/teaching-premium",
-        index: true,
-      },
+      // {
+      //   Component: MockPremiumLink,
+      //   path: "/mock-premium",
+      //   index: true,
+      // },
+      // {
+      //   Component: UCATPremiumLink,
+      //   path: "/ucat-premium",
+      //   index: true,
+      // },
+      // {
+      //   Component: TeachingPremiumLink,
+      //   path: "/teaching-premium",
+      //   index: true,
+      // },
       {
         Component: Impersonate,
         path: "/impersonate",
