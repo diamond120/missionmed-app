@@ -96,7 +96,8 @@ const FinalReviewStep: FC<UploadStepProps> = ({ getUrlFile, id, }) => {
         <p className={"steps-upload-text"}>
           Here you can upload your renewed application file for final reviewing.
         </p>
-        <p className={"steps-upload-text"}>Supported file formats: PDF, DOC, DOCX</p>
+        <p className={"steps-upload-text"}>Supported file formats: <b>PDF, DOC, DOCX</b></p>
+        <p className={"steps-upload-text"}>Maximum file size: <b>10MB</b></p>
 
         <div className={"upload-title"}>
           <p className={"upload-text"}>* Upload your Application</p>
