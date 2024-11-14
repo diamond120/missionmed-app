@@ -1,4 +1,4 @@
-import { Button, Modal, Rate, Input, Form, message, Avatar } from "antd";
+import { Button, Modal, Rate, Input, Form, message, Avatar, Checkbox } from "antd";
 import { SmileOutlined, UserOutlined } from "@ant-design/icons";
 import "./index.less";
 import { useEffect, useState } from "react";
@@ -133,6 +133,17 @@ const RateSession = ({ session, isOpen, handleRateCancel, updatePastSession, han
             style={{ marginTop: "32px" }}
           >
             <TextArea rows={4} />
+          </Form.Item>
+          <Form.Item
+            label=""
+            name="isAnonymous"
+            valuePropName="checked"
+            initialValue={false}
+            style={{ paddingLeft: '10px', textAlign: 'start' }}
+          >
+              <Checkbox style={{ marginLeft: 'auto' }}>
+                <span>Add review anonymously</span>
+              </Checkbox>
           </Form.Item>
         </Form>
       </div>
