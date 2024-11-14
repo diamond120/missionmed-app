@@ -90,6 +90,7 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
           <ul style={{ marginBottom: "24px" }}>
             <li>Here you can upload session summary.</li>
             <li>Supported file formats: PDF, DOC, DOCX</li>
+            <li>Maximum file size: 10MB</li>
           </ul>
 
           <div style={{ marginBottom: "16px" }}>
