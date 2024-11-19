@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, Modal, Tabs } from "antd";
+import { Button, Form, Input, message, Modal, Tabs } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { useUser } from "../../../api/providers/UserProvider";
@@ -8,6 +8,7 @@ import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../c
 import "./index.less";
 import CancleSession from "../../../pages/cancle-session";
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
+import { PageInfoType } from "./types";
 
 const SessionList = ({
   date,
@@ -256,13 +257,49 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
 
 const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions }) => {
   const { TabPane } = Tabs;
-  const navigation = useNavigate();
+  const [pageInfo, setPageInfo] = useState<PageInfoType>({
+    upcoming: {
+      page: upcomingSessions.current_page ?? 1,
+      loading: false,
+      hasMore: upcomingSessions.next_page_url ?? false
+    },
+    past: {
+      page: pastSessions.current_page ?? 1,
+      loading: false,
+      hasMore: pastSessions.next_page_url ?? false
+    },
+    freeze: {
+      page: freezeSessions.current_page ?? 1,
+      loading: false,
+      hasMore: freezeSessions.next_page_url ?? false
+    },
+  });
   const [rateSession, setRateSession] = useState(null);
-  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, "asc");
-  const formatedpastSessions = groupSessionsByDate(pastSessions, "desc");
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions.data, "asc");
+  const formatedpastSessions = groupSessionsByDate(pastSessions.data, "desc");
   let formatedFreezeSessions = {};
   if (freezeSessions) {
-    formatedFreezeSessions = groupSessionsByDate(freezeSessions, "asc");
+    formatedFreezeSessions = groupSessionsByDate(freezeSessions.data, "asc");
+  }
+
+  const updatePageInfo = () => {
+    setPageInfo({
+      upcoming: {
+        page: upcomingSessions.current_page ?? pageInfo.upcoming.page,
+        loading: false,
+        hasMore: upcomingSessions.next_page_url ?? false
+      },
+      past: {
+        page: pastSessions.current_page ?? pageInfo.past.page,
+        loading: false,
+        hasMore: pastSessions.next_page_url ?? false
+      },
+      freeze: {
+        page: freezeSessions.current_page ?? pageInfo.freeze.page,
+        loading: false,
+        hasMore: freezeSessions.next_page_url ?? false
+      },
+    });
   }
 
   const handleRateSession = (event, session) => {
@@ -272,6 +309,29 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
   const handleRateCancel = () => {
     setRateSession(null);
   };
+
+  const loadMore = (type: keyof PageInfoType) => {
+    if (!pageInfo[type].hasMore) {
+      message.error('No more session available')
+      return;
+    }
+    setPageInfo((prevValue) => {
+      return {
+        ...prevValue,
+        [type]: {
+          ...prevValue[type],
+          loading: true
+        }
+      }
+    })
+
+    const pageNumber = pageInfo[type].page + 1
+    const event = new CustomEvent('LoadMoreSessions', { detail: { type, page: pageNumber } })
+    document.dispatchEvent(event)
+  }
+  useEffect(() => {
+    updatePageInfo()
+  }, [upcomingSessions, pastSessions, freezeSessions])
 
   return (
     <>
@@ -293,6 +353,15 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
 
                 />
               ))}
+              {Object.keys(formatedUpcomingSessios).length > 0 && pageInfo.upcoming.hasMore && (
+                <Button
+                  type='primary'
+                  className='primary-button'
+                  loading={pageInfo.upcoming.loading}
+                  iconPosition='end'
+                  onClick={() => loadMore('upcoming')}
+                >Load More</Button>
+              )}
               {
                 (Object.keys(formatedUpcomingSessios).length <= 0) &&
                 (
@@ -322,6 +391,15 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
                   pagesession={moduleType}
                 />
               ))}
+              {Object.keys(formatedpastSessions).length > 0 && pageInfo.past.hasMore && (
+                <Button
+                  type='primary'
+                  className='primary-button'
+                  loading={pageInfo.past.loading}
+                  iconPosition='end'
+                  onClick={() => loadMore('past')}
+                >Load More</Button>
+              )}
               {
                 (Object.keys(formatedpastSessions).length <= 0) &&
                 (
@@ -353,6 +431,15 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
 
                 />
               ))}
+              {Object.keys(formatedFreezeSessions).length > 0 && pageInfo.freeze.hasMore && (
+                <Button
+                  type='primary'
+                  className='primary-button'
+                  loading={pageInfo.freeze.loading}
+                  iconPosition='end'
+                  onClick={() => loadMore('freeze')}
+                >Load More</Button>
+              )}
               {
                 (Object.keys(formatedFreezeSessions).length <= 0) &&
                 (

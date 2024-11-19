@@ -7,6 +7,7 @@ import BookSession from "../book-session";
 import SessionDetails from "../../components/session-details";
 import RescheduleInterview from "../../components/session-details/reschedule-interview";
 import CommonService from "../../api/services/Common";
+import { PageInfoType } from "../../components/session-details/my-sessions/types";
 
 const TutorTeachingSession = () => {
   const [timezone, setTimeZone] = useState("");
@@ -18,12 +19,11 @@ const TutorTeachingSession = () => {
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [moduleType, setModuleType] = useState("teaching");
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
+  const BookingFor = 'Interview 1-to-1 Tutoring'
+
   const getMockInterviewDetails = async () => {
     try {
-      const data = {
-        bookingFor : 'Interview 1-to-1 Tutoring'
-      }
-      const response = await CommonService.postAPI('/tutor/session-details',data);
+      const response = await CommonService.postAPI('/tutor/session-details', { bookingFor: BookingFor });
         if (response.data.success) {
         setTimeZone(response.data?.data?.tutorTimezone ?? null);
         await setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
@@ -56,7 +56,7 @@ const TutorTeachingSession = () => {
       const data = {
         "sessionId":upcomingInterview?.id,
         "agenda":agendaDetails,
-        'bookingFor' : 'Interview 1-to-1 Tutoring'
+        'bookingFor' : BookingFor
       }
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
@@ -133,8 +133,58 @@ const TutorTeachingSession = () => {
     setIsOpenReschedule(state);
   }
 
+  const customEventHandler = async ({ detail }: CustomEvent) => {
+    const pageName    = (detail?.type ?? '') as keyof PageInfoType
+    const pageNumber  = (detail?.page ?? null)
+    if (!pageName || !pageNumber) {
+      return
+    }
+
+    const payload = {
+      bookingFor: BookingFor,
+      page: pageNumber,
+      pageName: pageName
+    }
+    const response = await CommonService.postAPI('/tutor/session-details', payload);
+    const pageNameResponseKey: { [K in keyof PageInfoType]: string } = {
+      upcoming: 'upcomingsessions',
+      past: 'pastsessions',
+      freeze: 'freezesessions'
+    }
+    if (response.data.success) {
+      const content = response.data.data[pageNameResponseKey[pageName]]
+      const sessionUpdateHandler = (prevValue) => {
+        return {
+          ...content,
+          data: [
+            ...prevValue.data,
+            ...content.data
+          ]
+        }
+      }
+      switch (pageName) {
+        case 'upcoming':
+          setUpcomingSessions(sessionUpdateHandler)
+          break;
+        case 'past':
+          setPastSessions(sessionUpdateHandler)
+          break;
+        case 'freeze':
+          setFreezeSessions(sessionUpdateHandler)
+          break;
+      }
+    }
+  }
+
   useEffect(() => {
     getMockInterviewDetails();
+    // @ts-expect-error - this is custom event triggered by app
+    document.addEventListener('LoadMoreSessions', customEventHandler)
+
+    return () => {
+      // @ts-expect-error - this is custom event triggered by app
+      document.removeEventListener('LoadMoreSessions', customEventHandler)
+    }
   }, []);
 
   const cancleUpSession = (data) => {
@@ -161,7 +211,7 @@ const TutorTeachingSession = () => {
 
             </div>
           </div>
-          { (upcomingSessions.length > 0 || pastSessions.length > 0)  ? (
+          { (upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0)  ? (
           <SessionDetails
             moduleType="teaching"
             upcomingInterview={upcomingInterview}
