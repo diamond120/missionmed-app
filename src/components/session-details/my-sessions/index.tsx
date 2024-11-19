@@ -340,18 +340,18 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
         <Tabs defaultActiveKey={"Upcoming"}>
           <TabPane tab={"Upcoming"} key={"Upcoming"}>
             <div className={"upcoming-sessions"}>
-              {Object.keys(formatedUpcomingSessios).map((date, index) => (
-                <SessionList
-                  date={date}
-                  sessions={formatedUpcomingSessios[date]}
-                  type={"upcoming"}
-                  handleReschedule={handleReschedule}
-                  key={`upcomingSessions${index}`}
-                  pagesession={moduleType}
-                  cancleUpSession={cancleUpSession}
-                  handleEditLink={handleEditLink}
-
-                />
+              {Object.keys(formatedUpcomingSessios).length > 0 && 
+                Object.keys(formatedUpcomingSessios).map((date, index) => (
+                  <SessionList
+                    date={date}
+                    sessions={formatedUpcomingSessios[date]}
+                    type={"upcoming"}
+                    handleReschedule={handleReschedule}
+                    key={`upcomingSessions${index}`}
+                    pagesession={moduleType}
+                    cancleUpSession={cancleUpSession}
+                    handleEditLink={handleEditLink}
+                  />
               ))}
               {Object.keys(formatedUpcomingSessios).length > 0 && pageInfo.upcoming.hasMore && (
                 <Button
@@ -381,15 +381,16 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
 
           <TabPane tab={"Past"} key={"Past"}>
             <div className={"upcoming-past"}>
-              {Object.keys(formatedpastSessions).map((date, index) => (
-                <SessionList
-                  date={date}
-                  sessions={formatedpastSessions[date]}
-                  type={"past"}
-                  handleRateSession={handleRateSession}
-                  key={`pastSessions${index}`}
-                  pagesession={moduleType}
-                />
+              {Object.keys(formatedpastSessions).length > 0 &&
+                Object.keys(formatedpastSessions).map((date, index) => (
+                  <SessionList
+                    date={date}
+                    sessions={formatedpastSessions[date]}
+                    type={"past"}
+                    handleRateSession={handleRateSession}
+                    key={`pastSessions${index}`}
+                    pagesession={moduleType}
+                  />
               ))}
               {Object.keys(formatedpastSessions).length > 0 && pageInfo.past.hasMore && (
                 <Button

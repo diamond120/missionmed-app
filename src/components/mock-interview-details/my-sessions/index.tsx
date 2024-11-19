@@ -276,7 +276,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
         loading: false,
         hasMore: pastSessions.next_page_url ?? false
       },
-      freeze: {
+      freeze: { // * mock sessions does not have freeze session.
         page: 1,
         loading: false,
         hasMore: false
@@ -319,7 +319,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
         <Tabs defaultActiveKey={"Upcoming"}>
           <TabPane tab={"Upcoming"} key={"Upcoming"}>
             <div className={"upcoming-sessions"}>
-              {Object.keys(formatedUpcomingSessios).length <= 0 &&
+              {Object.keys(formatedUpcomingSessios).length > 0 &&
                   Object.keys(formatedUpcomingSessios).map((date, index) => (
                       <SessionList
                           date={date}
