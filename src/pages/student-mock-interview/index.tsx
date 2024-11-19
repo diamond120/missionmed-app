@@ -6,10 +6,10 @@ import { HomeOutlined, CalendarOutlined, CheckCircleOutlined } from "@ant-design
 import Section from "../../components/shared-ui/Section";
 import BookInterview from "./book-interview";
 import MockInterviewDetails from "../../components/mock-interview-details";
-import moment from "moment";
 import RescheduleInterview from "../../components/mock-interview-details/reschedule-interview";
 import CommonService from "../../api/services/Common";
 import RateSession from "../../components/rate-session";
+import { PageInfoType } from "../../components/session-details/my-sessions/types";
 const StudentMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
@@ -22,6 +22,8 @@ const StudentMockInterview = () => {
   const [isRateModalOpen, setIsRateModalOpen] = useState(false);
   const [sessionData, setSessionData] = useState(null);
 
+  const BookingFor = 'Mock interviews';
+
   const handleReschedule = (sessionId) => {
     setIsOpenReschedule(true);
     setRescheduleSessionId(sessionId);
@@ -31,32 +33,24 @@ const StudentMockInterview = () => {
     setIsOpenReschedule(state);
   }
 
-  const addUpcomingSession = (session) => {
-
-    setUpcomingSessions([...upcomingSessions, session]);
-
-    if (Object.keys(upcomingInterview).length == 0 || (moment(upcomingInterview.date) > moment(session.date))) {
-      setUpcomingInterview({
-        id: session.id,
-        date: session.date,
-        session_start_time: session.session_start_time,
-        session_end_time: session.session_end_time,
-        agenda: null
-      })
-      setAgenda(null);
-    }
+  const addUpcomingSession = () => {
     getMockInterviewDetails();
   }
 
   const updateUpcomingSession = (sessionId, data) => {
-    const updatedSessions = upcomingSessions.map(session => {
+    const updatedSessions = upcomingSessions?.data?.map(session => {
       if (session.id == sessionId) {
         return { ...session, ...data }
       } else {
         return session;
       }
     })
-    setUpcomingSessions(updatedSessions);
+    setUpcomingSessions((prevValue) => {
+      return {
+        ...prevValue,
+        data: updatedSessions
+      }
+    });
     if (sessionId == upcomingInterview.id) {
       setUpcomingInterview(prev => ({
         ...prev, ...{
@@ -69,14 +63,19 @@ const StudentMockInterview = () => {
   }
 
   const updatePastSession = (id, data = {}) => {
-    const updatedSessions = pastSessions.map(session => {
+    const updatedSessions = pastSessions?.data?.map(session => {
       if (session.id == id) {
         return { ...session, ...data };
       } else {
         return session;
       }
     })
-    setPastSessions(updatedSessions);
+    setPastSessions((prevValue) => {
+      return {
+        ...prevValue,
+        data: updatedSessions
+      }
+    });
   }
 
   const CheckLastMock = async() => {
@@ -105,10 +104,7 @@ const StudentMockInterview = () => {
 
   const getMockInterviewDetails = async () => {
     try {
-      const data = {
-        bookingFor: 'Mock interviews'
-      }
-      const response = await CommonService.postAPI("/student/session-details", data);
+      const response = await CommonService.postAPI("/student/session-details", { bookingFor: BookingFor });
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
@@ -155,9 +151,57 @@ const StudentMockInterview = () => {
     getMockInterviewDetails();
   }
 
+  const customEventHandler = async ({ detail }: CustomEvent) => {
+    const pageName    = (detail?.type ?? '') as keyof PageInfoType
+    const pageNumber  = (detail?.page ?? null)
+    if (!pageName || !pageNumber) {
+      return
+    }
+
+    const payload = {
+      bookingFor: BookingFor,
+      page: pageNumber,
+      pageName: pageName
+    }
+    const response = await CommonService.postAPI('/student/session-details', payload);
+    const pageNameResponseKey: { [K in keyof PageInfoType]: string } = {
+      upcoming: 'upcomingsessions',
+      past: 'pastsessions',
+      freeze: 'freezesessions' // This is to avoid ts error and for consistency across same functionality components
+    }
+    if (response.data.success) {
+      const content = response.data.data[pageNameResponseKey[pageName]]
+      const sessionUpdateHandler = (prevValue) => {
+        return {
+          ...content,
+          data: [
+            ...prevValue.data,
+            ...content.data
+          ]
+        }
+      }
+      switch (pageName) {
+        case 'upcoming':
+          setUpcomingSessions(sessionUpdateHandler)
+          break;
+        case 'past':
+          setPastSessions(sessionUpdateHandler)
+          break;
+      }
+    }
+  }
+
   useEffect(() => {
     getMockInterviewDetails();
     CheckLastMock();
+
+    // @ts-expect-error - this is custom event triggered by app
+    document.addEventListener('LoadMoreSessions', customEventHandler)
+  
+    return () => {
+      // @ts-expect-error - this is custom event triggered by app
+      document.removeEventListener('LoadMoreSessions', customEventHandler)
+    }
   }, []);
 
   return (
@@ -200,7 +244,7 @@ const StudentMockInterview = () => {
               )}
             </div>
           </div>
-          {(upcomingSessions.length > 0 || pastSessions.length > 0) ? (
+          {(upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0) ? (
             <MockInterviewDetails
               key="mockInterviewDetails"
               upcomingInterview={upcomingInterview}
