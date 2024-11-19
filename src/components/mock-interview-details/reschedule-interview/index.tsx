@@ -75,7 +75,6 @@ const RescheduleInterview = ({
 
   useEffect(() => {
     if (sessionId && isOpen) {
-      console.log("id : ", sessionId, isOpen)
       getInterviewSummary(sessionId);
     }
     setModalTitle("Reschedule Interview");

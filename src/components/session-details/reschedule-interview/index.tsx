@@ -73,9 +73,11 @@ const RescheduleInterview = ({
     if (sessionId) {
       getSessionummary(sessionId);
     }
-
     setModalTitle("Reschedule Session");
     setActiveStep(1);
+    if (interviewSummary?.session_type == 'Individual Session') {
+      setShowDropdown(false);
+    }
   }, [sessionId, isOpen]);
 
   useEffect(() => {
@@ -168,9 +170,7 @@ const RescheduleInterview = ({
   const selectUniversity = Form.useWatch("university", form);
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
-    if (interviewSummary?.session_type == 'Individual Session') {
-      setShowDropdown(false);
-    }
+    
     return (
       <>
         <div className={"session-details"} style={{ padding: "10px" }}>

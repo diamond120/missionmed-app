@@ -18,6 +18,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
 
   const handleClick = () => {
     setIsModalOpen(true)
+    form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
   }
 
   const handleSubmit = async () => {
@@ -44,8 +45,6 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
       callback();
     }
   };
-
-  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
 
   return (
     <>

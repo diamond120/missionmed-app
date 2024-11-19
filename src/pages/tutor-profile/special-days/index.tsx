@@ -140,7 +140,7 @@ const SpecialDays: FC<Any> = ({ props, isGoogleVerification }) => {
       } else {
         throw new Error(response.data.message)
       }
-    } catch (error) {
+    } catch (error: any) {
       message.error(error.message)
     } finally {
       setLoading(false)
@@ -169,7 +169,7 @@ const SpecialDays: FC<Any> = ({ props, isGoogleVerification }) => {
           } else {
             throw new Error(response.data.message)
           }
-        } catch (error) {
+        } catch (error: any) {
           message.error(error.message)
         }
       }
@@ -198,6 +198,7 @@ const SpecialDays: FC<Any> = ({ props, isGoogleVerification }) => {
               total: pagination.total,
               onChange: onChange
             }}
+            rowKey={record => record.id}
           />
         </Spin>
         <AddException

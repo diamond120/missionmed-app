@@ -74,7 +74,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
         setLoading(false);
         throw new Error(response.data.message)
       }
-    }catch(e){
+    }catch(e: any){
       setLoading(false);
       message.error(e.message);
     }
@@ -93,6 +93,9 @@ const AddException = ({title, callAdded, editedData = null }) => {
   const showModal = () => {
     setIsModalOpen(true);
     setModalTitle(title);
+    if (editedData) {
+      setIntialValue(editedData)
+    }
   };
 
   const handleOk = () => {
@@ -111,11 +114,6 @@ const AddException = ({title, callAdded, editedData = null }) => {
       });
   }
 
-  useEffect(() => {
-    if (editedData) {
-      setIntialValue(editedData)
-    }
-  }, [editedData, form]);
 
   const checkTimeFrame = async (rule, value) => {
     value = moment(value, format);

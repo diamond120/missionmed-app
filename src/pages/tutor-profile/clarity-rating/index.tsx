@@ -4,13 +4,13 @@ import { Rate,Progress } from 'antd';
 import { FC } from "react"
 
 interface RatingProps{
-title: string
-  one: number
-  two: number
-  three: number
-  four: number
-  five: number
-  rating: number
+  title: string
+  one: number | undefined
+  two: number | undefined
+  three: number | undefined
+  four: number | undefined
+  five: number | undefined
+  rating: number | undefined
 
 }
 

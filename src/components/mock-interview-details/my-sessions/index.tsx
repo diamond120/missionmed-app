@@ -40,6 +40,7 @@ const SessionItem = ({ session, type, handleRateSession = () => {}, handleResche
 
   const handleClick = () => {
     setIsModalOpen(true)
+    form.setFieldsValue({ sessionLink: session.sessionLink });
   }
 
   const handleSubmit = async () => {
@@ -64,7 +65,6 @@ const SessionItem = ({ session, type, handleRateSession = () => {}, handleResche
     setIsModalOpen(false)
   }
 
-  form.setFieldsValue({ sessionLink: session.sessionLink })
   const navigate = useNavigate()
 
   return (

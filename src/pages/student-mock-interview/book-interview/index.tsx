@@ -309,7 +309,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
       onChange?.(e); // Trigger onChange to update the form field
     };
     return (
-      <Radio.Group onChange={handleRadioChange} value={value}>
+      <Radio.Group onChange={handleRadioChange} value={value?? undefined}>
         {user.role === 'student' ?
           <Collapse
             bordered={false}

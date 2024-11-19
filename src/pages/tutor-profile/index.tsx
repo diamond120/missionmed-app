@@ -23,10 +23,11 @@ import { useTutor } from "../../api/providers/TutorProvider"
 import MeetingLink from "./meeting-link";
 import SpecialDays from "./special-days";
 import UcatPerformance from "./ucat-performance";
+import { Ratting } from "./type";
 
 const TutorProfile = () => {
   
-  const [rating, setRating] = useState(null);
+  const [rating, setRating] = useState<Ratting | null>(null);
   const [isGoogleVerification, setGoogleVerification] = useState(false);
   const tutor = useTutor();
   // const tutorId = useMeQuery()?.data?.me?.tutor?.data?.id
@@ -41,7 +42,7 @@ const TutorProfile = () => {
       } else {
         throw new Error(response.data.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       message.error(e.message);
     }
   };

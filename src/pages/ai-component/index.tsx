@@ -219,13 +219,13 @@ const AIStory = () => {
                 setQuestionList(null)
                 throw new Error(response.data.message);
             }
-          } catch (e) {
+        } catch (e: any) {
             setQuestionList(null)
-            if (!axios.isCancel(error)) {
+            if (!axios.isCancel(e)) {
                 // Handle non-cancelation errors
-                console.error('Error:', error.message);
+                console.error('Error:', e?.message);
               }
-            throw new Error(response.data.message);
+            throw new Error(e?.data?.message?? e);
           }
     }
 
