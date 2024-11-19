@@ -9,7 +9,7 @@ import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
-import { useUser } from "../../api/providers/UserProvider";
+import { PageInfoType } from "../../components/session-details/my-sessions/types";
 const StudentTeachingSession = () => {
 
   const [upcomingInterview, setUpcomingInterview] = useState({});
@@ -23,14 +23,11 @@ const StudentTeachingSession = () => {
   const [timezone, setTimeZone] = useState("");
   const [credit, setCredit] = useState("");
   const { Link } = Anchor;
-  const user = useUser();
+  const BookingFor = 'Interview 1-to-1 Tutoring'
 
   const getMockInterviewDetails = async () => {
     try {
-      const data = {
-        bookingFor: 'Interview 1-to-1 Tutoring',
-      }
-      const response = await CommonService.postAPI("/student/session-details", data);
+      const response = await CommonService.postAPI("/student/session-details", { bookingFor: BookingFor });
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
@@ -65,7 +62,7 @@ const StudentTeachingSession = () => {
       const data = {
         "sessionId": upcomingInterview?.id,
         "agenda": agendaDetails,
-        'bookingFor': 'Interview 1-to-1 Tutoring'
+        'bookingFor': BookingFor
       }
 
       const response = await CommonService.postAPI('/session-data', data)
@@ -137,6 +134,60 @@ const StudentTeachingSession = () => {
     getMockInterviewDetails();
   }
 
+  const customEventHandler = async ({ detail }: CustomEvent) => {
+    const pageName    = (detail?.type ?? '') as keyof PageInfoType
+    const pageNumber  = (detail?.page ?? null)
+    if (!pageName || !pageNumber) {
+      return
+    }
+
+    const payload = {
+      bookingFor: BookingFor,
+      page: pageNumber,
+      pageName: pageName
+    }
+    const response = await CommonService.postAPI('/student/session-details', payload);
+    const pageNameResponseKey: { [K in keyof PageInfoType]: string } = {
+      upcoming: 'upcomingsessions',
+      past: 'pastsessions',
+      freeze: 'freezesessions'
+    }
+    if (response.data.success) {
+      const content = response.data.data[pageNameResponseKey[pageName]]
+      const sessionUpdateHandler = (prevValue) => {
+        return {
+          ...content,
+          data: [
+            ...prevValue.data,
+            ...content.data
+          ]
+        }
+      }
+      switch (pageName) {
+        case 'upcoming':
+          setUpcomingSessions(sessionUpdateHandler)
+          break;
+        case 'past':
+          setPastSessions(sessionUpdateHandler)
+          break;
+        case 'freeze':
+          setFreezeSessions(sessionUpdateHandler)
+          break;
+      }
+    }
+  }
+
+  useEffect(() => {
+    getMockInterviewDetails();
+    // @ts-expect-error - this is custom event triggered by app
+    document.addEventListener('LoadMoreSessions', customEventHandler)
+
+    return () => {
+      // @ts-expect-error - this is custom event triggered by app
+      document.removeEventListener('LoadMoreSessions', customEventHandler)
+    }
+  }, []);
+
   const items = [
     {
       key: '1',
@@ -170,7 +221,7 @@ const StudentTeachingSession = () => {
               {/* {(credit == '0' || credit == '') ?
                 <div className={"tagLayout errorTagStyle"}>
                   <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
-                    {upcomingSessions.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
+                    {upcomingSessions?.data?.length > 0 ? 'Purchase More Hours ' : 'No Hours Remaining'}
                   </Tag>
                 </div>
                 :
@@ -191,7 +242,7 @@ const StudentTeachingSession = () => {
                     <div className={"tagLayout errorTagStyle"}>
                       <Tag icon={<CreditCardOutlined />} className={"tagStyle"} color="error">
                       <a href="https://missionmed.com.au/checkout_step/interview-private-checkout/" target="_blank" style={{ color: 'inherit', textDecoration: 'none' }}>
-                        {upcomingSessions.length > 0 ? 'Purchase More Hours' : 'No Teaching Session Remaining'}
+                        {upcomingSessions?.data?.length > 0 ? 'Purchase More Hours' : 'No Teaching Session Remaining'}
                       </a>
                       </Tag>
                     </div>
@@ -202,7 +253,7 @@ const StudentTeachingSession = () => {
                       </Tag>
                     </div>
               }
-              {(upcomingSessions.length > 0 ) &&
+              {(upcomingSessions?.data?.length > 0 ) &&
                 <Space direction="vertical" className="dropdownIcon">
                   <Space wrap  >
                     <Dropdown placement="bottomLeft" menu={{ items }} overlayClassName="session-dropdown">
@@ -211,11 +262,11 @@ const StudentTeachingSession = () => {
                   </Space>
                 </Space>
               }
-              {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) &&
+              {(upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0 || freezeSessions?.data?.length > 0) &&
                 <BookSession title="Book Extra Session" addUpcomingSession={addUpcomingSession} moduleType="teaching" credit={credit} timezone={timezone} />}
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
+          {((upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0 || freezeSessions?.data?.length > 0) && (credit == '0' || credit == null || credit == '')) &&
             <Alert
               closable
               showIcon
@@ -229,7 +280,7 @@ const StudentTeachingSession = () => {
               className="errorBanner"
             />
           }
-          {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) ? (
+          {(upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0 || freezeSessions?.data?.length > 0) ? (
             <SessionDetails
               key="Student Teaching Session"
               moduleType="teaching"
