@@ -1,12 +1,14 @@
-import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Button, Form, Input, Modal, Tabs } from 'antd'
-import RateSession from '../../../components/rate-session'
-import { UserContext } from '../../../api/providers/UserProvider'
-import { groupSessionsByDate, formatTime, formatDateV1 } from '../../../common/common'
-import './index.less'
-import CancleSession from '../../../pages/cancle-session'
-import { RightOutlined, DownOutlined } from '@ant-design/icons'
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Form, Input, message, Modal, Tabs } from "antd";
+import RateSession from "../../../components/rate-session";
+import { formatDateV1 } from "../../../common/common";
+import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
+import "./index.less";
+import CancleSession from "../../../pages/cancle-session";
+import { RightOutlined, DownOutlined } from '@ant-design/icons';
+import { PageInfoType } from "./types";
+import { UserContext } from "~/api/providers/UserProvider";
 
 const SessionList = ({
   date,
@@ -271,24 +273,51 @@ const SessionItem = ({ session, type, handleRateSession = () => {}, handleResche
   )
 }
 
-const Mysessions = ({
-  moduleType,
-  upcomingSessions,
-  pastSessions,
-  updatePastSession,
-  handleReschedule,
-  cancleUpSession,
-  handleEditLink,
-  freezeSessions
-}) => {
-  const { TabPane } = Tabs
-  const navigation = useNavigate()
-  const [rateSession, setRateSession] = useState(null)
-  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions, 'asc')
-  const formatedpastSessions = groupSessionsByDate(pastSessions, 'desc')
-  let formatedFreezeSessions = {}
+const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions }) => {
+  const { TabPane } = Tabs;
+  const [pageInfo, setPageInfo] = useState<PageInfoType>({
+    upcoming: {
+      page: upcomingSessions.current_page ?? 1,
+      loading: false,
+      hasMore: upcomingSessions.next_page_url ?? false
+    },
+    past: {
+      page: pastSessions.current_page ?? 1,
+      loading: false,
+      hasMore: pastSessions.next_page_url ?? false
+    },
+    freeze: {
+      page: freezeSessions.current_page ?? 1,
+      loading: false,
+      hasMore: freezeSessions.next_page_url ?? false
+    },
+  });
+  const [rateSession, setRateSession] = useState(null);
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions.data, "asc");
+  const formatedpastSessions = groupSessionsByDate(pastSessions.data, "desc");
+  let formatedFreezeSessions = {};
   if (freezeSessions) {
-    formatedFreezeSessions = groupSessionsByDate(freezeSessions, 'asc')
+    formatedFreezeSessions = groupSessionsByDate(freezeSessions.data, "asc");
+  }
+
+  const updatePageInfo = () => {
+    setPageInfo({
+      upcoming: {
+        page: upcomingSessions.current_page ?? pageInfo.upcoming.page,
+        loading: false,
+        hasMore: upcomingSessions.next_page_url ?? false
+      },
+      past: {
+        page: pastSessions.current_page ?? pageInfo.past.page,
+        loading: false,
+        hasMore: pastSessions.next_page_url ?? false
+      },
+      freeze: {
+        page: freezeSessions.current_page ?? pageInfo.freeze.page,
+        loading: false,
+        hasMore: freezeSessions.next_page_url ?? false
+      },
+    });
   }
 
   const handleRateSession = (event, session) => {
@@ -296,69 +325,114 @@ const Mysessions = ({
   }
 
   const handleRateCancel = () => {
-    setRateSession(null)
+    setRateSession(null);
+  };
+
+  const loadMore = (type: keyof PageInfoType) => {
+    if (!pageInfo[type].hasMore) {
+      message.error('No more session available')
+      return;
+    }
+    setPageInfo((prevValue) => {
+      return {
+        ...prevValue,
+        [type]: {
+          ...prevValue[type],
+          loading: true
+        }
+      }
+    })
+
+    const pageNumber = pageInfo[type].page + 1
+    const event = new CustomEvent('LoadMoreSessions', { detail: { type, page: pageNumber } })
+    document.dispatchEvent(event)
   }
+  useEffect(() => {
+    updatePageInfo()
+  }, [upcomingSessions, pastSessions, freezeSessions])
 
   return (
     <>
-      <div className={'upc-agenda con-box'} style={{ marginTop: '55px' }}>
-        <h2 className={'secondary-title'}>My Sessions </h2>
-        <Tabs defaultActiveKey={'Upcoming'}>
-          <TabPane tab={'Upcoming'} key={'Upcoming'}>
-            <div className={'upcoming-sessions'}>
-              {Object.keys(formatedUpcomingSessios).map((date, index) => (
-                <SessionList
-                  date={date}
-                  sessions={formatedUpcomingSessios[date]}
-                  type={'upcoming'}
-                  handleReschedule={handleReschedule}
-                  key={`upcomingSessions${index}`}
-                  pagesession={moduleType}
-                  cancleUpSession={cancleUpSession}
-                  handleEditLink={handleEditLink}
-                />
+      <div className={"upc-agenda con-box"} style={{ marginTop: "55px" }}>
+        <h2 className={"secondary-title"}>My Sessions </h2>
+        <Tabs defaultActiveKey={"Upcoming"}>
+          <TabPane tab={"Upcoming"} key={"Upcoming"}>
+            <div className={"upcoming-sessions"}>
+              {Object.keys(formatedUpcomingSessios).length > 0 && 
+                Object.keys(formatedUpcomingSessios).map((date, index) => (
+                  <SessionList
+                    date={date}
+                    sessions={formatedUpcomingSessios[date]}
+                    type={"upcoming"}
+                    handleReschedule={handleReschedule}
+                    key={`upcomingSessions${index}`}
+                    pagesession={moduleType}
+                    cancleUpSession={cancleUpSession}
+                    handleEditLink={handleEditLink}
+                  />
               ))}
-              {Object.keys(formatedUpcomingSessios).length <= 0 && (
-                <li className='item'>
-                  <div style={{ display: 'flex' }}>
-                    <div className='time'>
-                      <div style={{ paddingBottom: '5px' }}>
-                        <h1>
-                          <strong>No Upcoming sessions found.</strong>
-                        </h1>
+              {Object.keys(formatedUpcomingSessios).length > 0 && pageInfo.upcoming.hasMore && (
+                <Button
+                  type='primary'
+                  className='primary-button'
+                  loading={pageInfo.upcoming.loading}
+                  iconPosition='end'
+                  onClick={() => loadMore('upcoming')}
+                >Load More</Button>
+              )}
+              {
+                (Object.keys(formatedUpcomingSessios).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No Upcoming sessions found.</strong></h1>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              )}
+                  </li>
+                )
+              }
             </div>
           </TabPane>
 
-          <TabPane tab={'Past'} key={'Past'}>
-            <div className={'upcoming-past'}>
-              {Object.keys(formatedpastSessions).map((date, index) => (
-                <SessionList
-                  date={date}
-                  sessions={formatedpastSessions[date]}
-                  type={'past'}
-                  handleRateSession={handleRateSession}
-                  key={`pastSessions${index}`}
-                  pagesession={moduleType}
-                />
+          <TabPane tab={"Past"} key={"Past"}>
+            <div className={"upcoming-past"}>
+              {Object.keys(formatedpastSessions).length > 0 &&
+                Object.keys(formatedpastSessions).map((date, index) => (
+                  <SessionList
+                    date={date}
+                    sessions={formatedpastSessions[date]}
+                    type={"past"}
+                    handleRateSession={handleRateSession}
+                    key={`pastSessions${index}`}
+                    pagesession={moduleType}
+                  />
               ))}
-              {Object.keys(formatedpastSessions).length <= 0 && (
-                <li className='item'>
-                  <div style={{ display: 'flex' }}>
-                    <div className='time'>
-                      <div style={{ paddingBottom: '5px' }}>
-                        <h1>
-                          <strong>No past sessions found.</strong>
-                        </h1>
+              {Object.keys(formatedpastSessions).length > 0 && pageInfo.past.hasMore && (
+                <Button
+                  type='primary'
+                  className='primary-button'
+                  loading={pageInfo.past.loading}
+                  iconPosition='end'
+                  onClick={() => loadMore('past')}
+                >Load More</Button>
+              )}
+              {
+                (Object.keys(formatedpastSessions).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No past sessions found.</strong></h1>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              )}
+                  </li>
+                )
+              }
             </div>
           </TabPane>
           <TabPane tab={'Freeze'} key={'Freeze'}>
@@ -375,19 +449,29 @@ const Mysessions = ({
                   handleEditLink={handleEditLink}
                 />
               ))}
-              {Object.keys(formatedFreezeSessions).length <= 0 && (
-                <li className='item'>
-                  <div style={{ display: 'flex' }}>
-                    <div className='time'>
-                      <div style={{ paddingBottom: '5px' }}>
-                        <h1>
-                          <strong>No Freeze sessions found.</strong>
-                        </h1>
+              {Object.keys(formatedFreezeSessions).length > 0 && pageInfo.freeze.hasMore && (
+                <Button
+                  type='primary'
+                  className='primary-button'
+                  loading={pageInfo.freeze.loading}
+                  iconPosition='end'
+                  onClick={() => loadMore('freeze')}
+                >Load More</Button>
+              )}
+              {
+                (Object.keys(formatedFreezeSessions).length <= 0) &&
+                (
+                  <li className="item">
+                    <div style={{ display: "flex" }}>
+                      <div className="time">
+                        <div style={{ paddingBottom: "5px" }}>
+                          <h1><strong>No Freeze sessions found.</strong></h1>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              )}
+                  </li>
+                )
+              }
             </div>
           </TabPane>
         </Tabs>

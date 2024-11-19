@@ -241,7 +241,8 @@ const UploadStep: FC<UploadStepProps> = ({ getUrlFile, id, }) => {
             Let’s start! Upload here your first application draft. Don’t be afraid to write an imperfect first draft.
             It’s only the beginning! Together we’ll do the best one!
           </p>
-          <p className={"steps-upload-text"}>Supported file formats: PDF, DOC, DOCX</p>
+          <p className={"steps-upload-text"}>Supported file formats: <b>PDF, DOC, DOCX</b></p>
+          <p className={"steps-upload-text"}>Maximum file size: <b>10MB</b></p>
 
           <div className={"upload-title"}>
             <p className={"upload-text"}>* Upload your Application</p>

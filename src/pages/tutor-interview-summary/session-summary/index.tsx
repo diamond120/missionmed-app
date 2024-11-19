@@ -69,11 +69,13 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
   };
 
   const handleSubmit = () => {
+    setUploading(true);
     uploadReport(fileUrl).then(() => {
       setFileList([])
       setFileUrl("")
+      setUploading(false);
+      setReUpload(false);
     });
-    setReUpload(false);
   };
   const handleReUpload = () => {
     setReUpload(true);
@@ -87,7 +89,8 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
         <div className={"con-box-wrap"}>
           <ul style={{ marginBottom: "24px" }}>
             <li>Here you can upload session summary.</li>
-            <li>Supported file formats: PDF, DOC, DOCX</li>
+            <li>Supported file formats: <b>PDF, DOC, DOCX</b></li>
+            <li>Maximum file size: <b>10MB</b></li>
           </ul>
 
           <div style={{ marginBottom: "16px" }}>
@@ -136,7 +139,8 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
                 ) : (
                   <Button
                     key="submitSummary"
-                    disabled={fileList.length == 0}
+                    disabled={fileList.length == 0 || uploading}
+                    loading={uploading}
                     className={"secondary-button"}
                     onClick={handleSubmit}
                   >
