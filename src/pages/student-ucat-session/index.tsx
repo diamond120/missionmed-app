@@ -9,6 +9,7 @@ import BookSession from "../book-session";
 import FreezeSession from "../freeze-session";
 import CancleSession from "../cancle-session";
 import CommonService from "../../api/services/Common";
+import { PageInfoType } from "../../components/session-details/my-sessions/types";
 
 const StudentUCATSession = () => {
 
@@ -22,13 +23,11 @@ const StudentUCATSession = () => {
   const [timezone, setTimeZone] = useState("");
   const [credit, setCredit] = useState("");
   const { Link } = Anchor;
+  const BookingFor = 'UCAT 1-to-1 Tutoring';
 
   const getUCATSessionDetails = async () => {
     try {
-      const data = {
-        bookingFor: 'UCAT 1-to-1 Tutoring'
-      }
-      const response = await CommonService.postAPI("/student/session-details", data);
+      const response = await CommonService.postAPI("/student/session-details", { bookingFor: BookingFor });
       if (response.data.success) {
         setUpcomingInterview(response.data?.data?.upcomingInterview ?? {});
         setUpcomingSessions(
@@ -64,7 +63,7 @@ const StudentUCATSession = () => {
       const data = {
         "sessionId": upcomingInterview?.id,
         "agenda": agendaDetails,
-        'bookingFor': 'UCAT 1-to-1 Tutoring'
+        'bookingFor': BookingFor
       }
 
       const response = await CommonService.postAPI('/session-data', data)
@@ -79,14 +78,19 @@ const StudentUCATSession = () => {
   };
 
   const updatePastSession = (id, data = {}) => {
-    const updatedSessions = pastSessions.map(session => {
+    const updatedSessions = pastSessions?.data?.map(session => {
       if (session.id == id) {
         return { ...session, ...data };
       } else {
         return session;
       }
     })
-    setPastSessions(updatedSessions);
+    setPastSessions((prevValue) => {
+      return {
+        ...prevValue,
+        data: updatedSessions
+      }
+    });
   }
 
   const addUpcomingSession = (session) => {
@@ -115,8 +119,58 @@ const StudentUCATSession = () => {
     setIsOpenReschedule(state);
   }
 
+  const customEventHandler = async ({ detail }: CustomEvent) => {
+    const pageName    = (detail?.type ?? '') as keyof PageInfoType
+    const pageNumber  = (detail?.page ?? null)
+    if (!pageName || !pageNumber) {
+      return
+    }
+
+    const payload = {
+      bookingFor: BookingFor,
+      page: pageNumber,
+      pageName: pageName
+    }
+    const response = await CommonService.postAPI('/student/session-details', payload);
+    const pageNameResponseKey: { [K in keyof PageInfoType]: string } = {
+      upcoming: 'upcomingsessions',
+      past: 'pastsessions',
+      freeze: 'freezesessions'
+    }
+    if (response.data.success) {
+      const content = response.data.data[pageNameResponseKey[pageName]]
+      const sessionUpdateHandler = (prevValue) => {
+        return {
+          ...content,
+          data: [
+            ...prevValue.data,
+            ...content.data
+          ]
+        }
+      }
+      switch (pageName) {
+        case 'upcoming':
+          setUpcomingSessions(sessionUpdateHandler)
+          break;
+        case 'past':
+          setPastSessions(sessionUpdateHandler)
+          break;
+        case 'freeze':
+          setFreezeSessions(sessionUpdateHandler)
+          break;
+      }
+    }
+  }
+
   useEffect(() => {
     getUCATSessionDetails();
+    // @ts-expect-error - this is custom event triggered by app
+    document.addEventListener('LoadMoreSessions', customEventHandler)
+
+    return () => {
+      // @ts-expect-error - this is custom event triggered by app
+      document.removeEventListener('LoadMoreSessions', customEventHandler)
+    }
   }, []);
 
   const updateUpcomingSession = (sessionId, data) => {
@@ -203,7 +257,7 @@ const StudentUCATSession = () => {
                         target="_blank"
                         style={{ color: 'inherit', textDecoration: 'none' }}
                       >
-                        {upcomingSessions.length > 0 ? 'Purchase More Hours' : 'No UCAT Session Remaining'}
+                        {upcomingSessions?.data?.length > 0 ? 'Purchase More Hours' : 'No UCAT Session Remaining'}
                       </a>
                       </Tag>
                     </div>
@@ -215,7 +269,7 @@ const StudentUCATSession = () => {
                     </div>
               }
 
-              {(upcomingSessions.length > 0) &&
+              {(upcomingSessions?.data?.length > 0) &&
                 <Space direction="vertical" className="dropdownIcon">
                   <Space wrap>
                     <Dropdown placement="bottomLeft" menu={{ items }} >
@@ -224,11 +278,11 @@ const StudentUCATSession = () => {
                   </Space>
                 </Space>
               }
-              {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) && <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />}
+              {(upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0 || freezeSessions?.data?.length > 0) && <BookSession title="Book Extra Session" moduleType="ucatStudent" addUpcomingSession={addUpcomingSession} timezone={timezone} credit={credit} />}
 
             </div>
           </div>
-          {((upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) && (credit == '0' || credit == null || credit == '')) &&
+          {((upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0 || freezeSessions?.data?.length > 0) && (credit == '0' || credit == null || credit == '')) &&
             <Alert
               closable
               showIcon
@@ -242,7 +296,7 @@ const StudentUCATSession = () => {
               className="errorBanner"
             />
           }
-          {(upcomingSessions.length > 0 || pastSessions.length > 0 || freezeSessions.length > 0) ? (
+          {(upcomingSessions?.data?.length > 0 || pastSessions?.data?.length > 0 || freezeSessions?.data?.length > 0) ? (
             <SessionDetails
               key="mockInterviewDetails"
               moduleType="ucat"
