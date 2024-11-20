@@ -39,6 +39,11 @@ const Reminders: FC<Any> = ({props}) => {
   }
 
   const cancle = () => {
+    setReminders({
+      is48HourRemainderEnable: tutor.is48HourRemainderEnable,
+      is24HourRemainderEnable: tutor.is24HourRemainderEnable,
+      is30MinuteRemainderEnable: tutor.is30MinuteRemainderEnable,
+    });
     setEditing(false);
   }
 
