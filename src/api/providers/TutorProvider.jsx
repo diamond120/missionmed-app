@@ -74,7 +74,10 @@ function TutorReducer(tutor, action) {
         country: action.country,
         percentile: action.percentile,
         score: action.score,
-        tagline: action.tagline
+        tagline: action.tagline,
+        is48HourRemainderEnable: action.is48HourRemainderEnable,
+        is24HourRemainderEnable: action.is24HourRemainderEnable,
+        is30MinuteRemainderEnable: action.is30MinuteRemainderEnable
       };
     }
     case 'update': {
