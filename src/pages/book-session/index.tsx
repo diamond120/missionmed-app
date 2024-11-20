@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useContext } from "react";
+import React, { memo, useState, useEffect, useContext, FC } from "react";
 import { Button, Form, Modal, message, Select, Collapse, Avatar, Radio, Row, Col, Input, Spin, Tooltip, Alert } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import CommonService from "../../api/services/Common";
@@ -17,21 +17,28 @@ const { TextArea } = Input;
 import { QuestionCircleFilled } from "@ant-design/icons";
 // import Search from "antd/lib/transfer/search";
 import type { SearchProps } from 'antd/es/input/Search';
+import { Step2FormProps, Step4FormProps, Student, Tutor } from "./types";
 
-
-const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }) => {
+type Props = {
+  addUpcomingSession: (session: any) => void
+  title: string
+  moduleType: string
+  timezone: string
+  credit: number | string
+}
+const BookSession: FC<Props> = ({ addUpcomingSession, title, moduleType, timezone, credit }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState<number>(1);
   const [modalTitle, setModalTitle] = useState("");
-  const [tutors, setTutors] = useState([]);
-  const [students, setStudents] = useState([]);
+  const [tutors, setTutors] = useState<Array<Tutor>>([]);
+  const [students, setStudents] = useState<Array<Student>>([]);
   const totalSteps = 3;
-  const [showDropdown, setShowDropdown] = useState(true);
-  const [dayOfWeek, setDayOfWeek] = useState('Weekly on Monday');
+  const [showDropdown, setShowDropdown] = useState<boolean>(true);
+  const [dayOfWeek, setDayOfWeek] = useState<string>('Weekly on Monday');
   const [form] = Form.useForm();
-  const [recurringAvailable, setRecurringAvailable] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [recurringAvailable, setRecurringAvailable] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [card, setCard] = useState("");
   const student = useStudent();
   const [sessionType, setSessionType] = useState('');
@@ -203,7 +210,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     setShowDropdown(e.target.value === 'Recurring Session');
   }
 
-  const checkCredit = (student) => {
+  const checkCredit = (student: Student) => {
     if (userRole == 'tutor') {
       if (moduleType == 'ucatStudent' && (student?.ucat_teaching_session_credit == 0 || student?.ucat_teaching_session_credit == null)) {
         return 'disabled'
@@ -213,34 +220,34 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     }
   }
 
-  const TutorPanelHeader = memo(function TutorPanelHeader({ tutor, student }) {
+  const TutorPanelHeader = memo(function TutorPanelHeader({ tutor, student }: { tutor?: Tutor; student?: Student }) {
     return (
       <>
         {userRole === 'tutor' ? (
-          <Radio key={student.id} value={student.id} disabled={checkCredit(student)}  >
+          <Radio key={student?.id} value={student?.id} disabled={checkCredit(student)}  >
             <div className={"avatar"}>
               <Avatar
                 src={student.profile_picture}
                 icon={<UserOutlined />}
               />
               <div className={"name-degree"}>
-                <h4 className={"tutor-name"}>{student.full_name}</h4>
-                {student.phone_number && (
+                <h4 className={"tutor-name"}>{student?.full_name}</h4>
+                {student?.phone_number && (
                   <span>
-                    Ph No: {student.phone_number + ', '}
+                    Ph No: {student?.phone_number + ', '}
                   </span>
                 )}
-                {student.country && (
+                {student?.country && (
                   <span>
                     Country: {student.country + ', '}
                   </span>
                 )}
                 <span>
                   Credit:
-                  {moduleType == 'ucatStudent' && student.ucat_teaching_session_credit ? (
+                  {moduleType == 'ucatStudent' && student?.ucat_teaching_session_credit ? (
                     ` ${student.ucat_teaching_session_credit}`
                   ) : moduleType == 'teaching' && student.teaching_session_credit ? (
-                    ` ${student.teaching_session_credit}`
+                    ` ${student?.teaching_session_credit}`
                   ) : (
                     ` 0`
                   )}
@@ -261,15 +268,15 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             </div>
           </Radio>
         ) : (
-          <Radio key={tutor.id} value={tutor.id}>
+          <Radio key={tutor?.id} value={tutor?.id}>
             <div className={"avatar"}>
               <Avatar
-                src={tutor.profile_picture}
+                src={tutor?.profile_picture}
                 size={40}
                 icon={<UserOutlined />}
               />
               <div className={"name-degree"}>
-                <h4 className={"tutor-name"}>{tutor.full_name}</h4>
+                <h4 className={"tutor-name"}>{tutor?.full_name}</h4>
                 <div
                   style={{
                     display: "flex",
@@ -282,7 +289,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                 >
                    
                   <div className="school-degree">
-                    {tutor.university && tutor.university.map((item, index) => (
+                    {tutor?.university && tutor.university.map((item, index) => (
                       <span key={index}>{item.degree}<span className="dot"></span>{item.school}
                         {tutor.university.length - 1 != index && ','}</span>
                     ))}
@@ -327,7 +334,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     const handleCollapseChange = (key) => {
       setActiveKey(key);
       if (key) {
-        const selectedTutor = tutors.find((tutor) => tutor.id.toString() === key);
+        const selectedTutor = tutors?.find((tutor) => tutor.id.toString() === key);
         if (selectedTutor && onChange) {
           // Pass the selected tutor ID via onChange when the panel is expanded
           onChange({ target: { value: selectedTutor.id } });
@@ -356,7 +363,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                 accordion
               >
 
-                {tutors && tutors.map((tutor) => (
+                {tutors && tutors.map((tutor: Tutor) => (
                   <Panel
                     header={<TutorPanelHeader tutor={tutor} />}
                     key={tutor.id}
@@ -381,7 +388,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
             expandIconPosition={`end`}
             className="site-collapse-custom-collapse"
             > */}
-              {students && students.map((student) => (
+              {students && students?.map((student: Student) => (
                 <Panel
                   header={<TutorPanelHeader student={student} />}
                   key={student.id}
@@ -406,7 +413,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     getStudentList(value)
   }
 
-  const Step2Form = memo(function Step2Form({ students, tutors }) {
+  const Step2Form = memo(function Step2Form({ students, tutors }: Step2FormProps) {
     return (
       <>
         <div className={"choose-tutor"}>
@@ -481,14 +488,16 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
     }
   }
 
-
-  const Step4From = ({ form }) => {
+  const Step4From: FC<Step4FormProps> = ({ form }) => {
     const formData = form.getFieldsValue(true);
     const tutorName = (user.role == 'student') ? tutors.find(tutor => tutor.id == formData.tutorId)?.full_name : students.find(student => student.id == formData.studentId)?.full_name
-    setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
     const sessionDate = formatDateV1(moment(formData.date, 'YYYY-MM-DD'))
     const sessionStartTime = formatTime(formData.sessionStartTime)
     const sessionEndTime = formatTime(formData.sessionEndTime)
+
+    useEffect(() => {
+      setDayOfWeek(`Weekly on ${getDay(moment(formData.date))}`)
+    }, [])
 
     return (
       <>
@@ -768,11 +777,11 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
         width={"max-content"}
         footer={[
           activeStep > 1 && (
-            <Button className={"secondary-button previous-button"} onClick={() => prev()}>
+            <Button key='prev-step' className={"secondary-button previous-button"} onClick={() => prev()}>
               Previous Step
             </Button>
           ),
-          <span className={"steps"}>Step {activeStep} of {totalSteps}</span>,
+          <span key={activeStep} className={"steps"}>Step {activeStep} of {totalSteps}</span>,
 
 
           // ((activeStep < totalSteps  && activeStep != 3 ) || ((!card) &&  activeStep != 4 ) )  && (
@@ -797,7 +806,7 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
 
           ((activeStep < totalSteps)) && (
             // ((activeStep < totalSteps && activeStep !== 3) || (!card && activeStep !== 4)) && (
-            <>
+            <div key='next-step'>
 
               {/* {sessionType === 'Individual Session' && credit > 0 && (
                 <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
@@ -815,13 +824,13 @@ const BookSession = ({ addUpcomingSession, title, moduleType, timezone, credit }
                 Next Step
               </Button>
               {/* )} */}
-            </>
+            </div>
           ),
           loading === true ? (
             <Spin />
           ) : (
             ((activeStep === totalSteps || (activeStep === 3 && card)) || (card === '' && activeStep === 4)) && (
-              <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
+              <Button key='book-session' className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
                 Book Session
               </Button>
             )

@@ -22,16 +22,18 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
   }
 
   const handleSubmit = async () => {
-
-    const values = await form.validateFields();
-    const data = {
-      link: values.sessionLink,
-      sessionId: values.sessionId
+    try {
+      const values = await form.validateFields();
+      const data = {
+        link: values.sessionLink,
+        sessionId: values.sessionId
+      }
+      handleEditLink(data);
+      upcomingInterview['sessionLink'] = values.sessionLink;
+      setIsModalOpen(false);
+    } catch (error: any) {
+      console.error(error)
     }
-    handleEditLink(data);
-    upcomingInterview['sessionLink'] = values.sessionLink;
-    setIsModalOpen(false);
-
   };
 
   const handleCancel = () => {

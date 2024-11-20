@@ -19,16 +19,16 @@ const RescheduleInterview = ({
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [activeStep, setActiveStep] = useState(1);
-  const [modalTitle, setModalTitle] = useState("");
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [universityList, setUniversityList] = useState([]);
   const totalSteps = 3;
   const [interviewSummary, setInterviewSummary] = useState(null);
   const [mockInterviewList, setMockInterviewList] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { user } = useContext(UserContext);
   const userRole = user.role;
-  const getInterviewSummary = async (sessionId) => {
+  const getInterviewSummary = async (sessionId: number) => {
     try {
       const data = {
         sessionId : sessionId,
@@ -49,7 +49,7 @@ const RescheduleInterview = ({
       } else {
         throw new Error(response.data.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       message.error(e.message);
     }
   };
@@ -68,7 +68,7 @@ const RescheduleInterview = ({
       } else {
         throw new Error(response.data.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       message.error(e.message);
     }
   };
@@ -137,7 +137,7 @@ const RescheduleInterview = ({
         setLoading(false);
         throw new Error(response.data.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       setLoading(false);
       message.error(e.message);
     }
@@ -318,13 +318,13 @@ const RescheduleInterview = ({
         width={"max-content"}
         footer={[
           activeStep > 1 && (
-            <Button className={"secondary-button previous-button"} onClick={() => prev()}>
+            <Button key='prev-step' className={"secondary-button previous-button"} onClick={() => prev()}>
               Previous Step
             </Button>
           ),
-          <span className={"steps"}>Step {activeStep} of {stepsTitles.length}</span>,
+          <span key={activeStep} className={"steps"}>Step {activeStep} of {stepsTitles.length}</span>,
           activeStep < totalSteps && (
-            <Button className={"secondary-button"} onClick={next}>
+            <Button key='next-setp' className={"secondary-button"} onClick={next}>
               Next Step
             </Button>
           ),
@@ -333,6 +333,7 @@ const RescheduleInterview = ({
           ) : (
           activeStep === totalSteps && (
             <Button
+              key='confirm-btn'
               className={"primary-button"}
               htmlType="submit"
               onClick={handleSubmit}

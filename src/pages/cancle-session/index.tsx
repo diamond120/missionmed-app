@@ -73,7 +73,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
-          <>
+          <div key='cancel-session'>
           {loading == true ? (
             <Spin />
           ) : (
@@ -91,7 +91,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
             <Button className={"primary-button"} style={{backgroundColor: 'red'}} htmlType="submit" onClick={handleSubmit}>{addUpcomingSession.session_type == 'Recurring Session' ? 'Cancel Sessions' :  'Cancel Session'}</Button>
             </>
           )}
-          </>
+          </div>
         ]}
         >
         <div>

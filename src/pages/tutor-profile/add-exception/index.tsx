@@ -227,13 +227,13 @@ const AddException = ({title, callAdded, editedData = null }) => {
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
-          <> 
+          <div key='exception'>
             {loading == true ? (
               <Spin />
             ) : (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Save</Button>
             )}
-          </>
+          </div>
         ]}
       >
         <Form form={form} className={'freeze-sessions add-exception-form'} layout="vertical" >

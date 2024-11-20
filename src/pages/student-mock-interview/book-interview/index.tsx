@@ -20,14 +20,14 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [activeStep, setActiveStep] = useState(1);
-  const [modalTitle, setModalTitle] = useState("");
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [universityList, setUniversityList] = useState([]);
   const [tutors, setTutors] = useState([]);
   const totalSteps = 4;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [mockInterview, setMockInterview] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>('');
   const { user } = useContext(UserContext);
 
   const getUniversityList = async () => {
@@ -66,7 +66,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
       if (response.data.success) {
         const tutorList = user.role == 'student' ? response.data.data.tutors : response.data.data.students;
         const interviewList = response.data.data.mockinterview.mockinterview ? response.data.data.mockinterview.mockinterview.split(',') : [];
-        const mockInterviewList = interviewList.map((value, index) => ({
+        const mockInterviewList = interviewList.map((value: any, index: number) => ({
           id: index + 1,
           value,
         }));
@@ -109,9 +109,13 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
   };
 
   const prev = () => {
-    const prevStep = activeStep - 1;
-    setActiveStep(prevStep);
-    setModalTitle(stepsTitles[prevStep - 1]);
+    try {
+      const prevStep = activeStep - 1;
+      setActiveStep(prevStep);
+      setModalTitle(stepsTitles[prevStep - 1]);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleSubmit = async () => {
@@ -132,7 +136,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
           session_start_time: result.session_start_time,
           student_id: result.student_id,
           tutor_id: result.tutor_id,
-          tutor_name: tutors.find(tutor => tutor.id == result.tutor_id)?.full_name
+          tutor_name: tutors.find((tutor) => tutor.id == result.tutor_id)?.full_name
         });
         setLoading(false);
         navigate(`/${user.role}/mock-interview`)
@@ -327,7 +331,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
               > 
                 {tutor.biography && (
                   <>
-                    <strong class="biography">Biography</strong>
+                    <strong className="biography">Biography</strong>
                     <div dangerouslySetInnerHTML={{ __html: tutor.biography }} />
                   </>
                 )}
@@ -484,13 +488,14 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
         width={"max-content"}
         footer={[
           activeStep > 1 && (
-            <Button className={"secondary-button previous-button"} onClick={() => prev()}>
+            <Button key={'prev-step'} className={"secondary-button previous-button"} onClick={() => prev()}>
               Previous Step
             </Button>
           ),
-          <span className={"steps"}>Step {activeStep} of 4</span>,
+          <span className={"steps"} key={activeStep}>Step {activeStep} of 4</span>,
           activeStep < totalSteps && (
             <Button
+              key={'next-step'}
               className={"secondary-button"}
               onClick={next}
             >
@@ -498,10 +503,10 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
             </Button>
           ),
           loading == true ? (
-            <Spin />
+            <Spin key={'loading'} />
           ) : (
             activeStep === totalSteps && (
-              <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
+              <Button key={'book-interview'} className={"primary-button"} htmlType="submit" onClick={handleSubmit}>
                 Book Interview
               </Button>
             )

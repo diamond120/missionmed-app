@@ -8,9 +8,14 @@ import CommonService from "../../api/services/Common";
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const WithoutLoginSidebar: React.FC = ({className, callBack}) => {
+type Props = {
+  className: string
+  callBack: () => void
+}
+
+const WithoutLoginSidebar: React.FC<Props> = ({ className, callBack }: Props) => {
   const [collapsed, setCollapsed] = useState(false);
-  const [current, setCurrent] = useState()
+  const [current, setCurrent] = useState<string>()
   const navigate = useNavigate()
   const [showStory, setShowStory] = useState(false)
 

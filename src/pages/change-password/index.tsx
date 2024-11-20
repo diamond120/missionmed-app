@@ -7,19 +7,19 @@ const ChangePassword = ({ title, moduleType }) => {
   const [form] = Form.useForm()
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [modalTitle, setModalTitle] = useState('')
+  const [modalTitle, setModalTitle] = useState<string>('')
   const handleSubmit = async () => {
     await form.validateFields()
     try {
       const formData = form.getFieldsValue(true)
-      let response = await CommonService.postAPI('/change-password', formData)
+      const response = await CommonService.postAPI('/change-password', formData)
       if (response.data.success == true) {
         message.success('You’ve successfully change password')
         handleCancel()
       } else {
         throw new Error(response.data.message)
       }
-    } catch (e) {
+    } catch (e: any) {
       message.error(e.message)
     }
     // handleCancel();
@@ -52,7 +52,7 @@ const ChangePassword = ({ title, moduleType }) => {
         className={'mock-interview-modal '}
         width={'max-content'}
         footer={[
-          <>
+          <div key='change-password'>
             <Button onClick={handleCancel} className={'secondary-button'}>
               {' '}
               Cancel
@@ -60,7 +60,7 @@ const ChangePassword = ({ title, moduleType }) => {
             <Button className={'primary-button'} htmlType='submit' onClick={handleSubmit}>
               Change Password
             </Button>
-          </>
+          </div>
         ]}
       >
         <Form form={form} layout='vertical'>

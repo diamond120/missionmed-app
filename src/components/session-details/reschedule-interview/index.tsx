@@ -20,8 +20,8 @@ const RescheduleInterview = ({
 }) => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [activeStep, setActiveStep] = useState(1);
-  const [modalTitle, setModalTitle] = useState("");
+  const [activeStep, setActiveStep] = useState<number>(1);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [universityList, setUniversityList] = useState([]);
   const [recurringAvailable, setRecurringAvailable] = useState(false);
   const { user } = useContext(UserContext);
@@ -32,7 +32,7 @@ const RescheduleInterview = ({
   const [showDropdown, setShowDropdown] = useState(true);
   const [dayOfWeek, setDayOfWeek] = useState('Monday');
 
-  const getSessionummary = async (sessionId) => {
+  const getSessionummary = async (sessionId: number) => {
     try {
       const data = {
         sessionId: sessionId,
@@ -370,13 +370,13 @@ const RescheduleInterview = ({
         width={"max-content"}
         footer={[
           activeStep > 1 && (
-            <Button className={"secondary-button previous-button"} onClick={() => prev()}>
+            <Button key={'prev-step'} className={"secondary-button previous-button"} onClick={() => prev()}>
               Previous Step
             </Button>
           ),
-          <span className={"steps"}>Step {activeStep} of {stepsTitles.length}</span>,
+          <span key={activeStep} className={"steps"}>Step {activeStep} of {stepsTitles.length}</span>,
           activeStep < totalSteps && (
-            <Button className={"secondary-button"} onClick={next}>
+            <Button key='next-step' className={"secondary-button"} onClick={next}>
               Next Step
             </Button>
           ),
@@ -385,6 +385,7 @@ const RescheduleInterview = ({
           ) : (
           activeStep === totalSteps && (
             <Button
+              key='confirm-btn'
               className={"primary-button"}
               htmlType="submit"
               onClick={handleSubmit}

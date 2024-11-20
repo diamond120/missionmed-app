@@ -130,12 +130,12 @@ const PredicatedColumns: TableProps<PredicatedDataType>["columns"] = [
 ];
 interface Props {
   mocks: Array<Session>;
-  selectedMockId: number;
+  selectedMockId: number | undefined;
   setActiveTab: any;
 }
 
 function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
-  const [mockId, setMockId] = useState<number>(selectedMockId);
+  const [mockId, setMockId] = useState<number | undefined>(selectedMockId);
   const [mockData, setMockData] = useState<any>([]);
   const [scoreTableKey, setScoreTableKey] = useState<number>(52);
   const [predicatedData, setPredicatedData] = useState<PredicatedDataType[]>([
@@ -219,34 +219,38 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   }, [totalScaledScore])
 
   async function getLastYearData() {
-    const response: any = await fetch('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/Official+UCAT+Statistics.csv');
-    const reader = response.body.getReader();
-    const result = await reader.read();
-    const decoder = new TextDecoder('utf-8');
-    const csv = decoder.decode(result.value);
+    try {
+      const response: any = await fetch('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/Official+UCAT+Statistics.csv');
+      const reader = response.body.getReader();
+      const result = await reader.read();
+      const decoder = new TextDecoder('utf-8');
+      const csv = decoder.decode(result.value);
 
-    await Papa.parse(csv, {
-      header: true,
-      complete: async (results) => {
-        const data: any = results.data;
-        const header: any = results.meta.fields
-        if (data?.length > 0 && header) {
-          const lastScore = await data?.findIndex((i: any) => i[header[0]] === '')
-          if (totalScaledScore < Number(data[0]?.[header[0]]))
-            await setUCATPR(0)
-          else if (totalScaledScore > Number(data[(lastScore - 1)]?.[header[0]]))
-            await setUCATPR(100)
-          else {
-            const percentage = await data.reduce((a: any, b: any) => (
-              b?.[header[0]] <= totalScaledScore && b?.[header[0]] >= a?.[header[0]]
-                ? b
-                : a
-            ), { [header[0]]: -Infinity })
-            await setUCATPR(percentage?.[header[1]])
+      await Papa.parse(csv, {
+        header: true,
+        complete: async (results) => {
+          const data: any = results.data;
+          const header: any = results.meta.fields
+          if (data?.length > 0 && header) {
+            const lastScore = await data?.findIndex((i: any) => i[header[0]] === '')
+            if (totalScaledScore < Number(data[0]?.[header[0]]))
+              await setUCATPR(0)
+            else if (totalScaledScore > Number(data[(lastScore - 1)]?.[header[0]]))
+              await setUCATPR(100)
+            else {
+              const percentage = await data.reduce((a: any, b: any) => (
+                b?.[header[0]] <= totalScaledScore && b?.[header[0]] >= a?.[header[0]]
+                  ? b
+                  : a
+              ), { [header[0]]: -Infinity })
+              await setUCATPR(percentage?.[header[1]])
+            }
           }
-        }
-      },
-    });
+        },
+      });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async function getPackageData(id: any) {
@@ -492,10 +496,10 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         onChange={(e) => setMockId(e)}
       >
         {mocks?.map((item, index) => (
-          <Option key={index} value={item.id}>
+          <Select.Option key={index} value={item.id}>
             {item?.package?.name} - (
             {moment(item?.started_at).format("MMMM Do YYYY hh:mm A")})
-          </Option>
+          </Select.Option>
         ))}
       </Select>
       {mockId && (
@@ -515,7 +519,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
               let correctAnswers = 0;
               let partiallyCorrectAnswers = 0;
               let incorrect = 0;
-              item.questions.forEach((question) => {
+              item.questions.forEach((question: any) => {
                 if (
                   (question.score == 1 && question.type == "MC") ||
                   question.score == 2
@@ -528,7 +532,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                 }
               });
               return (
-                <div className="question-item" key={index}>
+                <div className="question-item" key={`${index}_${item.id}`}>
                   <span className="question-title">{item?.name}</span>
                   <div className="progress-bar">
                     <span
@@ -572,7 +576,7 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
                             {item?.questions?.map(
                               (question: any, _index: number) => (
                                 <div
-                                  key={mockData?.package?.id}
+                                  key={`${mockData?.package?.id}_${_index}`}
                                   className={`value ${question.score === 2 ||
                                     (question.type === "MC" &&
                                       question.score === 1)

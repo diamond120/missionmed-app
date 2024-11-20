@@ -7,22 +7,22 @@ import Performance from './performance'
 import { createSession, getSessions, getPackages } from '../../api/services/MockSimulation'
 import { EXAM_APP_URL, APP_URL } from '../../config/app-config'
 import { UserContext } from '../../api/providers/UserProvider'
-import { Session } from './types'
+import { Package, Session } from './types'
 import moment from 'moment'
 
 const Index = () => {
   const { TabPane } = Tabs
-  const [availableMocks, setAvailableMocks] = useState<Array<Session>>([])
+  const [availableMocks, setAvailableMocks] = useState<Array<Package>>([])
   const [mocks, setMocks] = useState<Array<Session>>([])
   const [pastMocks, setPastMocks] = useState<Array<Session>>([])
   const [activeTab, setActiveTab] = useState<string>('Simulate')
   const [examCode, setExamCode] = useState<string | number>('')
   const [examCodeIndex, setExamCodeIndex] = useState<number>()
   const [selectedMockId, setSelectedMockId] = useState<number>()
-  const [open, setOpen] = useState(false)
-  const [video, setVideo] = useState('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4')
-  const [videotitle, setVideoTitle] = useState('Verbal Reasoning')
-  const [mockId, setMockId] = useState<number>(selectedMockId)
+  const [open, setOpen] = useState<boolean>(false)
+  const [video, setVideo] = useState<string>('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4')
+  const [videotitle, setVideoTitle] = useState<string>('Verbal Reasoning')
+  const [mockId, setMockId] = useState<number | undefined>(selectedMockId)
   const { user } = useContext(UserContext)
   const vidRef = useRef(null)
   useEffect(() => {
@@ -43,24 +43,28 @@ const Index = () => {
     init()
   }, [])
   async function launchExam(package_id: number) {
-    if (examCode) {
-      const params = {
-        user_id: user?.id,
-        package_id: package_id,
-        redirect_url: `${APP_URL}/student/mock-simulation`,
-        exam_code: examCode
-      }
-      const res = await createSession(params)
-      if (res) {
-        if (res?.data?.id) {
-          setExamCode('')
-          window.open(`${EXAM_APP_URL}?session_id=${res?.data?.id}`, '_blank', 'noreferrer')
-        } else message.error('Please enter correct exam code')
-      }
-    } else message.error('Please enter exam code')
+    try {
+      if (examCode) {
+        const params = {
+          user_id: user?.id,
+          package_id: package_id,
+          redirect_url: `${APP_URL}/student/mock-simulation`,
+          exam_code: examCode
+        }
+        const res = await createSession(params)
+        if (res) {
+          if (res?.data?.id) {
+            setExamCode('')
+            window.open(`${EXAM_APP_URL}?session_id=${res?.data?.id}`, '_blank', 'noreferrer')
+          } else message.error('Please enter correct exam code')
+        }
+      } else message.error('Please enter exam code')
+    } catch (error: any) {
+      throw new Error(error)
+    }
   }
 
-  const handlePlayVideo = async (title, url) => {
+  const handlePlayVideo = async (title: string, url: string) => {
     await setOpen(true)
     await setVideoTitle(title)
     await setVideo(url)
@@ -189,9 +193,9 @@ const Index = () => {
               <TabPane tab={'Review'} key={'Review'} className='subTabs'>
                 <Select placeholder='Select' style={{ width: 328 }} value={mockId} onChange={(e) => setMockId(e)}>
                   {mocks?.map((item, index) => (
-                    <Option key={index} value={item.id}>
+                    <Select.Option key={index} value={item.id}>
                       {item?.package?.name} - ({moment(item?.started_at).format('MMMM Do YYYY hh:mm A')})
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
                 {mocks?.filter((item) => mockId === item.id && item.package_id === 28).length > 0 ? (

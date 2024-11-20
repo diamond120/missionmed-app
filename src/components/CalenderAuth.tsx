@@ -49,17 +49,21 @@ const CalendarAuth = ({setGoogleVerification}) => {
   }
 
   const updateSigninStatus = (isSignedIn) => {
-    setIsSignedIn(isSignedIn);
-    if (isSignedIn) {
-      const authInstance = gapi.auth2.getAuthInstance();
-      const currentUser = authInstance.currentUser.get();
-      if (currentUser) {
-        const userProfile = currentUser.getBasicProfile();
-        const email = userProfile ? userProfile.getEmail() : '';
-        setFullName(email); // Update email when signed in
+    try {
+      setIsSignedIn(isSignedIn);
+      if (isSignedIn) {
+        const authInstance = gapi.auth2.getAuthInstance();
+        const currentUser = authInstance.currentUser.get();
+        if (currentUser) {
+          const userProfile = currentUser.getBasicProfile();
+          const email = userProfile ? userProfile.getEmail() : '';
+          setFullName(email); // Update email when signed in
+        }
+      } else {
+        setFullName(''); // Clear fullName if signed out
       }
-    } else {
-      setFullName(''); // Clear fullName if signed out
+    } catch (error: any) {
+      console.error(error)
     }
   };
   

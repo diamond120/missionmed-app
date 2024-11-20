@@ -28,7 +28,12 @@ import CommonService from '../../api/services/Common'
 const { Sider } = Layout
 const { SubMenu } = Menu
 
-const SidebarMenu: React.FC = ({ className, callBack }) => {
+type Props = {
+  className: string
+  callBack: () => void
+}
+
+const SidebarMenu: React.FC<Props> = ({ className, callBack }: Props) => {
   const [collapsed, setCollapsed] = useState(false)
   const { unreadNotificationCount, setUnreadNotificationCount } = useNotificationContext()
   const [showStory, setShowStory] = useState(false)
