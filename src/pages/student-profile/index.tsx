@@ -14,6 +14,7 @@ import ApplicationInfo from "./application-info"
 import ExtraInfo from "./extra-info"
 import { useStudent } from "../../api/providers/StudentProvider";
 import CardDatails from "./card-details";
+import Reminders from "./reminders";
 
 const StudentProfile = () => {
   const student = useStudent();
@@ -47,6 +48,7 @@ const StudentProfile = () => {
                 </div>
                 <div className={"top-form-group-right"}>
                   {student && <ProfilePicture />}
+                  <Reminders />
                   <MyTeam />
                 </div>
               </div>
