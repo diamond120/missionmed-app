@@ -54,18 +54,21 @@ const TutorMockInterview = () => {
     setIsOpenReschedule(state);
   }
 
-  const handleEditAgenda = async (agendaDetails) => {
+  const handleEditAgenda = async (agendaDetails, sessionId = null) => {
+    const updateSessionId = sessionId ?? upcomingInterview?.id 
     try {
       const data = {
-        "sessionId":upcomingInterview?.id,
-        "agenda":agendaDetails,
-        'bookingFor' : BookingFor
+        "sessionId": updateSessionId,
+        "agenda": agendaDetails,
+        'bookingFor': 'Mock interviews'
       }
-      const response = await CommonService.postAPI('/session-data',data)
+      const response = await CommonService.postAPI('/session-data', data)
       if (response.data.success) {
-        setAgenda(agendaDetails);
+        if(updateSessionId === upcomingInterview?.id) {
+          setAgenda(agendaDetails);
+        } 
       } else {
-        throw new Error(response.data.message);
+        throw new Error(response.data.message)
       }
     } catch (e) {
       message.error(e.message);
