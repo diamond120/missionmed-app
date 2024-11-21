@@ -66,7 +66,7 @@ const TutorUCATSession = () => {
       const data = {
         "sessionId": updateSessionId,
         "agenda": agendaDetails,
-        'bookingFor': 'Mock interviews'
+        'bookingFor': BookingFor
       }
       const response = await CommonService.postAPI('/session-data', data)
       if (response.data.success) {
