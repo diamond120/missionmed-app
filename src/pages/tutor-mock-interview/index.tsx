@@ -66,6 +66,15 @@ const TutorMockInterview = () => {
       if (response.data.success) {
         if(updateSessionId === upcomingInterview?.id) {
           setAgenda(agendaDetails);
+          setUpcomingSessions((prevValue) => {
+            prevValue.data = prevValue.data.map((prevSession) => { 
+              if (prevSession.id === upcomingInterview?.id) {
+                prevSession.agenda = agendaDetails
+              }
+              return prevSession
+            })
+            return prevValue
+          })
         } 
       } else {
         throw new Error(response.data.message)

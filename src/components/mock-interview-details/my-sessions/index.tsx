@@ -85,6 +85,10 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     setModalType('');
   };
 
+  useEffect(() => {
+    formAgenda.setFieldValue('agenda', session.agenda)
+  }, [session.agenda])
+
   form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
 

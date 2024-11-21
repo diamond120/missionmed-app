@@ -84,6 +84,11 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       callback();
     }
   };
+
+  useEffect(() => {
+    formAgenda.setFieldValue('agenda', session.agenda)
+  }, [session.agenda])
+
   form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
   return (
@@ -150,7 +155,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               </div>
             ]}
           >
-            <Form form={form} layout="vertical">
+            <Form form={formAgenda} layout="vertical">
               <Form.Item 
               label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
               name="agenda" 
