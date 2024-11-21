@@ -82,6 +82,9 @@ function StudentReducer(student, action) {
               card_digit:action.card_digit,
               country: action.country,
               timezone_id:action.timezone_id,
+              is_48_hour_remainder_enable: action.is_48_hour_remainder_enable,
+              is_24_hour_remainder_enable: action.is_24_hour_remainder_enable,
+              is_30_minute_remainder_enable: action.is_30_minute_remainder_enable
           };
         }
         case 'update': {

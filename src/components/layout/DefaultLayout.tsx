@@ -117,7 +117,10 @@ export const DefaultLayout: FC = () => {
               credit: result.data.data.credit ?? 0,
               card_digit: result.data.data.card_digit ?? '',
               country: result.data.data.country ?? '',
-              timezone_id: result.data.data.timezone_id ?? ''
+              timezone_id: result.data.data.timezone_id ?? '',
+              is_48_hour_remainder_enable: result.data.data.is_48_hour_remainder_enable ?? 0,
+              is_24_hour_remainder_enable: result.data.data.is_24_hour_remainder_enable ?? 0,
+              is_30_minute_remainder_enable: result.data.data.is_30_minute_remainder_enable ?? 0
             })
             await studentDispatch({ type: 'loading', loading: false })
           } catch (error) {
@@ -175,7 +178,10 @@ export const DefaultLayout: FC = () => {
               timezone_id: result.data.data.timezone_id ?? '',
               percentile: result.data.data.percentile ?? '',
               score: result.data.data.score ?? '',
-              tagline: result.data.data.tagline ?? ''
+              tagline: result.data.data.tagline ?? '',
+              is48HourRemainderEnable: result.data.data.is_48_hour_remainder_enable ?? 0,
+              is24HourRemainderEnable: result.data.data.is_24_hour_remainder_enable ?? 0,
+              is30MinuteRemainderEnable: result.data.data.is_30_minute_remainder_enable ?? 0
             })
             await tutorDispatch({ type: 'loading', loading: false })
           } catch (error) {

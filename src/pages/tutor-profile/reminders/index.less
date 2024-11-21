@@ -1,0 +1,71 @@
+.reminders-section{
+  .ant-table-content{
+    overflow: auto; 
+  }
+  .reminders-section-title{
+    color: #6B7393;
+    font-weight: 600;
+    font-size: 24px;
+    font-style: normal;
+    line-height: 133%;
+    margin-top: 20px;
+    margin-bottom: 21px;
+  }
+}
+
+.reminders-form{
+  width: 416px;
+  padding: 32px !important;
+  background-color: #FFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 2%), 0 1px 6px -1px rgb(0 0 0 / 2%), 0 1px 2px 0 rgb(0 0 0 / 3%);
+
+  .reminders-form-item{
+    display: flex;
+    justify-content: space-between;
+    @media (max-width:767px){
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .reminders-label{ 
+      margin: 0;
+      color: #312D42;
+      font-weight: 600;
+      font-size: 16px;
+      font-style: normal;
+      line-height: 150%;
+    }
+
+    .reminders-checkboxes{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .reminders-checkbox{
+        margin: 0 0 16px;
+
+        & span{
+          color: #312D42;
+          font-weight: 400;
+          font-size: 14px;
+          font-style: normal;
+          line-height: 157% ;
+        }
+      }
+    }
+  }
+
+}
+@media (max-width:992px){
+  .reminders-section{
+    .reminders-section-title{
+      margin-top: 40px;
+    }    
+  }
+}
+@media (max-width:992px){
+    .reminders-form{
+      width: 100%;
+      padding: 20px;
+    }
+}
