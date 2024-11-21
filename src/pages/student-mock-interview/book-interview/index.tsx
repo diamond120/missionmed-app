@@ -188,7 +188,7 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
         {selectUniversity && (
           <Form.Item
             name="mockInterview"
-            label="Which mock interview are you sitting?"
+            label="Pick your Mock."
             rules={[{ required: true, message: "Please select mock interview" }]}
           >
             <Radio.Group>
