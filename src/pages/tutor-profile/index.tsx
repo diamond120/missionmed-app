@@ -23,6 +23,7 @@ import { useTutor } from "../../api/providers/TutorProvider"
 import MeetingLink from "./meeting-link";
 import SpecialDays from "./special-days";
 import UcatPerformance from "./ucat-performance";
+import Reminders from "./reminders";
 
 const TutorProfile = () => {
   
@@ -101,6 +102,7 @@ const TutorProfile = () => {
                 <h2 className={"specializations-section-title"}>Google Calendar</h2>
                  <CalendarAuth setGoogleVerification={setGoogleVerification} />
                 </div>
+                  <Reminders />
                   <Specializations />
                   <BufferTime />
                   <MeetingLink />
