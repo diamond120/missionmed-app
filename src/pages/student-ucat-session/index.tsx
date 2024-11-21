@@ -58,17 +58,28 @@ const StudentUCATSession = () => {
     }
   };
 
-  const handleEditAgenda = async (agendaDetails) => {
+  const handleEditAgenda = async (agendaDetails, sessionId = null) => {
+    const updateSessionId = sessionId ?? upcomingInterview?.id 
     try {
       const data = {
-        "sessionId": upcomingInterview?.id,
+        "sessionId": updateSessionId,
         "agenda": agendaDetails,
         'bookingFor': BookingFor
       }
-
       const response = await CommonService.postAPI('/session-data', data)
       if (response.data.success) {
-        setAgenda(agendaDetails);
+        if(updateSessionId === upcomingInterview?.id) {
+          setAgenda(agendaDetails);
+          setUpcomingSessions((prevValue) => {
+            prevValue.data = prevValue.data.map((prevSession) => { 
+              if (prevSession.id === upcomingInterview?.id) {
+                prevSession.agenda = agendaDetails
+              }
+              return prevSession
+            })
+            return prevValue
+          })
+        } 
       } else {
         throw new Error(response.data.message)
       }
