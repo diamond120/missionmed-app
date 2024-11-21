@@ -18,7 +18,8 @@ const SessionList = ({
   handleReschedule,
   pagesession,
   cancleUpSession,
-  handleEditLink
+  handleEditLink,
+  handleEditAgenda
 }) => (
   <div className="sessions">
     <h4 className="sessions-date">{formatDateV1(date)}</h4>
@@ -33,37 +34,47 @@ const SessionList = ({
           pagesession={pagesession}
           cancleUpSession={cancleUpSession}
           handleEditLink={handleEditLink}
+          handleEditAgenda={handleEditAgenda}
         />
       ))}
     </ul>
   </div>
 );
 
-const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, pagesession, cancleUpSession, handleEditLink }) => {
+const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, pagesession, cancleUpSession, handleEditLink, handleEditAgenda }) => {
   const user = useUser();
   const userRole = user.role;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState('');
   const [form] = Form.useForm();
+  const [formAgenda] = Form.useForm();
   const { TextArea } = Input;
 
   const [details, setDetails] = useState(false)
 
-  const handleClick = () => {
+  const handleClick = (type) => {
+    setModalType(type);
     setIsModalOpen(true)
   }
 
   const handleSubmit = async () => {
-    const values = await form.validateFields();
-    const data = {
-      link: values.sessionLink,
-      sessionId: values.sessionId
+    if (modalType === "agenda") {
+      const values = await formAgenda.validateFields();
+      handleEditAgenda(values.agenda,values.sessionId);
+    } else if (modalType === "sessionLink") {
+      const values = await form.validateFields();
+      const data = {
+        link: values.sessionLink,
+        sessionId: values.sessionId
+      }
+      handleEditLink(data);
     }
-    handleEditLink(data);
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setModalType('');
   };
 
   const validateURL = (rule, value, callback) => {
@@ -73,6 +84,11 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       callback();
     }
   };
+
+  useEffect(() => {
+    formAgenda.setFieldValue('agenda', session.agenda)
+  }, [session.agenda])
+
   form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
   return (
@@ -119,7 +135,46 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
 
           <Button disabled={(session.isWithin24Hours) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
           <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+          <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
+          <Modal
+            title="Edit Agenda"
+            open={isModalOpen && modalType === "agenda"}
+            onOk={handleSubmit}
+            onCancel={handleCancel}
+            className={"mock-interview-modal"}
+            width={"600px"}
+            footer={[
+              <div key="buttonGroup" className='button-group'>
+                <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+                  Discard 
+                </Button>
+                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                  Save Changes
+                </Button>
+              </div>
+            ]}
+          >
+            <Form form={formAgenda} layout="vertical">
+              <Form.Item 
+              label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
+              name="agenda" 
+              rules={[{required:true}]}
+              initialValue={session.agenda}
+              >
+              <TextArea
+                style={{ height: 200 }}
+                placeholder=""
+              />
+              </Form.Item>
+              <Form.Item
+                name="sessionId"
+                initialValue={session?.id}
+              >
+                <Input type="hidden" />
+              </Form.Item>
+            </Form>
+          </Modal>
         </div>
       )}
       {userRole == "tutor" && type == "upcoming" && (
@@ -131,12 +186,13 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
               </>
             )}
-            <Button className={"secondary-button"} onClick={handleClick}>Edit Session Link</Button>
+            <Button className={"secondary-button"} onClick={() => handleClick('sessionLink')}>Edit Session Link</Button>
+            <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
             {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           </div>
           <Modal
             title="Edit Session Link"
-            open={isModalOpen}
+            open={isModalOpen && modalType === "sessionLink"}
             onOk={handleSubmit}
             onCancel={handleCancel}
             className={"mock-interview-modal"}
@@ -166,6 +222,44 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
                   style={{ height: 50 }}
                   placeholder=""
                 />
+              </Form.Item>
+              <Form.Item
+                name="sessionId"
+                initialValue={session?.id}
+              >
+                <Input type="hidden" />
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Modal
+            title="Edit Agenda"
+            open={isModalOpen && modalType === "agenda"}
+            onOk={handleSubmit}
+            onCancel={handleCancel}
+            className={"mock-interview-modal"}
+            width={"600px"}
+            footer={[
+              <div key="buttonGroup" className='button-group'>
+                <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+                  Discard 
+                </Button>
+                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                  Save Changes
+                </Button>
+              </div>
+            ]}
+          >
+            <Form form={formAgenda} layout="vertical">
+              <Form.Item 
+              label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
+              name="agenda" 
+              rules={[{required:true}]}
+              initialValue={session.agenda}
+              >
+              <TextArea
+                style={{ height: 200 }}
+                placeholder=""
+              />
               </Form.Item>
               <Form.Item
                 name="sessionId"
@@ -255,7 +349,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   );
 };
 
-const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions }) => {
+const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions, handleEditAgenda }) => {
   const { TabPane } = Tabs;
   const [pageInfo, setPageInfo] = useState<PageInfoType>({
     upcoming: {
@@ -351,6 +445,7 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
                     pagesession={moduleType}
                     cancleUpSession={cancleUpSession}
                     handleEditLink={handleEditLink}
+                    handleEditAgenda={handleEditAgenda}
                   />
               ))}
               {Object.keys(formatedUpcomingSessios).length > 0 && pageInfo.upcoming.hasMore && (

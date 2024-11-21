@@ -11,7 +11,7 @@ const MockInterviewDetails = ({upcomingInterview, upcomingSessions, pastSessions
             {Object.keys(upcomingInterview).length >0 &&<UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} sessionType="interview" handleEditLink={handleEditLink}/>}
             {Object.keys(upcomingInterview).length >0 &&<Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} />}
             </div>
-            <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} handleReschedule={handleReschedule} handleEditLink={handleEditLink} cancleUpSession={cancleUpSession}/>
+            <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} handleReschedule={handleReschedule} handleEditLink={handleEditLink} cancleUpSession={cancleUpSession} handleEditAgenda={handleEditAgenda}/>
         </>
     )
 }
