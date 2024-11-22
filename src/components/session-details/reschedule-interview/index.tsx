@@ -221,7 +221,7 @@ const RescheduleInterview = ({
         {selectUniversity && (
           <Form.Item
             name="mockInterview"
-            label="Which mock interview are you sitting?"
+            label="Pick your Mock."
             rules={[{ required: true }]}
             initialValue={interviewSummary?.mock_interview}
           >

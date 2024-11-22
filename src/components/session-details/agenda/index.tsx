@@ -1,9 +1,9 @@
 import { Button, Form, Modal, Input, message } from 'antd'
 import './index.less'
-import { QuestionCircleFilled } from '@ant-design/icons'
-import { useContext, useState } from 'react'
-import { UserContext } from '../../../api/providers/UserProvider'
-const { TextArea } = Input
+import { QuestionCircleFilled } from "@ant-design/icons";
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from "../../../api/providers/UserProvider"
+const { TextArea } = Input;
 
 const Agenda = ({ agenda, handleEditAgenda, credit }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -25,8 +25,12 @@ const Agenda = ({ agenda, handleEditAgenda, credit }) => {
   }
 
   const handleCancel = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
+
+  useEffect(() => {
+    form.setFieldValue('agenda', agenda)
+  }, [agenda])
 
   return (
     <>
