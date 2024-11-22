@@ -126,7 +126,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard 
+                  Discard
                 </Button>
                 <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
                   Save Changes
@@ -135,8 +135,8 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             ]}
           >
             <Form form={formAgenda} layout="vertical">
-              <Form.Item 
-              label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
+              <Form.Item
+              label="Here you can put down your thoughts and questions to your tutor on the upcoming session"
               name="agenda"
               rules={[{required:true}]}
               initialValue={session.agenda}
@@ -220,7 +220,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard 
+                  Discard
                 </Button>
                 <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
                   Save Changes
@@ -229,9 +229,9 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             ]}
           >
             <Form form={formAgenda} layout="vertical">
-              <Form.Item 
-              label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
-              name="agenda" 
+              <Form.Item
+              label="Here you can put down your thoughts and questions to your tutor on the upcoming session"
+              name="agenda"
               rules={[{required:true}]}
               initialValue={session.agenda}
               >
@@ -427,6 +427,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                       />
                 ))}
               {Object.keys(formatedUpcomingSessios).length > 0 && pageInfo.upcoming.hasMore && (
+                /* eslint-disable react/no-unknown-property */
                 <Button
                   type='primary'
                   className='primary-button'
@@ -434,6 +435,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   iconPosition='end'
                   onClick={() => loadMore('upcoming')}
                 >Load More</Button>
+                /* eslint-enable react/no-unknown-property */
               )}
               {
                 (Object.keys(formatedUpcomingSessios).length <= 0) &&
@@ -465,6 +467,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   />
               ))}
               {Object.keys(formatedpastSessions).length > 0 && pageInfo.past.hasMore && (
+                /* eslint-disable react/no-unknown-property */
                 <Button
                   type='primary'
                   className='primary-button'
@@ -472,6 +475,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   iconPosition='end'
                   onClick={() => loadMore('past')}
                 >Load More</Button>
+                /* eslint-enable react/no-unknown-property */
               )}
               {
                 (Object.keys(formatedpastSessions).length <= 0) &&

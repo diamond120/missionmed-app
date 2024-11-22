@@ -24,9 +24,10 @@ import MeetingLink from "./meeting-link";
 import SpecialDays from "./special-days";
 import UcatPerformance from "./ucat-performance";
 import { Ratting } from "./type";
+import Reminders from "./reminders";
 
 const TutorProfile = () => {
-  
+
   const [rating, setRating] = useState<Ratting | null>(null);
   const [isGoogleVerification, setGoogleVerification] = useState(false);
   const tutor = useTutor();
@@ -35,7 +36,7 @@ const TutorProfile = () => {
 
   const getRatingDetails = async () => {
     try {
-     
+
       const response = await CommonService.getAPI("/tutor/rating");
       if (response.data.success) {
         setRating(response.data.data );
@@ -91,17 +92,18 @@ const TutorProfile = () => {
             </TabPane>
 
             <TabPane tab={"Teaching"} key={"teaching"}>
-                  
+
               <div className={"working-time-wrap"}>
                 <div className="flex-col">
                   <WorkingDaysHours />
                   <SpecialDays isGoogleVerification={isGoogleVerification}/>
-                </div> 
+                </div>
                 <div>
                 <div className={"specializations-section"}>
                 <h2 className={"specializations-section-title"}>Google Calendar</h2>
                  <CalendarAuth setGoogleVerification={setGoogleVerification} />
                 </div>
+                  <Reminders />
                   <Specializations />
                   <BufferTime />
                   <MeetingLink />
