@@ -11,7 +11,6 @@ import TutorService from "../../../api/services/Tutor";
 import {  useTutor, useTutorDispatch } from "../../../api/providers/TutorProvider";
 import confirm from "../../../components/confirm";
 import ChangePassword from "../../change-password";
-import Reminders from "../reminders";
 
 const ProfilePicture: FC<Any> = ({ props }) => {
   const tutor = useTutor();
@@ -139,7 +138,6 @@ const ProfilePicture: FC<Any> = ({ props }) => {
           </div>
         </div>
       </div>
-      <Reminders />
     </div>
   );
 };
