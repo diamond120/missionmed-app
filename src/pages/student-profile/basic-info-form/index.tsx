@@ -25,7 +25,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
   const [gender, setGender] = useState<string | undefined | null>('')
   const [pronouns, setPronouns] = useState<string | undefined | null>('')
   const [email, setEmail] = useState<string | undefined | null>('')
-  const [birthday, setBirthday] = useState(student.birthday)
+  const [birthday, setBirthday] = useState<string | undefined | null>(student.birthday)
   const [phone, setPhone] = useState<string | undefined | null>(student?.phoneNumber)
   const [location, setLocation] = useState<string | undefined | null>(student?.location)
   const [state, setState] = useState<string | undefined | null>(student?.state)
@@ -34,7 +34,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
   const [autoSelectedState, setAutoSelectedState] = useState<string>('')
 
   const countries = useMemo(() => countryList().getData(), [])
-  const [country, setCountry] = useState('')
+  const [country, setCountry] = useState<string>('')
 
   const labelStyle = 'original'
   const timezones = {
@@ -114,13 +114,12 @@ const BasicInfoForm: FC<any> = ({ props }) => {
     const myLng = pos.coords.longitude
 
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${myLat},${myLng}&key=${GOOGLE_MAP_API_KEY}&language=en`)
-      .then(response => response.json())
-      .then(address => {
+      .then((response) => response.json())
+      .then((address) => {
         setAutoSelectedLocation(`${address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'locality'))[0].long_name}, ${address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'country'))[0].long_name}`)
         setAutoSelectedState(address.results[5].address_components.filter((address_item: AddressDetails) => address_item.types.find(item => item === 'administrative_area_level_1'))[0].short_name)
       })
-      .catch(error => console.log(error));
-
+      .catch((error) => console.log(error))
   }
 
   const error = (err: { code: number; message: string }) => {
@@ -130,7 +129,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
   const handleSwitchCase = (val: boolean) => {
     setAutoSelected(val)
     if (val == true) {
-      const timezoneTitle = timezone.find(obj => obj.timezone === localTimezone.value);
+      const timezoneTitle = timezone.find((obj: any) => obj.timezone === localTimezone.value)
 
       form.setFieldValue('timezone', timezoneTitle.id);
       navigator.geolocation.getCurrentPosition(success, error)
@@ -140,21 +139,21 @@ const BasicInfoForm: FC<any> = ({ props }) => {
   const customSelect = () => {
     return (
       <Select style={{ width: 328 }} disabled={!editing}>
-        {timezone && timezone.map(option => (
-          <Option key={option.title} value={option.id}>{option.title}</Option>
+        {timezone && timezone.map((option: any) => (
+          <Select.Option key={option.title} value={option.id}>{option.title}</Select.Option>
         ))}
       </Select>
     )
   }
 
-  const optionsLocation: string[] = (profileStaticData.location) ? profileStaticData.location.map(l => ({ key: l.id, label: l.title, value: l.title })) : {}
-  const optionsState: string[] = (profileStaticData.state) ? profileStaticData.state.map(s => ({ key: s.id, label: s.title, value: s.title })) : {}
+  const optionsLocation: string[] = (profileStaticData.location) ? profileStaticData.location.map((l: any) => ({ key: l.id, label: l.title, value: l.title })) : {}
+  const optionsState: string[] = (profileStaticData.state) ? profileStaticData.state.map((s: any) => ({ key: s.id, label: s.title, value: s.title })) : {}
 
   const handleFilter = (inputValue: string, option: any) =>
     option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
 
 
-  const disabledDate: RangePickerProps['disabledDate'] = current => {
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
     return current && current > moment().endOf('day');
   };
 
@@ -169,7 +168,7 @@ const BasicInfoForm: FC<any> = ({ props }) => {
     )
   }
 
-  const studentTimezone = timezone.find(obj => obj.id == student?.timezone_id);
+  const studentTimezone = timezone.find((obj: any) => obj.id == student?.timezone_id)
 
   return (
     <div className={"basic-information"}>

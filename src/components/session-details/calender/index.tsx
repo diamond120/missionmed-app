@@ -2,13 +2,13 @@ import "./index.less"
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from '@fullcalendar/timegrid'
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Button, Form, Modal, Radio, Spin, message } from "antd";
 import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
 import { formatTime } from "../../../common/common";
 import { useTutor } from "../../../api/providers/TutorProvider";
-import { useUser } from "../../../api/providers/UserProvider";
+import { UserContext } from "../../../api/providers/UserProvider";
 import { useRef } from 'react';
 import moment from "moment";
 
@@ -37,7 +37,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
   const [weekAvailable, setWeekAvailable] = useState(true);
   const [weekDates,setWeekDates]= useState(null)
   const tutor = useTutor();
-  const user = useUser();
+  const { user } = useContext(UserContext);
   const handleDateClick = (dateInfo) => {
     const dateObjectEnd = new Date(dateInfo.endStr);
     const dateObjectStart = new Date(dateInfo.startStr);

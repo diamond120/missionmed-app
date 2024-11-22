@@ -81,7 +81,7 @@ const ProfilePicture: FC<any> = ({ props }) => {
         },
       });
     };
-    await confirm(handleConfirm, "Are you sure?", "You want to delete profile picture!");
+    await confirm({ handleOk: handleConfirm, title: 'Are you sure?', content: 'You want to delete profile picture!' })
   };
   const handleSave = () => {
     updatedStudent()

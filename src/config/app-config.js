@@ -1,14 +1,10 @@
 export const API_URL = import.meta.env.VITE_API_URL
-export const BASE_URL  = `${API_URL}/api`
+export const BASE_URL = `${API_URL}/api`
 export const GOOGLE_MAP_API_KEY = import.meta.env.VITE_GOOGLE_MAP_API_KEY
-export const TINYMCE_API_KEY =  import.meta.env.VITE_TINYMCE_API_KEY
+export const TINYMCE_API_KEY = import.meta.env.VITE_TINYMCE_API_KEY
 export const POST_HOG_KEY = import.meta.env.VITE_POST_HOG_KEY
 export const EXAM_APP_URL = import.meta.env.VITE_EXAM_APP_URL
 export const APP_URL = import.meta.env.VITE_APP_URL
 export const REACT_APP_API_KEY = import.meta.env.VITE_REACT_APP_API_KEY
 export const REACT_APP_CLIENT_ID = import.meta.env.VITE_REACT_APP_CLIENT_ID
 export const SCOPES = import.meta.env.VITE_SCOPES
-
-
-
-

@@ -8,6 +8,9 @@ import UnderConstructionPage from '../under-construction-page'
 import { useNavigate } from "react-router-dom"
 import { Loader } from "../../components/layout/Loader";
 
+/** 
+ * @deprecated - Not in use 2024-10-09
+ */
 const StudentReadingTraining = () => {
 
     const { Text } = Typography;

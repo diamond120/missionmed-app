@@ -74,7 +74,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
         setLoading(false);
         throw new Error(response.data.message)
       }
-    }catch(e){
+    }catch(e: any){
       setLoading(false);
       message.error(e.message);
     }
@@ -93,6 +93,9 @@ const AddException = ({title, callAdded, editedData = null }) => {
   const showModal = () => {
     setIsModalOpen(true);
     setModalTitle(title);
+    if (editedData) {
+      setIntialValue(editedData)
+    }
   };
 
   const handleOk = () => {
@@ -111,11 +114,6 @@ const AddException = ({title, callAdded, editedData = null }) => {
       });
   }
 
-  useEffect(() => {
-    if (editedData) {
-      setIntialValue(editedData)
-    }
-  }, [editedData, form]);
 
   const checkTimeFrame = async (rule, value) => {
     value = moment(value, format);
@@ -229,13 +227,13 @@ const AddException = ({title, callAdded, editedData = null }) => {
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
-          <> 
+          <div key='exception'>
             {loading == true ? (
               <Spin />
             ) : (
               <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Save</Button>
             )}
-          </>
+          </div>
         ]}
       >
         <Form form={form} className={'freeze-sessions add-exception-form'} layout="vertical" >
@@ -254,7 +252,7 @@ const AddException = ({title, callAdded, editedData = null }) => {
                     name="type"
                     rules={[{ required: true , message: 'Please choose type'}]}
                 >
-                <Radio.Group style={{ display: 'flex' }} onChange={() => { console.log('test')}}>
+                <Radio.Group style={{ display: 'flex' }}>
                     <Radio value="Off">Off</Radio>
                     <Radio value="Extra Availability">Extra Availability</Radio>
                 </Radio.Group>

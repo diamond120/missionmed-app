@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import svgr from 'vite-plugin-svgr' 
-// import vitePluginImp from 'vite-plugin-imp'
-import { getThemeVariables } from 'antd/dist/theme';
+import svgr from 'vite-plugin-svgr'
+import { getThemeVariables } from 'antd/dist/theme'
+import path from 'path'
+import eslintPlugin from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,35 +13,30 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    svgr({ 
-      svgrOptions: {
-        // svgr options
-      },
+    svgr({
+      svgrOptions: {}
     }),
-    // vitePluginImp({
-    //   libList: [
-    //     {
-    //       libName: 'antd',
-    //       style: (name) => `antd/es/${name}/style`,
-    //     },
-    //   ],
-    // }),
+    eslintPlugin({
+      cache: false,
+      include: ['./src//*.js', './src//*.jsx'],
+      exclude: []
+    })
   ],
   css: {
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
         modifyVars: getThemeVariables({
-         // dark: true,
+          // dark: true,
           // compact: true,
-        }),
-      },
+        })
+      }
     }
   },
   resolve: {
     alias: [
-      { find: /^~/, replacement: '' },
-    ],
+      // { find: /^~/, replacement: '' },
+      { find: '~', replacement: path.resolve(__dirname, 'src') }
+    ]
   }
-   
 })

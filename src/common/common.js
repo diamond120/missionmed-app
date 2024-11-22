@@ -1,10 +1,7 @@
 import moment from 'moment';
 import Payment from 'payment'
 
-export const getToken = () => {
-  const token = localStorage.getItem('jwt');
-  return token;
-}
+export const getToken = () =>  localStorage.getItem('jwt');
 
 export const makeOptions = (options) => {
   return options.map(o => ({ value: o.id, label: o.title }))
@@ -33,7 +30,7 @@ const formatHours = (hours, format = 'HH:mm') => {
 
 export const tutorWorkingHours = (workingHours, format) => {
   if (workingHours != null) {
-    const formattedWorkingHours = workingHours.reduce((obj, workingHour) => {
+    const formattedWorkingHours = workingHours?.reduce((obj, workingHour) => {
       if (workingHour.day == "Monday") {
         return { ...obj, isMondayOff: workingHour.dayOff, Monday: workingHour.dayOff ? [{ start: "", end: "" }] : formatHours(workingHour.hours, format) }
       } else if (workingHour.day == "Tuesday") {
@@ -76,9 +73,9 @@ export const checkSessionOnToday = (sessionDate) => {
 
 export const groupSessionsByDate = (sessions, orderBy = "asc") => {
   if (orderBy == "asc") {
-    sessions.sort(function (a, b) { return moment(a.date) - moment(b.date); });
+    sessions?.sort(function (a, b) { return moment(a.date) - moment(b.date); });
   } else {
-    sessions.sort(function (a, b) { return moment(b.date) - moment(a.date); });
+    sessions?.sort(function (a, b) { return moment(b.date) - moment(a.date); });
   }
   const formatedSessions = sessions.reduce((obj, session) => {
     obj[session.date] = obj[session.date] || [];

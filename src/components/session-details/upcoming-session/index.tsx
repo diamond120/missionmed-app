@@ -1,12 +1,12 @@
 import { Button, Form, Input, Modal, Tooltip } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
-import { useUser } from "../../../api/providers/UserProvider";
+import { UserContext } from "../../../api/providers/UserProvider";
 import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/common";
 import "./index.less";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink, credit }) => {
-  const user = useUser();
+  const { user } = useContext(UserContext);
 
   const isSessionOnToday = useMemo(
     () => checkSessionOnToday(upcomingInterview.date),
@@ -20,6 +20,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
 
   const handleClick = () => {
     setIsModalOpen(true)
+    form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
   }
 
   const handleSubmit = async () => {
@@ -43,8 +44,6 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
       callback();
     }
   };
-
-  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink});
 
   return (
     <>

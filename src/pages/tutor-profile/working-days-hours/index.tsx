@@ -306,7 +306,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                                                 dependencies={[["Monday", name, "end"]]}
                       >
                         <Select
@@ -346,7 +345,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Monday", name, "start"]]}
                       >
                       <Select
@@ -405,7 +403,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isMondayOff"}
             label="Day off"
-            initialValue={formattedWorkingHours.isMondayOff}
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isMondayOff}
@@ -438,7 +436,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Tuesday", name, "end"]]}
                       >
                         {/* <TimePicker
@@ -475,7 +472,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Tuesday", name, "start"]]}
                       >
                         {/* <TimePicker
@@ -534,6 +530,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isTuesdayOff"}
             label="Day off"
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isTuesdayOff}
@@ -566,7 +563,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Wednesday", name, "end"]]}
                       >
                         {/* <TimePicker
@@ -603,7 +599,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Wednesday", name, "start"]]}
                       >
                         {/* <TimePicker
@@ -663,6 +658,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isWednesdayOff"}
             label="Day off"
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isWednesdayOff}
@@ -695,7 +691,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Thursday", name, "end"]]}
                       >
                         {/* <TimePicker
@@ -732,7 +727,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Thursday", name, "start"]]}
                       >
                         {/* <TimePicker
@@ -792,6 +786,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isThursdayOff"}
             label="Day off"
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isThursdayOff}
@@ -824,7 +819,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Friday", name, "end"]]}
                       >
                         {/* <TimePicker
@@ -861,7 +855,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Friday", name, "start"]]}
                       >
                         {/* <TimePicker
@@ -920,6 +913,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isFridayOff"}
             label="Day off"
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isFridayOff}
@@ -952,7 +946,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Saturday", name, "end"]]}
                       >
                         {/* <TimePicker
@@ -989,7 +982,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Saturday", name, "start"]]}
                       >
                         {/* <TimePicker
@@ -1048,6 +1040,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isSaturdayOff"}
             label="Day off"
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isSaturdayOff}
@@ -1080,7 +1073,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Sunday", name, "end"]]}
                       >
                         {/* <TimePicker
@@ -1117,7 +1109,6 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
                           },
                           { validator: checkTimeFrame },
                         ]}
-                        initialValue={moment("9:00", format)}
                         dependencies={[["Sunday", name, "start"]]}
                       >
                         {/* <TimePicker
@@ -1175,6 +1166,7 @@ const WorkingDaysHours: FC<Any> = ({ props }) => {
             className="switch-btn"
             name={"isSundayOff"}
             label="Day off"
+            valuePropName="checked"
           >
             <Switch
               defaultChecked={formattedWorkingHours.isSundayOff}

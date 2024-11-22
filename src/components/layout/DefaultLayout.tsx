@@ -1,89 +1,71 @@
-import "./DefaultLayout.less"
-import { Layout } from "antd"
-import { CSSProperties, FC, Suspense, useEffect, useState } from "react"
-import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import { useBreakpoints } from "../screen"
-import SidebarMenu from "../sidebar-menu"
-import User from "../../api/services/User";
-import { useUserDispatch, useUser } from "../../api/providers/UserProvider.jsx";
-import Student from "../../api/services/Student.js";
-import { useStudentDispatch } from "../../api/providers/StudentProvider.jsx";
-import { useTutorDispatch } from "../../api/providers/TutorProvider.jsx";
-import Tutor from "../../api/services/Tutor.js";
-import ProfileStaticDataContext from "../../api/context/ProfileStaticDataContext";
-import CommonService from "../../api/services/Common";
-import NotificationContext from "../../api/context/NotificationContext";
+import './DefaultLayout.less'
+import { Layout } from 'antd'
+import { FC, Suspense, useContext, useEffect, useState } from 'react'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import SidebarMenu from '../sidebar-menu'
+import { UserContext } from '../../api/providers/UserProvider.jsx'
+import Student from '../../api/services/Student.js'
+import { useStudentDispatch } from '../../api/providers/StudentProvider.jsx'
+import { useTutorDispatch } from '../../api/providers/TutorProvider.jsx'
+import Tutor from '../../api/services/Tutor.js'
+import ProfileStaticDataContext from '../../api/context/ProfileStaticDataContext'
+import CommonService from '../../api/services/Common'
+import NotificationContext from '../../api/context/NotificationContext'
+import { getToken } from '~/common/common'
 
-const { Sider, Content } = Layout
-
-const siderStyle: CSSProperties = {
-  maxWidth: "200px",
-  width: "20%",
-  minHeight: "100%",
-  backgroundColor: "#1E1450",
-}
+const { Content } = Layout
 
 export const DefaultLayout: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const dispatch = useUserDispatch();
-  const user = useUser();
-  const studentDispatch = useStudentDispatch();
-  const tutorDispatch = useTutorDispatch();
-  const [profileStaticData, setProfileStaticData] = useState({});
+  const { user, dispatch } = useContext(UserContext)
+  const studentDispatch = useStudentDispatch()
+  const tutorDispatch = useTutorDispatch()
+  const [profileStaticData, setProfileStaticData] = useState({})
   const [loading, setLaoding] = useState(true)
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-  const [toggle,setToggle] = useState(false)
-  const resetTutorContext = () => {
-    tutorDispatch({
-      type: "reset"
-    })
-  }
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
+  const [toggle, setToggle] = useState<boolean>(false)
 
-  const resetStudentContext = () => {
-    studentDispatch({
-      type: "reset"
-    });
-  }
-
-  const getUserDetails = async (token) => {
-    const result = await User.getUserDetails(token);
+  const fetchUser = async () => {
+    const result = await CommonService.getUserDetails()
     dispatch({
-      type: "set",
-      id: result.data.data.id,
-      name: result.data.data.name,
-      email: result.data.data.email,
-      role: result.data.data.role
+      type: 'set',
+      payload: {
+        id: result.data.data.id,
+        name: result.data.data.name,
+        email: result.data.data.email,
+        role: result.data.data.role
+      }
     })
   }
 
   const getTokenResponse = async () => {
     try {
-        const response =  await CommonService.getAPI("/check-jwt-token");
-        if (response.data.status_code == 401) {
-          localStorage.clear();
-          navigate('/sign_in')
-        }
-      } catch (e) {
-        // navigate('/sign_in')
+      const response = await CommonService.getAPI('/check-jwt-token')
+      if (response.data.status_code == 401) {
+        localStorage.clear()
+        navigate('/sign_in')
       }
+    } catch (e) {
+      // navigate('/sign_in')
+    }
   }
 
   useEffect(() => {
-    if(location.pathname.startsWith('/impersonate')) {
+    if (location.pathname.startsWith('/impersonate')) {
       localStorage.clear()
-      return;
+      return
     }
-    getTokenResponse();
-    if (!localStorage.getItem("jwt")) {
-      navigate("/sign_in")
+    getTokenResponse()
+    if (!getToken()) {
+      navigate('/sign_in')
     } else {
-      if (Object.keys(user).length === 0) {
-        getUserDetails(localStorage.getItem("jwt"));
+      if (Object.keys(user).length === 0 || !user?.id) {
+        fetchUser()
       }
-      (async () => {
+      ;(async () => {
         await setLaoding(true)
-        const res = await CommonService.getProfileStaticData();
+        const res = await CommonService.getProfileStaticData()
         await setProfileStaticData({
           location: res.data.data.location,
           state: res.data.data.state,
@@ -94,21 +76,21 @@ export const DefaultLayout: FC = () => {
           degree: res?.data?.data?.degree
         })
         await setLaoding(false)
-      })();
+      })()
       // navigate("/")
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    if (Object.keys(user).length > 0) {
-      if (user.role == "student") {
+    if (Object.keys(user).length > 0 && user?.id) {
+      if (user.role == 'student') {
         // resetTutorContext();
         const getStudentProfile = async () => {
           try {
             await studentDispatch({ type: 'loading', loading: true })
-            const result = await Student.getProfile();
+            const result = await Student.getProfile()
             studentDispatch({
-              type: "add",
+              type: 'add',
               id: result.data.data.id,
               userId: result.data.data.user_id,
               fullName: result.data.data.full_name ?? null,
@@ -145,15 +127,15 @@ export const DefaultLayout: FC = () => {
             studentDispatch({ type: 'loading', loading: false })
           }
         }
-        getStudentProfile();
+        getStudentProfile()
       } else {
         //resetStudentContext();
         const getTutorProfile = async () => {
           try {
             await tutorDispatch({ type: 'loading', loading: true })
-            const result = await Tutor.getProfile();
+            const result = await Tutor.getProfile()
             await tutorDispatch({
-              type: "add",
+              type: 'add',
               id: result.data.data.id,
               userId: result.data.data.user_id,
               fullName: result.data.data.full_name ?? null,
@@ -178,7 +160,14 @@ export const DefaultLayout: FC = () => {
               applicationReview: result.data.data.application_review ?? null,
               applicationReviewPrice: result.data.data.application_review_price ?? null,
               profilePicture: result.data.data.profile_picture ?? null,
-              educations: result.data.data.tutor_educations.length > 0 ? result.data.data.tutor_educations.map((edu) => ({ school: edu.school ?? "", degree: edu.degree ?? "", is_primary: edu.is_primary  })) : [],
+              educations:
+                result.data.data.tutor_educations.length > 0
+                  ? result.data.data.tutor_educations.map((edu) => ({
+                      school: edu.school ?? '',
+                      degree: edu.degree ?? '',
+                      is_primary: edu.is_primary
+                    }))
+                  : [],
               lessionTypeID: result.data.data.lession_type_id ?? null,
               applicationLessionTime: result.data.data.application_lession_time ?? null,
               interviewLessionTime: result.data.data.interview_lession_time ?? null,
@@ -199,19 +188,12 @@ export const DefaultLayout: FC = () => {
             tutorDispatch({ type: 'loading', loading: false })
           }
         }
-        getTutorProfile();
+        getTutorProfile()
       }
     }
+  }, [user])
 
-    return () => {
-      // resetTutorContext();
-      // resetStudentContext();
-    };
-  }, [user]);
-
-  const { isTablet } = useBreakpoints()
-  if (loading)
-    return null
+  if (loading) return null
 
   const closeFunction = () => {
     setToggle(false)
@@ -220,15 +202,15 @@ export const DefaultLayout: FC = () => {
   return (
     <ProfileStaticDataContext.Provider value={profileStaticData}>
       <NotificationContext.Provider value={{ unreadNotificationCount, setUnreadNotificationCount }}>
-        <Layout className={"default"} hasSider>
+        <Layout className={'default'} hasSider>
           {/* {!isTablet && <SidebarMenu />} */}
-          <SidebarMenu className={`${toggle ? "active-sidebar":""}`} callBack={closeFunction}/>
+          <SidebarMenu className={`${toggle ? 'active-sidebar' : ''}`} callBack={closeFunction} />
           <Content>
-            <Suspense>  
-              <div className={`sideBar-menu-toggle ${toggle ? "active":""}`} onClick={()=>setToggle(!toggle)}>
-                <div className="bar1"></div>
-                <div className="bar2"></div>
-                <div className="bar3"></div>
+            <Suspense>
+              <div className={`sideBar-menu-toggle ${toggle ? 'active' : ''}`} onClick={() => setToggle(!toggle)}>
+                <div className='bar1'></div>
+                <div className='bar2'></div>
+                <div className='bar3'></div>
               </div>
               <Outlet />
             </Suspense>

@@ -3,14 +3,11 @@ import { Form, Input, Button, message } from 'antd';
 import { ReactComponent as SignInLogo } from "../../components/icon/assets/sign-in-logo.svg"
 import CommonService from "../../api/services/Common";
 import { useNavigate, useParams } from "react-router-dom"
-import { useState } from "react";
 
 
 const ResetPassword = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
-    const [errorMessage, setErrorMessage] = useState('');
-
     const { token } = useParams();
 
     const handleSubmit = async () => {
@@ -19,7 +16,7 @@ const ResetPassword = () => {
             await form.validateFields();
             const formData = form.getFieldsValue(true);
             formData.token = token;
-            let response = await CommonService.postAPI('/reset-password', formData);
+            const response = await CommonService.postAPI('/reset-password', formData);
             if (response.data.success == true) {
                 // throw new Error(response.data.message) 
                 message.success(response.data.message);
@@ -27,8 +24,8 @@ const ResetPassword = () => {
             } else {
                 throw new Error(response.data.message)
             }
-        } catch (e) {
-            message.error(e);
+        } catch (e: any) {
+            message.error(e?.message);
         }
     }
 

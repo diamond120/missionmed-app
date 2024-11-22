@@ -2,17 +2,18 @@ import "./index.less"
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from "@fullcalendar/daygrid"
 import timeGridPlugin from '@fullcalendar/timegrid'
-import { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {formatTime} from "../../../common/common";
-import { Button, Form, Modal, Radio, Spin, message } from "antd";
+import { Button, Form, FormInstance, Modal, Radio, Spin, message } from "antd";
 import CommonService from "../../../api/services/Common";
 import { LoadingOutlined } from '@ant-design/icons';
-import { useUser } from "../../../api/providers/UserProvider";
+import { UserContext } from "../../../api/providers/UserProvider";
 import { useTutor } from "../../../api/providers/TutorProvider";
 import { useRef } from 'react';
 import moment from "moment";
+import { Slot } from "./types";
 
-function formatDate(inputDateStr) {
+function formatDate(inputDateStr: string) {
   const inputDate = new Date(inputDateStr);
   const year = inputDate.getFullYear();
   const month = (inputDate.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-indexed
@@ -26,31 +27,45 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev}) => {
+interface Props {
+  tutorId: number | string
+  studentId: number | string
+  form: FormInstance
+  rescheduleDate: string
+  next: () => void
+  timezone: string
+  prev: () => void
+}
+
+const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, next, timezone, prev }) => {
   const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
-  const [filterDateSet, setFilterDateSet] = useState(false);
+  const [filterDateSet, setFilterDateSet] = useState<boolean>(false);
   const [spinning, setSpinning] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [subSlotList, setSubSlotList] = useState<any>([]);
-  const [weekAvailable, setWeekAvailable] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [subSlotList, setSubSlotList] = useState<Array<Slot>>([])
+  const [weekAvailable, setWeekAvailable] = useState<boolean>(true);
   const [weekDates,setWeekDates]= useState(null)
-  const user = useUser();
+  const { user } = useContext(UserContext);
   const tutor = useTutor();
     
-    const handleDateClick = (dateInfo) => {
+  const handleDateClick = (dateInfo: { endStr: string | Date; startStr: string | Date }) => {
+    try {
       const dateObjectEnd = new Date(dateInfo.endStr);
-      const dateObjectStart = new Date(dateInfo.startStr); 
+      const dateObjectStart = new Date(dateInfo.startStr);
       const data = {
-        'startDate' :  dateObjectStart.toISOString().split('T')[0],
-        'endDate' : dateObjectEnd.toISOString().split('T')[0],
+        'startDate': dateObjectStart.toISOString().split('T')[0],
+        'endDate': dateObjectEnd.toISOString().split('T')[0],
       };
       setfilterDate(data);
       setFilterDateSet(true);
+    } catch (error: any) {
+      console.error(error)
     }
+  }
 
-    const getSlotsist = async (tutorId) => {
+    const getSlotsist = async (tutorId: number) => {
       setSpinning(true);
       try {
         const data = {
@@ -84,7 +99,7 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
           throw new Error(response.data.message);
           prev() 
         }
-      } catch (e) {
+      } catch (e: any) {
         setTimeout(() => {
           setSpinning(false);
         }, 3000);
@@ -93,7 +108,7 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
       }
     };
 
-    const getWeekAvailable = async (tutorId, studentId) => {
+    const getWeekAvailable = async (tutorId: string | number, studentId: string | number) => {
       try {
         const params = {
           startDate : filterDate.startDate,
@@ -181,7 +196,7 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
 
     }, [tutorId,filterDate,filterDateSet,subSlotList]);
 
-    useEffect(() => {
+  useEffect(() => {
       const addClassToParent = () => {
         applyZIndexToUnavailable();
       };
@@ -240,7 +255,7 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
           setSpinning(false);
           throw new Error(response.data.message); 
         }
-      } catch (e) {
+      } catch (e: any) {
         setSpinning(false);
         message.error(e.message);
       }
@@ -279,7 +294,8 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
       calendarApi.gotoDate(date); // Navigate to the selected date
    } };
    const weekStart = moment(weekDates?.week_start);
-   const weekNumber = weekStart.week();
+  const weekNumber = weekStart.week();
+
     return (
       <>
       {spinning && (
@@ -376,4 +392,4 @@ const Calender = ({tutorId, studentId, form, rescheduleDate,next,timezone,prev})
 
 }
 
-export default Calender
+export default React.memo(Calender)
