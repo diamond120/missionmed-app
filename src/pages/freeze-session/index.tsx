@@ -97,7 +97,7 @@ const FreezeSession = ({title,moduleType,addFreezeSession, sessionType='', showC
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
-            <>
+            <div key='freeze-footer'>
            
             {loading == true ? (
               <Spin />
@@ -105,14 +105,14 @@ const FreezeSession = ({title,moduleType,addFreezeSession, sessionType='', showC
             <>
           <Button 
             className={"secondary-button"} 
-            onClick={() => sessionType ? (setIsModalOpen(false), showCancelModal()) :handleSubmit() }
+            onClick={() => sessionType ? (setIsModalOpen(false), showCancelModal()) :handleCancel() }
           >
             Cancel
           </Button>
             <Button className={"primary-button"} htmlType="submit" onClick={handleSubmit}>Freeze Sessions</Button>
             </>
             )}
-          </>
+          </div>
            
         ]}
       >

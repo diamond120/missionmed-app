@@ -107,7 +107,7 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
   const handleSwitchCase = (val: boolean) => {
     setAutoSelectedTimezone(val);
     if (val == true) {
-      const timezoneTitle = timezone.find(obj => obj.timezone == localTimezone.value);
+      const timezoneTitle = timezone.find((obj: any) => obj.timezone == localTimezone.value);
       form.setFieldValue('timezone', timezoneTitle.id);
       navigator.geolocation.getCurrentPosition(success, error)
     }
@@ -116,8 +116,8 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
   const customSelect = () => {
     return (
       <Select style={{ width: 328 }} disabled={!editing}>
-        {timezone && timezone.map(option => (
-          <Option key={option.title} value={option.id}>{option.title}</Option>
+        {timezone && timezone.map((option: any) => (
+          <Select.Option key={option.title} value={option.id}>{option.title}</Select.Option>
         ))}
       </Select>
     )
@@ -131,7 +131,7 @@ const BasicInfoForm: FC<Any> = ({ props }) => {
     )
   }
 
-  const studentTimezone = timezone.find(obj => obj.id == tutor?.timezone_id);
+  const studentTimezone = timezone.find((obj: any) => obj.id == tutor?.timezone_id);
 
   return (
     <div className={"basic-information"}>

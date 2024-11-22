@@ -14,7 +14,7 @@ const StudentMockInterview = () => {
   const [upcomingInterview, setUpcomingInterview] = useState({});
   const [upcomingSessions, setUpcomingSessions] = useState([]);
   const [pastSessions, setPastSessions] = useState([]);
-  const [agenda, setAgenda] = useState(null);
+  const [agenda, setAgenda] = useState<string | null>(null);
   const [isOpenReschedule, setIsOpenReschedule] = useState(false);
   const [rescheduleSessionId, setRescheduleSessionId] = useState(null);
   const [student, setStudentData] = useState('');
@@ -24,12 +24,12 @@ const StudentMockInterview = () => {
 
   const BookingFor = 'Mock interviews';
 
-  const handleReschedule = (sessionId) => {
+  const handleReschedule = (sessionId: number) => {
     setIsOpenReschedule(true);
     setRescheduleSessionId(sessionId);
   }
 
-  const handleOpen = (state) => {
+  const handleOpen = (state: boolean) => {
     setIsOpenReschedule(state);
   }
 
@@ -38,7 +38,7 @@ const StudentMockInterview = () => {
   }
 
   const updateUpcomingSession = (sessionId, data) => {
-    const updatedSessions = upcomingSessions?.data?.map(session => {
+    const updatedSessions = upcomingSessions?.data?.map((session: any) => {
       if (session.id == sessionId) {
         return { ...session, ...data }
       } else {
@@ -52,7 +52,7 @@ const StudentMockInterview = () => {
       }
     });
     if (sessionId == upcomingInterview.id) {
-      setUpcomingInterview(prev => ({
+      setUpcomingInterview((prev) => ({
         ...prev, ...{
           date: data.date,
           session_start_time: data.session_start_time,
@@ -63,7 +63,7 @@ const StudentMockInterview = () => {
   }
 
   const updatePastSession = (id, data = {}) => {
-    const updatedSessions = pastSessions?.data?.map(session => {
+    const updatedSessions = pastSessions?.data?.map((session) => {
       if (session.id == id) {
         return { ...session, ...data };
       } else {
@@ -79,7 +79,6 @@ const StudentMockInterview = () => {
   }
 
   const CheckLastMock = async() => {
-    console.log("function")
     const response = await CommonService.postAPI("/student/check-last-mock");
     if (response.data.success) {
       if(response.data.data.hasRating == false)
@@ -129,7 +128,7 @@ const StudentMockInterview = () => {
     }
   };
 
-  const handleEditAgenda = async (agendaDetails, sessionId = null) => {
+  const handleEditAgenda = async (agendaDetails: string, sessionId = null) => {
     const updateSessionId = sessionId ?? upcomingInterview?.id 
     try {
       const data = {
@@ -183,7 +182,7 @@ const StudentMockInterview = () => {
     }
     if (response.data.success) {
       const content = response.data.data[pageNameResponseKey[pageName]]
-      const sessionUpdateHandler = (prevValue) => {
+      const sessionUpdateHandler = (prevValue: any) => {
         return {
           ...content,
           data: [

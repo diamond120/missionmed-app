@@ -1,17 +1,17 @@
 import "./index.less";
 import { Button, Modal, Spin, message } from "antd";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useNavigate } from "react-router-dom";
 import FreezeSession from "../freeze-session";
-import { useUser } from "../../api/providers/UserProvider";
+import { UserContext } from "../../api/providers/UserProvider";
 const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSession}) => {
   const navigate = useNavigate();
   
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState("");
   const [loading, setLoading] = useState(false);
-  const user = useUser();
+  const { user } = useContext(UserContext);
   const userRole = user.role;
   const handleSubmit = async () => {
     try{
@@ -73,7 +73,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
         className={"mock-interview-modal "}
         width={"max-content"}
         footer={[
-          <>
+          <div key='cancel-session'>
           {loading == true ? (
             <Spin />
           ) : (
@@ -91,7 +91,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
             <Button className={"primary-button"} style={{backgroundColor: 'red'}} htmlType="submit" onClick={handleSubmit}>{addUpcomingSession.session_type == 'Recurring Session' ? 'Cancel Sessions' :  'Cancel Session'}</Button>
             </>
           )}
-          </>
+          </div>
         ]}
         >
         <div>

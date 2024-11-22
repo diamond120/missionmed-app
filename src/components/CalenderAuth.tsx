@@ -23,10 +23,12 @@ const CalendarAuth = ({setGoogleVerification}) => {
         })
         .then(() => {
           const authInstance = gapi.auth2.getAuthInstance();
-          authInstance.isSignedIn.listen(updateSigninStatus);
-          updateSigninStatus(authInstance.isSignedIn.get());
+          if (authInstance) {
+            authInstance?.isSignedIn?.listen(updateSigninStatus);
+            updateSigninStatus(authInstance?.isSignedIn?.get());
+          }
         })
-        .catch((error) => {
+        .catch((error: any) => {
           console.error("Error initializing Google API client:", error);
         });
     };
@@ -41,23 +43,27 @@ const CalendarAuth = ({setGoogleVerification}) => {
         setAccessToken(response.data.data); 
         console.log('success get access token', response.data.data);
       }
-    } catch (error) {
-       throw new Error(error.message);
+    } catch (error: any) {
+       throw new Error(error?.message);
     }
   }
 
   const updateSigninStatus = (isSignedIn) => {
-    setIsSignedIn(isSignedIn);
-    if (isSignedIn) {
-      const authInstance = gapi.auth2.getAuthInstance();
-      const currentUser = authInstance.currentUser.get();
-      if (currentUser) {
-        const userProfile = currentUser.getBasicProfile();
-        const email = userProfile ? userProfile.getEmail() : '';
-        setFullName(email); // Update email when signed in
+    try {
+      setIsSignedIn(isSignedIn);
+      if (isSignedIn) {
+        const authInstance = gapi.auth2.getAuthInstance();
+        const currentUser = authInstance.currentUser.get();
+        if (currentUser) {
+          const userProfile = currentUser.getBasicProfile();
+          const email = userProfile ? userProfile.getEmail() : '';
+          setFullName(email); // Update email when signed in
+        }
+      } else {
+        setFullName(''); // Clear fullName if signed out
       }
-    } else {
-      setFullName(''); // Clear fullName if signed out
+    } catch (error: any) {
+      console.error(error)
     }
   };
   
@@ -82,7 +88,7 @@ const CalendarAuth = ({setGoogleVerification}) => {
         console.error("Login failed");
       }
     })
-    .catch((error) => {
+    .catch((error: any) => {
       console.error("Error during login", error);
     });
   };
@@ -138,7 +144,7 @@ const CalendarAuth = ({setGoogleVerification}) => {
     </button>
   );
   
-  const GoogleAuthStatus = ({ email }) => (
+  const GoogleAuthStatus = ({ email }: { email: string }) => (
     <p>
       You are connected with <b>{email}</b>
     </p>

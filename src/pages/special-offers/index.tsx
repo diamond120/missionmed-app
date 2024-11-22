@@ -44,8 +44,8 @@ function SpecialOffers() {
         />
 
         <div className='card-container' onClick={() => window.open('https://zhangshsc.com.au/', '_blank')} >
-          {Array.from({ length: 1 })?.map(() => (
-            <div className='card'>
+          {Array.from({ length: 1 })?.map((item,index) => (
+            <div className='card' key={index}>
               <div className='card-header'>
                 <label>Zhang’s HSC Coaching</label>
                 <span>11 State Ranks in Physics, Chemistry (2023)</span>

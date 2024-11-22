@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 const { TextArea } = Input;
 
 const Agenda = ({agenda, handleEditAgenda}) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
 
   const handleClick = () => {
@@ -17,7 +17,7 @@ const Agenda = ({agenda, handleEditAgenda}) => {
       const values = await form.validateFields();
       handleEditAgenda(values.agenda);
       setIsModalOpen(false);
-    }catch(e){
+    } catch (e: any) {
       message.error(e.message);
     }
   };

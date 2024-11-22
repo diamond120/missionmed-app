@@ -1,12 +1,12 @@
 import { Button, Form, Input, Modal, Tooltip } from "antd";
 import { CalendarOutlined } from "@ant-design/icons";
-import { useUser } from "../../../api/providers/UserProvider";
+import { UserContext } from "../../../api/providers/UserProvider";
 import { formatDateV1, checkSessionOnToday, formatTime } from "../../../common/common";
 import "./index.less";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, handleEditLink }) => {
-  const user = useUser();
+  const { user } = useContext(UserContext);
   const isSessionOnToday = useMemo(
     () => checkSessionOnToday(upcomingInterview.date),
     [upcomingInterview.date]
@@ -18,19 +18,22 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
 
   const handleClick = () => {
     setIsModalOpen(true)
+    form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
   }
 
   const handleSubmit = async () => {
-
-    const values = await form.validateFields();
-    const data = {
-      link: values.sessionLink,
-      sessionId: values.sessionId
+    try {
+      const values = await form.validateFields();
+      const data = {
+        link: values.sessionLink,
+        sessionId: values.sessionId
+      }
+      handleEditLink(data);
+      upcomingInterview['sessionLink'] = values.sessionLink;
+      setIsModalOpen(false);
+    } catch (error: any) {
+      console.error(error)
     }
-    handleEditLink(data);
-    upcomingInterview['sessionLink'] = values.sessionLink;
-    setIsModalOpen(false);
-
   };
 
   const handleCancel = () => {
@@ -44,8 +47,6 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
       callback();
     }
   };
-
-  form.setFieldsValue({ sessionLink: upcomingInterview.sessionLink });
 
   return (
     <>

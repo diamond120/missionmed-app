@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, message, Modal, Tabs } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
-import { useUser } from "../../../api/providers/UserProvider";
 import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
 import "./index.less";
 import CancleSession from "../../../pages/cancle-session";
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import { PageInfoType } from "../../session-details/my-sessions/types";
+import { UserContext } from "~/api/providers/UserProvider";
 
 const SessionList = ({
   date,
@@ -40,7 +40,7 @@ const SessionList = ({
 );
 
 const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, handleEditLink, cancleUpSession, handleEditAgenda }) => {
-  const user = useUser();
+  const { user } = useContext(UserContext);
   const userRole = user.role;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
@@ -126,7 +126,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard 
+                  Discard
                 </Button>
                 <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
                   Save Changes
@@ -135,8 +135,8 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             ]}
           >
             <Form form={formAgenda} layout="vertical">
-              <Form.Item 
-              label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
+              <Form.Item
+              label="Here you can put down your thoughts and questions to your tutor on the upcoming session"
               name="agenda"
               rules={[{required:true}]}
               initialValue={session.agenda}
@@ -220,7 +220,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             footer={[
               <div key="buttonGroup" className='button-group'>
                 <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard 
+                  Discard
                 </Button>
                 <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
                   Save Changes
@@ -229,9 +229,9 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             ]}
           >
             <Form form={formAgenda} layout="vertical">
-              <Form.Item 
-              label="Here you can put down your thoughts and questions to your tutor on the upcoming session" 
-              name="agenda" 
+              <Form.Item
+              label="Here you can put down your thoughts and questions to your tutor on the upcoming session"
+              name="agenda"
               rules={[{required:true}]}
               initialValue={session.agenda}
               >
@@ -427,6 +427,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                       />
                 ))}
               {Object.keys(formatedUpcomingSessios).length > 0 && pageInfo.upcoming.hasMore && (
+                /* eslint-disable react/no-unknown-property */
                 <Button
                   type='primary'
                   className='primary-button'
@@ -434,6 +435,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   iconPosition='end'
                   onClick={() => loadMore('upcoming')}
                 >Load More</Button>
+                /* eslint-enable react/no-unknown-property */
               )}
               {
                 (Object.keys(formatedUpcomingSessios).length <= 0) &&
@@ -465,6 +467,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   />
               ))}
               {Object.keys(formatedpastSessions).length > 0 && pageInfo.past.hasMore && (
+                /* eslint-disable react/no-unknown-property */
                 <Button
                   type='primary'
                   className='primary-button'
@@ -472,6 +475,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                   iconPosition='end'
                   onClick={() => loadMore('past')}
                 >Load More</Button>
+                /* eslint-enable react/no-unknown-property */
               )}
               {
                 (Object.keys(formatedpastSessions).length <= 0) &&

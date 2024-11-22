@@ -1,7 +1,13 @@
 import { Modal } from "antd";
 import { WarningOutlined } from '@ant-design/icons';
 
-const confirm = async (handleOk, title="Do you Want to delete it?", content="") => {
+interface Props {
+  handleOk: () => void
+  title: string
+  content?: string | null
+}
+
+const confirm = async ({ handleOk, title = 'Do you Want to delete it?', content = '' }: Props) => {
     Modal.confirm({
       title: title,
       icon: <WarningOutlined />,
