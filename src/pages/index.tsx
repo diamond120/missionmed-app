@@ -2,9 +2,9 @@ import { FC, lazy, memo } from 'react'
 import { Outlet, RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { DefaultLayout } from '../components/layout'
 import { LayoutWithoutLogin } from '../components/layout/LayoutWithoutLogin'
-// import { calendarLayout } from '../components/layout/calendarLayout'
+import { calendarLayout } from '../components/layout/calendarLayout'
 import { Loader } from '../components/layout/Loader'
-// import TutorCalendar from './tutor-calendar-teaching'
+import TutorCalendar from './tutor-calendar-teaching'
 
 const ForgotPassword = lazy<FC>(() => import('./forgot-password'))
 const ResetPassword = lazy<FC>(() => import('./reset-password'))
@@ -206,19 +206,19 @@ const routes: RouteObject[] = [
         index: true
       }
     ]
-  }
+  },
 
-  //   {
-  //     Component: calendarLayout,
-  //     loader: () => <Loader spinning />,
-  //     children: [
-  //       {
-  //         Component: TutorCalendar,
-  //         path: '/tutor-calendar/:ID/:timezone?',
-  //         index: true
-  //       }
-  //     ]
-  //   }
+  {
+    Component: calendarLayout,
+    loader: () => <Loader spinning />,
+    children: [
+      {
+        Component: TutorCalendar,
+        path: '/tutor-calendar/:ID/:timezone?',
+        index: true
+      }
+    ]
+  }
 ]
 
 const router = createBrowserRouter(routes)
