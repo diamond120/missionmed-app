@@ -1,9 +1,11 @@
 import { gapi } from 'gapi-script'
-import { message, Form, Spin } from 'antd'
+import { message, Form, Spin, Button } from 'antd'
 import { useEffect, useState } from 'react'
 import CommonService from '../api/services/Common'
 import { REACT_APP_CLIENT_ID, SCOPES, REACT_APP_API_KEY } from '../config/app-config'
 import google from '../assets/images/google.png'
+import { RedoOutlined } from '@ant-design/icons'
+import confirm from './confirm'
 
 interface CalendarAuthType {
   setGoogleVerification: (value: boolean) => void
@@ -127,6 +129,23 @@ export default function CalendarAuth({ setGoogleVerification }: CalendarAuthType
     })
   }
 
+  const handleSyncNow = async () => {
+    setLoading(true)
+
+    const response = await CommonService.postAPI('/tutor/sync-google-calendar').catch((error) => {
+      message.error(
+        error?.response?.data?.message ?? error?.response?.message ?? error?.message ?? 'Something went wrong, please try again later.'
+      )
+      setLoading(false)
+    })
+    if (response.data?.success) {
+      message.success(response.data?.data?.message ?? 'Google Calendar will be synced soon')
+    } else {
+      message.error(response.data.message ?? 'Error syncing Google Calendar')
+    }
+    setLoading(false)
+  }
+
   interface GoogleAuthButtonType {
     onClick: () => void
     label: string
@@ -160,11 +179,29 @@ export default function CalendarAuth({ setGoogleVerification }: CalendarAuthType
                 <Spin />
                 {tokenData?.access_token && <GoogleAuthStatus email={tokenData.autheticate_user_email} />}
                 <GoogleAuthButton onClick={handleSignOutClick} label='Sign out with Google' isLoading={loading} />
+                <Button className={'secondary-button mt-3 w-max'} style={{ marginTop: '1rem', width: 'max-content' }} disabled>
+                  <RedoOutlined /> Sync Now
+                </Button>
               </>
             ) : tokenData?.access_token ? (
               <>
                 <GoogleAuthStatus email={tokenData.autheticate_user_email} />
                 <GoogleAuthButton onClick={handleSignOutClick} label='Sign out with Google' isLoading={loading} />
+                <Button
+                  className={'secondary-button mt-3 w-max'}
+                  onClick={() =>
+                    confirm({
+                      handleOk: handleSyncNow,
+                      title: 'Confirm google calendar sync now'
+                    })
+                  }
+                  style={{
+                    marginTop: '1rem',
+                    width: 'max-content'
+                  }}
+                >
+                  <RedoOutlined /> Sync Now
+                </Button>
               </>
             ) : (
               <>
