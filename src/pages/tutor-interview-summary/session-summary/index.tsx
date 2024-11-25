@@ -7,8 +7,10 @@ import { RcFile } from "antd/lib/upload";
 import { useState } from "react";
 import { getToken, fileName } from "../../../common/common";
 import { BASE_URL } from "../../../config/app-config";
+import confirm from "~/components/confirm";
+import axios from "axios";
 
-const SessionSummary = ({ uploadReport, reportUrl }) => {
+const SessionSummary = ({ uploadReport, reportUrl, sessionId }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fileUrl, setFileUrl] = useState<string>("");
   const [form] = Form.useForm();
@@ -82,6 +84,22 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
     setFileList([]);
   };
 
+  const handleRemove = async(sessionId: number, reportUrl: string) => {
+    const handleConfirm = async () => {
+      await axios.post(`${BASE_URL}/delete/report`, {
+        sessionId,
+        reportUrl
+      }, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        }
+      });
+      setFileUrl("")
+      setReUpload(true);
+      setFileList([])
+    };
+    await confirm({handleOk: handleConfirm, title: 'Are you sure?', content: 'You want to delete session summary!' })
+  };
   return (
     <>
       <div className={"session-summary con-box"}>
@@ -171,6 +189,9 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
                   onClick={handleReUpload}
                 >
                   Re-upload
+                </Button>
+                <Button onClick={() => handleRemove(sessionId, reportUrl)} className={"secondary-button"} style={{backgroundColor: 'red', color: 'white'}}>
+                  Delete
                 </Button>
               </div>
             </div>
