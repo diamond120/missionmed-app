@@ -112,11 +112,6 @@ const StudentTeachingSession = () => {
     setIsOpenReschedule(state);
   }
 
-  useEffect(() => {
-    getMockInterviewDetails();
-  }, []);
-
-
   const updateUpcomingSession = (sessionId, data) => {
     // const updatedSessions = upcomingSessions.map(session => {
     //   if(session.id == sessionId ){

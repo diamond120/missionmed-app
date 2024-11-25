@@ -452,8 +452,8 @@ const AIStory = () => {
                   ]}
                  >
                    <Text>
-                        {story?.content.map((text) =>(
-                            <p className="mt_2">{text}</p>
+                        {story?.content.map((text, index) =>(
+                            <p className="mt_2" key={index}>{text}</p>
                         ))}
                     </Text>
                 </Card>

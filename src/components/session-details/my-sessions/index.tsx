@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, message, Modal, Tabs } from "antd";
-import RateSession from "../../../components/rate-session";
-import { formatDateV1 } from "../../../common/common";
-import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
+import RateSession from "~/components/rate-session";
+import { groupSessionsByDate, formatTime, formatDateV1 } from "~/common/common";
 import "./index.less";
-import CancleSession from "../../../pages/cancle-session";
+import CancleSession from "~/pages/cancle-session";
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import { PageInfoType } from "./types";
 import { UserContext } from "~/api/providers/UserProvider";
@@ -55,6 +54,8 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   const handleClick = (type) => {
     setModalType(type);
     setIsModalOpen(true)
+    if (type === 'agenda') formAgenda.setFieldValue('agenda', session.agenda)
+    if (type === 'sessionLink') form.setFieldsValue({ sessionLink: session.sessionLink })
   }
 
   const handleSubmit = async () => {
@@ -85,11 +86,6 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     }
   };
 
-  useEffect(() => {
-    formAgenda.setFieldValue('agenda', session.agenda)
-  }, [session.agenda])
-
-  form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
   return (
     <li className="item" style={{ position: "relative" }}>
@@ -369,11 +365,11 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
     },
   });
   const [rateSession, setRateSession] = useState(null);
-  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions.data, "asc");
-  const formatedpastSessions = groupSessionsByDate(pastSessions.data, "desc");
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions.data ?? [], "asc");
+  const formatedpastSessions = groupSessionsByDate(pastSessions.data ?? [], "desc");
   let formatedFreezeSessions = {};
   if (freezeSessions) {
-    formatedFreezeSessions = groupSessionsByDate(freezeSessions.data, "asc");
+    formatedFreezeSessions = groupSessionsByDate(freezeSessions.data ?? [], "asc");
   }
 
   const updatePageInfo = () => {

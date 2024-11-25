@@ -70,7 +70,7 @@ const RescheduleInterview = ({
   };
 
   useEffect(() => {
-    if (sessionId) {
+    if (sessionId && isOpen) {
       getSessionummary(sessionId);
     }
     setModalTitle("Reschedule Session");

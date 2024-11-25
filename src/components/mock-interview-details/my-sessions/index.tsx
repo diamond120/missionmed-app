@@ -1,13 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input, message, Modal, Tabs } from "antd";
-import RateSession from "../../../components/rate-session";
-import { formatDateV1 } from "../../../common/common";
-import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
+import RateSession from "~/components/rate-session";
+import { groupSessionsByDate, formatTime, formatDateV1 } from "~/common/common";
 import "./index.less";
-import CancleSession from "../../../pages/cancle-session";
+import CancleSession from "~/pages/cancle-session";
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
-import { PageInfoType } from "../../session-details/my-sessions/types";
+import { PageInfoType } from "~/components/session-details/my-sessions/types";
 import { UserContext } from "~/api/providers/UserProvider";
 
 const SessionList = ({
@@ -53,6 +52,8 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   const handleClick = (type) => {
     setModalType(type);
     setIsModalOpen(true)
+    if (type === 'agenda') formAgenda.setFieldValue('agenda', session.agenda)
+    if (type === 'sessionLink') form.setFieldsValue({ sessionLink: session.sessionLink })
   }
 
   const handleSubmit = async () => {
@@ -85,11 +86,6 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     setModalType('');
   };
 
-  useEffect(() => {
-    formAgenda.setFieldValue('agenda', session.agenda)
-  }, [session.agenda])
-
-  form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
 
   return (
@@ -352,8 +348,8 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
       hasMore: false
     },
   });
-  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions.data, "asc");
-  const formatedpastSessions = groupSessionsByDate(pastSessions.data, "desc");
+  const formatedUpcomingSessios = groupSessionsByDate(upcomingSessions.data ?? [], "asc");
+  const formatedpastSessions = groupSessionsByDate(pastSessions.data ?? [], "desc");
   const handleRateSession = (event, session) => {
     setRateSession({ id: session.id, tutorId: session.tutor_id });
   };
