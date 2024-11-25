@@ -192,7 +192,8 @@ export default function CalendarAuth({ setGoogleVerification }: CalendarAuthType
                   onClick={() =>
                     confirm({
                       handleOk: handleSyncNow,
-                      title: 'Confirm google calendar sync now'
+                      title: 'Are you sure?',
+                      content: 'You want to sync google calendar now ?'
                     })
                   }
                   style={{
