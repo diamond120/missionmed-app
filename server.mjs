@@ -1,16 +1,3 @@
-// const express = require('express')
-// const path = require('path')
-// const app = express()
-
-// app.use(express.static(path.join(__dirname, 'dist')))
-
-// app.get('/*', function (req, res) {
-//   res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-// })
-
-// app.listen(8080)
-
-// import fs from 'fs'
 import express from 'express'
 import path from 'path'
 import os from 'os' // To get the network IP address
@@ -20,21 +7,6 @@ const app = express()
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url) // get the resolved path to the file
 const __dirname = path.dirname(__filename) // get the name of the directory
-
-// try {
-//   const sourcePath = path.join(__dirname, 'google5f2b2bf91c3f04a8.html')
-//   const destPath = path.join(__dirname, 'dist', 'google5f2b2bf91c3f04a8.html')
-
-//   fs.copyFile(sourcePath, destPath, (err) => {
-//     if (err) {
-//       console.error('Error copying file:', err)
-//     } else {
-//       console.log('custom.html copied successfully.')
-//     }
-//   })
-// } catch (e) {
-//   console.error(e.message)
-// }
 
 // Serve static files from the "dist" directory
 app.use(express.static(path.join(__dirname, 'dist')))
