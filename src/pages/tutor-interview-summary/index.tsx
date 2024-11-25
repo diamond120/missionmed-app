@@ -107,7 +107,7 @@ const TutorInterviewSummary = () => {
               <SectionDetails className={`summary-section`} title="Agenda">
                 {interviewSummary?.agenda ? interviewSummary?.agenda : "No agenda found"}
               </SectionDetails>
-              <SessionSummary uploadReport={uploadReport} reportUrl={interviewSummary.report ?? null} />
+              <SessionSummary uploadReport={uploadReport} reportUrl={interviewSummary.report ?? null} sessionId= {interviewSummary.id ?? null} />
               <div style={{ margin: "40px 0" }}>
                 <PostSessionTasks tasks={interviewSummary?.post_session_tasks} addPostSessionTasks={addPostSessionTasks} />
               </div>
