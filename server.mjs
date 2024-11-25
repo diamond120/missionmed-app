@@ -17,7 +17,7 @@ app.get('/*', function (req, res) {
 })
 
 // Listen on port 8080
-const port = 3001
+const port = 8080
 
 // Get network IP address
 function getNetworkAddress() {
