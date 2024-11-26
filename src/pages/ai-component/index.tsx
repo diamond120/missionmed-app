@@ -359,13 +359,13 @@ const AIStory = () => {
                 > 
                     {JSON.parse(questionList.replace(/^```json\s*|```$/g, '')).questions.map((question, i) => {
                       return  (
-                    <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`}  >
+                    <Form.Item label={ i+1 + '. '+ question.question} name={`question_${i}`} key={i} >
                         <Radio.Group 
                         className="radio_buttons"
                         style={{ width: "100%" }}
                         >
                         {question?.answers.map((answer, j) => (
-                            <>
+                            <div key={j}>
                             <Row>
                                 <Radio value={answer.option} disabled={isSubmit}   name={`question_${i}`}>{String.fromCharCode(65 + j)} {') '} {answer.option}</Radio>
                             </Row>
@@ -378,7 +378,7 @@ const AIStory = () => {
                                 }
                                 </>
                             }
-                            </>
+                            </div>
                         ))}
                         </Radio.Group>
                     </Form.Item>
