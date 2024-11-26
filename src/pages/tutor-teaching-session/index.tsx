@@ -135,7 +135,7 @@ const TutorTeachingSession = () => {
       const data = {
         sessionId: detail?.sessionId,
         interviewDate: detail.interviewDate,
-        bookingFor: 'Interview 1-to-1 Tutoring'
+        bookingFor: BookingFor
       }
       const response = await CommonService.postAPI('/session-data', data)
       if (response.data.success) {

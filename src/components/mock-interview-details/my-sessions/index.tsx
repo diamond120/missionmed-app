@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, DatePicker, Form, Input, message, Modal, Tabs } from "antd";
+import { Alert, Button, DatePicker, Form, Input, message, Modal, Tabs } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
@@ -97,7 +97,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
 
   useEffect(() => {
     formAgenda.setFieldValue('agenda', session.agenda)
-  }, [session])
+  }, [session.agenda])
 
   form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
@@ -331,6 +331,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
                     format='YYYY-MM-DD'
                     style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
                   />
+                  {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Interview date based on Student Timezone." showIcon />}
                 </Form.Item>
 
                 <Form.Item name='sessionId' initialValue={session?.id} hidden>

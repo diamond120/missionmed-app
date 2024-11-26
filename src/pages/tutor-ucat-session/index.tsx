@@ -171,7 +171,7 @@ const TutorUCATSession = () => {
       const data = {
         "sessionId":detail?.sessionId,
         "sessionLink":detail.link,
-        'bookingFor' : 'UCAT 1-to-1 Tutoring'
+        'bookingFor' : BookingFor
       }
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
@@ -189,7 +189,7 @@ const TutorUCATSession = () => {
       const data = {
         sessionId: detail?.sessionId,
         interviewDate: detail.interviewDate,
-        bookingFor: 'UCAT 1-to-1 Tutoring'
+        bookingFor: BookingFor
       }
       const response = await CommonService.postAPI('/session-data', data)
       if (response.data.success) {
