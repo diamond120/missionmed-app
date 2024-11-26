@@ -1,13 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, message, Modal, Tabs } from "antd";
+import { Alert, Button, DatePicker, Form, Input, message, Modal, Tabs, Tooltip } from "antd";
 import RateSession from "~/components/rate-session";
 import { groupSessionsByDate, formatTime, formatDateV1 } from "~/common/common";
 import "./index.less";
 import CancleSession from "~/pages/cancle-session";
-import { RightOutlined, DownOutlined } from '@ant-design/icons';
+import { RightOutlined, DownOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { PageInfoType } from "~/components/session-details/my-sessions/types";
 import { UserContext } from "~/api/providers/UserProvider";
+import moment from "moment";
 
 const SessionList = ({
   date,
@@ -16,6 +17,7 @@ const SessionList = ({
   handleRateSession = () => { },
   handleReschedule,
   handleEditLink,
+  handleEditInterviewDate,
   cancleUpSession,
   handleEditAgenda
 }) => (
@@ -30,6 +32,7 @@ const SessionList = ({
           handleReschedule={handleReschedule}
           key={session.id}
           handleEditLink={handleEditLink}
+          handleEditInterviewDate={handleEditInterviewDate}
           cancleUpSession={cancleUpSession}
           handleEditAgenda={handleEditAgenda}
         />
@@ -38,17 +41,18 @@ const SessionList = ({
   </div>
 );
 
-const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, handleEditLink, cancleUpSession, handleEditAgenda }) => {
+const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, handleEditLink, cancleUpSession, handleEditAgenda, handleEditInterviewDate }) => {
   const { user } = useContext(UserContext);
   const userRole = user.role;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [form] = Form.useForm();
   const [formAgenda] = Form.useForm();
+  const [formInterviewDate] = Form.useForm();
   const { TextArea } = Input;
 
   const [details, setDetails] = useState(false);
-
+  const [interviewDate, setInterviewDate] = useState(session?.interview_date ? moment(session?.interview_date, 'YYYY-MM-DD') : null)
   const handleClick = (type) => {
     setModalType(type);
     setIsModalOpen(true)
@@ -57,17 +61,23 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   }
 
   const handleSubmit = async () => {
-
-    if (modalType === "agenda") {
+    if (modalType === 'agenda') {
       const values = await formAgenda.validateFields();
-      handleEditAgenda(values.agenda,values.sessionId);
-    } else if (modalType === "sessionLink") {
+      handleEditAgenda(values.agenda, values.sessionId)
+    } else if (modalType === 'sessionLink') {
       const values = await form.validateFields();
       const data = {
         link: values.sessionLink,
         sessionId: values.sessionId
       }
       handleEditLink(data);
+    } else if (modalType === 'interviewDate') {
+      const values = await formInterviewDate.validateFields()
+      const data = {
+        interviewDate: interviewDate,
+        sessionId: values.sessionId
+      }
+      handleEditInterviewDate(data)
     }
     setIsModalOpen(false);
 
@@ -87,7 +97,10 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   };
 
   const navigate = useNavigate();
-
+  const handleDateChange = (date: string) => {
+    const dateFormat = date ? moment(date).format('YYYY-MM-DD') : null
+    setInterviewDate(dateFormat)
+  }
   return (
     <li className="item">
       <div style={{ display: "flex" }}>
@@ -111,6 +124,9 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
           <Button disabled={session.isWithin24Hours} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
           <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
           <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
+          <Button className={'secondary-button'} onClick={() => handleClick('interviewDate')}>
+            Edit Interview Date
+          </Button>
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           <Modal
             title="Edit Agenda"
@@ -150,101 +166,175 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               </Form.Item>
             </Form>
           </Modal>
+          <Modal
+            title='Edit Interview Date'
+            open={isModalOpen && modalType === 'interviewDate'}
+            onOk={handleSubmit}
+            onCancel={handleCancel}
+            className={'mock-interview-modal'}
+            width={'600px'}
+            footer={[
+              <div key='buttonGroup' className='button-group'>
+                <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
+                  Discard
+                </Button>
+                <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
+                  Save Changes
+                </Button>
+              </div>
+            ]}
+          >
+            <Form form={formInterviewDate} layout='vertical'>
+              <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
+                <DatePicker
+                  value={interviewDate}
+                  onChange={handleDateChange}
+                  format='YYYY-MM-DD'
+                  style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
+                />
+                </Form.Item>
+
+              <Form.Item name='sessionId' initialValue={session?.id} hidden>
+                <Input type='hidden' />
+              </Form.Item>
+            </Form>
+          </Modal>
         </div>
       )}
       {userRole == "tutor" && type == "upcoming" && (
         <>
-          <div className="btn-group" style={{ marginTop: "10px" }}>
-          {user.role == "tutor" && (
-          <>
-          <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-          <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
-          </>
-          )}
-            <Button className={"secondary-button"} onClick={() => handleClick('sessionLink')}>Edit Session Link</Button>
-            <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
-            {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
-          </div>
-          <Modal
-            title="Edit Session Link"
-            open={isModalOpen && modalType === "sessionLink"}
-            onOk={handleSubmit}
-            onCancel={handleCancel}
-            className={"mock-interview-modal"}
-            width={"600px"}
-            footer={[
-              <div key="buttonGroup" className='button-group'>
-                <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
-                </Button>
-                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
-                  Save Changes
-                </Button>
+          <div style={{display: 'flex', justifyContent: 'space-between', gap: '0.75rem'}}>
+            <div style={{ display:'flex', flexDirection: 'column' }}>
+              <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'center' }}>
+                {user.role == "tutor" && (
+                <>
+                <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+                <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+                </>
+              )}
               </div>
-            ]}
-          >
-            <Form form={form} layout="vertical">
-              <Form.Item
-                label="Edit Session Link"
-                name="sessionLink"
-                rules={[{ required: true },
-                { validator: validateURL }]}
-                initialValue={session?.sessionLink}
-              >
+              <div className="btn-group" style={{ marginTop: "10px" }}>
+                <Button className={"secondary-button"} onClick={() => handleClick('sessionLink')}>Edit Session Link</Button>
+                <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
+                <Button className={"secondary-button"} onClick={() => handleClick('interviewDate')}>Edit Interview Date</Button>
+              </div>
+            </div>
+            {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
+            </div>
+            <Modal
+              title="Edit Session Link"
+              open={isModalOpen && modalType === "sessionLink"}
+              onOk={handleSubmit}
+              onCancel={handleCancel}
+              className={"mock-interview-modal"}
+              width={"600px"}
+              footer={[
+                <div key="buttonGroup" className='button-group'>
+                  <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+                    Discard
+                  </Button>
+                  <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                    Save Changes
+                  </Button>
+                </div>
+              ]}
+            >
+              <Form form={form} layout="vertical">
+                <Form.Item
+                  label="Edit Session Link"
+                  name="sessionLink"
+                  rules={[{ required: true },
+                  { validator: validateURL }]}
+                  initialValue={session?.sessionLink}
+                >
+                  <TextArea
+                    style={{ height: 50 }}
+                    placeholder=""
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="sessionId"
+                  initialValue={session?.id}
+                >
+                  <Input type="hidden" />
+                </Form.Item>
+
+              </Form>
+            </Modal>
+            <Modal
+              title="Edit Agenda"
+              open={isModalOpen && modalType === "agenda"}
+              onOk={handleSubmit}
+              onCancel={handleCancel}
+              className={"mock-interview-modal"}
+              width={"600px"}
+              footer={[
+                <div key="buttonGroup" className='button-group'>
+                  <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
+                    Discard
+                  </Button>
+                  <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
+                    Save Changes
+                  </Button>
+                </div>
+              ]}
+            >
+              <Form form={formAgenda} layout="vertical">
+                <Form.Item
+                label="Here you can put down your thoughts and questions to your tutor on the upcoming session"
+                name="agenda"
+                rules={[{required:true}]}
+                initialValue={session.agenda}
+                >
                 <TextArea
-                  style={{ height: 50 }}
+                  style={{ height: 200 }}
                   placeholder=""
                 />
-              </Form.Item>
+                </Form.Item>
 
-              <Form.Item
-                name="sessionId"
-                initialValue={session?.id}
-              >
-                <Input type="hidden" />
-              </Form.Item>
+                <Form.Item
+                  name="sessionId"
+                  initialValue={session?.id}
+                >
+                  <Input type="hidden" />
+                </Form.Item>
+              </Form>
+            </Modal>
+            <Modal
+              title='Edit Interview Date'
+              open={isModalOpen && modalType === 'interviewDate'}
+              onOk={handleSubmit}
+              onCancel={handleCancel}
+              className={'mock-interview-modal'}
+              width={'600px'}
+              footer={[
+                <div key='buttonGroup' className='button-group'>
+                  <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
+                    Discard
+                  </Button>
+                  <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
+                    Save Changes
+                  </Button>
+                </div>
+              ]}
+            >
+              <Form form={formInterviewDate} layout='vertical'>
+                <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
+                  <DatePicker
+                    value={interviewDate}
+                    onChange={handleDateChange}
+                    format='YYYY-MM-DD'
+                    style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
+                  />
+                  {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Interview date based on Student Timezone." showIcon />}
+                </Form.Item>
 
-            </Form>
-          </Modal>
-          <Modal
-            title="Edit Agenda"
-            open={isModalOpen && modalType === "agenda"}
-            onOk={handleSubmit}
-            onCancel={handleCancel}
-            className={"mock-interview-modal"}
-            width={"600px"}
-            footer={[
-              <div key="buttonGroup" className='button-group'>
-                <Button key="discard" type="dashed" className={"secondary-button"} onClick={handleCancel}>
-                  Discard
-                </Button>
-                <Button key="submit" className={"primary-button"} onClick={handleSubmit}>
-                  Save Changes
-                </Button>
-              </div>
-            ]}
-          >
-            <Form form={formAgenda} layout="vertical">
-              <Form.Item
-              label="Here you can put down your thoughts and questions to your tutor on the upcoming session"
-              name="agenda"
-              rules={[{required:true}]}
-              initialValue={session.agenda}
-              >
-              <TextArea
-                style={{ height: 200 }}
-                placeholder=""
-              />
-              </Form.Item>
-
-              <Form.Item
-                name="sessionId"
-                initialValue={session?.id}
-              >
-                <Input type="hidden" />
-              </Form.Item>
-            </Form>
-          </Modal>
+                <Form.Item name='sessionId' initialValue={session?.id} hidden>
+                  <Input type='hidden' />
+                </Form.Item>
+              </Form>
+            </Modal>
         </>
       )}
       {type == "past" && (
@@ -311,7 +401,14 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             <div className={"end-time"}>Curriculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
-
+            <div className={'end-time'} style={{ display: 'flex', gap: '0.5rem' }}>
+              <span>Interview Date : {session.interview_date ? (formatDateV1(session.interview_date) ?? 'N/A') : 'N/A'}</span>
+              {userRole === 'tutor' && (
+                <Tooltip placement='bottom' title={'Note: Interview date based on Student Timezone.'} overlayStyle={{ minWidth: '325px' }}>
+                  <QuestionCircleFilled style={{ marginLeft: '8px' }} />
+                </Tooltip>
+              )}
+            </div>
           </div>
           <div>
             <div style={{ paddingBottom: "5px" }}>
@@ -328,7 +425,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   );
 };
 
-const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleReschedule, handleEditLink, cancleUpSession, handleEditAgenda }) => {
+const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleReschedule, handleEditLink, cancleUpSession, handleEditAgenda, handleEditInterviewDate }) => {
   const { TabPane } = Tabs;
   const [rateSession, setRateSession] = useState(null);
   const [pageInfo, setPageInfo] = useState<PageInfoType>({
@@ -418,6 +515,7 @@ const Mysessions = ({ upcomingSessions, pastSessions, updatePastSession, handleR
                           handleReschedule={handleReschedule}
                           key={`upcomingSessions${index}`}
                           handleEditLink={handleEditLink}
+                          handleEditInterviewDate={handleEditInterviewDate}
                           cancleUpSession={cancleUpSession}
                           handleEditAgenda={handleEditAgenda}
                       />

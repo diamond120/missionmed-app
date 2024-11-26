@@ -164,6 +164,24 @@ const TutorMockInterview = () => {
       message.error(e.message);
     }
   }
+  const handleEditInterviewDate = async (detail) => {
+    try {
+      const data = {
+        sessionId: detail?.sessionId,
+        interviewDate: detail.interviewDate,
+        bookingFor: BookingFor
+      }
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
+        getMockInterviewDetails()
+        message.success(response.data.message)
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (e) {
+      message.error(e.message)
+    }
+  }
 
   return (
     <>
@@ -193,7 +211,8 @@ const TutorMockInterview = () => {
             agenda={agenda}
             handleReschedule={handleReschedule}
             handleEditAgenda={handleEditAgenda}
-            handleEditLink= {handleEditLink}
+            handleEditLink={handleEditLink}
+            handleEditInterviewDate={handleEditInterviewDate}
             cancleUpSession={cancleUpSession}
           />
           ) : (
