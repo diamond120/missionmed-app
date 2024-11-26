@@ -8,7 +8,11 @@ import posthog from 'posthog-js'
 import { POST_HOG_KEY } from '~/config/app-config'
 
 const App: FC = memo(function App() {
-  posthog.init(POST_HOG_KEY)
+  try {
+    posthog.init(POST_HOG_KEY)
+  } catch (e) {
+    console.error(e)
+  }
 
   const [authenticated, setAuthenticated] = useState<boolean>(false)
 

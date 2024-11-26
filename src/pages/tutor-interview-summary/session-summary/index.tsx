@@ -7,8 +7,16 @@ import { RcFile } from "antd/lib/upload";
 import { useState } from "react";
 import { getToken, fileName } from "../../../common/common";
 import { BASE_URL } from "../../../config/app-config";
+import confirm from "~/components/confirm";
+import axios from "axios";
 
-const SessionSummary = ({ uploadReport, reportUrl }) => {
+interface SessionSummaryType {
+  uploadReport: (fileUrl: string, deleteReport?: boolean) => Promise<void>
+  reportUrl?: string | null
+  sessionId?: number
+}
+
+const SessionSummary = ({ uploadReport, reportUrl, sessionId }: SessionSummaryType) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fileUrl, setFileUrl] = useState<string>("");
   const [form] = Form.useForm();
@@ -40,7 +48,14 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
       // return isDocOrPdf && isLt2M;
       return isDocOrPdf;
     },
-    onRemove: (file) => {
+    onRemove: async (file) => {
+      await axios.post(
+        `${BASE_URL}/delete/report`,
+        { reportUrl: fileUrl },
+        {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        }
+      )
       const index = fileList.indexOf(file);
       const newFileList = fileList.slice();
       newFileList.splice(index, 1);
@@ -82,6 +97,23 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
     setFileList([]);
   };
 
+  const handleRemove = async(sessionId: number, reportUrl: string) => {
+    const handleConfirm = async () => {
+      await axios.post(`${BASE_URL}/delete/report`, {
+        sessionId,
+        reportUrl
+      }, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        }
+      });
+      uploadReport('', true)
+      setFileUrl("")
+      setReUpload(true);
+      setFileList([])
+    };
+    await confirm({handleOk: handleConfirm, title: 'Are you sure?', content: 'You want to delete session summary!' })
+  };
   return (
     <>
       <div className={"session-summary con-box"}>
@@ -171,6 +203,9 @@ const SessionSummary = ({ uploadReport, reportUrl }) => {
                   onClick={handleReUpload}
                 >
                   Re-upload
+                </Button>
+                <Button onClick={() => handleRemove(sessionId, reportUrl)} className={"secondary-button"} style={{backgroundColor: 'red', color: 'white'}}>
+                  Delete
                 </Button>
               </div>
             </div>

@@ -327,7 +327,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               <strong>{userRole == "tutor" ? "Student Details" : " Tutor Details"}</strong>
             </div>
             <div className={"end-time"}>Location : {session.location ?? 'N/A'}</div>
-            <div className={"end-time"}>Currinculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
+            <div className={"end-time"}>Curriculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
           </div>

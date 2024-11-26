@@ -88,7 +88,7 @@ export const groupSessionsByDate = (sessions, orderBy = "asc") => {
 export const fileName = (url) => {
   let filename = '';
   try {
-    filename = new URL(url).pathname.split('/').pop();
+    filename = decodeURIComponent(new URL(url).pathname.split('/').pop());
   } catch (e) {
     console.error(e);
   }

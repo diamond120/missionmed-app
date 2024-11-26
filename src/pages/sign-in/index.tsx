@@ -17,9 +17,14 @@ const SignIn = () => {
   const onFinish = async (values: any) => {
     let userTimezone = timezone
     if (!timezone) {
-      const response = await fetch('https://ipapi.co/timezone/')
-      userTimezone = await response.text()
-      setTimezone(userTimezone)
+      try {
+        const response = await fetch('https://ipapi.co/timezone/')
+        userTimezone = await response.text()
+        setTimezone(userTimezone)
+      } catch (e) {
+        console.error('Unable to get timezone. request blocked by tracking blocker.')
+        console.info(e)
+      }
     }
 
     const { email, password } = values
