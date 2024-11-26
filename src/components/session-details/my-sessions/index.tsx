@@ -209,7 +209,6 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             <Form form={formInterviewDate} layout='vertical'>
               <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
                 <DatePicker
-                  value={interviewDate}
                   onChange={handleDateChange}
                   format='YYYY-MM-DD'
                   style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
@@ -227,7 +226,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         <>
           <div style={{display: 'flex', justifyContent: 'space-between', gap: '0.75rem'}}>
             <div style={{ display:'flex', flexDirection: 'column' }}>
-              <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'center' }}>
+              <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'end' }}>
                 {user.role == "tutor" && (
                 <>
                 <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
@@ -342,13 +341,14 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
           >
             <Form form={formInterviewDate} layout='vertical'>
               <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
-                <DatePicker
-                  value={interviewDate}
-                  onChange={handleDateChange}
-                  format='YYYY-MM-DD'
-                  style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
-                />
-                {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Interview date based on Student Timezone." showIcon />}
+                <>
+                  <DatePicker
+                    onChange={handleDateChange}
+                    format='YYYY-MM-DD'
+                    style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
+                  />
+                  {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Interview date based on Student Timezone." showIcon />}
+                </>
               </Form.Item>
               <Form.Item name='sessionId' initialValue={session?.id} hidden>
                 <Input type='hidden' />
