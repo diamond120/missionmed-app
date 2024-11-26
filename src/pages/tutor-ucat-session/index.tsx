@@ -171,7 +171,7 @@ const TutorUCATSession = () => {
       const data = {
         "sessionId":detail?.sessionId,
         "sessionLink":detail.link,
-        'bookingFor' : 'UCAT 1-to-1 Tutoring'
+        'bookingFor' : BookingFor
       }
       const response = await CommonService.postAPI('/session-data',data)
       if(response.data.success){
@@ -182,6 +182,24 @@ const TutorUCATSession = () => {
       }
     }catch(e){
       message.error(e.message);
+    }
+  }
+  const handleEditInterviewDate = async (detail) => {
+    try {
+      const data = {
+        sessionId: detail?.sessionId,
+        interviewDate: detail.interviewDate,
+        bookingFor: BookingFor
+      }
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
+        message.success(response.data.message)
+        getUCATSessionDetails()
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (e) {
+      message.error(e.message)
     }
   }
 
@@ -216,6 +234,7 @@ const TutorUCATSession = () => {
             handleEditAgenda={handleEditAgenda}
             handleReschedule={handleReschedule}
             handleEditLink= {handleEditLink}
+            handleEditInterviewDate= {handleEditInterviewDate}
             freezeSessions={freezeSessions}
             cancleUpSession={cancleUpSession}
           />

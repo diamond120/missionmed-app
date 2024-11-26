@@ -77,7 +77,8 @@ function TutorReducer(tutor, action) {
         tagline: action.tagline,
         is48HourRemainderEnable: action.is48HourRemainderEnable,
         is24HourRemainderEnable: action.is24HourRemainderEnable,
-        is30MinuteRemainderEnable: action.is30MinuteRemainderEnable
+        is30MinuteRemainderEnable: action.is30MinuteRemainderEnable,
+        interviewDate: action.interviewDate
       };
     }
     case 'update': {
