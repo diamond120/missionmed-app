@@ -424,6 +424,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             <div className={"end-time"}>Curriculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
+            <div className={"end-time"}>Timezone : {session?.timezone_title ?? 'N/A'}</div>
             <div className={'end-time'} style={{ display: 'flex', gap: '0.5rem' }}>
               <span>Interview Date : {session.interview_date ? (formatDateV1(session.interview_date) ?? 'N/A') : 'N/A'}</span>
               {userRole === 'tutor' && (
