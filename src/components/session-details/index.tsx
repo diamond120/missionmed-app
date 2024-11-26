@@ -3,7 +3,7 @@ import Agenda from "./agenda";
 import Mysessions from "./my-sessions";
 import UpcomingSession from "./upcoming-session";
 
-const SessionDetails = ({ moduleType, upcomingInterview, upcomingSessions, pastSessions, agenda, handleEditAgenda, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions, credit }) => {
+const SessionDetails = ({ moduleType, upcomingInterview, upcomingSessions, pastSessions, agenda, handleEditAgenda, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions, credit, handleEditInterviewDate }) => {
 
     return (
         <>
@@ -11,7 +11,7 @@ const SessionDetails = ({ moduleType, upcomingInterview, upcomingSessions, pastS
                 {Object.keys(upcomingInterview).length > 0 && <UpcomingSession upcomingInterview={upcomingInterview} handleReschedule={handleReschedule} handleEditLink={handleEditLink} sessionType="session" credit={credit} />}
                 {Object.keys(upcomingInterview).length > 0 && <Agenda agenda={agenda} handleEditAgenda={handleEditAgenda} key={"agenda"} credit={credit} />}
             </div>
-            <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} moduleType={moduleType} handleReschedule={handleReschedule} cancleUpSession={cancleUpSession} handleEditLink={handleEditLink} freezeSessions={freezeSessions} handleEditAgenda={handleEditAgenda} />
+            <Mysessions upcomingSessions={upcomingSessions} pastSessions={pastSessions} updatePastSession={updatePastSession} moduleType={moduleType} handleReschedule={handleReschedule} cancleUpSession={cancleUpSession} handleEditLink={handleEditLink} freezeSessions={freezeSessions} handleEditAgenda={handleEditAgenda} handleEditInterviewDate={handleEditInterviewDate} />
         </>
     )
 }

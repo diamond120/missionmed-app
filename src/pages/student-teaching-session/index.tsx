@@ -213,6 +213,24 @@ const StudentTeachingSession = () => {
     },
   ];
 
+  const handleEditInterviewDate = async (detail) => {
+    try {
+      const data = {
+        sessionId: detail?.sessionId,
+        interviewDate: detail.interviewDate,
+        bookingFor: BookingFor
+      }
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
+        getMockInterviewDetails()
+        message.success(response.data.message)
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (e) {
+      message.error(e.message)
+    }
+  }
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -299,6 +317,7 @@ const StudentTeachingSession = () => {
               pastSessions={pastSessions}
               agenda={agenda}
               handleEditAgenda={handleEditAgenda}
+              handleEditInterviewDate={handleEditInterviewDate}
               updatePastSession={updatePastSession}
               handleReschedule={handleReschedule}
               cancleUpSession={cancleUpSession}
