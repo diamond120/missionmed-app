@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, DatePicker, Form, Input, message, Modal, Tabs } from "antd";
+import { Alert, Button, DatePicker, Form, Input, message, Modal, Tabs, Tooltip } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
 import "./index.less";
 import CancleSession from "../../../pages/cancle-session";
-import { RightOutlined, DownOutlined } from '@ant-design/icons';
+import { RightOutlined, DownOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { PageInfoType } from "./types";
 import { UserContext } from "~/api/providers/UserProvider";
 import moment from "moment";
@@ -424,8 +424,13 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             <div className={"end-time"}>Curriculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
-            <div className={'end-time'}>
-              Interview Date : {session.interview_date ? (formatDateV1(session.interview_date) ?? 'N/A') : 'N/A'}
+            <div className={'end-time'} style={{ display: 'flex', gap: '0.5rem' }}>
+              <span>Interview Date : {session.interview_date ? (formatDateV1(session.interview_date) ?? 'N/A') : 'N/A'}</span>
+              {userRole === 'tutor' && (
+                <Tooltip placement='bottom' title={'Note: Interview date based on Student Timezone.'} overlayStyle={{ minWidth: '325px' }}>
+                  <QuestionCircleFilled style={{ marginLeft: '8px' }} />
+                </Tooltip>
+              )}
             </div>
           </div>
           <div>
