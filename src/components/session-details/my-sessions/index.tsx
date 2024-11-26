@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Form, Input, message, Modal, Tabs } from "antd";
+import { Button, DatePicker, Form, Input, message, Modal, Tabs } from "antd";
 import RateSession from "../../../components/rate-session";
 import { formatDateV1 } from "../../../common/common";
 import { groupSessionsByDate, formatTime, checkSessionOnToday } from "../../../common/common";
@@ -9,6 +9,7 @@ import CancleSession from "../../../pages/cancle-session";
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import { PageInfoType } from "./types";
 import { UserContext } from "~/api/providers/UserProvider";
+import moment from "moment";
 
 const SessionList = ({
   date,
@@ -19,6 +20,7 @@ const SessionList = ({
   pagesession,
   cancleUpSession,
   handleEditLink,
+  handleEditInterviewDate,
   handleEditAgenda
 }) => (
   <div className="sessions">
@@ -34,6 +36,7 @@ const SessionList = ({
           pagesession={pagesession}
           cancleUpSession={cancleUpSession}
           handleEditLink={handleEditLink}
+          handleEditInterviewDate={handleEditInterviewDate}
           handleEditAgenda={handleEditAgenda}
         />
       ))}
@@ -41,16 +44,18 @@ const SessionList = ({
   </div>
 );
 
-const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, pagesession, cancleUpSession, handleEditLink, handleEditAgenda }) => {
+const SessionItem = ({ session, type, handleRateSession = () => { }, handleReschedule, pagesession, cancleUpSession, handleEditLink, handleEditAgenda, handleEditInterviewDate }) => {
   const { user } = useContext(UserContext);
   const userRole = user.role;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState('');
   const [form] = Form.useForm();
   const [formAgenda] = Form.useForm();
+  const [formInterviewDate] = Form.useForm();
   const { TextArea } = Input;
 
   const [details, setDetails] = useState(false)
+  const [interviewDate, setInterviewDate] = useState(session?.interview_date ? moment(session?.interview_date, 'YYYY-MM-DD') : '')
 
   const handleClick = (type) => {
     setModalType(type);
@@ -68,6 +73,13 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         sessionId: values.sessionId
       }
       handleEditLink(data);
+    } else if (modalType === 'interviewDate') {
+      const values = await formInterviewDate.validateFields()
+      const data = {
+        interviewDate: interviewDate,
+        sessionId: values.sessionId
+      }
+      handleEditInterviewDate(data)
     }
     setIsModalOpen(false);
   };
@@ -91,6 +103,10 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
 
   form.setFieldsValue({ sessionLink: session.sessionLink });
   const navigate = useNavigate();
+  const handleDateChange = (date: string) => {
+    const dateFormat = date ? moment(date).format('YYYY-MM-DD') : null
+    setInterviewDate(dateFormat)
+  }
   return (
     <li className="item" style={{ position: "relative" }}>
       <div style={{ display: "flex" }}>
@@ -136,6 +152,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
           <Button disabled={(session.isWithin24Hours) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
           <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
           <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
+          <Button className={"secondary-button"} onClick={() => handleClick('interviewDate')}>Edit Interview Date</Button>
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           <Modal
             title="Edit Agenda"
@@ -175,21 +192,61 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               </Form.Item>
             </Form>
           </Modal>
+          <Modal
+            title='Edit Interview Date'
+            open={isModalOpen && modalType === 'interviewDate'}
+            onOk={handleSubmit}
+            onCancel={handleCancel}
+            className={'mock-interview-modal'}
+            width={'600px'}
+            footer={[
+              <div key='buttonGroup' className='button-group'>
+                <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
+                  Discard
+                </Button>
+                <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
+                  Save Changes
+                </Button>
+              </div>
+            ]}
+          >
+            <Form form={formInterviewDate} layout='vertical'>
+              <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
+                <DatePicker
+                  value={interviewDate}
+                  onChange={handleDateChange}
+                  format='YYYY-MM-DD'
+                  style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
+                />
+              </Form.Item>
+
+              <Form.Item name='sessionId' initialValue={session?.id} hidden>
+                <Input type='hidden' />
+              </Form.Item>
+            </Form>
+          </Modal>
         </div>
       )}
       {userRole == "tutor" && type == "upcoming" && (
         <>
-          <div className="btn-group" style={{ marginTop: "10px" }}>
-          {user.role == "tutor" && (
-            <>
-            <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-              <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
-              </>
-            )}
-            <Button className={"secondary-button"} onClick={() => handleClick('sessionLink')}>Edit Session Link</Button>
-            <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
+          <div style={{display: 'flex', justifyContent: 'space-between', gap: '0.75rem'}}>
+            <div style={{ display:'flex', flexDirection: 'column' }}>
+              <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'center' }}>
+                {user.role == "tutor" && (
+                <>
+                <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+                <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+                </>
+              )}
+              </div>
+              <div className="btn-group" style={{ marginTop: "10px" }}>
+                <Button className={"secondary-button"} onClick={() => handleClick('sessionLink')}>Edit Session Link</Button>
+                <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
+                <Button className={"secondary-button"} onClick={() => handleClick('interviewDate')}>Edit Interview Date</Button>
+              </div>
+            </div>
             {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
-          </div>
+            </div>
           <Modal
             title="Edit Session Link"
             open={isModalOpen && modalType === "sessionLink"}
@@ -269,6 +326,38 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               </Form.Item>
             </Form>
           </Modal>
+          <Modal
+            title='Edit Interview Date'
+            open={isModalOpen && modalType === 'interviewDate'}
+            onOk={handleSubmit}
+            onCancel={handleCancel}
+            className={'mock-interview-modal'}
+            width={'600px'}
+            footer={[
+              <div key='buttonGroup' className='button-group'>
+                <Button key='discard' type='dashed' className={'secondary-button'} onClick={handleCancel}>
+                  Discard
+                </Button>
+                <Button key='submit' className={'primary-button'} onClick={handleSubmit}>
+                  Save Changes
+                </Button>
+              </div>
+            ]}
+          >
+            <Form form={formInterviewDate} layout='vertical'>
+              <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
+                <DatePicker
+                  value={interviewDate}
+                  onChange={handleDateChange}
+                  format='YYYY-MM-DD'
+                  style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
+                />
+              </Form.Item>
+              <Form.Item name='sessionId' initialValue={session?.id} hidden>
+                <Input type='hidden' />
+              </Form.Item>
+            </Form>
+          </Modal>
         </>
       )}
       {type == "past" && (
@@ -334,6 +423,9 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             <div className={"end-time"}>Curriculum : {(!session.state || session.state == '') ? 'N/A' : session.state}</div>
             <div className={"end-time"}>Phone Number : {session.phone_number ?? 'N/A'}</div>
             <div className={"end-time"}>Email : {session.email ?? 'N/A'}</div>
+            <div className={'end-time'}>
+              Interview Date : {session.interview_date ? (formatDateV1(session.interview_date) ?? 'N/A') : 'N/A'}
+            </div>
           </div>
           <div>
             <div style={{ paddingBottom: "5px" }}>
@@ -349,7 +441,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   );
 };
 
-const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions, handleEditAgenda }) => {
+const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSession, handleReschedule, cancleUpSession, handleEditLink, freezeSessions, handleEditAgenda, handleEditInterviewDate }) => {
   const { TabPane } = Tabs;
   const [pageInfo, setPageInfo] = useState<PageInfoType>({
     upcoming: {
@@ -445,6 +537,7 @@ const Mysessions = ({ moduleType, upcomingSessions, pastSessions, updatePastSess
                     pagesession={moduleType}
                     cancleUpSession={cancleUpSession}
                     handleEditLink={handleEditLink}
+                    handleEditInterviewDate={handleEditInterviewDate}
                     handleEditAgenda={handleEditAgenda}
                   />
               ))}

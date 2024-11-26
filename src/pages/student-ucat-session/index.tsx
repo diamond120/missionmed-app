@@ -226,6 +226,24 @@ const StudentUCATSession = () => {
     },
   ];
 
+  const handleEditInterviewDate = async (detail) => {
+    try {
+      const data = {
+        sessionId: detail?.sessionId,
+        interviewDate: detail.interviewDate,
+        bookingFor: 'UCAT 1-to-1 Tutoring'
+      }
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
+        message.success(response.data.message)
+        getUCATSessionDetails()
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (e) {
+      message.error(e.message)
+    }
+  }
   return (
     <React.Fragment>
       <Section className={"application-review-section"}>
@@ -316,6 +334,7 @@ const StudentUCATSession = () => {
               pastSessions={pastSessions}
               agenda={agenda}
               handleEditAgenda={handleEditAgenda}
+              handleEditInterviewDate={handleEditInterviewDate}
               updatePastSession={updatePastSession}
               handleReschedule={handleReschedule}
               cancleUpSession={cancleUpSession}

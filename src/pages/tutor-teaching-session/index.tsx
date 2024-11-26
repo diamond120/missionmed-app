@@ -130,6 +130,25 @@ const TutorTeachingSession = () => {
     }
   }
 
+  const handleEditInterviewDate = async (detail) => {
+    try {
+      const data = {
+        sessionId: detail?.sessionId,
+        interviewDate: detail.interviewDate,
+        bookingFor: 'Interview 1-to-1 Tutoring'
+      }
+      const response = await CommonService.postAPI('/session-data', data)
+      if (response.data.success) {
+        message.success(response.data.message)
+        getMockInterviewDetails()
+      } else {
+        throw new Error(response.data.message)
+      }
+    } catch (e) {
+      message.error(e.message)
+    }
+  }
+
   const updateUpcomingSession = (sessionId, data) => {
     getMockInterviewDetails();
   }
@@ -233,6 +252,7 @@ const TutorTeachingSession = () => {
             handleReschedule={handleReschedule}
             handleEditAgenda={handleEditAgenda}
             handleEditLink= {handleEditLink}
+            handleEditInterviewDate= {handleEditInterviewDate}
             cancleUpSession={cancleUpSession}
             freezeSessions={freezeSessions}
           /> ) : (

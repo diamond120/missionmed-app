@@ -84,7 +84,8 @@ function StudentReducer(student, action) {
               timezone_id:action.timezone_id,
               is_48_hour_remainder_enable: action.is_48_hour_remainder_enable,
               is_24_hour_remainder_enable: action.is_24_hour_remainder_enable,
-              is_30_minute_remainder_enable: action.is_30_minute_remainder_enable
+              is_30_minute_remainder_enable: action.is_30_minute_remainder_enable,
+              interviewDate: action.interview_date
           };
         }
         case 'update': {
