@@ -61,8 +61,13 @@ const TutorInterviewSummary = () => {
     }
   }
 
-  const uploadReport = async (fileUrl) => {
+  const uploadReport = async (fileUrl, deleteReport = false) => {
     try {
+      if (deleteReport) {
+        setInterviewSummary({ ...interviewSummary, report: '' })
+        return
+      }
+
       const data = {
         "sessionId": interviewSummary?.id,
         "report": fileUrl,
