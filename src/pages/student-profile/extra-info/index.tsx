@@ -77,9 +77,11 @@ const ExtraInfo: FC<any> = ({ props }) => {
       <h2 className={"extra-info-section-title"}>
         Extra Information <QuestionCircleFilled style={{ color: "#6B7393" }} title={"Extra Information"} />
       </h2>
-      <Form className={"extra-info-form"} form={form} colon={false}>
+      <Form className={"extra-info-form"} form={form} colon={false}
+        initialValues={{ status: residenceStatus, specification: specification, rural: rural, financial: financialHardship, gws: gws }}
+      >
         <Form.Item label={"Status of Residence"} name={"status"} rules={[{ required: false }]}>
-          <Radio.Group disabled={!editing} defaultValue={residenceStatus} onChange={(e) => setResidenceStatus(e.target.value)}>
+          <Radio.Group disabled={!editing} onChange={(e) => setResidenceStatus(e.target.value)}>
             <Radio value={"I’m Domestic"}>I’m Domestic</Radio>
             <Radio value={"I’m International"}>I’m International</Radio>
           </Radio.Group>
@@ -93,7 +95,6 @@ const ExtraInfo: FC<any> = ({ props }) => {
               label={"Specification"}
               rules={[{ required: true, }]}
             >
-              <Input type="hidden" value={specification} />
               <Select
                 options={optionsSpecification.map((option) => ({ value: option }))}
                 style={{ width: 328, color: !editing ? "#bfbfbf" : "" }}
@@ -120,21 +121,21 @@ const ExtraInfo: FC<any> = ({ props }) => {
             </Form.Item>
 
             <Form.Item label={"Rural"} name={"rural"} rules={[{ required: false }]}>
-              <Radio.Group disabled={!editing} defaultValue={rural} onChange={(e) => setRural(e.target.value)}>
+              <Radio.Group disabled={!editing} onChange={(e) => setRural(e.target.value)}>
                 <Radio value={true}>Yes</Radio>
                 <Radio value={false}>No</Radio>
               </Radio.Group>
             </Form.Item>
 
             <Form.Item label={"Financial Hardship"} name={"financial"} rules={[{ required: false }]}>
-              <Radio.Group disabled={!editing} defaultValue={financialHardship} onChange={(e) => setFinancialHardship(e.target.value)}>
+              <Radio.Group disabled={!editing} onChange={(e) => setFinancialHardship(e.target.value)}>
                 <Radio value={true}>Yes</Radio>
                 <Radio value={false}>No</Radio>
               </Radio.Group>
             </Form.Item>
 
             <Form.Item label={"GWS (Greater Western Sydney)"} name={"gws"} rules={[{ required: false }]}>
-              <Radio.Group disabled={!editing} defaultValue={gws} onChange={(e) => setGws(e.target.value)}>
+              <Radio.Group disabled={!editing} onChange={(e) => setGws(e.target.value)}>
                 <Radio value={true}>Yes</Radio>
                 <Radio value={false}>No</Radio>
               </Radio.Group>

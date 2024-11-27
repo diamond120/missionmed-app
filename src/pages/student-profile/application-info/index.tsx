@@ -74,7 +74,8 @@ const ApplicationInfo: FC<any> = ({props}) => {
   return(
     <div className={"application-info-section"}>
       <h2 className={"application-info-section-title"}>Application Information</h2>
-        <Form className={"application-info-form"} form={form} colon={false}>
+        <Form className={"application-info-form"} form={form} colon={false}
+        initialValues={{ predicted: student?.atar ?? '', gpa: student?.gpa ?? '' }}>
           <Form.Item
             name={"Applicant Cycle"}
             rules={[{ required: true, }]}
@@ -118,14 +119,14 @@ const ApplicationInfo: FC<any> = ({props}) => {
             ]}
             label={"Predicted ATAR / ATAR"}
           >
-            <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.atar ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={(value) => setAtar(value) } />
+            <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={(value) => setAtar(value) } />
           </Form.Item>
           <Form.Item
             name={"gpa"}
             rules={[{ required: false, }]}
             label={"GPA"}
           >
-            <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } defaultValue={student?.gpa ?? ''} style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={value => setGpa(value)} />
+            <InputNumber stringMode={true} parser={(value) => value!.replace(/\$\s?|(,*)/g, '')} className={"input"} disabled={ !editing } style={{color: !editing? "#bfbfbf" : "",backgroundColor: !editing? "#f5f5f5" : ""}} onChange={value => setGpa(value)} />
           </Form.Item>
           {editing ? (
 
