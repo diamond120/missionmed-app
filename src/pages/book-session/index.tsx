@@ -743,7 +743,7 @@ const BookSession: FC<Props> = ({ addUpcomingSession, title, moduleType, timezon
 
   useEffect(() => {
     cardDetails();
-  }, [dayOfWeek, recurringAvailable, card]);
+  }, [dayOfWeek, recurringAvailable]);
 
 
   return (

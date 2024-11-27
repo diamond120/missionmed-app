@@ -12,6 +12,7 @@ const Agenda = ({ agenda, handleEditAgenda, credit }) => {
 
   const handleClick = () => {
     setIsModalOpen(true)
+    form.setFieldValue('agenda', agenda)
   }
 
   const handleSubmit = async () => {
@@ -27,10 +28,6 @@ const Agenda = ({ agenda, handleEditAgenda, credit }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  useEffect(() => {
-    form.setFieldValue('agenda', agenda)
-  }, [agenda])
 
   return (
     <>

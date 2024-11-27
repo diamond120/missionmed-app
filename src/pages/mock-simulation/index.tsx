@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { HomeOutlined, InfoCircleFilled, LockOutlined, PlayCircleFilled } from '@ant-design/icons'
-import { Alert, Breadcrumb, Col, Row, Select, message, Button, Input, Tabs, Modal } from 'antd'
-import Section from '../../components/shared-ui/Section'
+import { Alert, Breadcrumb, Col, Row, Select, message, Button, Input, Tabs, Modal, Spin } from 'antd'
+import Section from '~/components/shared-ui/Section'
 import './index.less'
 import Performance from './performance'
-import { createSession, getSessions, getPackages } from '../../api/services/MockSimulation'
-import { EXAM_APP_URL, APP_URL } from '../../config/app-config'
-import { UserContext } from '../../api/providers/UserProvider'
+import { createSession, getSessions, getPackages } from '~/api/services/MockSimulation'
+import { EXAM_APP_URL, APP_URL } from '~/config/app-config'
+import { UserContext } from '~/api/providers/UserProvider'
 import { Package, Session } from './types'
 import moment from 'moment'
 
@@ -23,21 +23,28 @@ const Index = () => {
   const [video, setVideo] = useState<string>('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/solutions/VR/VR.mp4')
   const [videotitle, setVideoTitle] = useState<string>('Verbal Reasoning')
   const [mockId, setMockId] = useState<number | undefined>(selectedMockId)
+  const [loading, setLoading] = useState(false)
   const { user } = useContext(UserContext)
   const vidRef = useRef(null)
   useEffect(() => {
     const init = async () => {
-      const resAvailable = await getPackages()
-      if (resAvailable?.data) {
-        const available = await resAvailable.data
-        setAvailableMocks(available)
-      }
-      const res = await getSessions()
-      if (res?.data) {
-        // const past = await res?.data?.filter((i: Session) => i?.completed === 1)
-        const past = await res.data
-        setMocks(res.data)
-        setPastMocks(past)
+      try {
+        setLoading(true)
+        const resAvailable = await getPackages()
+        if (resAvailable?.data) {
+          const available = await resAvailable.data
+          setAvailableMocks(available)
+        }
+        const res = await getSessions()
+        if (res?.data) {
+          // const past = await res?.data?.filter((i: Session) => i?.completed === 1)
+          const past = await res.data
+          setMocks(res.data)
+          setPastMocks(past)
+        }
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
       }
     }
     init()
@@ -93,97 +100,99 @@ const Index = () => {
             <h2 className={'secondary-title'}>UCAT Simulation Mocks </h2>
             <Tabs defaultActiveKey={'Simulate'} activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
               <TabPane tab={'Simulate'} key={'Simulate'}>
-                <div className={'upcoming-sessions'}>
-                  <Alert
-                    message='Please read the following carefully.'
-                    description={
-                      <code>
-                        <div className='text'>
-                          You should currently be sitting at a UCAT Mock Testing centre. These mocks are designed to be sat under proctoring
-                          and test conditions. Ensure that you have the following equipment before you begin.
-                        </div>
-                        <ul>
-                          <li>Whiteboard & Pen</li>
-                          <li>Earplugs</li>
-                          <li>Keyboard & Mouse</li>
-                        </ul>
-                        <div className='text'>
-                          When you launch the simulation, you will be prompted for a code which you should have with you. If there are any
-                          issues, please notify the proctor immediately.
-                        </div>
-                      </code>
-                    }
-                    type='info'
-                    closable
-                    showIcon
-                    icon={<InfoCircleFilled />}
-                  />
+                <Spin spinning={loading}>
+                  <div className={'upcoming-sessions'}>
+                    <Alert
+                      message='Please read the following carefully.'
+                      description={
+                        <code>
+                          <div className='text'>
+                            You should currently be sitting at a UCAT Mock Testing centre. These mocks are designed to be sat under proctoring
+                            and test conditions. Ensure that you have the following equipment before you begin.
+                          </div>
+                          <ul>
+                            <li>Whiteboard & Pen</li>
+                            <li>Earplugs</li>
+                            <li>Keyboard & Mouse</li>
+                          </ul>
+                          <div className='text'>
+                            When you launch the simulation, you will be prompted for a code which you should have with you. If there are any
+                            issues, please notify the proctor immediately.
+                          </div>
+                        </code>
+                      }
+                      type='info'
+                      closable
+                      showIcon
+                      icon={<InfoCircleFilled />}
+                    />
 
-                  <div className='mocks-items available-mocks'>
-                    <div className='mocks-item'>
-                      <h4 className='title'>Available Mocks</h4>
-                      {availableMocks?.map((item, index) => (
-                        <div className='item' key={index}>
-                          <div>
-                            <strong>{item?.name}</strong> <br />
-                            <div>{item?.type}</div>
-                          </div>
-                          <div className='btn-group'>
-                            <Input
-                              className='input-type'
-                              placeholder='Exam Code'
-                              prefix={<LockOutlined />}
-                              onChange={(e) => {
-                                setExamCode(e.target.value)
-                                setExamCodeIndex(index)
-                              }}
-                              value={index === examCodeIndex ? examCode : ''}
-                            />
-                            <Button className={'secondary-button'} onClick={() => launchExam(item?.id)}>
-                              Launch Exam
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {pastMocks?.length > 0 && (
-                    <div className='mocks-items past-mocks'>
+                    <div className='mocks-items available-mocks'>
                       <div className='mocks-item'>
-                        <h4 className='title'>Past Mocks</h4>
-                        {pastMocks?.map((item, index) => (
+                        <h4 className='title'>Available Mocks</h4>
+                        {availableMocks?.map((item, index) => (
                           <div className='item' key={index}>
                             <div>
-                              <strong>{item?.package?.name}</strong> <br />
-                              <div>{item?.package?.type}</div>
-                              <div className='small-date-time'>({moment(item?.started_at).format('dddd, MMMM Do YYYY hh:mm A')})</div>
+                              <strong>{item?.name}</strong> <br />
+                              <div>{item?.type}</div>
                             </div>
                             <div className='btn-group'>
-                              <Button
-                                className={'secondary-button'}
-                                onClick={async () => {
-                                  await setMockId(item.id)
-                                  await setActiveTab('Review')
+                              <Input
+                                className='input-type'
+                                placeholder='Exam Code'
+                                prefix={<LockOutlined />}
+                                onChange={(e) => {
+                                  setExamCode(e.target.value)
+                                  setExamCodeIndex(index)
                                 }}
-                              >
-                                Review
-                              </Button>
-                              <Button
-                                className={'secondary-button'}
-                                onClick={async () => {
-                                  await setSelectedMockId(item.id)
-                                  await setActiveTab('Performance')
-                                }}
-                              >
-                                View Performance
+                                value={index === examCodeIndex ? examCode : ''}
+                              />
+                              <Button className={'secondary-button'} onClick={() => launchExam(item?.id)}>
+                                Launch Exam
                               </Button>
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
-                  )}
-                </div>
+                    {pastMocks?.length > 0 && (
+                      <div className='mocks-items past-mocks'>
+                        <div className='mocks-item'>
+                          <h4 className='title'>Past Mocks</h4>
+                          {pastMocks?.map((item, index) => (
+                            <div className='item' key={index}>
+                              <div>
+                                <strong>{item?.package?.name}</strong> <br />
+                                <div>{item?.package?.type}</div>
+                                <div className='small-date-time'>({moment(item?.started_at).format('dddd, MMMM Do YYYY hh:mm A')})</div>
+                              </div>
+                              <div className='btn-group'>
+                                <Button
+                                  className={'secondary-button'}
+                                  onClick={async () => {
+                                    await setMockId(item.id)
+                                    await setActiveTab('Review')
+                                  }}
+                                >
+                                  Review
+                                </Button>
+                                <Button
+                                  className={'secondary-button'}
+                                  onClick={async () => {
+                                    await setSelectedMockId(item.id)
+                                    await setActiveTab('Performance')
+                                  }}
+                                >
+                                  View Performance
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Spin>
               </TabPane>
 
               <TabPane tab={'Performance'} key={'Performance'}>
