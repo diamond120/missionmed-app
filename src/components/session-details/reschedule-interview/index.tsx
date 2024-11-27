@@ -170,7 +170,11 @@ const RescheduleInterview = ({
   const selectUniversity = Form.useWatch("university", form);
 
   const Step1Form = ({ universityList, getMockInterviewList }) => {
-    
+
+    useEffect(() => {
+      form.setFieldValue('sessionType', interviewSummary?.session_type)
+    }, [])
+
     return (
       <>
         <div className={"session-details"} style={{ padding: "10px" }}>
