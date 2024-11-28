@@ -90,7 +90,7 @@ const UpcomingSession = ({ upcomingInterview, sessionType, handleReschedule, han
                 <Tooltip
                   className={'button_tooltip'}
                   title={
-                    "You can’t reschedule session less than 24 hours before it starts"
+                    `You can’t reschedule session less than ${upcomingInterview.rescheduleHours} hours before it starts`
                   }
                   color={"#465078"}
                 >
