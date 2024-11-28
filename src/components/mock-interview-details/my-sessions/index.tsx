@@ -120,19 +120,25 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         </div>
       </div>
       {userRole == "student" && type == "upcoming" && (
-        <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap' }}>
-          <Tooltip
-            className={session.isWithin24Hours ? 'button_tooltip' : ''}
-            title={session.isWithin24Hours ? `You can’t reschedule session less than ${session.rescheduleHours} hours before it starts` : ''}
-            color={'#465078'}
-          >
-            <Button disabled={session.isWithin24Hours} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
-          </Tooltip>
-          <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
-          <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
-          <Button className={'secondary-button'} onClick={() => handleClick('interviewDate')}>
-            Edit Interview Date
-          </Button>
+        <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.75rem' }}>
+          <div style={{ display:'flex', flexDirection: 'column' }}>
+            <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'end' }}>
+              <Tooltip
+                className={session.isWithin24Hours ? 'button_tooltip' : ''}
+                title={session.isWithin24Hours ? `You can’t reschedule session less than ${session.rescheduleHours} hours before it starts` : ''}
+                color={'#465078'}
+              >
+                <Button disabled={session.isWithin24Hours} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
+              </Tooltip>
+              <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
+            </div>
+            <div className="btn-group" style={{ marginTop: "10px" }}>
+              <Button className={"secondary-button"} onClick={() => handleClick('agenda')}>Edit Agenda</Button>
+              <Button className={'secondary-button'} onClick={() => handleClick('interviewDate')}>
+                Edit Interview Date
+              </Button>
+            </div>
+          </div>
           {details ? <DownOutlined onClick={() => setDetails(false)} /> : <RightOutlined onClick={() => setDetails(true)} />}
           <Modal
             title="Edit Agenda"
