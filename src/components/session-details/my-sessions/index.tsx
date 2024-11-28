@@ -143,7 +143,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
       )}
 
       {(userRole == 'student' && type == "upcoming") && (
-        <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.75rem' }}>
           <div style={{ display:'flex', flexDirection: 'column' }}>
             <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'end' }}>
               <Tooltip
