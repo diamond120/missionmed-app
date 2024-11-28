@@ -1,5 +1,5 @@
 import "./index.less";
-import { Button, Modal, Spin, message } from "antd";
+import { Button, Modal, Spin, Tooltip, message } from "antd";
 import { useContext, useState } from "react";
 import CommonService from "../../api/services/Common";
 import { useNavigate } from "react-router-dom";
@@ -62,9 +62,21 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
 
   return (
     <>
-      <Button onClick={showModal} disabled={addUpcomingSession.is_freeze == 1}  className={"secondary-button"}>
-        {title}
-      </Button>
+      {userRole === 'student' ? (
+        <Tooltip
+          className={addUpcomingSession.isWithin24Hours ? 'button_tooltip' : ''}
+          title={addUpcomingSession.isWithin24Hours ? 'You can’t cancel session less than 24 hours before it starts' : ''}
+          color={'#465078'}
+        >
+          <Button onClick={showModal} disabled={addUpcomingSession.isWithin24Hours} className={'secondary-button'}>
+            {title}
+          </Button>
+        </Tooltip>
+      ) : (
+        <Button onClick={showModal} className={'secondary-button'}>
+          {title}
+        </Button>
+      )}
       <Modal
         title={modalTitle}
         open={isModalOpen}
