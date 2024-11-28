@@ -65,7 +65,7 @@ const CancleSession = ({title,addUpcomingSession,moduleType,cancleUpcomingSessio
       {userRole === 'student' ? (
         <Tooltip
           className={addUpcomingSession.isWithin24Hours ? 'button_tooltip' : ''}
-          title={addUpcomingSession.isWithin24Hours ? 'You can’t cancel session less than 24 hours before it starts' : ''}
+          title={addUpcomingSession.isWithin24Hours ? `You can’t cancel session less than ${addUpcomingSession.rescheduleHours} hours before it starts` : ''}
           color={'#465078'}
         >
           <Button onClick={showModal} disabled={addUpcomingSession.isWithin24Hours} className={'secondary-button'}>

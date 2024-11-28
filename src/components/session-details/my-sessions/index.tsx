@@ -146,7 +146,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
         <div style={{ gap: 15, display: 'flex', flexWrap: 'wrap' }}>
           <Tooltip
             className={session.isWithin24Hours ? 'button_tooltip' : ''}
-            title={session.isWithin24Hours ? 'You can’t reschedule session less than 24 hours before it starts' : ''}
+            title={session.isWithin24Hours ? `You can’t reschedule session less than ${session.rescheduleHours} hours before it starts` : ''}
             color={'#465078'}
           >
             <Button disabled={(session.isWithin24Hours) || session.is_freeze == 1} className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
