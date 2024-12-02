@@ -332,16 +332,13 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
             >
               <Form form={formInterviewDate} layout='vertical'>
                 <Form.Item label='Interview Date' name={'interviewDate'} initialValue={interviewDate}>
-                  <>
-                    <DatePicker
-                      onChange={handleDateChange}
-                      format='YYYY-MM-DD'
-                      style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
-                    />
-                    {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Interview date based on Student Timezone." showIcon />}
-                  </>
+                  <DatePicker
+                    onChange={handleDateChange}
+                    format='YYYY-MM-DD'
+                    style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px', width: '70%' }}
+                  />
                 </Form.Item>
-
+                {(userRole == 'tutor') && <Alert style={{ top: 5 }} message="Note: Interview date based on Student Timezone." showIcon />}
                 <Form.Item name='sessionId' initialValue={session?.id} hidden>
                   <Input type='hidden' />
                 </Form.Item>
