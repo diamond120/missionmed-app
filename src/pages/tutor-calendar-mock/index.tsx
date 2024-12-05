@@ -127,7 +127,7 @@ const TutorCalendarMock = (tutorId, next, form) => {
           setSpin(true);
           const data = {
             tutorId: calTutorId,
-            role: 'tutor',
+            role: 'student',
             startDate: filterDate?.startDate,
             endDate: filterDate?.endDate,
             type: 'mockinterview',
@@ -202,7 +202,7 @@ const TutorCalendarMock = (tutorId, next, form) => {
       const data = {
         tutorId: calTutorId,
         startDate: startDate,
-        role: 'tutor',
+        role: 'student',
         endDate: endDate,
         date: date,
         type: 'mockinterview',
