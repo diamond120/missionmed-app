@@ -126,7 +126,7 @@ function formatDate(inputDateStr) {
           setSpin(true);
           const data = {
             tutorId: calTutorId,
-            role: 'tutor',
+            role: 'student',
             startDate: filterDate?.startDate,
             endDate: filterDate?.endDate,
             type: 'teachingsession',
@@ -201,7 +201,7 @@ function formatDate(inputDateStr) {
       const data = {
         tutorId: calTutorId,
         startDate: startDate,
-        role: 'tutor',
+        role: 'student',
         endDate: endDate,
         date: date,
         type: 'teachingsession',
