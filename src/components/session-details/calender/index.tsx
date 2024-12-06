@@ -157,6 +157,10 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
   const memoizedGetSlotsist = useMemo(() => getSlotsist, [tutorId, studentId, filterDate, rescheduleDate]);
 
   const applyZIndexToUnavailable = () => {
+    const availableElement = document.querySelectorAll('.available');
+    availableElement.forEach(element => {
+      element.parentNode.style.setProperty('z-index', '2', 'important');
+    });
     const unavailableElement = document.querySelectorAll('.unavailable');
     unavailableElement.forEach(element => {
       element.parentNode.style.setProperty('z-index', '7', 'important');

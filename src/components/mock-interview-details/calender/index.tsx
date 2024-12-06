@@ -170,6 +170,10 @@ const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, n
     }
     
     const applyZIndexToUnavailable = () => {
+      const availableElement = document.querySelectorAll('.available');
+      availableElement.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '2', 'important');
+      });
       const unavailableElement = document.querySelectorAll('.unavailable');
       unavailableElement.forEach(element => {
         element.parentNode.style.setProperty('z-index', '7', 'important');
