@@ -250,6 +250,11 @@ function formatDate(inputDateStr) {
       unavailableElement.forEach(element => {
         element.parentNode.style.zIndex = 7;
       });
+
+      const bufferElements = document.querySelectorAll('.buffer');
+      bufferElements.forEach(element => {
+        element.parentNode.style.zIndex = 8;
+      });
     };
     const timeoutId = setTimeout(addClassToParentAfterDateChange, 3000);
 

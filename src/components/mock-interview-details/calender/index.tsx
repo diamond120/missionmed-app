@@ -182,6 +182,10 @@ const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, n
       elementsWithABCClass.forEach(element => {
         element.parentNode.style.setProperty('z-index', '7', 'important');
       });
+      const bufferSlots = document.querySelectorAll('.buffer');
+      bufferSlots.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '8', 'important');
+      });
     };
 
     useEffect(() => {

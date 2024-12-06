@@ -169,6 +169,10 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
     elementsWithABCClass.forEach(element => {
       element.parentNode.style.setProperty('z-index', '7', 'important');
     });
+    const bufferSlots = document.querySelectorAll('.buffer');
+    bufferSlots.forEach(element => {
+      element.parentNode.style.setProperty('z-index', '8', 'important');
+    });
   };
 
   useEffect(() => {
