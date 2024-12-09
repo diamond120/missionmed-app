@@ -159,9 +159,9 @@ const TutorCalendarMock = (tutorId, next, form) => {
           memoizedGetSlotsList(tutorId);
         }
         const addClassToParentAfterDateChange = () => {
-          const availableElements = document.querySelectorAll('.available-index');
-          availableElements.forEach(element => {
-            element.parentNode.classList.add('available-index');
+          const availableElement = document.querySelectorAll('.available');
+          availableElement.forEach(element => {
+            element.parentNode.style.setProperty('z-index', '2', 'important');
           });
           const elementsWithABCClass = document.querySelectorAll('.otherslot');
           elementsWithABCClass.forEach(element => {
@@ -171,6 +171,11 @@ const TutorCalendarMock = (tutorId, next, form) => {
           const unavailableElement = document.querySelectorAll('.unavailable');
   
           unavailableElement.forEach(element => {
+            element.parentNode.style.zIndex = 8;
+          });
+          const bufferElements = document.querySelectorAll('.buffer');
+  
+          bufferElements.forEach(element => {
             element.parentNode.style.zIndex = 7;
           });
         };
@@ -245,6 +250,10 @@ const TutorCalendarMock = (tutorId, next, form) => {
 
   useEffect(() => {
     const addClassToParentAfterDateChange = () => {
+      const availableElement = document.querySelectorAll('.available');
+      availableElement.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '2', 'important');
+      });
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
         element.parentNode.classList.add('bookedslot');
@@ -253,6 +262,11 @@ const TutorCalendarMock = (tutorId, next, form) => {
       const unavailableElement = document.querySelectorAll('.unavailable');
 
       unavailableElement.forEach(element => {
+        element.parentNode.style.zIndex = 8;
+      });
+
+      const bufferElements = document.querySelectorAll('.buffer');
+      bufferElements.forEach(element => {
         element.parentNode.style.zIndex = 7;
       });
     };
