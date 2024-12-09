@@ -159,6 +159,10 @@ const TutorCalendarMock = (tutorId, next, form) => {
           memoizedGetSlotsList(tutorId);
         }
         const addClassToParentAfterDateChange = () => {
+          const availableElements = document.querySelectorAll('.available-index');
+          availableElements.forEach(element => {
+            element.parentNode.classList.add('available-index');
+          });
           const elementsWithABCClass = document.querySelectorAll('.otherslot');
           elementsWithABCClass.forEach(element => {
             element.parentNode.classList.add('bookedslot');
