@@ -64,9 +64,16 @@ const SpecialDays: FC<Any> = ({ props, isGoogleVerification }) => {
       render: (text, record) => {
         if (record.event_id) {
           return (
-            <span style={{ color: 'black' }}>
-              Synced from Google Calendar. You cannot edit/delete here. Buffer time will be added before and after your event automatically as configured.
-            </span>
+            <>
+              <span style={{ color: 'black' }}>
+                Synced from Google Calendar. You cannot edit/delete here. Buffer time will be added before and after your event automatically as configured.
+              </span>
+              {record?.start_day !== record?.end_day && (
+                <div style={{fontWeight: 'bold', marginTop: '0.75rem'}}>
+                  This is a continues event from start date and time to end date and time.
+                </div>
+              )}
+            </>
           )
         }
         return (
