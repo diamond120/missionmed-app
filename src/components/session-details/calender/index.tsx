@@ -163,10 +163,14 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
     });
     const unavailableElement = document.querySelectorAll('.unavailable');
     unavailableElement.forEach(element => {
-      element.parentNode.style.setProperty('z-index', '7', 'important');
+      element.parentNode.style.setProperty('z-index', '8', 'important');
     });
     const elementsWithABCClass = document.querySelectorAll('.otherslot');
     elementsWithABCClass.forEach(element => {
+      element.parentNode.style.setProperty('z-index', '8', 'important');
+    });
+    const bufferSlots = document.querySelectorAll('.buffer');
+    bufferSlots.forEach(element => {
       element.parentNode.style.setProperty('z-index', '7', 'important');
     });
   };

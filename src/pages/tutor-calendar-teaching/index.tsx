@@ -158,6 +158,10 @@ function formatDate(inputDateStr) {
           memoizedGetSlotsList(tutorId);
         }
         const addClassToParentAfterDateChange = () => {
+          const availableElement = document.querySelectorAll('.available');
+          availableElement.forEach(element => {
+            element.parentNode.style.setProperty('z-index', '2', 'important');
+          });
           const elementsWithABCClass = document.querySelectorAll('.otherslot');
           elementsWithABCClass.forEach(element => {
             element.parentNode.classList.add('bookedslot');
@@ -166,6 +170,10 @@ function formatDate(inputDateStr) {
           const unavailableElement = document.querySelectorAll('.unavailable');
   
           unavailableElement.forEach(element => {
+            element.parentNode.style.zIndex = 8;
+          });
+          const bufferElements = document.querySelectorAll('.buffer');
+          bufferElements.forEach(element => {
             element.parentNode.style.zIndex = 7;
           });
         };
@@ -240,6 +248,10 @@ function formatDate(inputDateStr) {
 
   useEffect(() => {
     const addClassToParentAfterDateChange = () => {
+      const availableElement = document.querySelectorAll('.available');
+      availableElement.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '2', 'important');
+      });
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
         element.parentNode.classList.add('bookedslot');
@@ -248,6 +260,11 @@ function formatDate(inputDateStr) {
       const unavailableElement = document.querySelectorAll('.unavailable');
 
       unavailableElement.forEach(element => {
+        element.parentNode.style.zIndex = 8;
+      });
+
+      const bufferElements = document.querySelectorAll('.buffer');
+      bufferElements.forEach(element => {
         element.parentNode.style.zIndex = 7;
       });
     };

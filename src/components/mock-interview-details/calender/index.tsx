@@ -176,10 +176,14 @@ const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, n
       });
       const unavailableElement = document.querySelectorAll('.unavailable');
       unavailableElement.forEach(element => {
-        element.parentNode.style.setProperty('z-index', '7', 'important');
+        element.parentNode.style.setProperty('z-index', '8', 'important');
       });
       const elementsWithABCClass = document.querySelectorAll('.otherslot');
       elementsWithABCClass.forEach(element => {
+        element.parentNode.style.setProperty('z-index', '8', 'important');
+      });
+      const bufferSlots = document.querySelectorAll('.buffer');
+      bufferSlots.forEach(element => {
         element.parentNode.style.setProperty('z-index', '7', 'important');
       });
     };
