@@ -26,7 +26,7 @@ function formatDate(inputDateStr) {
   return formattedDate;
 }
 
-const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezone, next, prev }) => {
+const Calender = ({ tutorId, studentId, rescheduleDate, sessionId, form, moduleType, timezone, next, prev }) => {
   const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -64,6 +64,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
         startDate: filterDate.startDate,
         endDate: filterDate.endDate,
         rescheduleDate: rescheduleDate,
+        sessionId: sessionId,
         type: 'teachingsession',
       };
 
@@ -236,6 +237,7 @@ const Calender = ({ tutorId, studentId, rescheduleDate, form, moduleType, timezo
         type: 'teachingsession',
         timezone: timezone,
         rescheduleDate: rescheduleDate,
+        sessionId: sessionId,
         start: filterDate.startDate,
         end: filterDate.endDate,
         studentId: studentId,
