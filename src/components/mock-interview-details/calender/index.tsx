@@ -37,7 +37,7 @@ interface Props {
   prev: () => void
 }
 
-const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, next, timezone, prev }) => {
+const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, sessionId, next, timezone, prev }) => {
   const calendarRef = useRef(null);
   const [slotsList, setSlots] = useState([]);
   const [filterDate, setfilterDate] = useState({});
@@ -72,6 +72,7 @@ const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, n
           startDate : filterDate.startDate,
           endDate : filterDate.endDate,
           rescheduleDate : rescheduleDate,
+          sessionId: sessionId,
           type :'mockinterview',
           role : user.role,
         };
@@ -242,6 +243,7 @@ const Calender: React.FC<Props> = ({ tutorId, studentId, form, rescheduleDate, n
           type :'mockinterview',
           timezone :timezone,
           rescheduleDate : rescheduleDate,
+          sessionId: sessionId,
           start: filterDate.startDate,
           end: filterDate.endDate,
           role : user.role,

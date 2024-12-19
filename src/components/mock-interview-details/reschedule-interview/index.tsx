@@ -235,7 +235,7 @@ const RescheduleInterview = ({
   const Step2From = () => {
     return <>
       <div className={"book-time-cal"}>
-      <Calender tutorId={interviewSummary?.tutor_id} studentId={interviewSummary?.student_id}  rescheduleDate={interviewSummary?.student_session_start_time}  form={form} next={next} timezone={timezone}/>
+      <Calender tutorId={interviewSummary?.tutor_id} studentId={interviewSummary?.student_id} sessionId={interviewSummary?.id}  rescheduleDate={interviewSummary?.student_session_start_time}  form={form} next={next} timezone={timezone}/>
       {(userRole == 'tutor') && <Alert style={{ top: 23 }} message="Note: Timings in Calendar are displaying based on Student Timezone." showIcon />}
       </div>
     </>;
