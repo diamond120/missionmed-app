@@ -5,7 +5,7 @@ import RateSession from "~/components/rate-session";
 import { groupSessionsByDate, formatTime, formatDateV1 } from "~/common/common";
 import "./index.less";
 import CancleSession from "~/pages/cancle-session";
-import { RightOutlined, DownOutlined, QuestionCircleFilled, LoadingOutlined } from '@ant-design/icons';
+import { RightOutlined, DownOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { PageInfoType } from "~/components/session-details/my-sessions/types";
 import { UserContext } from "~/api/providers/UserProvider";
 import moment from "moment";
