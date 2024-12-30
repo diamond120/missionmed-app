@@ -84,6 +84,11 @@ const routes: RouteObject[] = [
         Component: Impersonate,
         path: '/impersonate',
         index: true
+      },
+      {
+        Component: Impersonate,
+        path: '/temp-login',
+        index: true
       }
     ]
   },
@@ -203,6 +208,11 @@ const routes: RouteObject[] = [
       {
         Component: Impersonate,
         path: '/impersonate',
+        index: true
+      },
+      {
+        Component: Impersonate,
+        path: '/temp-login',
         index: true
       }
     ]
