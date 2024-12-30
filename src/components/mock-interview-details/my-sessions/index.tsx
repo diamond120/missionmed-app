@@ -1,14 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, DatePicker, Form, Input, message, Modal, Tabs, Tooltip } from "antd";
+import { Alert, Button, DatePicker, Form, Input, message, Modal, Spin, Tabs, Tooltip } from "antd";
 import RateSession from "~/components/rate-session";
 import { groupSessionsByDate, formatTime, formatDateV1 } from "~/common/common";
 import "./index.less";
 import CancleSession from "~/pages/cancle-session";
-import { RightOutlined, DownOutlined, QuestionCircleFilled } from '@ant-design/icons';
+import { RightOutlined, DownOutlined, QuestionCircleFilled, LoadingOutlined } from '@ant-design/icons';
 import { PageInfoType } from "~/components/session-details/my-sessions/types";
 import { UserContext } from "~/api/providers/UserProvider";
 import moment from "moment";
+import CommonService from "../../../api/services/Common";
 
 const SessionList = ({
   date,
@@ -50,6 +51,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
   const [formAgenda] = Form.useForm();
   const [formInterviewDate] = Form.useForm();
   const { TextArea } = Input;
+  const [isLoading, setLoading] = useState(false)
 
   const [details, setDetails] = useState(false);
   const [interviewDate, setInterviewDate] = useState(session?.interview_date ? moment(session?.interview_date, 'YYYY-MM-DD') : null)
@@ -58,6 +60,23 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     setIsModalOpen(true)
     if (type === 'agenda') formAgenda.setFieldValue('agenda', session.agenda)
     if (type === 'sessionLink') form.setFieldsValue({ sessionLink: session.sessionLink })
+  }
+
+  const handleSendTempLoginLink = async () => {
+    setLoading(true)
+    const response = await CommonService.postAPI('/student/send-temp-login-link', { sessionId: session.id })
+    .catch((error) => {
+      if (error.response) {
+        message.error(error.response.data.message);
+      }
+      setLoading(false)
+    })
+    if (response.data.success) {
+      message.success('Temporary login link sent successfully');
+    } else if (response.data.error) {
+      message.error(response.data.error);
+    }
+    setLoading(false)
   }
 
   const handleSubmit = async () => {
@@ -102,7 +121,8 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
     setInterviewDate(dateFormat)
   }
   return (
-    <li className="item">
+    <li className="item" style={{ position: "relative" }} aria-disabled={isLoading}>
+      {isLoading && <Spin style={{ position: "absolute", zIndex: 99, inset: 0, display: "flex", justifyContent: "center", alignItems: "center" }} />}
       <div style={{ display: "flex" }}>
         <div className="time">
           <div style={{ paddingBottom: "5px" }}>
@@ -219,6 +239,7 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'end' }}>
                 {user.role == "tutor" && (
                 <>
+                <Button className={"secondary-button"} onClick={() => handleSendTempLoginLink()}>Send Temporary Login Link</Button>
                 <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
                 <CancleSession title='Cancel Session' moduleType={"mock"} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
                 </>
