@@ -10,6 +10,7 @@ import { PageInfoType } from "./types";
 import { UserContext } from "~/api/providers/UserProvider";
 import moment from "moment";
 import CommonService from "../../../api/services/Common";
+import confirm from "~/components/confirm";
 
 const SessionList = ({
   date,
@@ -260,7 +261,16 @@ const SessionItem = ({ session, type, handleRateSession = () => { }, handleResch
               <div className="btn-group" style={{ marginTop: "10px", justifyContent: 'end' }}>
                 {user.role == "tutor" && (
                 <>
-                <Button className={"secondary-button"} onClick={() => handleSendTempLoginLink()}>Send Temporary Login Link</Button>
+                <Button
+                  className={"secondary-button"}
+                  onClick={() => {
+                    confirm({
+                      handleOk: handleSendTempLoginLink,
+                      title: 'Are you sure?',
+                      content: `You want to send temporary login link to ${session.student_name}?`
+                    })
+                  }}
+                >Send Temporary Login Link</Button>
                 <Button className={"secondary-button"} onClick={() => handleReschedule(session.id)}>Reschedule</Button>
                 <CancleSession title={'Cancel Session'} moduleType={pagesession} addUpcomingSession={session} cancleUpcomingSession={cancleUpSession} />
                 </>
