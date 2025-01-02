@@ -1,11 +1,12 @@
 import './index.less'
-import { Form, Input, Button, Checkbox, message } from 'antd'
+import { Form, Input, Button, Checkbox, message, Alert } from 'antd'
 import Authentication from '../../api/services/Authentication'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../api/providers/UserProvider.jsx'
 import { useAuthContext } from '../../api/context/AuthContext.js'
 import posthog from 'posthog-js'
 import { useContext, useState } from 'react'
+import CommonService from "../../api/services/Common";
 
 const SignIn = () => {
   const [form] = Form.useForm()
@@ -13,6 +14,8 @@ const SignIn = () => {
   const { dispatch } = useContext(UserContext)
   const { setAuthenticated } = useAuthContext()
   const [timezone, setTimezone] = useState<string>('')
+  const [withEmail, setWithEmail] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const onFinish = async (values: any) => {
     let userTimezone = timezone
@@ -60,6 +63,25 @@ const SignIn = () => {
     console.log('Failed:', errorInfo)
   }
 
+  const handleSendTempLoginLink = async () => {
+    const email = form.getFieldValue('email')
+
+    setLoading(true)
+    const response = await CommonService.postAPI('/student/send-temp-login-link', { email })
+    .catch((error) => {
+      if (error.response) {
+        message.error(error.response.data.message);
+      }
+      setLoading(false)
+    })
+    if (response.data.success) {
+      message.success('Magic login link sent successfully.');
+    } else if (response.data.error) {
+      message.error(response.data.error);
+    }
+    setLoading(false)
+  }
+
   return (
     <div className={'sign-in'}>
       <div className={'sign-in-left'}>
@@ -85,41 +107,94 @@ const SignIn = () => {
               label={''}
               name={'email'}
               rules={[{ required: true, message: 'Please enter your email!' }]}
-              style={{ marginTop: 55 }}
+              style={{ marginTop: 30 }}
             >
               <Input style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px' }} placeholder={'Email'} />
             </Form.Item>
 
-            <Form.Item label={''} name={'password'} rules={[{ required: true, message: 'Please enter your password!' }]}>
-              <Input.Password
-                style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px' }}
-                placeholder={'Password'}
-              />
-            </Form.Item>
+            {!withEmail && 
+              <>
+                <Form.Item label={''} name={'password'} rules={[{ required: true, message: 'Please enter your password!' }]}>
+                  <Input.Password
+                    style={{ borderRadius: 8, fontSize: 16, lineHeight: 1.4, padding: ' 8px 12px 8px 12px' }}
+                    placeholder={'Password'}
+                  />
+                </Form.Item>
+                
 
-            <div className={'sign-in-left-remember'}>
-              <Checkbox>
-                <span>Remember me</span>
-              </Checkbox>
-              <Button size='large' type='link' href={`/forgot-password`} className='link_btn'>
-                Forgot Password?
+                <div className={'sign-in-left-remember'}>
+                  <Checkbox>
+                    <span>Remember me</span>
+                  </Checkbox>
+                  <Button size='large' type='link' href={`/forgot-password`} className='link_btn'>
+                    Forgot Password?
+                  </Button>
+                  {/* <Link to={`/forgot-password`} className={"sign-in-left-remember-forgot"}>Forgot Password?</Link> */}
+                </div>
+                </>
+            }
+
+            {withEmail ? 
+            <>
+                <Button
+                  type={'primary'}
+                  htmlType={'submit'}
+                  disabled={loading}
+                  loading={loading}
+                  className={'primary-button'}
+                  style={{ marginTop: '10px', width: '100%', borderRadius: '8px' }}
+                  onClick={async () => {
+                    const rsp = await form.validateFields(['email'])
+                    if (rsp.email) {
+                      handleSendTempLoginLink()
+                    }
+                  }}
+                  
+                >
+                  Sign In With Email
+                </Button>
+
+                <Alert
+                  message=""
+                  description={<>
+                    We’ll email you a magic code for a password-free sign-in.
+                    Or you can <a onClick={() => setWithEmail(false)}>sign in with password</a>.
+                  </>}
+                  type="info"
+                  showIcon
+                  style={{
+                    marginTop: '20px',
+                  }}
+                />
+              </>
+              : 
+              <>
+              <Button
+                type={'default'}
+                htmlType={'submit'}
+                disabled={loading}
+                loading={loading}
+                className={'btn-text'}
+                style={{ marginTop: '25px', width: '100%', borderRadius: '8px' }}
+              >
+                Login
               </Button>
-              {/* <Link to={`/forgot-password`} className={"sign-in-left-remember-forgot"}>Forgot Password?</Link> */}
-            </div>
-
-            <Button
-              type={'default'}
-              htmlType={'submit'}
-              disabled={false}
-              className={'btn-text'}
-              style={{ marginTop: '40px', width: '100%', borderRadius: '8px' }}
-            >
-              Login
-            </Button>
+              <Alert
+                  message=""
+                  description={<>
+                    For password-free sign-in. you can <a onClick={() => setWithEmail(true)}>sign in with email</a>.
+                  </>}
+                  type="info"
+                  showIcon
+                  style={{
+                    marginTop: '20px',
+                  }}
+                />
+              </>
+              }
           </Form>
         </div>
       </div>
-      {/* <div className={"sign-in-right"}></div> */}
     </div>
   )
 }
