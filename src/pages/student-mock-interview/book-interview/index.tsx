@@ -231,9 +231,11 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
               <h4 className={"tutor-name"}>{tutor.full_name}</h4>
               {user.role == 'tutor' &&
                 <>
+                 {tutor.phone_number && (
                   <span>
                     Ph No: {tutor.phone_number + ', '}
                   </span>
+                  )}
                   {tutor.country &&
                     <span>
                       Country: {tutor.country + ', '}
