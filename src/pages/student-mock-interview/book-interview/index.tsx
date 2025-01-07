@@ -242,6 +242,12 @@ const BookInterview = ({ addUpcomingSession, timezone }) => {
                   <span>
                     Credit: {tutor.credit || 0}
                   </span>
+                  <br />
+                    {tutor?.email && (
+                      <span>
+                        Email: {tutor.email}
+                      </span>
+                    )}
                 </>
               }
               <div

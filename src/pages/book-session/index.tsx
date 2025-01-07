@@ -251,6 +251,12 @@ const BookSession: FC<Props> = ({ addUpcomingSession, title, moduleType, timezon
                   ) : (
                     ` 0`
                   )}
+                  <br />
+                  {student?.email && (
+                    <span>
+                      Email: {student.email}
+                    </span>
+                  )}
                 </span>
 
                 <div
