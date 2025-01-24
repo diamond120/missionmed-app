@@ -49,73 +49,6 @@ type BandRange = {
   maxScore: number;
 };
 
-const scoreTable: ScoreTable[] = [
-  { estimatedScore: 300, vr: 0, qr: 0, ar: 0, dm: 0 },
-  { estimatedScore: 330, vr: 6, qr: 4, ar: 5, dm: 4 },
-  { estimatedScore: 350, vr: 8, qr: 6, ar: 7, dm: 5 },
-  { estimatedScore: 380, vr: 9, qr: 8, ar: 9, dm: 6 },
-  { estimatedScore: 400, vr: 11, qr: 10, ar: 11, dm: 7 },
-  { estimatedScore: 430, vr: 12, qr: 12, ar: 12, dm: 8 },
-  { estimatedScore: 450, vr: 14, qr: 14, ar: 14, dm: 9 },
-  { estimatedScore: 480, vr: 15, qr: 16, ar: 16, dm: 10 },
-  { estimatedScore: 500, vr: 17, qr: 17, ar: 18, dm: 11 },
-  { estimatedScore: 530, vr: 18, qr: 18, ar: 20, dm: 12 },
-  { estimatedScore: 550, vr: 20, qr: 19, ar: 22, dm: 13 },
-  { estimatedScore: 580, vr: 21, qr: 20, ar: 23, dm: 14 },
-  { estimatedScore: 600, vr: 23, qr: 21, ar: 25, dm: 15 },
-  { estimatedScore: 630, vr: 24, qr: 22, ar: 27, dm: 16 },
-  { estimatedScore: 650, vr: 26, qr: 23, ar: 29, dm: 17 },
-  { estimatedScore: 680, vr: 27, qr: 24, ar: 31, dm: 18 },
-  { estimatedScore: 700, vr: 29, qr: 25, ar: 32, dm: 19 },
-  { estimatedScore: 730, vr: 30, qr: 26, ar: 34, dm: 20 },
-  { estimatedScore: 750, vr: 32, qr: 27, ar: 36, dm: 21 },
-  { estimatedScore: 780, vr: 33, qr: 28, ar: 38, dm: 22 },
-  { estimatedScore: 800, vr: 35, qr: 29, ar: 41, dm: 23 },
-  { estimatedScore: 830, vr: 36, qr: 30, ar: 43, dm: 24 },
-  { estimatedScore: 850, vr: 38, qr: 31, ar: 44, dm: 25 },
-  { estimatedScore: 880, vr: 39, qr: 32, ar: 45, dm: 26 },
-  { estimatedScore: 900, vr: 41, qr: 33, ar: 47, dm: 27 },
-];
-
-const sjtBands: BandRange[] = [
-  { band: 1, minScore: 56, maxScore: 66 },
-  { band: 2, minScore: 37, maxScore: 55 },
-  { band: 3, minScore: 17, maxScore: 36 },
-  { band: 4, minScore: 0, maxScore: 16 },
-];
-
-function findEstimatedScore(
-  rawScore: number,
-  scoreType: keyof ScoreTable
-): number {
-  for (let i = scoreTable.length - 1; i >= 0; i--) {
-    if (rawScore >= scoreTable[i][scoreType]) {
-      return scoreTable[i].estimatedScore;
-    }
-  }
-  return 300; // return the lowest score if raw score is below the minimum in the table
-}
-
-function calculateScores(
-  rawScores: [number, number, number, number]
-): [number, number, number, number] {
-  const vrScore = findEstimatedScore(rawScores[0], "vr");
-  const qrScore = findEstimatedScore(rawScores[1], "qr");
-  const arScore = findEstimatedScore(rawScores[2], "ar");
-  const dmScore = findEstimatedScore(rawScores[3], "dm");
-  return [vrScore, dmScore, qrScore, arScore];
-}
-
-function determineSJTband(score: number): number {
-  const foundBand = sjtBands.find(
-    (band) => score >= band.minScore && score <= band.maxScore
-  );
-  if (!foundBand) {
-    throw new Error("Invalid score: Score must be between 0 and 66.");
-  }
-  return foundBand.band;
-}
-
 const PredicatedColumns: TableProps<PredicatedDataType>["columns"] = [
   {
     title: "Subtest",
@@ -197,6 +130,9 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   const [rank, setRank] = useState<number>(0)
   const [prOfBetterPerformed, setPrOfBetterPerformed] = useState<number | string>(0)
   const [UCATPR, setUCATPR] = useState<number>(0)
+  const [scoreTable, setScoreTable] = useState<ScoreTable[]>([])
+  const [sjtBands, setSjtBands] = useState<BandRange[]>([])
+  const [ucatPercentile, setUcatPercentile] = useState([])
 
   useEffect(() => {
     if (selectedMockId) {
@@ -214,40 +150,60 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
   }, [mockId]);
 
   useEffect(() => {
-    if (totalScaledScore > 0)
+    if (totalScaledScore > 0 && ucatPercentile?.length > 0)
       getLastYearData()
-  }, [totalScaledScore])
+  }, [totalScaledScore, ucatPercentile])
+
+  function findEstimatedScore(
+    rawScore: number,
+    scoreType: keyof ScoreTable
+  ): number {
+    for (let i = scoreTable.length - 1; i >= 0; i--) {
+      if (rawScore >= scoreTable[i][scoreType]) {
+        return scoreTable[i].estimatedScore;
+      }
+    }
+    return 300; // return the lowest score if raw score is below the minimum in the table
+  }
+
+  function calculateScores(
+    rawScores: [number, number, number, number]
+  ): [number, number, number, number] {
+    const vrScore = findEstimatedScore(rawScores[0], "vr");
+    const qrScore = findEstimatedScore(rawScores[1], "qr");
+    const arScore = findEstimatedScore(rawScores[2], "ar");
+    const dmScore = findEstimatedScore(rawScores[3], "dm");
+    return [vrScore, dmScore, qrScore, arScore];
+  }
+
+  function determineSJTband(score: number): number {
+    const foundBand = sjtBands.find(
+      (band) => score >= band.minScore && score <= band.maxScore
+    );
+    if (!foundBand) {
+      throw new Error("Invalid score: Score must be between 0 and 66.");
+    }
+    return foundBand.band;
+  }
 
   async function getLastYearData() {
     try {
-      const response: any = await fetch('https://missionmed-app.s3.ap-southeast-2.amazonaws.com/Official+UCAT+Statistics.csv');
-      const reader = response.body.getReader();
-      const result = await reader.read();
-      const decoder = new TextDecoder('utf-8');
-      const csv = decoder.decode(result.value);
 
-      await Papa.parse(csv, {
-        header: true,
-        complete: async (results) => {
-          const data: any = results.data;
-          const header: any = results.meta.fields
-          if (data?.length > 0 && header) {
-            const lastScore = await data?.findIndex((i: any) => i[header[0]] === '')
-            if (totalScaledScore < Number(data[0]?.[header[0]]))
-              await setUCATPR(0)
-            else if (totalScaledScore > Number(data[(lastScore - 1)]?.[header[0]]))
-              await setUCATPR(100)
-            else {
-              const percentage = await data.reduce((a: any, b: any) => (
-                b?.[header[0]] <= totalScaledScore && b?.[header[0]] >= a?.[header[0]]
-                  ? b
-                  : a
-              ), { [header[0]]: -Infinity })
-              await setUCATPR(percentage?.[header[1]])
-            }
-          }
-        },
-      });
+      if (ucatPercentile?.length > 0) {
+        const lastScore = await ucatPercentile?.findIndex((i: any) => i['UCAT Scaled Score'] === '')
+        if (totalScaledScore < Number(ucatPercentile[0]?.['UCAT Scaled Score']))
+          await setUCATPR(0)
+        else if (totalScaledScore > Number(ucatPercentile[(lastScore - 1)]?.['UCAT Scaled Score']))
+          await setUCATPR(100)
+        else {
+          const percentage = await ucatPercentile.reduce((a: any, b: any) => (
+            b?.['UCAT Scaled Score'] <= totalScaledScore && b?.['UCAT Scaled Score'] >= a?.['UCAT Scaled Score']
+              ? b
+              : a
+          ), { ['UCAT Scaled Score']: -Infinity })
+          await setUCATPR(percentage?.['Percentile'])
+        }
+      }
     } catch (error) {
       console.log(error)
     }
@@ -402,15 +358,11 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
     }
   }
 
-  async function getMockData() {
-    try {
-      await setLoading(true);
-      await setMockData([]);
-      const res = await getSessionDetail(mockId);
-      if (res.data) {
-        await setMockData(res.data);
-        const sections = res.data.sections;
-        const result = sections.reduce((acc, item) => {
+  useEffect(() => {
+    async function calculate() {
+      if (Object.keys(mockData)?.length > 0 && scoreTable?.length > 0) {
+        const sections = mockData?.sections;
+        const result = await sections?.reduce((acc, item) => {
           acc[item.type] = item.total_score;
           return acc;
         }, {});
@@ -444,8 +396,28 @@ function Performance({ mocks, selectedMockId, setActiveTab }: Props) {
         await setTotalScaledScore(total)
         await setPredicatedData(tempPredicatedData);
         await setScoreTableKey((preV) => preV + 10);
-        await getPackageData(res.data.package.id);
+        await getPackageData(mockData.package.id);
       }
+    }
+    calculate()
+  }, [mockData, scoreTable])
+
+  async function getMockData() {
+    try {
+      await setLoading(true);
+      await setMockData([]);
+      const res = await getSessionDetail(mockId);
+      await setScoreTable(res.data?.config?.score)
+      await setSjtBands(res.data?.config?.rank)
+      await setUcatPercentile(res.data.config.ucat_percentile)
+
+      if (res.data) {
+        await setMockData(res.data);
+      }
+      const filteredSubtests = await predicatedData?.filter(subtest =>
+        res.data?.sections?.some(section => section?.name === subtest.subtest)
+      );
+      setPredicatedData(filteredSubtests)
     } catch (error) {
       setLoading(false);
     }
