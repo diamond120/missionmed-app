@@ -171,6 +171,7 @@ const SidebarMenu: React.FC<Props> = ({ className, callBack }: Props) => {
           <SvgIcon className={'sidebar-menu-logo'} type={'fullLogo'} />
         )}
       </div>
+      {console.log(user)}
       <Menu
         onClick={handleSelectedMenu}
         expandIcon={
@@ -184,51 +185,58 @@ const SidebarMenu: React.FC<Props> = ({ className, callBack }: Props) => {
         selectedKeys={[current]}
         style={{ borderRight: 0, height: '0' }}
       >
-        <Menu.Item
-          onClick={applicationReviewNavigate}
-          key={isStudent ? '/application_review' : '/tutor/application_review'}
-          icon={<FileDoneOutlined style={{ fontSize: '24px' }} />}
-          className={'custom-application-review-item'}
-        >
-          Application Review
-        </Menu.Item>
-        <Menu.Item
-          key={isStudent ? '/student_notifications' : '/tutor_notifications'}
-          onClick={() => {
-            navigate(isStudent ? 'student_notifications' : 'tutor_notifications')
-          }}
-          style={{ position: 'fixed', bottom: '128px', width: '280px' }}
-          icon={
-            <Badge dot={unreadNotificationCount > 0}>
-              {' '}
-              <BellOutlined style={{ fontSize: '24px' }} />{' '}
-            </Badge>
-          }
-          className={'notification-item custom-notification-item'}
-        >
-          Notifications
-        </Menu.Item>
-
-        {tutor.profilePicture == '' || student.profilePicture == '' ? (
-          <Menu.Item
-            style={{ position: 'fixed', bottom: '72px', width: '280px' }}
-            key={isStudent ? '/student_profile' : '/tutor_profile'}
-            onClick={navigateProfilePage}
-            icon={<Avatar size={32} icon={<UserOutlined />} />}
-            className={'custom-profile-item'}
-          >
-            My Profile
-          </Menu.Item>
+        {user.isTrail === true ? (
+          <></>
         ) : (
-          <Menu.Item
-            style={{ position: 'fixed', bottom: '72px', width: '280px' }}
-            key={isStudent ? '/student_profile' : '/tutor_profile'}
-            onClick={navigateProfilePage}
-            icon={<Avatar src={isStudent ? student.profilePicture : tutor ? tutor.profilePicture : ''} size={32} icon={<UserOutlined />} />}
-            className={'custom-profile-item'}
-          >
-            My Profile
-          </Menu.Item>
+          <>
+            <Menu.Item
+              onClick={applicationReviewNavigate}
+              key={isStudent ? '/application_review' : '/tutor/application_review'}
+              icon={<FileDoneOutlined style={{ fontSize: '24px' }} />}
+              className={'custom-application-review-item'}
+            >
+              Application Review
+            </Menu.Item>
+            <Menu.Item
+              key={isStudent ? '/student_notifications' : '/tutor_notifications'}
+              onClick={() => {
+                navigate(isStudent ? 'student_notifications' : 'tutor_notifications')
+              }}
+              style={{ position: 'fixed', bottom: '128px', width: '280px' }}
+              icon={
+                <Badge dot={unreadNotificationCount > 0}>
+                  {' '}
+                  <BellOutlined style={{ fontSize: '24px' }} />{' '}
+                </Badge>
+              }
+              className={'notification-item custom-notification-item'}
+            >
+              Notifications
+            </Menu.Item>
+            {tutor.profilePicture == '' || student.profilePicture == '' ? (
+              <Menu.Item
+                style={{ position: 'fixed', bottom: '72px', width: '280px' }}
+                key={isStudent ? '/student_profile' : '/tutor_profile'}
+                onClick={navigateProfilePage}
+                icon={<Avatar size={32} icon={<UserOutlined />} />}
+                className={'custom-profile-item'}
+              >
+                My Profile
+              </Menu.Item>
+            ) : (
+              <Menu.Item
+                style={{ position: 'fixed', bottom: '72px', width: '280px' }}
+                key={isStudent ? '/student_profile' : '/tutor_profile'}
+                onClick={navigateProfilePage}
+                icon={
+                  <Avatar src={isStudent ? student.profilePicture : tutor ? tutor.profilePicture : ''} size={32} icon={<UserOutlined />} />
+                }
+                className={'custom-profile-item'}
+              >
+                My Profile
+              </Menu.Item>
+            )}
+          </>
         )}
 
         {/* {!isStudent && (
@@ -244,86 +252,104 @@ const SidebarMenu: React.FC<Props> = ({ className, callBack }: Props) => {
         )} */}
 
         {/* {isStudent && ( */}
-        <>
-          <SubMenu
-            key='interview-submenu'
-            title={<>Interview </>}
-            icon={<CommentOutlined style={{ fontSize: '24px', color: 'white' }} key={'4'} />}
-          >
-            <Menu.Item
-              onClick={() => {
-                navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview')
-              }}
-              key={isStudent ? '/student/mock-interview' : '/tutor/mock-interview'}
+        {user.isTrail === true ? (
+          <>
+            {isStudent && (
+              <Menu.Item
+                className={'custom-profile-item'}
+                key={'/student/mock-simulation'}
+                onClick={() => {
+                  navigate('/student/mock-simulation')
+                }}
+                icon={<DesktopOutlined />}
+              >
+                {' '}
+                Mock Simulations{' '}
+              </Menu.Item>
+            )}
+          </>
+        ) : (
+          <>
+            <SubMenu
+              key='interview-submenu'
+              title={<>Interview </>}
+              icon={<CommentOutlined style={{ fontSize: '24px', color: 'white' }} key={'4'} />}
             >
-              Mock Interview{' '}
-            </Menu.Item>
-            <Menu.Item
-              onClick={() => {
-                navigate(isStudent ? 'student/teaching-session' : 'tutor/teaching-session')
-              }}
-              key={isStudent ? '/student/teaching-session' : '/tutor/teaching-session'}
-            >
-              {' '}
-              Teaching Session{' '}
-            </Menu.Item>
-          </SubMenu>
+              <Menu.Item
+                onClick={() => {
+                  navigate(isStudent ? 'student/mock-interview' : 'tutor/mock-interview')
+                }}
+                key={isStudent ? '/student/mock-interview' : '/tutor/mock-interview'}
+              >
+                Mock Interview{' '}
+              </Menu.Item>
+              <Menu.Item
+                onClick={() => {
+                  navigate(isStudent ? 'student/teaching-session' : 'tutor/teaching-session')
+                }}
+                key={isStudent ? '/student/teaching-session' : '/tutor/teaching-session'}
+              >
+                {' '}
+                Teaching Session{' '}
+              </Menu.Item>
+            </SubMenu>
 
-          <SubMenu
-            key='ucat-submenu'
-            title={<>UCAT Sessions </>}
-            icon={<ReadOutlined style={{ fontSize: '24px', color: 'white' }} key={'7'} />}
-          >
-            {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
-            <Menu.Item
-              className=''
-              onClick={() => {
-                navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session')
-              }}
-              key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'}
+            <SubMenu
+              key='ucat-submenu'
+              title={<>UCAT Sessions </>}
+              icon={<ReadOutlined style={{ fontSize: '24px', color: 'white' }} key={'7'} />}
             >
-              {' '}
-              Teaching Session{' '}
-            </Menu.Item>
-          </SubMenu>
-          {isStudent && (
-            <Menu.Item
-              className={'custom-profile-item'}
-              key={'/student/mock-simulation'}
-              onClick={() => {
-                navigate('/student/mock-simulation')
-              }}
-              icon={<DesktopOutlined />}
-            >
-              {' '}
-              Mock Simulations{' '}
-            </Menu.Item>
-          )}
-          {showStory && isStudent && (
-            <Menu.Item
-              key={'/student/reading-trainer'}
-              onClick={() => {
-                navigate('/student/reading-trainer')
-              }}
-              className={'custom-profile-item'}
-              icon={<DashboardOutlined />}
-            >
-              Speed Reading Trainer
-            </Menu.Item>
-          )}
-          {isStudent && (
-            <Menu.Item
-              className={'custom-profile-item'}
-              key={'/student/special-offers'}
-              onClick={() => {
-                navigate('/student/special-offers')
-              }}
-              icon={<CrownOutlined />}
-            >
-              Special Offers
-            </Menu.Item>
-          )}
-        </>
+              {/* <Menu.Item key={"9"}> Learn (LMS) </Menu.Item> */}
+              <Menu.Item
+                className=''
+                onClick={() => {
+                  navigate(isStudent ? 'student/ucat-session' : 'tutor/ucat-session')
+                }}
+                key={isStudent ? '/student/ucat-session' : '/tutor/ucat-session'}
+              >
+                {' '}
+                Teaching Session{' '}
+              </Menu.Item>
+            </SubMenu>
+            {isStudent && (
+              <Menu.Item
+                className={'custom-profile-item'}
+                key={'/student/mock-simulation'}
+                onClick={() => {
+                  navigate('/student/mock-simulation')
+                }}
+                icon={<DesktopOutlined />}
+              >
+                {' '}
+                Mock Simulations{' '}
+              </Menu.Item>
+            )}
+            {showStory && isStudent && (
+              <Menu.Item
+                key={'/student/reading-trainer'}
+                onClick={() => {
+                  navigate('/student/reading-trainer')
+                }}
+                className={'custom-profile-item'}
+                icon={<DashboardOutlined />}
+              >
+                Speed Reading Trainer
+              </Menu.Item>
+            )}
+            {isStudent && (
+              <Menu.Item
+                className={'custom-profile-item'}
+                key={'/student/special-offers'}
+                onClick={() => {
+                  navigate('/student/special-offers')
+                }}
+                icon={<CrownOutlined />}
+              >
+                Special Offers
+              </Menu.Item>
+            )}
+          </>
+        )}
         {/* )} */}
 
         <Menu.Item

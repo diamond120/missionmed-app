@@ -5,6 +5,7 @@ interface UserInitalStateType {
   name: string
   email: string
   role: string
+  isTrail: boolean
 }
 
 interface UserContextType {
@@ -16,7 +17,8 @@ const initialUser: UserInitalStateType = {
   id: 0,
   name: '',
   email: '',
-  role: ''
+  role: '',
+  isTrail: false
 }
 
 export const UserContext = React.createContext<UserContextType>({ user: initialUser, dispatch: () => {} })
@@ -36,6 +38,7 @@ function UserReducer(user: UserInitalStateType, action: { type: 'set'; payload: 
         id: payload.id,
         name: payload.name,
         email: payload.email,
+        isTrail: payload.isTrail,
         role: payload.role?.toString().toLowerCase()
       }
     }

@@ -35,7 +35,8 @@ export const DefaultLayout: FC = () => {
           id: result.data.data.id,
           name: result.data.data.name,
           email: result.data.data.email,
-          role: result.data.data.role
+          role: result.data.data.role,
+          isTrail: result.data.data.is_trial
         }
       })
     }
