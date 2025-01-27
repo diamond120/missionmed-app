@@ -171,7 +171,6 @@ const SidebarMenu: React.FC<Props> = ({ className, callBack }: Props) => {
           <SvgIcon className={'sidebar-menu-logo'} type={'fullLogo'} />
         )}
       </div>
-      {console.log(user)}
       <Menu
         onClick={handleSelectedMenu}
         expandIcon={

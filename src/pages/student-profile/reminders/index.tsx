@@ -13,7 +13,6 @@ const Reminders: FC<Any> = ({props}) => {
     is_24_hour_remainder_enable: student.is_24_hour_remainder_enable,
     is_30_minute_remainder_enable: student.is_30_minute_remainder_enable,
   });
-  console.log(student)
   const handleEditClick = () => {
     setEditing(true);
   };
