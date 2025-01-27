@@ -51,7 +51,7 @@ const Index = () => {
   }, [])
   async function launchExam(package_id: number) {
     try {
-      if (examCode) {
+      if (user.isTrail || examCode) {
         const params = {
           user_id: user?.id,
           package_id: package_id,
@@ -82,6 +82,31 @@ const Index = () => {
     if (!open && vidRef.current) vidRef.current.pause()
   }, [open])
 
+  function AlertContent() {
+    const isTrial = user.isTrail
+    return (
+      <>
+        <code>
+          <div className='text'>
+            {isTrial
+              ? `You should currently be sitting at a UCAT Mock Testing centre or in an environment which you will not disturbed for the next two hours. These mocks are designed to be sat under proctoring and test conditions. Ensure that you have the following equipment before you begin.`
+              : `You should currently be sitting at a UCAT Mock Testing centre. These mocks are designed to be sat under proctoring and test conditions. Ensure that you have the following equipment before you begin.`}
+          </div>
+          <ul>
+            <li>Whiteboard & Pen</li>
+            <li>Earplugs</li>
+            <li>Keyboard & Mouse</li>
+          </ul>
+          <div className='text'>
+            {isTrial
+              ? `You will need an exam code to launch this exam. If there are any issues, please notify the proctor immediately. If you are a trial user, no such exam code is necessary.`
+              : `When you launch the simulation, you will be prompted for a code which you should have with you. If there are any issues, please notify the proctor immediately.`}
+          </div>
+        </code>
+      </>
+    )
+  }
+
   return (
     <React.Fragment>
       <Section className={'application-review-section'}>
@@ -104,23 +129,7 @@ const Index = () => {
                   <div className={'upcoming-sessions'}>
                     <Alert
                       message='Please read the following carefully.'
-                      description={
-                        <code>
-                          <div className='text'>
-                            You should currently be sitting at a UCAT Mock Testing centre. These mocks are designed to be sat under proctoring
-                            and test conditions. Ensure that you have the following equipment before you begin.
-                          </div>
-                          <ul>
-                            <li>Whiteboard & Pen</li>
-                            <li>Earplugs</li>
-                            <li>Keyboard & Mouse</li>
-                          </ul>
-                          <div className='text'>
-                            When you launch the simulation, you will be prompted for a code which you should have with you. If there are any
-                            issues, please notify the proctor immediately.
-                          </div>
-                        </code>
-                      }
+                      description={<AlertContent />}
                       type='info'
                       closable
                       showIcon
@@ -137,16 +146,18 @@ const Index = () => {
                               <div>{item?.type}</div>
                             </div>
                             <div className='btn-group'>
-                              <Input
-                                className='input-type'
-                                placeholder='Exam Code'
-                                prefix={<LockOutlined />}
-                                onChange={(e) => {
-                                  setExamCode(e.target.value)
-                                  setExamCodeIndex(index)
-                                }}
-                                value={index === examCodeIndex ? examCode : ''}
-                              />
+                              {!user.isTrail && (
+                                <Input
+                                  className='input-type'
+                                  placeholder='Exam Code'
+                                  prefix={<LockOutlined />}
+                                  onChange={(e) => {
+                                    setExamCode(e.target.value)
+                                    setExamCodeIndex(index)
+                                  }}
+                                  value={index === examCodeIndex ? examCode : ''}
+                                />
+                              )}
                               <Button className={'secondary-button'} onClick={() => launchExam(item?.id)}>
                                 Launch Exam
                               </Button>
