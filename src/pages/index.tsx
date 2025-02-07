@@ -193,7 +193,7 @@ const routes: RouteObject[] = [
       },
       {
         Component: MockSimulation,
-        path: '/student/mock-simulation',
+        path: '/student/mock-simulation/:tab?',
         index: true
       },
       {
