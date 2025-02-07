@@ -9,6 +9,7 @@ import { EXAM_APP_URL, APP_URL } from '~/config/app-config'
 import { UserContext } from '~/api/providers/UserProvider'
 import { Package, Session } from './types'
 import moment from 'moment'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const Index = () => {
   const { TabPane } = Tabs
@@ -26,6 +27,10 @@ const Index = () => {
   const [loading, setLoading] = useState(false)
   const { user } = useContext(UserContext)
   const vidRef = useRef(null)
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -49,6 +54,14 @@ const Index = () => {
     }
     init()
   }, [])
+
+  useEffect(() => {
+    if (location.pathname === '/student/mock-simulation/performance') {
+      setActiveTab('Performance')
+      if (pastMocks?.length > 0 && !selectedMockId) setSelectedMockId(pastMocks[pastMocks?.length - 1]?.id)
+    }
+  }, [location, navigate, pastMocks])
+
   async function launchExam(package_id: number) {
     try {
       if (user.isTrail || examCode) {
@@ -107,6 +120,14 @@ const Index = () => {
     )
   }
 
+  const handleTabChange = (key: string) => {
+    setActiveTab(key)
+    if (key === 'Performance') {
+      navigate(`/student/mock-simulation/${key?.toLowerCase()}`)
+      if (pastMocks?.length > 0) setSelectedMockId(pastMocks[pastMocks?.length - 1]?.id)
+    } else navigate(`/student/mock-simulation`, { replace: true })
+  }
+
   return (
     <React.Fragment>
       <Section className={'application-review-section'}>
@@ -123,7 +144,7 @@ const Index = () => {
           </div>
           <div className={'upc-agenda con-box'}>
             <h2 className={'secondary-title'}>UCAT Simulation Mocks </h2>
-            <Tabs defaultActiveKey={'Simulate'} activeKey={activeTab} onChange={(key) => setActiveTab(key)}>
+            <Tabs defaultActiveKey={'Simulate'} activeKey={activeTab} onChange={handleTabChange}>
               <TabPane tab={'Simulate'} key={'Simulate'}>
                 <Spin spinning={loading}>
                   <div className={'upcoming-sessions'}>
@@ -192,6 +213,7 @@ const Index = () => {
                                   onClick={async () => {
                                     await setSelectedMockId(item.id)
                                     await setActiveTab('Performance')
+                                    navigate(`/student/mock-simulation/performance`)
                                   }}
                                 >
                                   View Performance
